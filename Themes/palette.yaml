@@ -1,0 +1,24 @@
+
+primary: "#DD6E42" # burnt sienna
+secondary: "E8DAB2" # Dotch White
+background: "#4F6D7A" # cadet
+
+# ansi colors
+
+  black : "#000000"
+    red : "#F66151"
+  green : "#8FF0A4"
+ yellow : "#FFA348"
+   blue : "#1C71D8"
+magenta : "#DC8ADD"
+   cyan : "#99C1F1"
+  white : "#F6F5F4"
+
+  bright_black : "#241F31"
+    bright_red : "#ED333B"
+  bright_green : "#57E389"
+ bright_yellow : "#FF7800"
+   bright_blue : "#1A5FB4"
+bright_magenta : "#C061CB"
+   bright_cyan : "#62A0EA"
+   bright_white: "#FFFFFF"

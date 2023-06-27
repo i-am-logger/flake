@@ -20,22 +20,27 @@
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = inputs @ { self, nixpkgs, flake-utils, ... }:
+  outputs = inputs @ { self, nixpkgs, flake-utils, hyprland, hypr-contrib, stylix, ... }:
     let
       lib = nixpkgs.lib;
       user = "snick";
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";        
+        config.allowUnfree = true; # Allow proprietary software
+      };
     in
     {
       nixosConfigurations = {
         handlink = lib.nixosSystem {
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";        
-            config.allowUnfree = true; # Allow proprietary software
-          };
           
-          specialArgs = { inherit nixpkgs self inputs user; };
+          specialArgs = { inherit pkgs self inputs user; };
           modules = [
-            (./handlink)
+            (modules/oct-motd)
+            hyprland.nixosModules.default
+            { programs.hyprland.enable = true; }
+            ./hosts/handlink.nix
+            stylix.nixosModules.stylix 
+            Themes/stylix.nix
           ];
         };
         

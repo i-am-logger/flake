@@ -1,0 +1,54 @@
+# Base16 Example Theme (https://github.com/realsnick/base16-themes)
+
+scheme: "Example"
+author: "Sn|cK (http://github.com/realsnick)"
+
+# Neutral Colors:
+# Darkest color, used for the background color of the application or text editor.
+base00: ""
+
+# Slightly lighter color, used for borders, lines, and other subtle design elements.
+base01: ""
+
+# Lighter color, used for syntax highlighting elements such as comments or preprocessor directives.
+base02: ""
+
+# Lightest neutral color, used for plain text or background text.
+base03: ""
+
+# Accent Colors:
+# First accent color, used to highlight important elements in the interface such as selected text or active buttons.
+base04: ""
+
+# Lighter accent color, used for less important interface elements such as inactive buttons or secondary text.
+base05: ""
+
+# Second accent color, used to highlight additional important elements in the interface such as warning or error messages.
+base06: ""
+
+# Lightest accent color, used for less important highlighted elements such as less critical warning or status messages.
+base07: ""
+# Bright Colors:
+# First bright color, used for syntax highlighting elements such as keywords or function names.
+base08: ""
+
+# Slightly lighter bright color, used for syntax highlighting elements such as numeric constants or string literals.
+base09: ""
+
+# Lighter version of base09, used for syntax highlighting elements such as escape characters or special symbols.
+base0A: ""
+
+# Second bright color, used for syntax highlighting elements such as operators or punctuation.
+base0B: ""
+
+# Color used for syntax highlighting elements such as function arguments or types.
+base0C: ""
+
+# Color used for syntax highlighting elements such as variables or class names.
+base0D: ""
+
+# Color used for syntax highlighting elements such as constants or enums.
+base0E: ""
+
+# Last bright color, used for syntax highlighting elements such as macros or other preprocessor directives.
+base0F: ""
