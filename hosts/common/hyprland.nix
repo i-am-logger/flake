@@ -2,33 +2,25 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, pkgs-unstable, home-manager, username, ... }:
+{ pkgs, inputs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
     hyprland
-    wlr-randr
-    mako
-    waybar
-
-    pipewire
-    wireplumber
-    xdg-desktop-portal-hyprland
-
-    qt6.full
-    
+    inputs.hypr-contrib.packages.${pkgs.system}.grimblast    
+    inputs.hypr-contrib.packages.${pkgs.system}.scratchpad 
   ];
 
-  programs.hyprland = {
-    enable = true;
+    
+  #programs.hyprland = {
+  #  enable = true;
+  #  #nvidiaPatches = true;
 
-    xwayland = {
-      enable = true;
-      hidpi = true;
-    };
+  #  xwayland = {
+  #    enable = true;
+  #    hidpi = true;
+  #  };
+  #};
 
-    nvidiaPatches = true;
-  };
-
-  services.xserver.windowManager.hypr.enable = true;
+  #services.xserver.windowManager.hypr.enable = true;
 }

@@ -25,12 +25,12 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-  
+
+  # ssd
+  #services.fstrim.enable = true;
+    
   hardware.opengl.enable = true;
   hardware.enableAllFirmware = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

@@ -1,10 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ self, pkgs, inputs, config, user, ... }:
-
 {
+  self,
+  pkgs,
+  inputs,
+  config,
+  user,
+  ...
+}: {
   #boot.consoleLogLevel = 0;
   #boot.initrd.verbose = false;
   #boot.extraModprobeConfig = ''
@@ -13,7 +17,6 @@
   #  options snd_usb_audio quirk_alias=19f7000a:05a71020
   #  options thinkpad_acpi fan_control=1
   #'';
-
   #systemd.services.NetworkManager-wait-online.enable = false;
 
   # Boot loader - EFI
@@ -34,9 +37,9 @@
 
       # TODO: move to where disk cryptography is done
       enableCryptodisk = true;
-      
-      font = "${pkgs.powerline-fonts}/share/fonts/truetype/Hack-Regular.ttf"; 
-      fontSize = 32; #only for ttf or otf fonts
+
+      #font = "${pkgs.powerline-fonts}/share/fonts/truetype/Hack-Regular.ttf";
+      #fontSize = 32; #only for ttf or otf fonts
       #gfxmodeEfi = "2880x1600";
       #gfxpayloadEfi = "3840x1080";
       #gfxmodeEfi = "3840x1080";
@@ -68,11 +71,10 @@
     "acpi_call"
   ];
   #  boot.supportedFilesystems = [ "btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs" "zfs" ];
-  boot.supportedFilesystems = [ "btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs" ];
+  boot.supportedFilesystems = ["btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs"];
   #  boot.supportedFilesystems = [ "ntfs" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   #boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-  boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
-
+  boot.extraModulePackages = with config.boot.kernelPackages; [acpi_call];
 }

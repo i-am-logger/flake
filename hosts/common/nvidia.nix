@@ -23,23 +23,23 @@
   };
 
   # Nvidia Drivers
-  hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+#  hardware.nvidia = {
+#    package = config.boot.kernelPackages.nvidiaPackages.beta;
     
     # Open drivers (NVreg_OpenRmEnableUnsupportedGpus=1)
-    open = false;
+#    open = false;
 
     # nvidia-drm.modeset=1
-    modesetting.enable = true;
+#    modesetting.enable = true;
 
     # Allow headless mode
     #nvidiaPersistenced = true;
 
     # NVreg_PreserveVideoMemoryAllocations=1
-    powerManagement.enable = true;
+ #   powerManagement.enable = true;
 
     # fixed screen tearing
     #forceFullCompositionPipeline = true;
 
-  };
+ # };
 }

@@ -1,6 +1,9 @@
 { config, pkgs, lib, user, ... }:
 
 {
+  boot.loader.grub.configurationLimit = 2;
+  boot.tmp.cleanOnBoot = true;
+    
   nix = {
     settings = {
       # substituters = [
