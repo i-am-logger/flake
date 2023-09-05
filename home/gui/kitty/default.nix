@@ -16,7 +16,7 @@
       window_alert_on_bell = " yes";
       bell_on_tab = "🔔 ";
       #allow_remote_control = true;
-      window_padding_width = "16";
+      #window_padding_width = "16";
       "disable_ligatures" = "never";
       #      background_opacity = "0.8";
       #include = "mytheme.conf";
@@ -29,7 +29,7 @@
       copy_on_select = "yes";
       dim_opacity = 0;
       #wheel_scroll_multiplier = 1;
-      touch_scroll_multiplier = 8;
+      touch_scroll_multiplier = 7;
     };
   };
 }

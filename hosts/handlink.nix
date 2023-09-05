@@ -8,6 +8,7 @@
     #common/nvidia.nix
     common/bluetooth.nix
     handlink/power_management.nix
+    handlink/power_management2.nix
 
     # boot
     handlink/boot.nix

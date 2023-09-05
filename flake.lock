@@ -230,15 +230,16 @@
       "locked": {
         "lastModified": 1690213242,
         "narHash": "sha256-aRkEXGmCbAGcvDcdh/HB3YN+EvoPoxmJMOaqRZmf6vM=",
-        "ref": "refs/heads/master",
+        "owner": "realsnick",
+        "repo": "nixos-hardware",
         "rev": "5ef610f98869e809aaa7869c16c1e1b69da57b43",
-        "revCount": 1309,
-        "type": "git",
-        "url": "file:///home/snick/Code/nix/nixos-hardware"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/snick/Code/nix/nixos-hardware"
+        "owner": "realsnick",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
       }
     },
     "nixpkgs": {

@@ -2,8 +2,8 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
-    #nixos-hardware.url = "github:realsnick/nixos-hardware/master";
-    nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
+    nixos-hardware.url = "github:realsnick/nixos-hardware/master";
+    #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";

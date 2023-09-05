@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-
-{
-    imports = [
+{pkgs, ...}: {
+  imports = [
     ./xdg.nix
     #../Programs/PasswordManagers/1Password)
     cli/bat.nix
@@ -10,19 +8,19 @@
     cli/git.nix
     cli/lsd.nix
     cli/variables.nix
-    
-    (cli/fish)
-    (cli/btop)
-    (cli/neofetch)
-    (cli/ranger)
-    (cli/mc)
-    (cli/helix)
-    (cli/cava)
+
+    cli/fish
+    cli/btop
+    cli/neofetch
+    cli/ranger
+    cli/mc
+    cli/helix
+    cli/cava
 
     # GUI
-    (gui/hyprland)
-    (gui/kitty)
-    (gui/chats/discord)
+    gui/hyprland
+    gui/kitty
+    gui/chats/discord
     #../GUI/obs-studio.nix
     #(../GUI/SDR)
   ];
@@ -36,7 +34,7 @@
     #ranger
     # IDE
     #lapce
-    # calendar 
+    # calendar
     #calcurse
     # Web Browsers
     #qutebrowser
@@ -46,10 +44,11 @@
     #alacritty
     #kate
     neo
-     
+
     # UI Media Keys
     #playerctl
     #UI Apps
+    mypaint
     #gimp
     #pfetch # Minimal fetch
     #github-desktop
@@ -79,8 +78,8 @@
     # Chats
     qtox
     signal-desktop
-    tdesktop # telegram 
-    
+    tdesktop # telegram
+
     # broadcasting
     #screenkey
 
