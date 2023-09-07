@@ -32,9 +32,9 @@
           hidden = false;
           git-ignore = true;
         };
-        #soft-wrap = {
-        #  enable = true;
-        #};
+        soft-wrap = {
+          enable = true;
+        };
         statusline = {
           left = ["mode" "spinner"];
           center = ["file-name" "position-percentage"];
@@ -56,7 +56,7 @@
             space = " ";
             nbsp = "⍽";
             tab = "→";
-            newline = " ";
+            newline = "⏎";
 
             tabpad = "·"; # Tabs will look like "→···" (depending on tab width)
           };

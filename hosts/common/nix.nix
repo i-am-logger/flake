@@ -1,16 +1,20 @@
-{ config, pkgs, lib, user, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  user,
+  ...
+}: {
   boot.loader.grub.configurationLimit = 2;
   boot.tmp.cleanOnBoot = true;
-    
+
   nix = {
     settings = {
       # substituters = [
       #   "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
       #   "https://cache.nixos.org/"
       # ];
-      auto-optimise-store = true; # Optimise syslinks
+      #auto-optimise-store = true; # Optimise syslinks
     };
     gc = {
       automatic = true;
