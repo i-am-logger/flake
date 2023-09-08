@@ -46,7 +46,6 @@ in {
         popups = 10;
         terminal = 12;
       };
-
       serif = {
         #package = pkgs.noto-fonts;
         #name = "Noto Serif";

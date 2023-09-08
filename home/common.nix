@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, pkgs-stable, ... }: {
   imports = [
     ./xdg.nix
     #../Programs/PasswordManagers/1Password)

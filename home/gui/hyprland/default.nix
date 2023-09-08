@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   inputs,
   ...
 }: {
@@ -23,36 +24,36 @@
   #    };
   #  })];
 
-  home.packages = with pkgs; [
-    xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
+  home.packages = [
+    pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
 
     #hyprland
-    wlr-randr
-    mako
-    pipewire
-    wireplumber
-    xdg-desktop-portal-hyprland
+    pkgs.wlr-randr
+    pkgs.mako
+    pkgs.pipewire
+    pkgs.wireplumber
+    pkgs.xdg-desktop-portal-hyprland
 
     #wallpaper
-    swww
-    swaybg
+    pkgs.swww
+    pkgs.swaybg
     # screenshot
-    grim
-    slurp
-    swappy
+    pkgs.grim
+    pkgs.slurp
+    pkgs.swappy
     # clipboard
-    wl-clipboard
-    cliphist
+    pkgs.wl-clipboard
+    pkgs.cliphist
     # mount
-    udiskie
+    pkgs.udiskie
     #video player
-    vlc
+    pkgs.vlc
     #   polkit-kde-agent #TODO: configure and get rid of gnome dekstop manager
     #libsForQt5.full -- error of insecure
-    qt6.full
-    wineWowPackages.waylandFull
-    winetricks
-    hyprpicker
+    # pkgs-stable.qt6.full
+    pkgs.wineWowPackages.waylandFull
+    pkgs.winetricks
+    pkgs.hyprpicker
     inputs.hypr-contrib.packages.${pkgs.system}.grimblast
     inputs.hypr-contrib.packages.${pkgs.system}.scratchpad
   ];

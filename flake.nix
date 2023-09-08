@@ -6,7 +6,13 @@
     #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+
+    disko = {
+      url = github:nix-community/disko;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -31,15 +37,17 @@
     hypr-picker.url = "github:hyprwm/hyprpicker";
     hypr-contrib.url = "github:hyprwm/contrib";
 
-    #stylix.url = "github:danth/stylix";
+    stylix.url = "github:danth/stylix";
     #stylix.url = "github:realsnick/stylix";
-    stylix.url = "../../../home/snick/Code/github/snick/stylix";
+    #stylix.url = "../../../home/snick/Code/github/snick/stylix";
   };
 
   outputs = inputs @ {
     self,
     nixos-hardware,
     nixpkgs,
+    nixpkgs-stable,
+    disko,
     flake-utils,
     home-manager,
     hyprland,
@@ -50,6 +58,10 @@
   }: let
     username = "snick";
     lib = nixpkgs.lib;
+    pkgs-stable = import nixpkgs-stable {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
+    };
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       config.allowUnfree = true; # Allow proprietary software
@@ -70,8 +82,20 @@
 
     nixosConfigurations = {
       handlink = lib.nixosSystem {
-        specialArgs = {inherit pkgs self inputs hyprland username;};
+        specialArgs = {inherit pkgs pkgs-stable disko self inputs hyprland username;};
         modules = [
+          ({modulesPath, ...}: {
+            imports = [
+              (modulesPath + "/installer/scan/not-detected.nix")
+              (modulesPath + "/profiles/qemu-guest.nix")
+              # (./Systems/mirage/boot.nix)
+              disko.nixosModules.disko
+            ];
+
+            disko.devices = import ./Systems/mirage/configuration-disks.nix {
+              lib = nixpkgs.lib;
+            };
+          })
           # hardware
           nixos-hardware.nixosModules.lenovo-legion-16irx8h #2023
 
@@ -97,8 +121,8 @@
           }
 
           # system
-          stylix.nixosModules.stylix
           Themes/stylix.nix
+          stylix.nixosModules.stylix
         ];
       };
 
