@@ -21,7 +21,7 @@ volumes: nvme 2
 # steps
 
 - [x] backup /home 
-- [ ] install os
-- [ ] setup btrfs
-- [ ] setup personal flake.nix with new hardware-configuration.nix
+- [x] install os
+- [x] setup btrfs
+- [x] setup personal flake.nix with new hardware-configuration.nix
 - [ ] setup development enviornment for sky360 nixOS SD Image builds 

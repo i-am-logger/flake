@@ -6,20 +6,20 @@
   ...
 }: {
   boot.loader.grub.configurationLimit = 2;
-  boot.tmp.cleanOnBoot = true;
+  #boot.tmp.cleanOnBoot = true;
 
   nix = {
     settings = {
       substituters = [
         #   "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
-        #   "https://cache.nixos.org/"
+        "https://cache.nixos.org/"
       ];
       auto-optimise-store = true; # Optimise syslinks
     };
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 2d";
+      options = "--delete-older-than 7d";
     };
     package = pkgs.nixVersions.unstable;
     #registry.nixpkgs.flake = inputs.nixpkgs;

@@ -6,7 +6,7 @@
     #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
+    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
     disko = {
@@ -46,7 +46,7 @@
     self,
     nixos-hardware,
     nixpkgs,
-    nixpkgs-stable,
+    # nixpkgs-stable,
     disko,
     flake-utils,
     home-manager,
@@ -58,10 +58,10 @@
   }: let
     username = "snick";
     lib = nixpkgs.lib;
-    pkgs-stable = import nixpkgs-stable {
-      system = "x86_64-linux";
-      config.allowUnfree = true;
-    };
+    # pkgs-stable = import nixpkgs-stable {
+    # system = "x86_64-linux";
+    # config.allowUnfree = true;
+    # };
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       config.allowUnfree = true; # Allow proprietary software
@@ -82,7 +82,7 @@
 
     nixosConfigurations = {
       handlink = lib.nixosSystem {
-        specialArgs = {inherit pkgs pkgs-stable disko self inputs hyprland username;};
+        specialArgs = {inherit pkgs disko self inputs hyprland username;};
         modules = [
           ({modulesPath, ...}: {
             imports = [
