@@ -53,6 +53,8 @@
     #playerctl
     #UI Apps
     mypaint
+    marktext
+    obs-studio
     #gimp
     #pfetch # Minimal fetch
     #github-desktop
@@ -67,7 +69,7 @@
     #stremio        # Media Streamer
     #ffmpeg # Video Support (dslr)
     #libGL
-    #rofi # Menu
+    rofi # Menu
     #udiskie # Auto Mounting
     rpi-imager # Raspberri pi USB Imager
     # screensaver
@@ -75,8 +77,8 @@
     #expect # has unbuffer - helpful with watch like - watch --color --interval 1 unbuffer lsd --tree
     #jq
     # Music
-    #spotify
-    #spotify-tui
+    spotify
+    spotify-tui
     #spotifyd
 
     # Chats

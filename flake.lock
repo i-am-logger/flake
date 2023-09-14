@@ -25,11 +25,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1694642855,
-        "narHash": "sha256-wcR5XA2EBVLqRKVGsfECgplip3TuqgYhp46yprFc6aQ=",
+        "lastModified": 1694654374,
+        "narHash": "sha256-cQnlJCp4RGMtVfghufkHihGe2qgB8p//fXTXsbZ8a2g=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "689873ae4f765c0c1304daf7d304fa247a22e48d",
+        "rev": "6133a16d685cad59fe6573090c115a03a30fdd31",
         "type": "github"
       },
       "original": {
@@ -147,10 +147,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1694584639,
-        "narHash": "sha256-uEfdBuRiSk2E/SUqjrpOALkfiHLzYeXG4t9doFrEMnA=",
+        "lastModified": 1694654261,
+        "narHash": "sha256-Syu9Nwhcbc59wUVBaOTl5NZ5qAZqBDCFRE8n0fy2gzU=",
         "ref": "refs/heads/master",
-        "rev": "27275cf10a9b694f574361655d720624f12f9c48",
+        "rev": "c17b94b8591cb78637eda06694efb5d23f646094",
         "revCount": 524833,
         "type": "git",
         "url": "file:///home/snick/Code/nix/nixpkgs"
