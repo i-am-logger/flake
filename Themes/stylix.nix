@@ -30,14 +30,14 @@ in {
     #      ${pkgs.imagemagick}/bin/convert ${ Wallpapers/51202857906_363ba5d644_o.jpg } -brightness-contrast -30,0 -fill black $out
     #    '';
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/ia-dark.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
     # base16Scheme = ./mission-control.yaml;
 
-    #targets.console.enable = false;
-    #targets.grub = {
-    #  enable = false;
-    #  useImage = false;
-    #};
+    targets.console.enable = false;
+    targets.grub = {
+      enable = false;
+      #  useImage = false;
+    };
 
     fonts = {
       sizes = {
