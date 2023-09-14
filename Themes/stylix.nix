@@ -31,7 +31,7 @@ in {
     #    '';
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/ia-dark.yaml";
-    #base16Scheme = ./mission-control.yaml;
+    # base16Scheme = ./mission-control.yaml;
 
     #targets.console.enable = false;
     #targets.grub = {
@@ -47,8 +47,8 @@ in {
         terminal = 12;
       };
       serif = {
-        #package = pkgs.noto-fonts;
-        #name = "Noto Serif";
+        # package = pkgs.noto-fonts;
+        # name = "Noto Serif";
 
         package = pkgs.fira-code;
         name = "Fira Serif";

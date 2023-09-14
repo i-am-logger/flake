@@ -9,6 +9,7 @@
     common/bluetooth.nix
     handlink/power_management.nix
     handlink/power_management2.nix
+    handlink/udev.nix
 
     # boot
     handlink/boot.nix
@@ -28,7 +29,6 @@
 
     #common/hyprland.nix
     #common/x11_plasma.nix
-
     users/${username}.nix
   ];
 }

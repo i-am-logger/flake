@@ -15,6 +15,9 @@
         "https://cache.nixos.org/"
       ];
       auto-optimise-store = true; # Optimise syslinks
+
+      # sandbox - an isolated environment for each build process. It is used to remove further hidden dependencies set by the build environment to improve reproducibility.
+      sandbox = true;
     };
     gc = {
       automatic = true;

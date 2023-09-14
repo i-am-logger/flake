@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   nodev = {
     "/tmp" = {
       fsType = "tmpfs";
@@ -18,7 +17,7 @@
         type = "gpt";
         partitions = {
           boot = {
-            size = "2M"; 
+            size = "2M";
             type = "EF02"; # for grub MBR
           };
           ESP = {
@@ -37,20 +36,29 @@
               resumeDevice = true; # resume from hiberation from this device
             };
           };
-          
+
           root = {
             size = "100%";
             content = {
               type = "btrfs";
               # extraArgs = [ "-f" ]; # override existing partition
-              
-              subvolumes = {
-                "SYSTEM" = { };
-                "SYSTEM/rootfs" =        { mountpoint = "/";    mountOptions = [ "noatime" ]; };
-                "SYSTEM/nix" =           { mountpoint = "/nix"; mountOptions = [ "noatime" "compress=zstd" ]; };
 
-                "DATA" = { };
-                "DATA/home" =            { mountpoint = "/home";            mountOptions = [ "noatime" ]; };
+              subvolumes = {
+                "SYSTEM" = {};
+                "SYSTEM/rootfs" = {
+                  mountpoint = "/";
+                  mountOptions = ["noatime"];
+                };
+                "SYSTEM/nix" = {
+                  mountpoint = "/nix";
+                  mountOptions = ["noatime" "compress=zstd"];
+                };
+
+                "DATA" = {};
+                "DATA/home" = {
+                  mountpoint = "/home";
+                  mountOptions = ["noatime"];
+                };
                 # "DATA/home/snick" =      { mountpoint = "/home/snick";      mountOptions = [ "noatime" ]; };
                 # "DATa/home/snick/Code" = { mountpoint = "/home/snick/Code"; mountOptions = [ "noatime" "compress=zstd" ]; };
               };

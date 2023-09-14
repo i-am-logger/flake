@@ -17,7 +17,7 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  boot.tmp.useTmpfs = true;
+  # boot.tmp.useTmpfs = true;
 
   # fileSystems."/" = {
   #   device = "/dev/disk/by-label/ROOT";

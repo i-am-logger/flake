@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-stable,
   inputs,
   ...
 }: {
@@ -13,7 +12,7 @@
     gtk.enable = true;
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
-    size = 22;
+    size = 12;
   };
   #services.blueman.enable = true;
   services.blueman-applet.enable = true;
@@ -50,12 +49,13 @@
     pkgs.vlc
     #   polkit-kde-agent #TODO: configure and get rid of gnome dekstop manager
     #libsForQt5.full -- error of insecure
-    # pkgs-stable.qt6.full
+    # pkgs.qt6.full
+    # pkgs.qt-wayland
     pkgs.wineWowPackages.waylandFull
     pkgs.winetricks
     pkgs.hyprpicker
-    inputs.hypr-contrib.packages.${pkgs.system}.grimblast
-    inputs.hypr-contrib.packages.${pkgs.system}.scratchpad
+    # inputs.hypr-contrib.packages.${pkgs.system}.grimblast
+    # inputs.hypr-contrib.packages.${pkgs.system}.scratchpad
   ];
 
   xdg.configFile."hypr" = {
@@ -66,6 +66,12 @@
   wayland.windowManager.hyprland = {
     enable = true;
     #nvidiaPatches = true;
+
+    # settings = {
+    #   general = {
+    #     layout = "dwindle";
+    #   };
+    # };
 
     xwayland = {
       enable = true;
