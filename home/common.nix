@@ -86,6 +86,8 @@
     signal-desktop
     tdesktop # telegram
 
+    # development
+    cachix
     # broadcasting
     #screenkey
 

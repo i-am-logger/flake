@@ -23,10 +23,13 @@
     common/sound.nix # TODO: fix & power management
 
     common/environment.nix
+    common/yubikey-gpg.nix
+    common/1password.nix
     common/qemu.nix
     common/docker.nix
     #common/virtualbox.nix
 
+    common/github-runner.nix
     #common/hyprland.nix
     #common/x11_plasma.nix
     users/${username}.nix
