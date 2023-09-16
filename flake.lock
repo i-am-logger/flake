@@ -147,10 +147,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1694654261,
-        "narHash": "sha256-Syu9Nwhcbc59wUVBaOTl5NZ5qAZqBDCFRE8n0fy2gzU=",
+        "lastModified": 1694851609,
+        "narHash": "sha256-61gkOAiPSdAN9vBXRI69rRgBMbTorev6KYuY8JkqOyo=",
         "ref": "refs/heads/master",
-        "rev": "c17b94b8591cb78637eda06694efb5d23f646094",
+        "rev": "2bbff868f4f6f2cb0cee9094de80d87d396a0639",
         "revCount": 524833,
         "type": "git",
         "url": "file:///home/snick/Code/snick/nix/nixpkgs"
@@ -223,7 +223,7 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1694843979,
+        "lastModified": 1694854143,
         "narHash": "sha256-AHVTdXHFI83xIDFEv2028NYx1hQqM3m/Df1r3rUGAQo=",
         "path": "/home/snick/.secrets",
         "type": "path"
