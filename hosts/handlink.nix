@@ -5,7 +5,7 @@
   imports = [
     # hardware
     handlink/hardware-configuration.nix
-    #common/nvidia.nix
+    common/nvidia.nix
     common/bluetooth.nix
     handlink/power_management.nix
     handlink/power_management2.nix
@@ -21,6 +21,7 @@
     common/nix.nix
     handlink/network.nix
     common/sound.nix # TODO: fix & power management
+    common/v4l2loopback.nix
 
     common/environment.nix
     common/yubikey-gpg.nix

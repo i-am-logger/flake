@@ -1,8 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./waybar
     ./swappy
@@ -12,7 +8,7 @@
     gtk.enable = true;
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
-    size = 12;
+    # size = 12;
   };
   #services.blueman.enable = true;
   services.blueman-applet.enable = true;
@@ -65,8 +61,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    #nvidiaPatches = true;
-
+    enableNvidiaPatches = true;
     # settings = {
     #   general = {
     #     layout = "dwindle";

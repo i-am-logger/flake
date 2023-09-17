@@ -31,12 +31,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # might need it for user login
-    # hyprland = {
-    # url = "github:hyprwm/Hyprland";
-    # inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     # themes
     stylix.url = "github:danth/stylix";
     #stylix.url = "github:realsnick/stylix";
@@ -69,7 +63,7 @@
   in {
     nixosConfigurations = {
       handlink = lib.nixosSystem {
-        specialArgs = {inherit pkgs secrets disko self inputs username;}; #hyprland
+        specialArgs = {inherit pkgs secrets disko self inputs username;};
         modules = [
           # hardware
           nixos-hardware.nixosModules.lenovo-legion-16irx8h #2023
@@ -98,8 +92,6 @@
             home-manager.extraSpecialArgs = {inherit inputs;};
             home-manager.users.${username} = {
               imports = [
-                # hyprland.homeManagerModules.default
-                # {wayland.windowManager.hyprland.enable = true;}
                 ./home/${username}.nix
               ];
             };

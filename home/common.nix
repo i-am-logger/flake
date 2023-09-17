@@ -25,7 +25,7 @@
     gui/hyprland
     gui/kitty
     gui/chats/discord
-    #../GUI/obs-studio.nix
+    gui/obs-studio.nix
     #(../GUI/SDR)
   ];
 
@@ -54,7 +54,6 @@
     #UI Apps
     mypaint
     marktext
-    obs-studio
     #gimp
     #pfetch # Minimal fetch
     #github-desktop

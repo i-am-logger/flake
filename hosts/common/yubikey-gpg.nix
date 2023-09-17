@@ -2,10 +2,20 @@
   environment.systemPackages = with pkgs; [
     gnupg
     age
+    # Tools for backing up keys
+    paperkey
+    pgpdump
+    parted
     cryptsetup
-    yubico-pam
+
+    # Yubico's tools
     yubikey-manager
+    yubikey-manager-qt
     yubikey-personalization
+    yubikey-personalization-gui
+    yubico-piv-tool
+    yubioath-flutter
+    yubico-pam
   ];
 
   services.udev.packages = with pkgs; [

@@ -6,16 +6,22 @@
 }: {
   programs.git = {
     enable = true;
-    userName = "Ido Samuelson";
+    package = pkgs.gitAndTools.gitFull;
+    userName = "Sn|cK";
     userEmail = "ido.samuelson@gmail.com";
     signing = {
       key = "6AACFE7CBA89F53A"; # gpg --list-secret-keys --keyid-format=long
       signByDefault = true;
     };
-    #    includes = [{
-    #      condition = "gitdir:~/dotfiles/git/conditions/";
-    #      path = "~/dotfiles/git/.gitconfig";
-    #    }];
+
+    aliases = {
+      ci = "commit";
+      ca = "commit --amend";
+      co = "checkout";
+      s = "status";
+      l = "log";
+      graph = "log --decorate --oneline --graph";
+    };
     extraConfig = {
       core = {
         editor = "hx";
@@ -23,6 +29,15 @@
       };
       diff.algorithm = "histogram";
     };
-    delta.enable = true;
+    # delta.enable = true;
+    # diff-so-fancy.enable = true;
+
+    ignores = ["*.img" ".direnv" "result"];
+
+    difftastic = {
+      enable = true;
+      background = "dark";
+      display = "inline";
+    };
   };
 }
