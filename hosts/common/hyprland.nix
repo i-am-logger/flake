@@ -21,6 +21,7 @@
   #    hidpi = true;
   #  };
   #};
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  #services.xserver.windowManager.hypr.enable = true;
+  services.xserver.windowManager.hypr.enable = true;
 }

@@ -14,7 +14,7 @@
 
   boot.initrd.availableKernelModules = ["xhci_pci" "nvme" "thunderbolt" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
+  boot.kernelModules = ["kvm-intel" "fbcon"]; # ""
   boot.extraModulePackages = [];
 
   # boot.tmp.useTmpfs = true;

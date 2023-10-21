@@ -1,17 +1,13 @@
-{
-  pkgs,
-  pkgs-stable,
-  ...
-}: {
+{ pkgs, ... }: {
   imports = [
     ./xdg.nix
-    #../Programs/PasswordManagers/1Password)
     cli/bat.nix
     cli/direnv.nix
-    #cli/exa.nix
     cli/git.nix
     cli/lsd.nix
     cli/variables.nix
+    cli/neovim.nix
+    cli/tmux.nix
 
     cli/fish
     cli/btop
@@ -20,12 +16,14 @@
     cli/mc
     cli/helix
     cli/cava
-
     # GUI
     gui/hyprland
     gui/kitty
+    gui/rofi
+    gui/emacs/emacs.nix
     gui/chats/discord
     gui/obs-studio.nix
+
     #(../GUI/SDR)
   ];
 
@@ -68,7 +66,6 @@
     #stremio        # Media Streamer
     #ffmpeg # Video Support (dslr)
     #libGL
-    rofi # Menu
     #udiskie # Auto Mounting
     rpi-imager # Raspberri pi USB Imager
     # screensaver
@@ -84,7 +81,7 @@
     qtox
     signal-desktop
     tdesktop # telegram
-
+    tldr
     # development
     cachix
     # broadcasting

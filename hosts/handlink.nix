@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{username, ...}: {
+{ username, ... }: {
   imports = [
     # hardware
     handlink/hardware-configuration.nix
@@ -25,14 +25,15 @@
 
     common/environment.nix
     common/yubikey-gpg.nix
+    common/hyprland.nix
     common/1password.nix
     common/qemu.nix
+    common/ros2.nix
     common/docker.nix
     #common/virtualbox.nix
 
+
     common/github-runner.nix
-    #common/hyprland.nix
-    #common/x11_plasma.nix
     users/${username}.nix
   ];
 }

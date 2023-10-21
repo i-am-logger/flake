@@ -79,7 +79,7 @@
         {
           name = "nix";
           auto-format = true;
-          formatter = {command = "alejandra";};
+          formatter = {command = "nixpkgs-fmt";};
           language-server = {command = "nil";};
         }
         {

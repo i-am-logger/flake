@@ -1,11 +1,12 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }: {
   programs.git = {
     enable = true;
+    lfs.enable = true;
+
     package = pkgs.gitAndTools.gitFull;
     userName = "Sn|cK";
     userEmail = "ido.samuelson@gmail.com";
@@ -32,7 +33,7 @@
     # delta.enable = true;
     # diff-so-fancy.enable = true;
 
-    ignores = ["*.img" ".direnv" "result"];
+    ignores = [ "*.img" ".direnv" "result" ];
 
     difftastic = {
       enable = true;

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   imports = [
     ./waybar
     ./swappy
@@ -6,18 +6,13 @@
 
   home.pointerCursor = {
     gtk.enable = true;
+    x11.enable = true;
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
-    # size = 12;
+    size = 12;
   };
-  #services.blueman.enable = true;
+  # services.blueman.enable = true;
   services.blueman-applet.enable = true;
-
-  #  nixpkgs.overlays = [ (final: prev: {
-  #    xdg-desktop-portal-hyprland = inputs.xdph.packages.${prev.system}.default.override {
-  #      hyprland-share-picker = inputs.nixos-hardware.packages.${prev.system}.hyprland-share-picker.override {inherit hyprland;};
-  #    };
-  #  })];
 
   home.packages = [
     pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord

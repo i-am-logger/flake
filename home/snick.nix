@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ self, pkgs, pkgs-stable, inputs,... }:
+{ self, pkgs, pkgs-stable, inputs, ... }:
 
 {
 
@@ -12,16 +12,16 @@
     home-manager.enable = true;
     bash.enable = true;
   };
-  
-  home = {   
+
+  home = {
     username = "snick";
     homeDirectory = "/home/snick";
     stateVersion = "23.11";
 
   };
   #nixpkgs.allowUnfree = true;
-    
+
   imports = [
-    ./common.nix      
+    ./common.nix
   ];
 }
