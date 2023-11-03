@@ -80,7 +80,7 @@
           name = "nix";
           auto-format = true;
           formatter = {command = "nixpkgs-fmt";};
-          language-server = {command = "nil";};
+          # language-servers = {command = "nil";};
         }
         {
           name = "typescript";

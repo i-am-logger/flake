@@ -5,8 +5,8 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
 
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 

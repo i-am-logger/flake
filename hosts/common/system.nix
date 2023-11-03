@@ -47,6 +47,7 @@
 
     usbutils
 
+    p7zip
     wget
     git
     direnv

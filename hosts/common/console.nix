@@ -12,7 +12,7 @@
 
     # font = "ter-powerline-v24b";
     # font = "ter-u32n";
-    keyMap = "dvorak";
+    # keyMap = "dvorak";
     useXkbConfig = true;
     # packages = [
     # pkgs.terminus_font
