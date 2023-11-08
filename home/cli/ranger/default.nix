@@ -1,12 +1,13 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
+{ pkgs
+, config
+, lib
+, ...
 }: {
   home.packages = with pkgs; [
     ranger
     ueberzug # image preview
+    poppler_utils # pdf to text
+    mupdf # pdf graphical viewer
   ];
 
   # TODO: devicons

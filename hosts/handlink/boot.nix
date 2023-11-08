@@ -1,13 +1,12 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-  self,
-  pkgs,
-  inputs,
-  config,
-  user,
-  ...
+{ self
+, pkgs
+, inputs
+, config
+, user
+, ...
 }: {
   #boot.consoleLogLevel = 0;
   #boot.initrd.verbose = false;
@@ -59,6 +58,8 @@
     };
   };
 
+  boot.plymouth.enable = true;
+
   boot.kernelParams = [
     #"quiet"
     #"splash"
@@ -71,11 +72,11 @@
     "acpi_call"
   ];
   #  boot.supportedFilesystems = [ "btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs" "zfs" ];
-  boot.supportedFilesystems = ["btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs"];
+  boot.supportedFilesystems = [ "btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs" ];
   #  boot.supportedFilesystems = [ "ntfs" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   #boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-  boot.binfmt.emulatedSystems = ["aarch64-linux"];
-  boot.extraModulePackages = with config.boot.kernelPackages; [acpi_call];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
 }

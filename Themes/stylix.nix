@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
 
   inputImage = pkgs.fetchurl {
@@ -8,7 +9,8 @@
   #brightness = -30;
   #contrast = 0;
   #fillColor = "black";
-in {
+in
+{
   stylix = {
     polarity = "dark";
 
@@ -16,7 +18,7 @@ in {
       applications = 1.0; # 0.8;
       desktop = 1.0; # 0.8;
       popups = 1.0;
-      terminal = 1.0; #0.8;
+      terminal = 0.8;
     };
     image = inputImage;
     #pkgs.runCommand "dimmed-background.png" {} ''
@@ -44,7 +46,7 @@ in {
         applications = 12;
         desktop = 12;
         popups = 12;
-        terminal = 16;
+        terminal = 20;
       };
       serif = {
         # package = pkgs.noto-fonts;
@@ -61,8 +63,8 @@ in {
         package = pkgs.fira-code;
         name = "Fira Sans";
 
-        #package = pkgs.nerdfonts;
-        #name = "FiraCode Nerd Font";
+        # package = pkgs.nerdfonts;
+        # name = "FiraCode Nerd Font";
       };
 
       monospace = {

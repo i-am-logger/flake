@@ -47,6 +47,7 @@
 
     usbutils
 
+    zip
     p7zip
     wget
     git
@@ -54,6 +55,7 @@
     tree
 
     pciutils
+    screen
     neofetch
     btop
 

@@ -1,11 +1,10 @@
-{
-  config,
-  pkgs,
-  lib,
-  user,
-  ...
+{ config
+, pkgs
+, lib
+, user
+, ...
 }: {
-  boot.loader.grub.configurationLimit = 10;
+  boot.loader.grub.configurationLimit = 100;
   #boot.tmp.cleanOnBoot = true;
 
   nix = {
@@ -22,7 +21,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 7d";
+      # options = "--delete-older-than 7d";
     };
     package = pkgs.nixVersions.unstable;
     #registry.nixpkgs.flake = inputs.nixpkgs;

@@ -46,7 +46,7 @@
     #alacritty
     #kate
     neo
-
+    pipes
     # UI Media Keys
     #playerctl
     #UI Apps
@@ -67,12 +67,19 @@
     #ffmpeg # Video Support (dslr)
     #libGL
     #udiskie # Auto Mounting
+    krusader
     rpi-imager # Raspberri pi USB Imager
+    kdiff3
+    krename
+    rclone
+    # insync
+
     # screensaver
 
     #expect # has unbuffer - helpful with watch like - watch --color --interval 1 unbuffer lsd --tree
     #jq
     # Music
+    audacious
     spotify
     spotify-tui
     #spotifyd
@@ -89,7 +96,7 @@
 
     # astronomy
     #kstars
-    #indi-full
+    indi-full
 
     # coding
     #vscode
