@@ -12,7 +12,7 @@
     userEmail = "ido.samuelson@gmail.com";
     signing = {
       key = "6AACFE7CBA89F53A"; # gpg --list-secret-keys --keyid-format=long
-      signByDefault = true;
+      # signByDefault = true;
     };
 
     aliases = {

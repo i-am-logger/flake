@@ -14,6 +14,8 @@
     enable = true;
 
     shellAliases = {
+      ".." = "cd ..";
+      c = "clear";
       f = "free -h"; # memory usage
       # df = "df -h"; # disk usage
       g = "git";
