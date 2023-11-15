@@ -16,6 +16,12 @@
     shellAliases = {
       ".." = "cd ..";
       c = "clear";
+      ff = "fd --type file --color always | fzf --ansi"; # find file
+      ffd = "fd --type directory --color always | fzf --ansi"; # find file
+      eff = "$EDITOR (ff)"; # edit find file
+      cdf = "cd (ffd)"; # cd find dir
+      cf = "find . -type f | wc -l"; #count files in dir recursivley
+
       f = "free -h"; # memory usage
       # df = "df -h"; # disk usage
       g = "git";
@@ -24,11 +30,24 @@
       h = "hx";
       et = "emacsclient -nw -c";
       e = "emacsclient -c";
+
+      mnt = "mount | awk -F' ' '{ printf \"%s\t%s\n\",\$1,\$3; }' | column -t | egrep ^/dev/ | sort";
+
+      cpv = "rsync - ah - -info=progress2";
     };
 
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      function cl --argument dir
+        if [ "dir" = "" ]
+          builtin cd $HOME
+        else
+          builtin cd $dir
+        end
+        ls -a 
+      end
     '';
+
     plugins = [
       # Enable a plugin (here grc for colorized command output) from nixpkgs
       {
@@ -71,3 +90,9 @@
     ];
   };
 }
+
+
+
+
+
+

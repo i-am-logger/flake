@@ -20,7 +20,7 @@
     gui/hyprland
     gui/kitty
     gui/rofi
-    gui/emacs/emacs.nix
+    gui/emacs/doom-emacs.nix
     gui/chats/discord
     gui/obs-studio.nix
 
