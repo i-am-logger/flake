@@ -46,7 +46,7 @@
     pass
 
     usbutils
-
+    tcpdump
     zip
     p7zip
     wget
