@@ -46,35 +46,28 @@ in
         applications = 12;
         desktop = 12;
         popups = 12;
-        terminal = 20;
+        terminal = 12;
       };
       serif = {
-        # package = pkgs.noto-fonts;
-        # name = "Noto Serif";
-
-        package = pkgs.fira-code;
-        name = "Fira Serif";
+        name = "Noto Nerd Font";
+        # name = "FiraCode Nerd Font";
+        package = pkgs.nerdfonts;
       };
 
       sansSerif = {
-        #package = pkgs.noto-fonts;
-        #name = "Noto Sans Mono";
-
-        package = pkgs.fira-code;
-        name = "Fira Sans";
-
-        # package = pkgs.nerdfonts;
+        name = "Noto Nerd Font";
         # name = "FiraCode Nerd Font";
+        package = pkgs.nerdfonts;
       };
 
       monospace = {
-        package = pkgs.nerdfonts;
         name = "FiraCode Nerd Font";
+        package = pkgs.nerdfonts;
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
+        package = pkgs.noto-fonts-emoji;
 
         # package = pkgs.twitter-color-emoji;
         # name = "Twitter Color Emoji";

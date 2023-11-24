@@ -29,7 +29,7 @@
     pkgs.swww
     pkgs.swaybg
     # screenshot
-    pkgs.grim
+    pkgs.grimblast
     pkgs.slurp
     pkgs.swappy
     # clipboard
@@ -46,8 +46,11 @@
     pkgs.wineWowPackages.waylandFull
     pkgs.winetricks
     pkgs.hyprpicker
-    # inputs.hypr-contrib.packages.${pkgs.system}.grimblast
-    # inputs.hypr-contrib.packages.${pkgs.system}.scratchpad
+
+
+    pkgs.pavucontrol
+    pkgs.pamixer
+    pkgs.playerctl
   ];
 
   xdg.configFile."hypr" = {

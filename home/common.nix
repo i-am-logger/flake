@@ -41,7 +41,7 @@
     # Web Browsers
     #qutebrowser
     firefox
-    #google-chrome
+    google-chrome
     # UI Virtual Terminals
     #alacritty
     #kate
@@ -82,7 +82,7 @@
     audacious
     spotify
     spotify-tui
-    #spotifyd
+    spotifyd
 
     # Chats
     qtox

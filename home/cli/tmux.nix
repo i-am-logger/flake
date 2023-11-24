@@ -21,10 +21,10 @@ in
     escapeTime = 0;
     historyLimit = 50000;
     # keyMode = "vi";
-    shortcut = "Space";
+    # shortcut = "Space";
     extraConfig = ''
-      # set-option -g default-command /bin/sh
-      set-option -g default-shell /bin/sh
+      set-option -g default-command usr/bin/env bash
+      # set-option -g default-shell /bin/sh
       set -g status-justify "left"
       set -g status "on"
       set -g status-left-style none

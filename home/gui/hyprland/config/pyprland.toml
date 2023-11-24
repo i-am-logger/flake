@@ -1,0 +1,108 @@
+[pyprland]
+plugins = [
+  "scratchpads",
+  "lost_windows",
+  "monitors",
+  "shift_monitors",
+  "toggle_dpms",
+  "magnify",
+  "expose",
+  "shift_monitors",
+  "workspaces_follow_focus",
+]
+
+[workspaces_follow_focus]
+max_workspaces = 9
+
+[expose]
+include_special = false
+
+[scratchpads.volume]
+animation = "fromRight"
+command = "pavucontrol"
+class = "pavucontrol"
+lazy = true
+size = "50% 75%"
+unfocus = "hide"
+
+[scratchpads.term]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm"
+class = "kitty-dropterm"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.term-mc]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm-mc mc"
+class = "kitty-dropterm-mc"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.term-debugger]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm-debugger screen /dev/ttyUSB0 1500000"
+class = "kitty-dropterm-debugger"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.term-nmtui]
+animation = "fromRight"
+command = "kitty --class kitty-dropterm-nmtui nmtui"
+class = "kitty-dropterm-nmtui"
+lazy = true
+size = "19% 35%"
+unfocus = "hide"
+
+[scratchpads.bluetooth]
+animation = "fromRight"
+command = "blueman-manager"
+class = ".blueman-manager-wrapped"
+lazy = true
+size = "19% 35%"
+unfocus = "hide"
+# position = "80% 5%"
+# excludes = "*"
+
+# [scratchpads.spotify]
+# animation = "fromTop"
+# command = "spotifywm"
+# class = "spotify"
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
+
+# [scratchpads.emacs]
+# animation = "fromTop"
+# command = "emacsclient"
+# class = "Emacs"
+# size = "50% 75%"
+# position = "25% 5%"
+
+# [monitors]
+# unknown = "wlrlui"
+
+[monitors.placement]
+"Samsung".leftOf = "HDMI-A-1"
+"California".rightOf = "eDP-1"
+
+# [scratchpads.stb]
+# animation = "fromBottom"
+# command = "kitty --class kitty-stb sstb"
+# class = "kitty-stb"
+lazy = true
+# size = "75% 45%"
+
+# [scratchpads.stb-logs]
+# animation = "fromTop"
+# command = "kitty --class kitty-stb-logs stbLog"
+# class = "kitty-stb-logs"
+# lazy = true
+# size = "75% 40%"
+
