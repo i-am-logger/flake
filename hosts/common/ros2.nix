@@ -2,7 +2,7 @@
 {
   services.ros2 = {
     enable = true;
-    distro = "iron";
+    distro = "noetic";
 
     # pkgs = [
 

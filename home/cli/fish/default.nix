@@ -28,6 +28,8 @@
       t = "tree -C";
       r = "ranger";
       h = "hx";
+      za = "zellij attach";
+      zz = "zellij -l layout.kdl";
       et = "emacsclient -nw -c";
       e = "emacsclient -c";
 

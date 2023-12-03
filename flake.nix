@@ -21,7 +21,7 @@
     # secrets.url = "github:realsnick/secrets";
     # managing partitions
     disko = {
-      url = github:nix-community/disko;
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -30,11 +30,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
-
+    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
+    hy3 =
+      {
+        url = "github:outfoxxed/hy3";
+      };
     # themes
     stylix.url = "github:danth/stylix";
     #stylix.url = "github:realsnick/stylix";
@@ -53,6 +54,7 @@
     , home-manager
     , nix-doom-emacs
     , nix-ros-overlay
+    , hy3
     , stylix
     , ...
     }:

@@ -6,11 +6,11 @@
   ];
 
   # home.pointerCursor = {
-  # gtk.enable = true;
-  # x11.enable = true;
-  # package = pkgs.bibata-cursors;
-  # name = "Bibata-Modern-Ice";
-  # size = 12;
+  #   gtk.enable = true;
+  #   x11.enable = true;
+  #   package = pkgs.bibata-cursors;
+  #   name = "Bibata-Modern-Ice";
+  #   size = 12;
   # };
   # services.blueman.enable = true;
   services.blueman-applet.enable = true;
@@ -61,6 +61,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     enableNvidiaPatches = true;
+    # plugins = [ hy3.packages.x86_64-linux.hy3 ];
     # settings = {
     #   general = {
     #     layout = "dwindle";

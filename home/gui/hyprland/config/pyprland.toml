@@ -1,3 +1,5 @@
+# to get windows' class-name use
+# $ hyprctl clients | grep -i class
 [pyprland]
 plugins = [
   "scratchpads",
@@ -10,6 +12,14 @@ plugins = [
   "shift_monitors",
   "workspaces_follow_focus",
 ]
+
+
+# [monitors]
+# unknown = "wlrlui"
+
+[monitors.placement]
+"Samsung".leftOf = "HDMI-A-1"
+"California".rightOf = "eDP-1"
 
 [workspaces_follow_focus]
 max_workspaces = 9
@@ -67,8 +77,43 @@ class = ".blueman-manager-wrapped"
 lazy = true
 size = "19% 35%"
 unfocus = "hide"
-# position = "80% 5%"
-# excludes = "*"
+
+[scratchpads.nixpkgs-search]
+animation = "fromTop"
+command = "firefox --no-remote --class nixpkgs-search --new-window https://search.nixos.org/packages"
+# class = "nixpkgs-search"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.discord]
+animation = "fromTop"
+command = "discord"
+class = "discord"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.emacs]
+animation = "fromTop"
+command = "emacs"
+class = "Emacs"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
+[scratchpads.obs-studio]
+animation = "fromTop"
+command = "obs"
+class = "com.obsproject.Studio"
+lazy = true
+size = "50% 75%"
+position = "25% 5%"
+excludes = "*"
+
 
 # [scratchpads.spotify]
 # animation = "fromTop"
@@ -77,32 +122,3 @@ unfocus = "hide"
 # size = "50% 75%"
 # position = "25% 5%"
 # excludes = "*"
-
-# [scratchpads.emacs]
-# animation = "fromTop"
-# command = "emacsclient"
-# class = "Emacs"
-# size = "50% 75%"
-# position = "25% 5%"
-
-# [monitors]
-# unknown = "wlrlui"
-
-[monitors.placement]
-"Samsung".leftOf = "HDMI-A-1"
-"California".rightOf = "eDP-1"
-
-# [scratchpads.stb]
-# animation = "fromBottom"
-# command = "kitty --class kitty-stb sstb"
-# class = "kitty-stb"
-lazy = true
-# size = "75% 45%"
-
-# [scratchpads.stb-logs]
-# animation = "fromTop"
-# command = "kitty --class kitty-stb-logs stbLog"
-# class = "kitty-stb-logs"
-# lazy = true
-# size = "75% 40%"
-

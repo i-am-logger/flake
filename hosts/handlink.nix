@@ -40,4 +40,8 @@
     #   ../Systems/sky360
     # )
   ];
+
+  # support udev rules for zsa voyager's keyboard
+  hardware.keyboard.zsa.enable = true;
+
 }

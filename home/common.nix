@@ -81,8 +81,8 @@
     # Music
     audacious
     spotify
-    spotify-tui
-    spotifyd
+    # spotify-tui
+    # spotifyd
 
     # Chats
     qtox
