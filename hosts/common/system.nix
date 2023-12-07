@@ -65,10 +65,16 @@
 
     kitty
 
+    # inetutils
+    # pure-ftpd
     # vscode
     # nixd
   ];
-
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #   pure-ftpd = pkgs.pure-ftpd.overrideAttrs (oldAttrs: {
+  #     configureFlags = oldAttrs.configureFlags ++ [ "--with-puredb" ];
+  #   });
+  # };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

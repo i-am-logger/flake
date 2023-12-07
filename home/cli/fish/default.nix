@@ -25,7 +25,7 @@
       f = "free -h"; # memory usage
       # df = "df -h"; # disk usage
       g = "git";
-      t = "tree -C";
+      t = "tree -Cd -L 2";
       r = "ranger";
       h = "hx";
       za = "zellij attach";

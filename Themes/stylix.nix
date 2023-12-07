@@ -15,8 +15,8 @@ in
     polarity = "dark";
 
     opacity = {
-      applications = 1.0; # 0.8;
-      desktop = 1.0; # 0.8;
+      applications = 0.8;
+      desktop = 0.8;
       popups = 1.0;
       terminal = 0.8;
     };
@@ -38,7 +38,7 @@ in
     targets.console.enable = false;
     targets.grub = {
       enable = false;
-      #  useImage = false;
+      # useImage = false;
     };
 
     fonts = {
@@ -46,7 +46,7 @@ in
         applications = 12;
         desktop = 12;
         popups = 12;
-        terminal = 12;
+        terminal = 16;
       };
       serif = {
         name = "Noto Nerd Font";

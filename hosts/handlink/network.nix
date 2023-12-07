@@ -32,7 +32,7 @@
   # networking.defaultGateway.address = "192.168.0.1";
   # networking.useDHCP = lib.mkForce true;
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 45563 ]; # 45563 - obs-teleport
+  networking.firewall.allowedTCPPorts = [ 45563 ]; # #TODO - move to OBS config 45563 - obs-teleport
   # networking.firewall.allowedUDPPorts = [
   # 54186
   # ];
