@@ -18,8 +18,8 @@ plugins = [
 # unknown = "wlrlui"
 
 [monitors.placement]
-"Samsung".leftOf = "HDMI-A-1"
-"California".rightOf = "eDP-1"
+# "Samsung".leftOf = "HDMI-A-1"
+# "California".rightOf = "eDP-1"
 
 [workspaces_follow_focus]
 max_workspaces = 9
@@ -62,58 +62,57 @@ size = "50% 75%"
 position = "25% 5%"
 excludes = "*"
 
-[scratchpads.term-nmtui]
-animation = "fromRight"
-command = "kitty --class kitty-dropterm-nmtui nmtui"
-class = "kitty-dropterm-nmtui"
-lazy = true
-size = "19% 35%"
-unfocus = "hide"
+# [scratchpads.term-nmtui]
+# animation = "fromRight"
+# command = "kitty --class kitty-dropterm-nmtui nmtui"
+# class = "kitty-dropterm-nmtui"
+# lazy = true
+# size = "19% 35%"
+# unfocus = "hide"
 
-[scratchpads.bluetooth]
-animation = "fromRight"
-command = "blueman-manager"
-class = ".blueman-manager-wrapped"
-lazy = true
-size = "19% 35%"
-unfocus = "hide"
+# [scratchpads.bluetooth]
+# animation = "fromRight"
+# command = "blueman-manager"
+# class = ".blueman-manager-wrapped"
+# lazy = true
+# size = "19% 35%"
+# unfocus = "hide"
 
-[scratchpads.nixpkgs-search]
-animation = "fromTop"
-command = "firefox --no-remote --class nixpkgs-search --new-window https://search.nixos.org/packages"
-# class = "nixpkgs-search"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.nixpkgs-search]
+# animation = "fromTop"
+# command = "firefox --no-remote --class nixpkgs-search --new-window https://search.nixos.org/packages"
+# # class = "nixpkgs-search"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
-[scratchpads.discord]
-animation = "fromTop"
-command = "discord"
-class = "discord"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.discord]
+# animation = "fromTop"
+# command = "discord"
+# class = "discord"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
-[scratchpads.emacs]
-animation = "fromTop"
-command = "emacs"
-class = "Emacs"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.emacs]
+# animation = "fromTop"
+# command = "emacs"
+# class = "Emacs"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
-[scratchpads.obs-studio]
-animation = "fromTop"
-command = "obs"
-class = "com.obsproject.Studio"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
-
+# [scratchpads.obs-studio]
+# animation = "fromTop"
+# command = "obs"
+# class = "com.obsproject.Studio"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
 # [scratchpads.spotify]
 # animation = "fromTop"

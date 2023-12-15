@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  services.emacs.enable = true;
+  # services.emacs.enable = true;
 
   home.packages = with pkgs; [
     ripgrep
@@ -7,7 +7,7 @@
 
 
   programs.doom-emacs = {
-    enable = true;
+    # enable = true;
     doomPrivateDir = ./doom.d;
     # emacsPackage = pkgs.emacs29-pgtk;
   };

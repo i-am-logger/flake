@@ -1,7 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   # services.emacs.enable = true;
   programs.emacs = {
-    enable = true;
+    # enable = true;
     package = pkgs.emacs29-pgtk;
 
     extraPackages = epkgs:

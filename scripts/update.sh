@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-sudo nixos-rebuild --upgrade switch --flake .# --recreate-lock-file
+nix flake update
+sudo nixos-rebuild --upgrade switch --flake .#
