@@ -5,12 +5,13 @@
 { self, pkgs, pkgs-stable, inputs, ... }:
 
 {
-
   manual.manpages.enable = true;
 
   programs = {
     home-manager.enable = true;
     bash.enable = true;
+    zellij.enable = true;
+    fzf.enable = true;
   };
 
   home = {

@@ -1,7 +1,15 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{config, ...}: {
+{ config, pkgs, ... }: {
+
+  environment.systemPackages = with pkgs; [
+    # nvidia-dkms
+    # qt5-wayland
+    qt5ct
+    libva
+  ];
+
   hardware.opengl = {
     enable = true;
 

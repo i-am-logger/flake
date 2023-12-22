@@ -89,6 +89,7 @@
     signal-desktop
     tdesktop # telegram
     tldr
+    gh
     # development
     cachix
     # broadcasting

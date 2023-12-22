@@ -27,13 +27,13 @@ max_workspaces = 9
 [expose]
 include_special = false
 
-[scratchpads.volume]
-animation = "fromRight"
-command = "pavucontrol"
-class = "pavucontrol"
-lazy = true
-size = "50% 75%"
-unfocus = "hide"
+# [scratchpads.volume]
+# animation = "fromRight"
+# command = "pavucontrol"
+# class = "pavucontrol"
+# lazy = true
+# size = "50% 75%"
+# unfocus = "hide"
 
 [scratchpads.term]
 animation = "fromTop"

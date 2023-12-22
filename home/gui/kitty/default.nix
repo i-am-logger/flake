@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     kitty
   ];
@@ -30,6 +30,8 @@
       dim_opacity = 0;
       #wheel_scroll_multiplier = 1;
       touch_scroll_multiplier = 7;
+      scrollback_lines = 100000;
+      scrollback_pager = "hx";
     };
   };
 }

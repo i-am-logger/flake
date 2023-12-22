@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ username, ... }: {
+{ pkgs, username, ... }: {
   imports = [
     # hardware
     handlink/hardware-configuration.nix
@@ -44,5 +44,38 @@
 
   # support udev rules for zsa voyager's keyboard
   hardware.keyboard.zsa.enable = true;
+
+  # systemd.user.services.swww = {
+  #   description = "Efficient animated wallpaper daemon for wayland";
+  #   wantedBy = [ "graphical-session.target" ];
+  #   partOf = [ "graphical-session.target" ];
+  #   before = [ "default_wall.service" ];
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     ExecStart = ''
+  #       ${pkgs.swww}/bin/swww-daemon
+  #     '';
+  #     ExecStop = "${pkgs.swww}/bin/swww kill";
+  #     Restart = "on-failure";
+  #   };
+  # };
+  # systemd.user.services.default_wall = {
+  #   description = "default wallpaper";
+  #   requires = [ "swww.service" ];
+  #   after = [ "swww.service" "graphical-session.target" ];
+  #   wantedBy = [ "graphical-session.target" ];
+  #   partOf = [ "graphical-session.target" ];
+  #   script = ''${default_wall}'';
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     Restart = "on-failure";
+  #   };
+  # };
+
+  security.pam.services.swaylock = { };
+  # xdg.portal = {
+  #   enable = true;
+  #   wlr.enable = true;
+  # };
 
 }

@@ -15,18 +15,18 @@
   # services.blueman.enable = true;
   services.blueman-applet.enable = true;
 
-  home.packages = [
+  home.packages = with pkgs; [
     pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
-
     #hyprland
     pkgs.wlr-randr
     pkgs.mako
     pkgs.pipewire
     pkgs.wireplumber
     pkgs.xdg-desktop-portal-hyprland
-
+    brightnessctl
     #wallpaper
     pkgs.swww
+    pkgs.waypaper
     pkgs.swaybg
     # screenshot
     pkgs.grimblast
@@ -47,6 +47,10 @@
     pkgs.winetricks
     pkgs.hyprpicker
 
+    hyprpaper
+    swaylock-effects
+    wlogout
+    networkmanagerapplet
 
     pkgs.pavucontrol
     pkgs.pamixer
@@ -60,7 +64,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    enableNvidiaPatches = true;
+    # enableNvidiaPatches = true;
     # plugins = [ hy3.packages.x86_64-linux.hy3 ];
     # settings = {
     #   general = {

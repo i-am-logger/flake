@@ -25,6 +25,7 @@
     pkgs.yaml-language-server
     pkgs.taplo
 
+    pkgs.vimPlugins.copilot-vim
     pkgs.tree-sitter
     (pkgs.tree-sitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
     pkgs.nixpkgs-fmt
@@ -36,7 +37,7 @@
     settings = {
       editor = {
         line-number = "relative";
-        bufferline = "multiple";
+        bufferline = "always";
         mouse = true;
         true-color = true;
         color-modes = true;
@@ -105,6 +106,10 @@
         space = {
           l = ":toggle lsp.display-inlay-hints";
           n = ":toggle lsp.auto-signature_help";
+
+          space.space = "file_picker";
+          space.w = ":w";
+          space.q = ":q";
         };
 
         backspace = {
@@ -134,19 +139,59 @@
       };
     };
     languages = {
+
+      language-server = with pkgs; with pkgs.nodePackages_latest; {
+        typescript-language-server = {
+          command = "${typescript-language-server}/bin/typescript-language-server";
+          args = [ "--stdio" ];
+        };
+        svelteserver.command = "${svelte-language-server}/bin/svelteserver";
+        tailwindcss-ls.command = "${tailwindcss-language-server}/bin/tailwindcss-language-server";
+        nixd = {
+          command = "${nixd}/bin/nixd";
+        };
+        eslint = {
+          command = "${eslint}/bin/eslint";
+          args = [ "--stdin" ];
+        };
+        # copilot = {
+        #   command = "${copilot-lsp}/copilot";
+        #   language-id = "copilot";
+        #   args = ["--stdio"];
+        # };
+        nil.command = "${nil}/bin/nil";
+        rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
+      };
       language = [
         {
-          name = "nix";
+          name = "javascript";
+          formatter = { command = "prettier"; args = [ "--parser" "typescript" ]; };
+          language-servers = [ "typescript-language-server" "eslint" ];
           auto-format = true;
-          formatter = { command = "nixpkgs-fmt"; };
-          # language-servers = {command = "nil";};
         }
         {
           name = "typescript";
+          formatter = { command = "prettier"; args = [ "--parser" "typescript" ]; };
+          language-servers = [ "typescript-language-server" "eslint" ];
           auto-format = true;
         }
         {
-          name = "javascript";
+          name = "svelte";
+          formatter = { command = "prettier"; args = [ "--plugin" "prettier-plugin-svelte" ]; };
+          language-servers = [ "tailwindcss-ls" "svelteserver" "eslint" ];
+          auto-format = true;
+        }
+        {
+
+          name = "nix";
+          auto-format = true;
+          formatter = { command = "nixpkgs-fmt"; };
+          language-servers = [ "nixd" "nil" ];
+        }
+        {
+          name = "python";
+          language-servers = [ "pylsp" "pyright" ];
+          formatter = { command = "black"; args = [ "--quiet" "-" ]; };
           auto-format = true;
         }
       ];
