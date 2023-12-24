@@ -1,12 +1,11 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-  self,
-  pkgs,
-  inputs,
-  user,
-  ...
+{ self
+, pkgs
+, inputs
+, user
+, ...
 }: {
   powerManagement = {
     enable = true;
@@ -16,6 +15,14 @@
   networking.networkmanager.wifi.powersave = true;
 
   # hardware.nvidia.powerManagement.enable = true;
+
+  services.upower = {
+    enable = true;
+  };
+
+  services.cpupower-gui = {
+    enable = true;
+  };
 
   programs.light.enable = true;
 

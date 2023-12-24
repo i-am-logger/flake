@@ -162,7 +162,14 @@
         nil.command = "${nil}/bin/nil";
         rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
       };
+
+      #https://github.com/helix-editor/helix/blob/master/languages.toml
       language = [
+        # {
+        #   name = "json5";
+        #   scope = "*";
+        #   # shebangs = ["json"];
+        # }
         {
           name = "javascript";
           formatter = { command = "prettier"; args = [ "--parser" "typescript" ]; };

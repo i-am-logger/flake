@@ -20,15 +20,21 @@ window#waybar {
 }
 
 #workspaces,
-#clock.1,
-#clock.2,
-#clock.3,
+#window,
+#clock,
+#custom-weather,
+#privacy,
+#network,
 #pulseaudio,
+#language,
+#battery,
+#tray,
+#disk.root,
+#disk.tmp,
 #memory,
 #cpu,
-#battery,
-#disk,
-#tray {
+#temperature,
+#keyboard-state {
   background: #1a1a1a;
 }
 
@@ -37,7 +43,8 @@ window#waybar {
   color: #fdf6e3;
 }
 
-#workspaces button.focused {
+#workspaces button.focused,
+#workspaces button.active {
   color: #268bd2;
 }
 
@@ -68,15 +75,29 @@ window#waybar {
   color: #859900;
 }
 
-#disk {
+#disk.root,
+#disk.tmp {
   color: #b58900;
 }
 
 #clock,
+#custom-weather,
+#privacy,
+#network,
 #pulseaudio,
+#language,
+#battery,
+#tray,
+#disk.root,
+#disk.tmp,
 #memory,
 #cpu,
-#battery,
-#disk {
+#temperature,
+#keyboard-state {
   padding: 0 10px;
+}
+
+#workspaces,
+#window {
+  padding: 0px 10px 0 10px;
 }

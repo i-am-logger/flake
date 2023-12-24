@@ -34,8 +34,8 @@
       e = "emacsclient -c";
 
       mnt = "mount | awk -F' ' '{ printf \"%s\t%s\n\",\$1,\$3; }' | column -t | egrep ^/dev/ | sort";
-
       cpv = "rsync - ah - -info=progress2";
+      weather = "curl wttr.in";
     };
 
     interactiveShellInit = ''
