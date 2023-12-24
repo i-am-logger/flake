@@ -1,15 +1,13 @@
 // json5
 [
 	{
+		// TOP BAR
 		"layer": "top",
 		"position": "top",
-		"height": 28,
+		"height": 32,
 		"modules-left": [
 			"hyprland/workspaces",
 			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
-			"hyprland/window",
-			"custom/right-arrow-dark"
 		],
 		"modules-center": [
 			"custom/left-arrow-dark",
@@ -26,6 +24,9 @@
 			"custom/left-arrow-light",
 			"custom/left-arrow-dark",
 			"pulseaudio",
+			"custom/left-arrow-light",
+			"custom/left-arrow-dark",
+			"cava",
 			"custom/left-arrow-light",
 			"custom/left-arrow-dark",
 			"battery",
@@ -54,11 +55,6 @@
 			"active-only": false,
 			"format-window-separator": "|",
 			"format": "{name}"
-		},
-		"hyprland/window": {
-			"format": "{}",
-			"max-length": 60,
-			"tooltip": false
 		},
 		"clock": {
 			"internal": 1,
@@ -128,8 +124,36 @@
 			"on-click": "pamixer -t",
 			"on-click-right": "pavucontrol"
 		},
-		"hyprland/language": {
-			"format": "  {}",
+		"cava": {
+			// "cava_config": "$XDG_CONFIG_HOME/cava/config",
+			"framerate": 60,
+			"autosens": 1,
+			"sensitivity": 1.5,
+			"bars": 14,
+			"lower_cutoff_freq": 80,
+			"higher_cutoff_freq": 20000,
+			"method": "pipewire",
+			"source": "auto",
+			"stereo": false,
+			"reverse": false,
+			"bar_delimiter": 0,
+			// "monstercat": false,
+			// "waves": false,
+			"noise_reduction": 0.77,
+			// "input_delay": 2,
+			"format-icons": [
+				"<span color='#2268bd'>▁</span>", // blue
+				"<span color='#2268bd'>▂</span>", // blue
+				"<span color='#2268bd'>▃</span>", // blue
+				"<span color='#2268bd'>▄</span>", // blue
+				"<span color='#2268bd'>▅</span>", // blue
+				"<span color='#ff9977'>▆</span>", // orange
+				"<span color='#ff9977'>█</span>", // orange
+				"<span color='#dd532e'>█</span>" // red
+			],
+			"actions": {
+				"on-click-right": "mode"
+			}
 		},
 		"battery": {
 			"states": {
@@ -166,17 +190,13 @@
 		"height": 28,
 		"modules-left": [
 			"disk#root",
-			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
+			"custom/seperator",
 			"disk#tmp",
-			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
+			"custom/seperator",
 			"memory",
-			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
+			"custom/seperator",
 			"cpu",
-			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
+			"custom/seperator",
 			"temperature",
 			"custom/right-arrow-dark",
 			"custom/right-arrow-light",
@@ -184,15 +204,12 @@
 			"custom/right-arrow-dark"
 		],
 		"modules-center": [],
-		"modules-right": [
-			"custom/left-arrow-dark",
-			"hyprland/language",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
-			"keyboard-state"
-			// "custom/left-arrow-light",
-			// "custom/left-arrow-dark",
-		],
+		"modules-right": [],
+
+		"custom/seperator": {
+			"format": "|",
+			"tooltip": false
+		},
 		"custom/left-arrow-dark": {
 			"format": "",
 			"tooltip": false
@@ -211,15 +228,14 @@
 		},
 		"network": {
 			"interval": 5,
-			"format": "{ifname}: 󰕒 {bandwidthUpBits}| 󰇚 {bandwidthDownBits}"
+			// "format": ""
+			"format-wifi": "  󰕒{bandwidthUpBits} 󰇚{bandwidthDownBits}",
+			"format-ethernet": "󰈀  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
 		},
 		"memory": {
 			"interval": 5,
-			"format": " RAM {used:0.1f}G/{total:0.1f}GiB"
-		},
-		"cpu": {
-			"interval": 1,
-			"format": " CPU{usage:2}% {icon}",
+			"format": "  {icon} {percentage}%",
+			"tooltip-format": "  RAM {used:0.1f}G/{total:0.1f}G",
 			"format-icons": [
 				"<span color='#69ff94'>▁</span>", // green
 				"<span color='#2aa9ff'>▂</span>", // blue
@@ -231,23 +247,99 @@
 				"<span color='#dd532e'>█</span>" // red
 			]
 		},
+		"cpu": {
+			"interval": 1,
+			"format": "  {usage:2}% {icon}",
+			"format-icons": [
+				"<span color='#69ff94'>▁</span>", // green
+				"<span color='#69ff94'>▂</span>", // green
+				"<span color='#69ff94'>▃</span>", // green
+				"<span color='#2aa9ff'>▄</span>", // blue
+				"<span color='#2aa9ff'>▅</span>", // blue
+				"<span color='#ffffa5'>▆</span>", // yellow
+				"<span color='#ff9977'>▇</span>", // orange
+				"<span color='#dd532e'>█</span>" // red
+			]
+		},
 		"temperature": {
 			// "thermal-zone": 2,
 			// "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
 			"critical-threshold": 80,
 			// "format-critical": "{temperatureC}°C ",
-			"format": " {temperatureF}°F"
+			"format": " {temperatureF}°F {icon}",
+			"tooltip-format": " TEMP {temperatureF}°F",
+			"format-icons": [
+				"<span color='#69ff94'>▁</span>", // green
+				"<span color='#69ff94'>▂</span>", // green
+				"<span color='#69ff94'>▃</span>", // green
+				"<span color='#2aa9ff'>▄</span>", // blue
+				"<span color='#2aa9ff'>▅</span>", // blue
+				"<span color='#ffffa5'>▆</span>", // yellow
+				"<span color='#ff9977'>▇</span>", // orange
+				"<span color='#dd532e'>█</span>" // red
+			]
 		},
 		"disk#root": {
 			"interval": 5,
-			"format": "  '/' {percentage_used:2}%",
-			"path": "/"
+			"format": " {path} {percentage_used:2}%",
+			"tooltip-format": "  DISK {used}/{total}",
+			"path": "/",
 		},
 		"disk#tmp": {
 			"interval": 5,
-			"format": "  '/' tmp {percentage_used:2}%",
-			"path": "/tmp"
+			"format": " {path} {percentage_used:2}%",
+			"tooltip-format": "  DISK {used}/{total}",
+			"path": "/tmp",
 		},
+	},
+	{
+		// bar 3
+		"layer": "top",
+		"position": "bottom",
+		"height": 28,
+		"modules-left": [
+			"hyprland/window",
+			"custom/right-arrow-dark"
+		],
+		"modules-center": [],
+		"modules-right": [
+			"custom/left-arrow-dark",
+			"hyprland/language",
+			"custom/left-arrow-light",
+			"custom/left-arrow-dark",
+			"keyboard-state",
+		],
+		"custom/left-arrow-dark": {
+			"format": "",
+			"tooltip": false
+		},
+		"custom/left-arrow-light": {
+			"format": "",
+			"tooltip": false
+		},
+		"custom/right-arrow-dark": {
+			"format": "",
+			"tooltip": false
+		},
+		"custom/right-arrow-light": {
+			"format": "",
+			"tooltip": false
+		},
+		// LEFT
+		"hyprland/window": {
+			"format": " {}",
+			// "max-length": 60,
+			"separate-outputs": true,
+			"tooltip": false,
+			"rewrite": {
+				"(.*) - Mozilla Firefox": " $1",
+				"(.*) - fish": " [$1]"
+			}
+		},
+		"hyprland/language": {
+			"format": "  {}"
+		},
+		// RIGHT
 		"keyboard-state": {
 			// "numlock": true,
 			"capslock": true,

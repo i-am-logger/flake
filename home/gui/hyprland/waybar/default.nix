@@ -3,6 +3,8 @@
 {
   home.packages = with pkgs ; [
     waybar
+    fftw #cava 
+    iniparser #cava
   ];
 
   xdg.configFile."waybar/" = {

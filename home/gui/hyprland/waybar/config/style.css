@@ -13,6 +13,7 @@ window#waybar {
   color: #1a1a1a;
 }
 
+#custom-seperator,
 #custom-right-arrow-light,
 #custom-left-arrow-light {
   color: #292b2e;
@@ -26,7 +27,6 @@ window#waybar {
 #privacy,
 #network,
 #pulseaudio,
-#language,
 #battery,
 #tray,
 #disk.root,
@@ -34,6 +34,8 @@ window#waybar {
 #memory,
 #cpu,
 #temperature,
+#cava,
+#language,
 #keyboard-state {
   background: #1a1a1a;
 }
@@ -59,10 +61,12 @@ window#waybar {
   padding: 0 3px;
 }
 
+#cava,
 #pulseaudio {
   color: #268bd2;
 }
 
+/*
 #memory {
   color: #2aa198;
 }
@@ -74,30 +78,30 @@ window#waybar {
 #battery {
   color: #859900;
 }
-
 #disk.root,
 #disk.tmp {
   color: #b58900;
 }
-
+*/
 #clock,
 #custom-weather,
 #privacy,
 #network,
 #pulseaudio,
-#language,
 #battery,
 #tray,
-#disk.root,
-#disk.tmp,
 #memory,
 #cpu,
 #temperature,
+#cava,
+#language,
 #keyboard-state {
   padding: 0 10px;
 }
 
 #workspaces,
+#disk.root,
+#disk.tmp,
 #window {
   padding: 0px 10px 0 10px;
 }
