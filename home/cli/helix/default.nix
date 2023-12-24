@@ -11,6 +11,7 @@
     pkgs.nil
     pkgs.rnix-lsp
     pkgs.rust-analyzer
+    pkgs.lldb
     pkgs.clang-tools
     pkgs.ocamlPackages.ocaml-lsp
     pkgs.vscode-langservers-extracted
@@ -20,6 +21,7 @@
     pkgs.texlab
     pkgs.lua-language-server
     pkgs.marksman
+    pkgs.nodePackages.pyright
     pkgs.python310Packages.python-lsp-server
     pkgs.nodePackages.vue-language-server
     pkgs.yaml-language-server
@@ -36,7 +38,7 @@
     defaultEditor = true;
     settings = {
       editor = {
-        line-number = "relative";
+        # line-number = "relative";
         bufferline = "always";
         mouse = true;
         true-color = true;
@@ -67,7 +69,7 @@
           enable = true;
           display-messages = true;
           auto-signature-help = true;
-          display-inlay-hints = true;
+          # display-inlay-hints = true;
           display-signature-help-docs = true;
           snippets = true;
           goto-reference-include-declaration = true;
@@ -161,6 +163,13 @@
         # };
         nil.command = "${nil}/bin/nil";
         rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
+        rust-analyzer.config = {
+          "inlayHints.bindingModeHints.enable" = true;
+          "inlayHints.closingBraceHints.minLines" = 10;
+          "inlayHints.closureReturnTypeHints.enable" = "with_block";
+          "inlayHints.discrimiinantHints.enable" = "skip_trivial";
+          "inlayHints.typeHints.hideClosureInitialization" = false;
+        };
       };
 
       #https://github.com/helix-editor/helix/blob/master/languages.toml
@@ -199,6 +208,10 @@
           name = "python";
           language-servers = [ "pylsp" "pyright" ];
           formatter = { command = "black"; args = [ "--quiet" "-" ]; };
+          auto-format = true;
+        }
+        {
+          name = "rust";
           auto-format = true;
         }
       ];
