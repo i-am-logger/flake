@@ -4,7 +4,7 @@
 		// TOP BAR
 		"layer": "top",
 		"position": "top",
-		"height": 32,
+		"height": 28,
 		"modules-left": [
 			"hyprland/workspaces",
 			"custom/right-arrow-dark",
@@ -12,6 +12,7 @@
 		"modules-center": [
 			"custom/left-arrow-dark",
 			"clock",
+			"custom/seperator",
 			"custom/weather",
 			"custom/right-arrow-dark"
 		],
@@ -35,6 +36,12 @@
 			"custom/left-arrow-dark",
 			"tray"
 		],
+
+		"custom/seperator": {
+			"format": "|",
+			"tooltip": false
+		},
+
 		"custom/left-arrow-dark": {
 			"format": "",
 			"tooltip": false
@@ -57,12 +64,12 @@
 			"format": "{name}"
 		},
 		"clock": {
-			"internal": 1,
+			"interval": 1,
 			"format": "{:%A | %r | %d-%m-%Y}",
 			"tooltip": false
 		},
 		"custom/weather": {
-			"format": "| {}",
+			"format": "{}",
 			"tooltip": true,
 			"interval": 300,
 			"exec": "$HOME/.config/waybar/scripts/waybar-weather.py",
@@ -126,17 +133,18 @@
 		},
 		"cava": {
 			// "cava_config": "$XDG_CONFIG_HOME/cava/config",
+			 // "format": "  |{}|",
 			"framerate": 60,
 			"autosens": 1,
 			"sensitivity": 1.5,
-			"bars": 14,
+			"bars": 10,
 			"lower_cutoff_freq": 80,
 			"higher_cutoff_freq": 20000,
 			"method": "pipewire",
 			"source": "auto",
 			"stereo": false,
-			"reverse": false,
-			"bar_delimiter": 0,
+			// "reverse": false,
+			"bar_delimiter": 124,
 			// "monstercat": false,
 			// "waves": false,
 			"noise_reduction": 0.77,
@@ -147,7 +155,7 @@
 				"<span color='#2268bd'>▃</span>", // blue
 				"<span color='#2268bd'>▄</span>", // blue
 				"<span color='#2268bd'>▅</span>", // blue
-				"<span color='#ff9977'>▆</span>", // orange
+				"<span color='#2268bd'>▆</span>", // blue
 				"<span color='#ff9977'>█</span>", // orange
 				"<span color='#dd532e'>█</span>" // red
 			],
@@ -229,7 +237,7 @@
 		"network": {
 			"interval": 5,
 			// "format": ""
-			"format-wifi": "  󰕒{bandwidthUpBits} 󰇚{bandwidthDownBits}",
+			"format-wifi": "  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
 			"format-ethernet": "󰈀  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
 		},
 		"memory": {

@@ -58,9 +58,16 @@ WEATHER_CODES = {
 
 data = {}
 
-
-weather = requests.get("https://wttr.in/?format=j1").json()
-
+try:
+    r = requests.get("https://wttr.in/?format=j1")
+    r.raise_for_status()
+    weather = r.json()
+except requests.exceptions.RequestException as e:
+    error_message = f"Failed to fetch weather data:\n {e.errno}"
+    data['text'] = "󰅤"
+    data['tooltip'] = error_message
+    print(json.dumps(data))
+    exit()
 
 def format_time(time):
     return time.replace("00", "").zfill(2)

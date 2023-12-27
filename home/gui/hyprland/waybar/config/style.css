@@ -5,7 +5,7 @@
 
 window#waybar {
   background: #292b2e;
-  color: #fdf6e3;
+  color: #545862;
 }
 
 #custom-right-arrow-dark,
@@ -13,6 +13,7 @@ window#waybar {
   color: #1a1a1a;
 }
 
+#cava,
 #custom-seperator,
 #custom-right-arrow-light,
 #custom-left-arrow-light {
@@ -61,7 +62,6 @@ window#waybar {
   padding: 0 3px;
 }
 
-#cava,
 #pulseaudio {
   color: #268bd2;
 }
