@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     gnupg
     age
@@ -14,7 +14,8 @@
     yubikey-personalization
     yubikey-personalization-gui
     yubico-piv-tool
-    yubioath-flutter
+    # flutter
+    # yubioath-flutter
     yubico-pam
   ];
 
@@ -42,7 +43,7 @@
       enable = true;
       debug = true;
       mode = "challenge-response";
-      id = ["17027658"];
+      id = [ "17027658" ];
     };
   };
 }
