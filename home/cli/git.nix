@@ -3,6 +3,9 @@
 , lib
 , ...
 }: {
+  home.packages = with pkgs; [
+    gitui
+  ];
   programs.git = {
     enable = true;
     lfs.enable = true;

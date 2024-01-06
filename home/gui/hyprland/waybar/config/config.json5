@@ -237,8 +237,10 @@
 		"network": {
 			"interval": 5,
 			// "format": ""
-			"format-wifi": "  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
-			"format-ethernet": "󰈀  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
+			// "format-wifi": "  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> | <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
+			// "format-ethernet": "󰈀  <span color='#2aa9ff'>󰕒{bandwidthUpBits}</span> | <span color='#69ff94'>󰇚{bandwidthDownBits}</span>",
+			"format-wifi": "  󰕒{bandwidthUpBits} | 󰇚{bandwidthDownBits}",
+			"format-ethernet": "󰈀  󰕒{bandwidthUpBits} | 󰇚{bandwidthDownBits}",
 		},
 		"memory": {
 			"interval": 5,

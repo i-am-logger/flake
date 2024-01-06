@@ -18,6 +18,7 @@
   home.packages = with pkgs; [
     pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
     #hyprland
+    pkgs.libinput
     pkgs.wlr-randr
     pkgs.mako
     pkgs.pipewire

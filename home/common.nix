@@ -7,7 +7,7 @@
     cli/lsd.nix
     cli/variables.nix
     cli/neovim.nix
-    cli/tmux.nix
+    # cli/tmux.nix
 
     cli/fish
     cli/btop
