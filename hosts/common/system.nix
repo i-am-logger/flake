@@ -86,7 +86,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # services.openssh.enable = true;
   system.autoUpgrade = {
     #enable = true;
     # channel = "https://nixos.org/channels/nixos-stable";

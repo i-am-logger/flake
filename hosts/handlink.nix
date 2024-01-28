@@ -36,7 +36,7 @@
 
     # Sky360
     # common/pure-ftpd/default.nix
-    common/github-runner.nix
+    # common/github-runner.nix
     # (
     #   ../Systems/sky360
     # )
