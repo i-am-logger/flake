@@ -10,6 +10,9 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  # temp fix for network
+  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
   # Enable networking
   networking.networkmanager.enable = true;
   networking.interfaces.enp118s0.useDHCP = true;

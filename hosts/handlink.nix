@@ -28,8 +28,9 @@
     common/hyprland.nix
     common/1password.nix
     common/qemu.nix
-    common/ros2.nix
-    common/docker.nix
+    # common/sddm.nix
+    # common/ros2.nix
+    # common/docker.nix
     #common/virtualbox.nix
 
     users/${username}.nix

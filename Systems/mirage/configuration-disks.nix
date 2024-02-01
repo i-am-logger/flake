@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   nodev = {
     "/tmp" = {
       fsType = "tmpfs";
@@ -22,7 +22,7 @@
           };
           ESP = {
             size = "2G";
-            priority = 1;
+            # priority = 1;
             type = "EF00";
             content = {
               type = "filesystem";
@@ -46,20 +46,20 @@
               # extraArgs = [ "-f" ]; # override existing partition
 
               subvolumes = {
-                "SYSTEM" = {};
+                "SYSTEM" = { };
                 "SYSTEM/rootfs" = {
                   mountpoint = "/";
-                  mountOptions = ["noatime"];
+                  mountOptions = [ "noatime" ];
                 };
                 "SYSTEM/nix" = {
                   mountpoint = "/nix";
-                  mountOptions = ["noatime" "compress=zstd"];
+                  mountOptions = [ "noatime" "compress=zstd" ];
                 };
 
-                "DATA" = {};
+                "DATA" = { };
                 "DATA/home" = {
                   mountpoint = "/home";
-                  mountOptions = ["noatime"];
+                  mountOptions = [ "noatime" ];
                 };
                 # "DATA/home/snick" =      { mountpoint = "/home/snick";      mountOptions = [ "noatime" ]; };
                 # "DATa/home/snick/Code" = { mountpoint = "/home/snick/Code"; mountOptions = [ "noatime" "compress=zstd" ]; };

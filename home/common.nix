@@ -43,7 +43,7 @@
     firefox
     google-chrome
     # UI Virtual Terminals
-    #alacritty
+    alacritty
     #kate
     neo
     pipes

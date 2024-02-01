@@ -24,13 +24,13 @@
 
     systemd-boot.enable = false;
     efi = {
-      #canTouchEfiVariables = true;
+      canTouchEfiVariables = true;
       efiSysMountPoint = "/boot";
     };
 
     grub = {
       efiSupport = true;
-      efiInstallAsRemovable = true;
+      # efiInstallAsRemovable = true;
       #useOSProber = true;
       device = "nodev";
 

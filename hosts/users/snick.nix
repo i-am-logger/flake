@@ -8,7 +8,7 @@
     name = "snick";
     initialPassword = "";
     isNormalUser = true;
-    description = "Ido Samuelson";
+    description = "SnIcK";
     extraGroups = [ "networkmanager" "input" "wheel" "video" "audio" "udev" "dialout" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [

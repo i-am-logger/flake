@@ -23,6 +23,7 @@
     pkgs.mako
     pkgs.pipewire
     pkgs.wireplumber
+    pkgs.xdg-desktop-portal
     pkgs.xdg-desktop-portal-hyprland
     brightnessctl
     #wallpaper
