@@ -26,8 +26,11 @@
 
   programs.light.enable = true;
 
+  # https://github.com/johnfanv2/LenovoLegionLinux
   environment.systemPackages = with pkgs; [
     powertop
     acpi
+    lm_sensors
+    # powerprofilesctl
   ];
 }

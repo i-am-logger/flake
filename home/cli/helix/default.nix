@@ -60,8 +60,8 @@
           enable = true;
         };
         statusline = {
-          left = [ "mode" "spinner" ];
-          center = [ "file-name" "position-percentage" ];
+          left = [ "mode" "file-name" "spinner" ];
+          center = [ "position-percentage" ];
           right = [ "version-control" "diagnostics" "selections" "position" "file-encoding" "file-line-ending" "file-type" ];
           separator = "│";
         };
@@ -82,12 +82,12 @@
             tab = "→";
             newline = "⏎";
 
-            tabpad = "·"; # Tabs will look like "→···" (depending on tab width)
+            tabpad = " "; # "·"; # Tabs will look like "→···" (depending on tab width)
           };
         };
         indent-guides = {
           render = true;
-          character = "╎";
+          character = "│"; # "╎";
         };
       };
       keys.normal = {

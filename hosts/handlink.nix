@@ -17,16 +17,16 @@
 
     # system
     common/system.nix
-    common/security.nix
+    common/security/security.nix
+    common/security/yubikey-gpg.nix
+    common/security/1password.nix
     common/nix.nix
     handlink/network.nix
     common/sound.nix # TODO: fix & power management
     common/v4l2loopback.nix
 
     common/environment.nix
-    common/yubikey-gpg.nix
     common/hyprland.nix
-    common/1password.nix
     common/qemu.nix
     # common/sddm.nix
     # common/ros2.nix
