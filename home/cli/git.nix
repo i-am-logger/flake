@@ -5,6 +5,7 @@
 }: {
   home.packages = with pkgs; [
     gitui
+    gh
   ];
   programs.git = {
     enable = true;

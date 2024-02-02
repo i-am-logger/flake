@@ -5,58 +5,64 @@
     ./pyprland
   ];
 
-  # home.pointerCursor = {
-  #   gtk.enable = true;
-  #   x11.enable = true;
-  #   package = pkgs.bibata-cursors;
-  #   name = "Bibata-Modern-Ice";
-  #   size = 12;
-  # };
+  home.pointerCursor = {
+    gtk.enable = true;
+  };
+
+  gtk = {
+    enable = true;
+    # iconTheme = {
+    # package = pkgs.gnome.adwaita-icon-theme;
+    # name = "Adwaita";
+    # };
+  };
   # services.blueman.enable = true;
   services.blueman-applet.enable = true;
 
   home.packages = with pkgs; [
-    pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
+    # pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
     #hyprland
-    pkgs.libinput
-    pkgs.wlr-randr
-    pkgs.mako
-    pkgs.pipewire
-    pkgs.wireplumber
-    # pkgs.xdg-desktop-portal
-    pkgs.xdg-desktop-portal-hyprland
+    libinput
+    wlr-randr
+    mako
+    pipewire
+    wireplumber
+    xdg-desktop-portal
+    xdg-desktop-portal-hyprland
     brightnessctl
     #wallpaper
-    pkgs.swww
-    pkgs.waypaper
-    pkgs.swaybg
+    swww
+    waypaper
+    swaybg
     # screenshot
-    pkgs.grimblast
-    pkgs.slurp
-    pkgs.swappy
+    grimblast
+    slurp
+    swappy
     # clipboard
-    pkgs.wl-clipboard
-    pkgs.cliphist
+    wl-clipboard
+    cliphist
     # mount
-    pkgs.udiskie
+    udiskie
     #video player
-    pkgs.vlc
+    vlc
     #   polkit-kde-agent #TODO: configure and get rid of gnome dekstop manager
     #libsForQt5.full -- error of insecure
     # pkgs.qt6.full
     # pkgs.qt-wayland
-    pkgs.wineWowPackages.waylandFull
-    pkgs.winetricks
-    pkgs.hyprpicker
+    # pkgs.wineWowPackages.waylandFull
+    # pkgs.winetricks
+    hyprpicker
 
     hyprpaper
     swaylock-effects
     wlogout
     networkmanagerapplet
 
-    pkgs.pavucontrol
-    pkgs.pamixer
-    pkgs.playerctl
+    pavucontrol
+    pamixer
+    playerctl
+
+    gtk3
   ];
 
   xdg.configFile."hypr" = {
@@ -66,14 +72,6 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    # enableNvidiaPatches = true;
-    # plugins = [ hy3.packages.x86_64-linux.hy3 ];
-    # settings = {
-    #   general = {
-    #     layout = "dwindle";
-    #   };
-    # };
-
     xwayland = {
       enable = true;
     };

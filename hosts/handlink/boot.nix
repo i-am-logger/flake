@@ -22,7 +22,7 @@
   boot.loader = {
     timeout = 2;
 
-    # systemd-boot.enable = false;
+    systemd-boot.enable = false;
     efi = {
       canTouchEfiVariables = true;
       efiSysMountPoint = "/boot";

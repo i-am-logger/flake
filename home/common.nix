@@ -89,7 +89,6 @@
     signal-desktop
     tdesktop # telegram
     tldr
-    gh
     # development
     cachix
     # broadcasting
@@ -97,7 +96,7 @@
 
     # astronomy
     #kstars
-    indi-full
+    # indi-full
 
     # coding
     #vscode

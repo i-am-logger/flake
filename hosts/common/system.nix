@@ -63,8 +63,6 @@
     ranger
     helix
 
-    kitty
-
     # inetutils
     # pure-ftpd
     # vscode
