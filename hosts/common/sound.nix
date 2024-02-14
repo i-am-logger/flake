@@ -27,7 +27,7 @@
     # '';
   };
   hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true; # Realtime audio support
+  # security.rtkit.enable = true; # Realtime audio support
   services.pipewire = {
     enable = true;
     audio.enable = true;
@@ -39,16 +39,16 @@
     # jack.enable = true;
 
   };
-  environment.etc = {
-    "pipewire/pipewire.conf.d/92-low-latency.conf".text = ''
-      context.properties = {
-        default.clock.rate = 352800
-        # default.clock.quantum = 32
-        # default.clock.min-quantum = 32
-        # default.clock.max-quantum = 32
-      }
-    '';
-  };
+  # environment.etc = {
+  #   "pipewire/pipewire.conf.d/92-low-latency.conf".text = ''
+  #     context.properties = {
+  #       default.clock.rate = 352800
+  #       # default.clock.quantum = 32
+  #       # default.clock.min-quantum = 32
+  #       # default.clock.max-quantum = 32
+  #     }
+  #   '';
+  # };
   # environment.etc."wireplumber/main.lua.d/99-alsa-lowlatency.lua".text = ''
   #   alsa_monitor.rules = {
   #     {

@@ -47,7 +47,7 @@ in
         applications = 12;
         desktop = 12;
         popups = 12;
-        terminal = 16;
+        terminal = 18;
       };
       serif = {
         name = "Noto Nerd Font";
