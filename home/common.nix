@@ -75,7 +75,7 @@
     # insync
 
     # screensaver
-
+    asciiquarium
     #expect # has unbuffer - helpful with watch like - watch --color --interval 1 unbuffer lsd --tree
     #jq
     # Music
