@@ -7,7 +7,7 @@
 
 # Function to list available devices and their mounts
 list_devices() {
-    local devices="$(lsblk -d -o PATH,SIZE,VENDOR,MODEL | grep "Disk")"
+    local devices="$(lsblk -d -o PATH,SIZE,VENDOR,MODEL,Type | grep "Disk")"
 
     if [ -z "$devices" ]; then
         echo "No available devices"

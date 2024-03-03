@@ -3,7 +3,7 @@
     "/tmp" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=16G"
+        "size=32G"
         "mode=755"
       ];
     };
