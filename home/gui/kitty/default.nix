@@ -17,7 +17,7 @@
       cursor_stop_blinking_after = 0;
       detect_urls = "yes";
       show_hyperlink_targets = "yes";
-      # copy_on_select = "yes";
+      copy_on_select = "yes";
       dim_opacity = 0;
       touch_scroll_multiplier = 7;
       scrollback_lines = 100000;

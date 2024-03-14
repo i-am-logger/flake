@@ -9,7 +9,7 @@
     pkgs.zellij
     pkgs.lazygit
     pkgs.nil
-    pkgs.rnix-lsp
+    # pkgs.rnix-lsp
     pkgs.rust-analyzer
     pkgs.lldb
     pkgs.clang-tools
@@ -149,9 +149,9 @@
         };
         svelteserver.command = "${svelte-language-server}/bin/svelteserver";
         tailwindcss-ls.command = "${tailwindcss-language-server}/bin/tailwindcss-language-server";
-        nixd = {
-          command = "${nixd}/bin/nixd";
-        };
+        # nixd = {
+        #   command = "${nixd}/bin/nixd";
+        # };
         eslint = {
           command = "${eslint}/bin/eslint";
           args = [ "--stdin" ];

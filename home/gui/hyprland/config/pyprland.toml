@@ -2,15 +2,15 @@
 # $ hyprctl clients | grep -i class
 [pyprland]
 plugins = [
-  "scratchpads",
-  "lost_windows",
-  "monitors",
-  "shift_monitors",
-  "toggle_dpms",
-  "magnify",
-  "expose",
-  "shift_monitors",
-  "workspaces_follow_focus",
+  # "scratchpads",
+  # "lost_windows",
+  # "monitors",
+  # "shift_monitors",
+  # "toggle_dpms",
+  # "magnify",
+  # "expose",
+  # "shift_monitors",
+  # "workspaces_follow_focus",
 ]
 
 

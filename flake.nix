@@ -2,10 +2,11 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -31,7 +32,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
-    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
+    # nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
     hy3 =
       {
         url = "github:outfoxxed/hy3";
@@ -52,8 +53,8 @@
     , sops-nix
     , secrets
     , home-manager
-    , nix-doom-emacs
-    , nix-ros-overlay
+      # , nix-doom-emacs
+      # , nix-ros-overlay
     , hy3
     , stylix
     , ...
@@ -68,6 +69,12 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true; # Allow proprietary software
+        nixpkgs.config.permittedInsecurePackages = [
+          "nix-2.15.3"
+          "nix-2.19.3"
+          "nix-2.16.2"
+          "nix"
+        ];
       };
     in
     {
@@ -88,14 +95,21 @@
                 lib = nixpkgs.lib;
               };
             })
-
+            {
+              nixpkgs.config.permittedInsecurePackages = [
+                "nix-2.19.3"
+                "nix-2.15.3"
+                "nix-2.16.2"
+                "nix"
+              ];
+            }
             # secrets
             sops-nix.nixosModules.sops
             # system
             ./hosts/handlink.nix
             modules/oct-motd
 
-            nix-ros-overlay.nixosModules.default
+            # nix-ros-overlay.nixosModules.default
             # Home
             home-manager.nixosModules.home-manager
             {
@@ -104,7 +118,7 @@
               home-manager.extraSpecialArgs = { inherit inputs; };
               home-manager.users.${username} = {
                 imports = [
-                  nix-doom-emacs.hmModule
+                  # nix-doom-emacs.hmModule
                   ./home/${username}.nix
                 ];
               };

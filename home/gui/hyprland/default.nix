@@ -2,7 +2,7 @@
   imports = [
     ./waybar
     ./swappy
-    ./pyprland
+    # ./pyprland
   ];
 
   home.pointerCursor = {

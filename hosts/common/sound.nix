@@ -7,38 +7,40 @@
   # defaults.pcm.!card "AUDIO"
   # defaults.ctl.!card "AUDIO"{
   # Enable sound with pipewire.
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-
+  hardware.pulseaudio = {
+    enable = true;
+    support32Bit = true;
+    package = pkgs.pulseaudioFull;
+  };
   # boot.extraModprobeConfig = ''
   #   options snd-intel-dspcfg dsp_driver=1
   # '';
-  sound = {
-    enable = true;
-    # extraConfig = ''
-    #   pcm.!default {
-    #     type hw
-    #     card 0
-    #   }
+  # sound = {
+  #   enable = true;
+  #   # extraConfig = ''
+  #   #   pcm.!default {
+  #   #     type hw
+  #   #     card 0
+  #   #   }
 
-    #   ctl.!default {
-    #     type hw           
-    #     card 0
-    #   }
-    # '';
-  };
-  hardware.pulseaudio.enable = false;
+  #   #   ctl.!default {
+  #   #     type hw           
+  #   #     card 0
+  #   #   }
+  #   # '';
+  # };
   # security.rtkit.enable = true; # Realtime audio support
-  services.pipewire = {
-    enable = true;
-    audio.enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-    # If you want to use JACK applications, uncomment this
-    # jack.enable = true;
+  # services.pipewire = {
+  #   enable = true;
+  #   audio.enable = true;
+  #   # alsa.enable = true;
+  #   # alsa.support32Bit = true;
+  #   # pulse.enable = true;
+  #   # wireplumber.enable = true;
+  #   # If you want to use JACK applications, uncomment this
+  #   jack.enable = true;
 
-  };
+  # };
   # environment.etc = {
   #   "pipewire/pipewire.conf.d/92-low-latency.conf".text = ''
   #     context.properties = {

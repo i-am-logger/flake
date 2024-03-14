@@ -13,7 +13,6 @@ window#waybar {
   color: #1a1a1a;
 }
 
-#cava,
 #custom-seperator,
 #custom-right-arrow-light,
 #custom-left-arrow-light {
@@ -21,6 +20,12 @@ window#waybar {
   background: #1a1a1a;
 }
 
+#cava {
+  color: #1a1a1a;
+  background: linear-gradient(to bottom, #4CAF50 10%, #4CAF50 50%, #FFA500 50%, #FFA500 75%, #FFA500 75%, #FF0000 80%, #1A1A1A 90%);
+}
+
+#custom-audio,
 #workspaces,
 #window,
 #clock,
@@ -35,10 +40,13 @@ window#waybar {
 #memory,
 #cpu,
 #temperature,
-#cava,
 #language,
 #keyboard-state {
   background: #1a1a1a;
+}
+
+#custom-audio {
+  color: #545862
 }
 
 #workspaces button {
@@ -83,6 +91,7 @@ window#waybar {
   color: #b58900;
 }
 */
+#custom-audio,
 #clock,
 #custom-weather,
 #privacy,
@@ -93,7 +102,6 @@ window#waybar {
 #memory,
 #cpu,
 #temperature,
-#cava,
 #language,
 #keyboard-state {
   padding: 0 10px;
