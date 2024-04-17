@@ -39,6 +39,7 @@
     settings = {
       editor = {
         # line-number = "relative";
+        rulers = [ 80 120 ];
         bufferline = "always";
         mouse = true;
         true-color = true;
@@ -198,11 +199,16 @@
           auto-format = true;
         }
         {
-
           name = "nix";
           auto-format = true;
           formatter = { command = "nixpkgs-fmt"; };
           language-servers = [ "nixd" "nil" ];
+        }
+        {
+          name = "nim";
+          auto-format = true;
+          formatter = { command = "nimpretty"; };
+          # language-servers = [ "nimlsp" "nimlangserver" ];
         }
         {
           name = "python";

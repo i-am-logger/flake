@@ -25,7 +25,7 @@
     libinput
     wlr-randr
     mako
-    pipewire
+    # pipewire
     wireplumber
     xdg-desktop-portal
     xdg-desktop-portal-hyprland

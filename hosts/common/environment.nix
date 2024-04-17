@@ -5,19 +5,19 @@
   environment.variables = {
     EDITOR = "hx";
     VIEWER = "hx";
-    BROWSER = "firefox";
-    DEFAULT_BROWSER = "firefox";
+    BROWSER = "brave";
+    DEFAULT_BROWSER = "brave";
   };
 
   xdg.mime.defaultApplications = {
-    "text/html" = "firefox";
-    "x-scheme-handler/http" = "firefox";
-    "x-scheme-handler/https" = "firefox";
-    "x-scheme-handler/about" = "firefox";
+    "text/html" = "brave";
+    "x-scheme-handler/http" = "brave";
+    "x-scheme-handler/https" = "brave";
+    "x-scheme-handler/about" = "brave";
     # "x-scheme-handler/unknown" = "firefox";
   };
 
-  environment.sessionVariables.DEFAULT_BROWSER = "firefox";
+  environment.sessionVariables.DEFAULT_BROWSER = "brave";
 
   environment.pathsToLink = [ "libexec" ];
 

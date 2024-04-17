@@ -42,6 +42,7 @@
     #qutebrowser
     firefox
     google-chrome
+    brave
     # UI Virtual Terminals
     alacritty
     #kate
@@ -67,7 +68,7 @@
     #ffmpeg # Video Support (dslr)
     #libGL
     #udiskie # Auto Mounting
-    krusader
+    krusader # dual file browser GUI
     rpi-imager # Raspberri pi USB Imager
     kdiff3
     krename
@@ -99,8 +100,8 @@
     # indi-full
 
     # coding
-    #vscode
-
+    vscode
+    bazecor
     # sky360
     #libusb1
     #fxload

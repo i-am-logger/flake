@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    thefuck
+    # thefuck
     grc
     fzf
     fd

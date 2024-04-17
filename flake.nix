@@ -31,7 +31,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
+    # nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
     # nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
     hy3 =
       {

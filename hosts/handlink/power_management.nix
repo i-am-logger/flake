@@ -16,6 +16,9 @@
 
   # hardware.nvidia.powerManagement.enable = true;
 
+  # services.logind.enable = true;
+  services.logind.lidSwitchExternalPower = "ignore";
+
   services.upower = {
     enable = true;
   };
