@@ -107,7 +107,7 @@
             sops-nix.nixosModules.sops
             # system
             ./hosts/handlink.nix
-            modules/oct-motd
+            modules/motd
 
             # nix-ros-overlay.nixosModules.default
             # Home
