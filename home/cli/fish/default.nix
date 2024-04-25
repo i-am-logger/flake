@@ -26,7 +26,8 @@
       # df = "df -h"; # disk usage
       g = "git";
       t = "tree -Cd -L 2";
-      r = "ranger";
+      # r = "ranger";
+      y = "yazi";
       h = "hx";
       za = "zellij attach";
       zz = "zellij -l layout.kdl";

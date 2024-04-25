@@ -12,7 +12,7 @@
     cli/fish
     cli/btop
     cli/neofetch
-    cli/ranger
+    # cli/ranger
     cli/mc
     cli/helix
     cli/cava
@@ -33,6 +33,7 @@
 
   home.packages = with pkgs; [
     # file manager
+    yazi
     #ranger
     # IDE
     #lapce

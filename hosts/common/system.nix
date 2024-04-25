@@ -60,7 +60,7 @@
     btop
 
     mc
-    ranger
+    yazi
     helix
 
     # inetutils
