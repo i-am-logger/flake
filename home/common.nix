@@ -83,6 +83,7 @@
     # Music
     audacious
     spotify
+    # unityhub
     # spotify-tui
     # spotifyd
 

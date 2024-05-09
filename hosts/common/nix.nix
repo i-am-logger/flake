@@ -23,7 +23,7 @@
       dates = "weekly";
       # options = "--delete-older-than 7d";
     };
-    package = pkgs.nixVersions.unstable;
+    package = pkgs.nixVersions.latest;
     #registry.nixpkgs.flake = inputs.nixpkgs;
     extraOptions = ''
       experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
