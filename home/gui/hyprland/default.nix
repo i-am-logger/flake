@@ -5,15 +5,15 @@
     # ./pyprland
   ];
 
-  home.pointerCursor = {
-    gtk.enable = true;
-  };
+  # home.pointerCursor = {
+  #   package = pkgs.gnome.adwaita-icon-theme;
+  #   name = "Adwaita";
+  #   gtk.enable = true;
+  # };
 
   gtk = {
     enable = true;
     # iconTheme = {
-    # package = pkgs.gnome.adwaita-icon-theme;
-    # name = "Adwaita";
     # };
   };
   # services.blueman.enable = true;

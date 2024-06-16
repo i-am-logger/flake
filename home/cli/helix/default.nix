@@ -3,7 +3,7 @@
     pkgs.helix
     pkgs.alejandra
 
-    pkgs.nodePackages.bash-language-server
+    # pkgs.nodePackages.bash-language-server
     pkgs.cmake-language-server
 
     pkgs.zellij
@@ -21,8 +21,8 @@
     pkgs.texlab
     pkgs.lua-language-server
     pkgs.marksman
-    pkgs.nodePackages.pyright
-    pkgs.python310Packages.python-lsp-server
+    # pkgs.nodePackages.pyright
+    # pkgs.python310Packages.python-lsp-server
     pkgs.nodePackages.vue-language-server
     pkgs.yaml-language-server
     pkgs.taplo

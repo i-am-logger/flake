@@ -1,17 +1,18 @@
 { pkgs, ... }:
-let
-  image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
+# let
+#   # image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
 
-  inputImage = pkgs.fetchurl {
-    url = image_url;
-    sha256 = "sha256-AIT4q35wpsTslkBnqFLlNiRtn6b7vaL6fvb14oqEv6I=";
-  };
-  #brightness = -30;
-  #contrast = 0;
-  #fillColor = "black";
-in
+#   # inputImage = pkgs.fetchurl {
+#   #   url = image_url;
+#   #   sha256 = "sha256-AIT4q35wpsTslkBnqFLlNiRtn6b7vaL6fvb14oqEv6I=";
+#   # };
+#   #brightness = -30;
+#   #contrast = 0;
+#   #fillColor = "black";
+# in
 {
   stylix = {
+    enable = true;
     polarity = "dark";
 
     opacity = {
@@ -35,7 +36,7 @@ in
     base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
     # base16Scheme = ./mission-control.yaml;
 
-    targets.console.enable = false;
+    # targets.console.enable = false;
     # targets.waybar.enable = false;
     targets.grub = {
       enable = false;
@@ -76,4 +77,3 @@ in
     };
   };
 }
-
