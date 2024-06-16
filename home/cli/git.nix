@@ -39,10 +39,31 @@
 
     ignores = [ "*.img" ".direnv" "result" ];
 
-    difftastic = {
+    # difftastic = {
+    #   enable = true;
+    #   background = "dark";
+    #   display = "inline";
+    # };
+
+    # diff-so-fancy = {
+    #   enable = true;
+
+    # };
+
+    delta = {
       enable = true;
-      background = "dark";
-      display = "inline";
+      options = {
+        decorations = {
+          commit-decoration-style = "bold yellow box ul";
+          file-decoration-style = "none";
+          file-style = "bold yellow ul";
+        };
+        features = "decorations";
+        whitespace-error-style = "22 reverse";
+      };
     };
   };
+
+  programs.gitui.enable = true;
+
 }
