@@ -1,6 +1,6 @@
 { pkgs, ... }:
 # let
-#   # image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
+# image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
 
 #   # inputImage = pkgs.fetchurl {
 #   #   url = image_url;
@@ -21,7 +21,8 @@
       popups = 0.8;
       terminal = 0.8;
     };
-    image = Wallpapers/51202857906_363ba5d644_o.jpg; #inputImage;
+    # image = Wallpapers/51202857906_363ba5d644_o.jpg; #inputImage;
+    image = Wallpapers/futuristic4.jpg; #inputImage;
     # pkgs.runCommand "dimmed-background.png" {} ''
     #   ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
     # '';
@@ -33,8 +34,9 @@
     #      ${pkgs.imagemagick}/bin/convert ${ Wallpapers/51202857906_363ba5d644_o.jpg } -brightness-contrast -30,0 -fill black $out
     #    '';
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-    # base16Scheme = ./mission-control.yaml;
+    # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
+    base16Scheme = ./mission.yaml;
+    # base16Scheme = ./example.yaml;
 
     # targets.console.enable = false;
     # targets.waybar.enable = false;
@@ -48,7 +50,7 @@
         applications = 12;
         desktop = 12;
         popups = 12;
-        terminal = 18;
+        terminal = 14;
       };
       serif = {
         name = "Noto Nerd Font";

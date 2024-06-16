@@ -1,6 +1,5 @@
 scheme: "Mission Control"
 author: "Sn|cK <ido.samuelson@gmail.com>"
-# based on Ayu Dark 
 
 base00: "#0F1419" # background
 base01: "#131721" # background bright
@@ -18,8 +17,6 @@ base0C: "#59C2FF" # notice (cyan)
 base0D: "#3465A4" # info 1 (blue)
 base0E: "#D2A6FF" # info 2 (purple)
 base0F: "#E6B673" # warning 3 (brown)
-
-
 # 0 - background        : "#0F1419"
 # 1 - background_bright : "#131721"
 # 2 - background_select : "#272D38"
