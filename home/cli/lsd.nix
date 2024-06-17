@@ -5,6 +5,7 @@
     enable = true;
     enableAliases = true;
     settings = {
+      date = "+%y-%m-%d %H:%M:%S";
       indicators = true;
       recursion = {
         depth = 2;
@@ -14,6 +15,21 @@
       };
       symlink-arrow = "⇒";
       header = true;
+      classic = false;
+      # color = "auto";
+      # icons = "auto";
+      # hyperlink = "auto";
+      blocks = [
+        "permission"
+        "user"
+        "group"
+        # "context"
+        "size"
+        "date"
+        "name"
+        # "inode"
+        # "links"
+      ];
     };
   };
 }
