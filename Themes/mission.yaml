@@ -9,12 +9,12 @@ base05: "E6E1CF" # text default
 base06: "F3F4F5" # text subtitle
 base07: "FFFFFF" # text title
 base08: "F07178" # error (red)
-base09: "FF8F40" # warning 1 (orange)
+base09: "D2A6FF" # info 2 (purple) 
 base0A: "E6B450" # warning 2 (yellow)
 base0B: "00AF87" # success (green)
 base0C: "59C2FF" # notice (cyan)
 base0D: "3465A4" # info 1 (blue)
-base0E: "D2A6FF" # info 2 (purple) 
+base0E: "FF8F40" # warning 1 (orange)
 base0F: "E6B673" # warning 3 (brown)
 # 0 - background        : "0F1419"
 # 1 - background_bright : "131721"

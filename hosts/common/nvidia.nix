@@ -4,27 +4,12 @@
 { config, pkgs, ... }: {
 
   environment.systemPackages = with pkgs; [
-    # nvidia-dkms
-    # qt5-wayland
     qt5ct
     libva
   ];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-
-    driSupport = true;
-    driSupport32Bit = true;
-    # Vulkan
-    #driSupport = true;
-
-    #driSupport = true;
-
-    # VA-API
-    #extraPackages = with pkgs; [
-    #  vaapiVdpau
-    #  libvdpau-va-gl
-    #];
   };
 
   # Nvidia Drivers

@@ -30,7 +30,7 @@
   # ssd
   services.fstrim.enable = true;
 
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
   hardware.enableAllFirmware = true;
 
   # Allow unfree packages
