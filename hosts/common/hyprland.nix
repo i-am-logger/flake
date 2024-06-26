@@ -8,7 +8,7 @@
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   programs.hyprland.enable = true;
 
-  # services.xserver.windowManager.hypr.enable = true;
-  # services.xserver.libinput.enable = true;
-  # services.xserver.libinput.mouse.disableWhileTyping = true;
+  services.xserver.windowManager.hypr.enable = true;
+  services.libinput.enable = true;
+  services.libinput.mouse.disableWhileTyping = true;
 }

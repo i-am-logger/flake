@@ -16,6 +16,7 @@
     # iconTheme = {
     # };
   };
+
   # services.blueman.enable = true;
   services.blueman-applet.enable = true;
 
