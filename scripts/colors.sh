@@ -1,17 +1,55 @@
 #!/usr/bin/env bash
-echo -e "Base00 Black: \033[30mBlack\033[0m"
-echo -e "Base01 Red: \033[31mRed\033[0m"
-echo -e "Base02 Green: \033[32mGreen\033[0m"
-echo -e "Base03 Yellow: \033[33mYellow\033[0m"
-echo -e "Base04 Blue: \033[34mBlue\033[0m"
-echo -e "Base05 Magenta: \033[35mMagenta\033[0m"
-echo -e "Base06 Cyan: \033[36mCyan\033[0m"
-echo -e "Base07 White: \033[37mWhite\033[0m"
-echo -e "Base08 Bright Black (Gray): \033[90mGray\033[0m"
-echo -e "Base09 Bright Red: \033[91mBright Red\033[0m"
-echo -e "Base0A Bright Green: \033[92mBright Green\033[0m"
-echo -e "Base0B Bright Yellow: \033[93mBright Yellow\033[0m"
-echo -e "Base0C Bright Blue: \033[94mBright Blue\033[0m"
-echo -e "Base0D Bright Magenta: \033[95mBright Magenta\033[0m"
-echo -e "Base0E Bright Cyan: \033[96mBright Cyan\033[0m"
-echo -e "Base0F Bright White: \033[97mBright White\033[0m"
+ansi_mappings=(
+  Black
+  Red
+  Green
+  Yellow
+  Blue
+  Magenta
+  Cyan
+  White
+  Bright_Black
+  Bright_Red
+  Bright_Green
+  Bright_Yellow
+  Bright_Blue
+  Bright_Magenta
+  Bright_Cyan
+  Bright_White
+)
+colors=(
+  base00
+  base08
+  base0B
+  base0A
+  base0D
+  base0E
+  base0C
+  base05
+  base03
+  base08
+  base0B
+  base0A
+  base0D
+  base0E
+  base0C
+  base07
+  base09
+  base0F
+  base01
+  base02
+  base04
+  base06
+)
+for padded_value in `seq -w 0 21`; do
+  color_variable="color${padded_value}"
+  eval current_color=\$${color_variable}
+  current_color=$(echo ${current_color//\//} | tr '[:lower:]' '[:upper:]') # get rid of slashes, and uppercase
+  non_padded_value=$((10#$padded_value))
+  base16_color_name=${colors[$non_padded_value]}
+  current_color_label=${current_color:-unknown}
+  ansi_label=${ansi_mappings[$non_padded_value]} 
+  block=$(printf "\x1b[48;5;${non_padded_value}m___________________________")
+  foreground=$(printf "\x1b[38;5;${non_padded_value}m$color_variable")
+  printf "%s %s %s %-30s %s\x1b[0m\n" $foreground $base16_color_name $current_color_label ${ansi_label:-""} $block
+done;
