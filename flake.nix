@@ -69,12 +69,12 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true; # Allow proprietary software
-        nixpkgs.config.permittedInsecurePackages = [
-          "nix-2.15.3"
-          "nix-2.19.3"
-          "nix-2.16.2"
-          "nix"
-        ];
+        # nixpkgs.config.permittedInsecurePackages = [
+        #   "nix-2.15.3"
+        #   "nix-2.19.3"
+        #   "nix-2.16.2"
+        #   "nix"
+        # ];
       };
     in
     {
