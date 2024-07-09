@@ -38,9 +38,9 @@
         url = "github:outfoxxed/hy3";
       };
     # themes
-    stylix.url = "github:danth/stylix";
+    # stylix.url = "github:danth/stylix";
     #stylix.url = "github:realsnick/stylix";
-    # stylix.url = "../../../home/snick/Code/github/snick/stylix";
+    stylix.url = "../../../home/snick/Code/snick/stylix";
   };
 
   outputs =

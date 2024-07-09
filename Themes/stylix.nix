@@ -35,7 +35,7 @@
     #    '';
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-    base16Scheme = ./mission.yaml;
+    base16Scheme = ./mission_hacker.yaml;
     # base16Scheme = ./example.yaml;
 
     # targets.console.enable = false;

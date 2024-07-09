@@ -11,7 +11,7 @@
 
     cli/fish
     cli/btop
-    cli/neofetch
+    # cli/neofetch
     # cli/ranger
     cli/mc
     cli/helix
@@ -34,6 +34,7 @@
   home.packages = with pkgs; [
     # file manager
     yazi
+    # ueberzug # move to yazi
     #ranger
     # IDE
     #lapce
@@ -59,7 +60,7 @@
     #github-desktop
     # Video/Audio
     #cli-visualizer # Audio visualizer
-    #feh # Image Viewer
+    feh # Image Viewer
     #sxiv # Image Viewer
     #mpv # Media Player
     #pavucontrol # Audio control

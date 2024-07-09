@@ -56,7 +56,7 @@
 
     pciutils
     screen
-    neofetch
+    # neofetch
     btop
 
     mc

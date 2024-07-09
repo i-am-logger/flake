@@ -35,32 +35,32 @@ include_special = false
 # size = "50% 75%"
 # unfocus = "hide"
 
-[scratchpads.term]
-animation = "fromTop"
-command = "kitty --class kitty-dropterm"
-class = "kitty-dropterm"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.term]
+# animation = "fromTop"
+# command = "kitty --class kitty-dropterm"
+# class = "kitty-dropterm"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
-[scratchpads.term-mc]
-animation = "fromTop"
-command = "kitty --class kitty-dropterm-mc mc"
-class = "kitty-dropterm-mc"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.term-mc]
+# animation = "fromTop"
+# command = "kitty --class kitty-dropterm-mc mc"
+# class = "kitty-dropterm-mc"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
-[scratchpads.term-debugger]
-animation = "fromTop"
-command = "kitty --class kitty-dropterm-debugger screen /dev/ttyUSB0 1500000"
-class = "kitty-dropterm-debugger"
-lazy = true
-size = "50% 75%"
-position = "25% 5%"
-excludes = "*"
+# [scratchpads.term-debugger]
+# animation = "fromTop"
+# command = "kitty --class kitty-dropterm-debugger screen /dev/ttyUSB0 1500000"
+# class = "kitty-dropterm-debugger"
+# lazy = true
+# size = "50% 75%"
+# position = "25% 5%"
+# excludes = "*"
 
 # [scratchpads.term-nmtui]
 # animation = "fromRight"

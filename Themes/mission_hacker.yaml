@@ -1,0 +1,39 @@
+scheme: "Mission Control"
+author: "Sn|cK (http://github.com/realsnick)"
+base00: "000000" # background
+base01: "131721" # background bright
+base02: "272D38" # backgorund select
+base03: "3E4B59" # text strikethrough
+base04: "BFBDB6" # text comment
+# base05: "59C2FF" # text default (cyan)
+base05: "3465A4" # info 1 (blue)
+base06: "95E6CB" # text subtitle (light cyan)
+base07: "59C2FF" # text title (cyan, brightest)
+# base05: "E6E1CF" # text default
+# base06: "F3F4F5" # text subtitle
+# base07: "FFFFFF" # text title
+base08: "F07178" # error (red)
+base09: "D2A6FF" # info 2 (purple) 
+base0A: "E6B450" # warning 2 (yellow)
+base0B: "00AF87" # success (green)
+base0C: "D2A6FF" # notice (purple)
+# base0D: "3465A4" # info 1 (blue)
+base0D: "59C2FF" # text default (cyan)
+base0E: "FF8F40" # warning 1 (orange)
+base0F: "E6B673" # warning 3 (brown)
+# 0 - background        : "0F1419"
+# 1 - background_bright : "131721"
+# 2 - background_select : "272D38"
+# 3 - text_darker       : "3E4B59"
+# 4 - text_dark         : "BFBDB6"
+# 5 - text              : "E6E1CF"
+# 6 - text_bright       : "F3F4F5" # original #E6E1CF
+# 7 - text_super_bright : "FFFFFF" # original #F3F4F5
+# 8 - red               : "F07178"
+# 9 - orange            : "FF8F40"
+# A - magenta           : "D2A6FF"
+# B - green             : "00AF87" # original #B8CC52
+# C - cyan              : "59C2FF" # original #95E6CB
+# D - blue              : "3465A4" # original #59C2FF
+# E - yellow            : "E6B450" # original #FFB454
+# F - brown             : "E6B673"
