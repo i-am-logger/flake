@@ -589,11 +589,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1720542392,
-        "narHash": "sha256-7xLnppDS5R5kBZXBhJ7uOhaG2rtspWAByj+YNMBo37k=",
+        "lastModified": 1720579976,
+        "narHash": "sha256-ZlOtc1Z+0cJHU3235UKrMXNNFTz8NXdt+8i15XnHK3w=",
         "ref": "refs/heads/master",
-        "rev": "f7bbcc7e5b6626028488c78f8c140b20b6a3c869",
-        "revCount": 383,
+        "rev": "d1a333e34bc9bd21e82c636e746a0b3c64c38953",
+        "revCount": 384,
         "type": "git",
         "url": "file:///home/snick/Code/snick/stylix"
       },

@@ -71,6 +71,11 @@
     recursive = true;
   };
 
+  programs.hyprlock = {
+    enable = true;
+
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland = {

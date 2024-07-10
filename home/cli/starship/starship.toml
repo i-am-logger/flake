@@ -125,8 +125,8 @@ commands = [
 
 [character]
 format = "$symbol"
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
+success_symbol = "[](bold green)"
+error_symbol = "[](bold red)"
 vimcmd_symbol = "[❮](bold green)"
 vimcmd_visual_symbol = "[❮](bold yellow)"
 vimcmd_replace_symbol = "[❮](bold purple)"
@@ -237,7 +237,7 @@ detect_folders = []
 
 [directory]
 truncation_length = 3
-truncate_to_repo = true
+truncate_to_repo = false
 fish_style_pwd_dir_length = 3
 use_logical_path = true
 format = "[$read_only]($read_only_style)[$path]($style)"
@@ -1024,7 +1024,7 @@ detect_folders = [".metals"]
 
 [shell]
 format = "[$indicator]($style)"
-bash_indicator = ""
+bash_indicator = ""
 fish_indicator = " "
 zsh_indicator = "zsh"
 powershell_indicator = "psh"

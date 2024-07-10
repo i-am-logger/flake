@@ -21,7 +21,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      # options = "--delete-older-than 7d";
+      options = "--delete-older-than 7d";
     };
     package = pkgs.nixVersions.latest;
     #registry.nixpkgs.flake = inputs.nixpkgs;

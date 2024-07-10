@@ -48,38 +48,11 @@
   # support udev rules for zsa voyager's keyboard
   hardware.keyboard.zsa.enable = true;
 
-  # systemd.user.services.swww = {
-  #   description = "Efficient animated wallpaper daemon for wayland";
-  #   wantedBy = [ "graphical-session.target" ];
-  #   partOf = [ "graphical-session.target" ];
-  #   before = [ "default_wall.service" ];
-  #   serviceConfig = {
-  #     Type = "simple";
-  #     ExecStart = ''
-  #       ${pkgs.swww}/bin/swww-daemon
-  #     '';
-  #     ExecStop = "${pkgs.swww}/bin/swww kill";
-  #     Restart = "on-failure";
-  #   };
-  # };
-  # systemd.user.services.default_wall = {
-  #   description = "default wallpaper";
-  #   requires = [ "swww.service" ];
-  #   after = [ "swww.service" "graphical-session.target" ];
-  #   wantedBy = [ "graphical-session.target" ];
-  #   partOf = [ "graphical-session.target" ];
-  #   script = ''${default_wall}'';
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #     Restart = "on-failure";
-  #   };
-  # };
-
   services.trezord.enable = true;
   security.pam.services.swaylock = { };
-  # xdg.portal = {
-  #   enable = true;
-  #   wlr.enable = true;
-  # };
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+  };
 
 }
