@@ -105,7 +105,7 @@ source = auto
 # 'mono_option' set mono to either take input from 'left', 'right' or 'average'.
 # set 'reverse' to 1 to display frequencies the other way around.
 channels = mono
-; mono_option = average
+mono_option = average
 ; reverse = 0
 
 # Raw output target. A fifo will be created if target does not exist.
@@ -115,7 +115,7 @@ channels = mono
 ; data_format = binary
 
 # Binary bit format, can be '8bit' (0-255) or '16bit' (0-65530).
-; bit_format = 16bit
+bit_format = 16bit
 
 # Ascii max value. In 'ascii' mode range will run from 0 to value specified here
 ; ascii_max_range = 1000
@@ -161,14 +161,14 @@ channels = mono
 gradient = 1
 gradient_count = 8
 
-gradient_color_1 = '#4CAF50'
-gradient_color_2 = '#4CAF50'
-gradient_color_3 = '#4CAF50'
-gradient_color_4 = '#4CAF50'
-gradient_color_5 = '#4CAF50'
-gradient_color_6 = '#FFA500'
-gradient_color_7 = '#FFA500'
-gradient_color_8 = '#FF0000'
+gradient_color_1 = "#2E588F"
+gradient_color_2 = '#2E588F'
+gradient_color_3 = '#2E588F'
+gradient_color_4 = '#2E588F'
+gradient_color_5 = '#2E588F'
+gradient_color_6 = '#50ABE5'
+gradient_color_7 = '#80C7B4'
+gradient_color_8 = '#D97681'
 
 
 

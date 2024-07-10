@@ -10,6 +10,7 @@
     # cli/tmux.nix
 
     cli/fish
+    cli/starship
     cli/btop
     # cli/neofetch
     # cli/ranger

@@ -53,10 +53,10 @@
 
     plugins = [
       # Enable a plugin (here grc for colorized command output) from nixpkgs
-      {
-        name = "tide";
-        src = pkgs.fishPlugins.tide.src;
-      }
+      # {
+      #   name = "tide";
+      #   src = pkgs.fishPlugins.tide.src;
+      # }
       {
         name = "puffer";
         src = pkgs.fishPlugins.puffer.src;

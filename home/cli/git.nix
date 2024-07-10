@@ -12,7 +12,7 @@
     lfs.enable = true;
 
     package = pkgs.gitAndTools.gitFull;
-    userName = "Sn|cK";
+    userName = "Logger";
     userEmail = "ido.samuelson@gmail.com";
     signing = {
       key = "6AACFE7CBA89F53A"; # gpg --list-secret-keys --keyid-format=long
@@ -28,6 +28,16 @@
       graph = "log --decorate --oneline --graph";
     };
     extraConfig = {
+      init = {
+        defaultBranch = "main";
+      };
+      url = {
+        "git@github.com:" = {
+          insteadOf = [
+            "https://github.com/"
+          ];
+        };
+      };
       core = {
         editor = "hx";
         autocrlf = "input";
@@ -49,6 +59,7 @@
     #   enable = true;
 
     # };
+
 
     delta = {
       enable = true;
