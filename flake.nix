@@ -31,12 +31,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ags.url = "github:Aylur/ags";
     # nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
     # nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-    hy3 =
-      {
-        url = "github:outfoxxed/hy3";
-      };
+    # hy3 =
+    #   {
+    #     url = "github:outfoxxed/hy3";
+    #   };
     # themes
     # stylix.url = "github:danth/stylix";
     #stylix.url = "github:realsnick/stylix";
@@ -55,7 +57,7 @@
     , home-manager
       # , nix-doom-emacs
       # , nix-ros-overlay
-    , hy3
+      # , hy3
     , stylix
     , ...
     }:
@@ -95,14 +97,14 @@
                 lib = nixpkgs.lib;
               };
             })
-            {
-              nixpkgs.config.permittedInsecurePackages = [
-                "nix-2.19.3"
-                "nix-2.15.3"
-                "nix-2.16.2"
-                "nix"
-              ];
-            }
+            # {
+            #   nixpkgs.config.permittedInsecurePackages = [
+            #     "nix-2.19.3"
+            #     "nix-2.15.3"
+            #     "nix-2.16.2"
+            #     "nix"
+            #   ];
+            # }
             # secrets
             sops-nix.nixosModules.sops
             # system

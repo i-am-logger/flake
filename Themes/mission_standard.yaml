@@ -1,0 +1,19 @@
+scheme: "Mission Control - standard"
+author: "Sn|cK (http://github.com/realsnick)"
+base00: "000000" # Black                        00    | background
+base01: "282828" # DARK GRAY        "131721" # 18    | background bright
+base02: "383838" # GRAY             "272D38" # 19    | backgorund select
+base03: "585858" # BRIGHT BLACK     "3E4B59" # 08    | text strikethrough
+base04: "B8B8B8" # DARK WHITE       "BFBDB6" # 20    | text comment
+base05: "D8D8D8" # WHITE            "4CA5D9" # 07    | info 1 (blue)
+base06: "E8E8E8" # WHITE 2          "95E6CB" # 21    | text subtitle (light cyan)
+base07: "F8F8F8" # BRIGHT WHITE     "4CA5D9" # 15    | text title (cyan, brightest)
+base08: "AB4642" # RED              "AB4642" # RED              "F07178" # 01,09 | error (red)
+base09: "DC9656" # BRIGHT BROWN     "D2A6FF" # 16    | info 2 (purple) 
+base0A: "F7CA88" # YELLOW           "E6B450" # 03,11 | warning 2 (yellow)
+base0B: "A1B56C" # GREEN            "00AF87" # 02,10 | success (green)
+base0C: "86C1B9" # CYAN             "59C2FF" # 04,12 | text default (cyan)
+base0D: "7CAFC2" # BLUE             "3465A4" # 04,12 | text default (cyan)
+base0E: "BA8BAF" # MAGENTA          "D2A6FF" # 06,14 | notice (purple)
+base0F: "A16946" # BROWN            "E6B673" # 17    | warning 3 (brown)
+

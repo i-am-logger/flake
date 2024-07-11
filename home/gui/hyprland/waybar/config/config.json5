@@ -1,4 +1,4 @@
-// json5
+//json5
 [
 	{
 		// TOP BAR
@@ -37,7 +37,6 @@
 			"custom/left-arrow-dark",
 			"tray"
 		],
-
 		"custom/seperator": {
 			"format": "|",
 			"tooltip": false
@@ -138,7 +137,7 @@
 		"cava": {
 			// "cava_config": "$XDG_CONFIG_HOME/cava/config",
 			"cava_config": "$HOME/cava/config",
-			 // "format": "  |{}|",
+			// "format": "  |{}|",
 			"framerate": 120,
 			"autosens": 1,
 			"sensitivity": 1.5,
@@ -157,8 +156,16 @@
 			// "input_delay": 2,
 			"ascii_max_range": 8,
 			// "format-icons": ["▁","▂","▃","▄","▅","▆","▇","█"],
-			"format-icons": ["█", "▇", "▆", "▅", "▄", "▃", "▂", "▁"],
-
+			"format-icons": [
+				"█",
+				"▇",
+				"▆",
+				"▅",
+				"▄",
+				"▃",
+				"▂",
+				"▁"
+			],
 			"actions": {
 				"on-click-right": "mode"
 			}
@@ -213,7 +220,6 @@
 		],
 		"modules-center": [],
 		"modules-right": [],
-
 		"custom/seperator": {
 			"format": "|",
 			"tooltip": false

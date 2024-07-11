@@ -1,6 +1,7 @@
 # Warning: This config does not include keys that have an unset value
 
 # $all is shorthand for $username$hostname$localip$shlvl$singularity$kubernetes$nats$directory$vcsh$fossil_branch$fossil_metrics$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$pijul_channel$docker_context$package$bun$c$cmake$cobol$daml$dart$deno$dotnet$elixir$elm$erlang$fennel$gleam$golang$gradle$haskell$haxe$helm$java$julia$kotlin$lua$nim$nodejs$ocaml$odin$opa$perl$php$pulumi$purescript$python$quarto$raku$rlang$red$ruby$rust$scala$solidity$swift$terraform$typst$vlang$vagrant$zig$buf$guix_shell$nix_shell$conda$meson$spack$memory_usage$aws$gcloud$openstack$azure$direnv$env_var$crystal$custom$sudo$cmd_duration$line_break$jobs$battery$time$status$container$os$shell$character
+
 "$schema" = "https://starship.rs/config-schema.json"
 format = """\
 $git_branch $git_commit $git_status$git_metrics$git_state\
@@ -57,17 +58,20 @@ disabled = false
 format = "[$symbol$percentage]($style)"
 
 [[battery.display]]
-threshold = 100
-style = "white"
-[[battery.display]]
-threshold = 50
-style = "yellow"
-[[battery.display]]
-threshold = 30
-style = "magenta"
-[[battery.display]]
 threshold = 10
 style = "red bold"
+
+[[battery.display]]
+threshold = 30
+style = "yellow"
+
+[[battery.display]]
+threshold = 50
+style = "17"
+
+[[battery.display]]
+threshold = 100
+style = "blue"
 
 [buf]
 format = "with [$symbol($version )]($style)"
@@ -99,7 +103,7 @@ detect_folders = []
 [c]
 format = " [$symbol($version(-$name))]($style)"
 version_format = "v${raw}"
-style = "white"
+style = "blue"
 symbol = " "
 disabled = false
 detect_extensions = [
@@ -242,8 +246,8 @@ fish_style_pwd_dir_length = 3
 use_logical_path = true
 format = "[$read_only]($read_only_style)[$path]($style)"
 repo_root_format = "[$read_only]($read_only_style)[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)"
-style = "blue bold"
-repo_root_style = "underline blue bold"
+style = "white"
+repo_root_style = "underline cyan bold"
 disabled = false
 read_only = "🔒"
 read_only_style = "red"
@@ -257,7 +261,7 @@ use_os_path_sep = true
 [direnv]
 format = " [$symbol$loaded$allowed]($style)"
 symbol = " "
-style = "white"
+style = "blue"
 disabled = false
 detect_extensions = []
 detect_files = [".envrc"]
@@ -386,7 +390,7 @@ detect_env_vars = []
 [git_branch]
 format = "[$symbol$branch(:$remote_branch)]($style)"
 symbol = "  "
-style = "white"
+style = "blue"
 truncation_length = 9223372036854775807
 truncation_symbol = "…"
 only_attached = false
@@ -397,7 +401,7 @@ disabled = false
 [git_commit]
 commit_hash_length = 8
 format = '[\($hash$tag\)]($style)'
-style = "white bold"
+style = "white"
 only_detached = false
 disabled = false
 tag_symbol = " 🏷  "
@@ -405,8 +409,8 @@ tag_disabled = false
 tag_max_candidates = 0
 
 [git_metrics]
-added_style = "bold green"
-deleted_style = "bold red"
+added_style = "green"
+deleted_style = "red"
 only_nonzero_diffs = true
 format = "([+$added]($added_style) )([-$deleted]($deleted_style))"
 disabled = false
@@ -426,7 +430,7 @@ disabled = false
 
 [git_status]
 format = '([$ahead_behind$all_status]($style))'
-style = "white"
+style = "blue"
 stashed = '[${count}](cyan) '
 ahead = "[󱓍 ⇡${count}](green) "
 behind = "[󱓍 ⇣${count}](yellow) "
@@ -434,7 +438,7 @@ up_to_date = "󱓏 "
 diverged = "[󰩌 ${count}](red) "
 conflicted = "[ ${count}](red) "
 deleted = "[󱪢 ${count}](red) "
-renamed = "[󱀱 ${count}](cyan) "
+renamed = "[󱀱 ${count}](blue) "
 modified = "[ ${count}](yellow) "
 staged = "[ ${count}](green) "
 untracked = "[󱀶 ${count}](08) "
@@ -555,7 +559,7 @@ ssh_symbol = " 🌐"
 trim_at = "."
 detect_env_vars = []
 format = "[$hostname$ssh_symbol]($style)"
-style = "blue bold"
+style = "blue"
 disabled = false
 
 [java]
@@ -680,7 +684,7 @@ disabled = true
 format = " [$symbol($version)]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "white"
+style = "blue"
 disabled = false
 detect_extensions = [
     "nim",
@@ -704,7 +708,7 @@ heuristic = false
 format = " [$symbol($version )]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "white"
+style = "blue"
 disabled = false
 not_capable_style = "bold red"
 detect_extensions = [
@@ -999,7 +1003,7 @@ detect_variables = [
 format = " [$symbol($version)]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "bold white"
+style = "blue"
 disabled = false
 detect_extensions = ["rs"]
 detect_files = ["Cargo.toml"]
@@ -1035,7 +1039,7 @@ nu_indicator = "nu"
 xonsh_indicator = "xsh"
 cmd_indicator = "cmd"
 unknown_indicator = ""
-style = "white bold"
+style = "blue"
 disabled = false
 
 [shlvl]
@@ -1091,7 +1095,7 @@ disabled = true
 format = "[$symbol]($style)"
 symbol = "󰀋 "
 style = "bold yellow"
-allow_windows = true
+allow_windows = false
 disabled = false
 
 [swift]
@@ -1120,7 +1124,7 @@ detect_folders = [".terraform"]
 
 [time]
 format = "[$time]($style)"
-style = "white"
+style = "blue"
 use_12hr = false
 disabled = false
 utc_time_offset = "local"
@@ -1139,8 +1143,8 @@ detect_folders = []
 [username]
 detect_env_vars = []
 format = "[$user]($style)"
-style_root = "red bold"
-style_user = "blue bold"
+style_root = "red"
+style_user = "blue"
 show_always = true
 disabled = false
 

@@ -20,7 +20,8 @@
     # GUI
     gui/hyprland
     gui/kitty
-    gui/rofi
+    gui/ags
+    # gui/rofi
     # gui/emacs/doom-emacs.nix
     gui/chats/discord
     gui/obs-studio.nix
@@ -35,6 +36,7 @@
   home.packages = with pkgs; [
     # file manager
     yazi
+    fastfetch
     # ueberzug # move to yazi
     #ranger
     # IDE
