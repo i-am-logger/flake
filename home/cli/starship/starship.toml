@@ -67,11 +67,11 @@ style = "yellow"
 
 [[battery.display]]
 threshold = 50
-style = "17"
+style = "purple"
 
 [[battery.display]]
 threshold = 100
-style = "blue"
+style = "cyan"
 
 [buf]
 format = "with [$symbol($version )]($style)"
