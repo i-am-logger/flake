@@ -47,6 +47,8 @@
 
   # support udev rules for zsa voyager's keyboard
   hardware.keyboard.zsa.enable = true;
+  # to access ios devices
+  services.usbmuxd.enable = true;
 
   services.trezord.enable = true;
   security.pam.services.swaylock = { };
