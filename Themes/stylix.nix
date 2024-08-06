@@ -22,7 +22,7 @@
       terminal = 0.8;
     };
     # image = Wallpapers/51202857906_363ba5d644_o.jpg; #inputImage;
-    image = Wallpapers/futuristic4.jpg; #inputImage;
+    image = Wallpapers/futuristic1.png; #inputImage;
     # pkgs.runCommand "dimmed-background.png" {} ''
     #   ${pkgs.imagemagick}/bin/convert "${inputImage}" -brightness-contrast ${brightness},${contrast} -fill ${fillColor} $out
     # '';
