@@ -8,6 +8,8 @@
       pkgs.streamlink # streamlink for live videostream
       wlrobs
       obs-teleport
+      obs-tuna
+      waveform
     ];
   };
 }
