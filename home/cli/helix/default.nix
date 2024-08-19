@@ -27,7 +27,7 @@
     pkgs.yaml-language-server
     pkgs.taplo
 
-    pkgs.vimPlugins.copilot-vim
+    # pkgs.vimPlugins.copilot-vim
     pkgs.tree-sitter
     (pkgs.tree-sitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
     pkgs.nixpkgs-fmt
