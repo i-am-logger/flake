@@ -1,81 +1,70 @@
-{ pkgs, ... }: {
+{ lib, pkgs, ... }:
+
+let
+  hyprlandConfig = import ./hyprland-config.nix { inherit lib pkgs; };
+in
+{
   imports = [
     ./waybar
     ./swappy
-    # ./pyprland
+    hyprlandConfig
+    # ./pyprland  # Commented out as in original
   ];
 
+  # Cursor configuration (commented out as in original)
   # home.pointerCursor = {
   #   package = pkgs.gnome.adwaita-icon-theme;
   #   name = "Adwaita";
   #   gtk.enable = true;
   # };
 
+  # GTK configuration
   gtk = {
     enable = true;
     # iconTheme = {
     # };
   };
 
-  # services.blueman.enable = true;
-  services.blueman-applet.enable = true;
+  # Services
+  services = {
+    # blueman.enable = true;  # Commented out as in original
+    blueman-applet.enable = true;
+  };
 
+  # Home packages
   home.packages = with pkgs; [
-    # pkgs.xorg.xprop # trying to fix scale of non hyprland windows like signal, discord
-    #hyprland
     wlr-randr
-    # pipewire
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
     brightnessctl
-    #wallpaper
     swww
     waypaper
     swaybg
-    # screenshot
     grimblast
     slurp
     swappy
-    # clipboard
     wl-clipboard
     cliphist
-    # mount
     udiskie
-    #video player
     vlc
-    #   polkit-kde-agent #TODO: configure and get rid of gnome dekstop manager
-    #libsForQt5.full -- error of insecure
-    # pkgs.qt6.full
-    # pkgs.qt-wayland
-    # pkgs.wineWowPackages.waylandFull
-    # pkgs.winetricks
     hyprpicker
-
     hyprpaper
     wlogout
     networkmanagerapplet
-
     pavucontrol
     pamixer
     playerctl
-
     gtk3
   ];
 
+  # Hypr configuration files
   xdg.configFile."hypr" = {
     source = ./config;
     recursive = true;
   };
 
+  # Hyprlock
   programs.hyprlock = {
     enable = true;
-
-  };
-
-  wayland.windowManager.hyprland = {
-    enable = true;
-    xwayland = {
-      enable = true;
-    };
   };
 }

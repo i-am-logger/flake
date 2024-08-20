@@ -1,36 +1,37 @@
 { pkgs, ... }: {
-  home.packages = [
-    pkgs.helix
-    pkgs.alejandra
+  home.packages = with pkgs; [
+    helix
+    alejandra
 
     # pkgs.nodePackages.bash-language-server
-    pkgs.cmake-language-server
+    cmake-language-server
 
-    pkgs.zellij
-    pkgs.lazygit
-    pkgs.nil
+
+    zellij
+    lazygit
+    nil
     # pkgs.rnix-lsp
-    pkgs.rust-analyzer
-    pkgs.lldb
-    pkgs.clang-tools
-    pkgs.ocamlPackages.ocaml-lsp
-    pkgs.vscode-langservers-extracted
-    pkgs.dockerfile-language-server-nodejs
-    pkgs.haskellPackages.haskell-language-server
-    pkgs.nodePackages.typescript-language-server
-    pkgs.texlab
-    pkgs.lua-language-server
-    pkgs.marksman
+    rust-analyzer
+    lldb
+    clang-tools
+    ocamlPackages.ocaml-lsp
+    vscode-langservers-extracted
+    dockerfile-language-server-nodejs
+    haskellPackages.haskell-language-server
+    nodePackages.typescript-language-server
+    texlab
+    lua-language-server
+    marksman
     # pkgs.nodePackages.pyright
     # pkgs.python310Packages.python-lsp-server
-    pkgs.nodePackages.vue-language-server
-    pkgs.yaml-language-server
-    pkgs.taplo
+    nodePackages.vue-language-server
+    yaml-language-server
+    taplo
 
     # pkgs.vimPlugins.copilot-vim
-    pkgs.tree-sitter
-    (pkgs.tree-sitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
-    pkgs.nixpkgs-fmt
+    tree-sitter
+    (tree-sitter.withPlugins (_: tree-sitter.allGrammars))
+    nixpkgs-fmt
   ];
 
   programs.helix = {
@@ -39,7 +40,7 @@
     settings = {
       editor = {
         # line-number = "relative";
-        rulers = [ 80 120 ];
+        rulers = [ 120 ];
         bufferline = "always";
         mouse = true;
         true-color = true;

@@ -10,7 +10,7 @@
       enable_audio_bell = true;
       window_alert_on_bell = " yes";
       bell_on_tab = "🔔 ";
-      disable_ligatures = "never";
+      disable_ligatures = "auto";
       cursor_text_color = "background";
       cursor_shape = "block";
       cursor_blink_internal = 1;
