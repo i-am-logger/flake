@@ -1,7 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, ... }: {
+{ lib, config, pkgs, ... }: {
 
   environment.systemPackages = with pkgs; [
     qt5ct
@@ -12,16 +9,23 @@
     enable = true;
   };
 
+  services.xserver.videoDrivers = [ "nvidia" ];
+
   # Nvidia Drivers
   hardware.nvidia = {
     # Modesetting is required.
+
+    # prime = {
+    #   sync.enable = true;
+    #   offload.enable = false;
+    # };
     modesetting.enable = true;
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = false;
+    # powerManagement.enable = false;
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
+    # powerManagement.finegrained = false;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -40,4 +44,16 @@
     # package = config.boot.kernelPackages.nvidiaPackages.stable;
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
+
+  specialisation = {
+    on-the-go.configuration = {
+      system.nixos.tags = [ "on-the-go" ];
+      hardware.nvidia = {
+        prime.offload.enable = lib.mkForce true;
+        prime.offload.enableOffloadCmd = lib.mkForce true;
+        prime.sync.enable = lib.mkForce false;
+      };
+    };
+  };
 }
+
