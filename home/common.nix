@@ -56,7 +56,7 @@
     # UI Media Keys
     #playerctl
     #UI Apps
-    mypaint
+    # mypaint
     marktext
     #gimp
     #pfetch # Minimal fetch
