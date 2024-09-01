@@ -28,7 +28,7 @@
     common/environment.nix
     common/hyprland.nix
     common/qemu.nix
-
+    common/appimage.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix

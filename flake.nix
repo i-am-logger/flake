@@ -68,9 +68,12 @@
       # system = "x86_64-linux";
       # config.allowUnfree = true;
       # };
+      packages-overlay = import ./packages/overlay.nix;
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true; # Allow proprietary software
+
+        overlays = [ packages-overlay ];
         # nixpkgs.config.permittedInsecurePackages = [
         #   "nix-2.15.3"
         #   "nix-2.19.3"
@@ -78,6 +81,7 @@
         #   "nix"
         # ];
       };
+
     in
     {
       nixosConfigurations = {

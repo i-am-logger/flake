@@ -1,4 +1,7 @@
 { pkgs, ... }: {
+  home.packages = with pkgs; [
+    ffmpeg-full
+  ];
   programs.obs-studio = {
     enable = true;
     plugins = with pkgs.obs-studio-plugins; [

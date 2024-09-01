@@ -48,7 +48,6 @@ in
     udiskie
     vlc
     hyprpicker
-    hyprpaper
     wlogout
     networkmanagerapplet
     pavucontrol

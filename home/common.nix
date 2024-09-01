@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  cursor = pkgs.callPackage ./cursor.nix { };
+in
+{
   imports = [
     ./xdg.nix
     cli/bat.nix
@@ -107,6 +111,7 @@
 
     # coding
     vscode
+    cursor
     bazecor
     # sky360
     #libusb1

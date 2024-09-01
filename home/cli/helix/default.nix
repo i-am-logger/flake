@@ -27,7 +27,7 @@
     nodePackages.vue-language-server
     yaml-language-server
     taplo
-
+    github-copilot-cli
     # pkgs.vimPlugins.copilot-vim
     tree-sitter
     (tree-sitter.withPlugins (_: tree-sitter.allGrammars))
@@ -154,15 +154,14 @@
         # nixd = {
         #   command = "${nixd}/bin/nixd";
         # };
-        eslint = {
-          command = "${eslint}/bin/eslint";
-          args = [ "--stdin" ];
-        };
-        # copilot = {
-        #   command = "${copilot-lsp}/copilot";
-        #   language-id = "copilot";
-        #   args = ["--stdio"];
+        # eslint = {
+        #   command = "${eslint}/bin/eslint";
+        #   args = [ "--stdin" ];
         # };
+        copilot = {
+          command = "github-copilot-cli";
+          args = [ "--stdio" ];
+        };
         nil.command = "${nil}/bin/nil";
         rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
         rust-analyzer.config = {
@@ -203,7 +202,7 @@
           name = "nix";
           auto-format = true;
           formatter = { command = "nixpkgs-fmt"; };
-          language-servers = [ "nixd" "nil" ];
+          language-servers = [ "nixd" "nil" "copilot" ];
         }
         {
           name = "nim";
@@ -220,6 +219,7 @@
         {
           name = "rust";
           auto-format = true;
+          language-servers = [ "rust-analyzer" "copilot" ];
         }
       ];
     };
