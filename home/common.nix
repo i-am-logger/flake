@@ -29,7 +29,6 @@ in
     # gui/emacs/doom-emacs.nix
     gui/chats/discord
     gui/obs-studio.nix
-
     #(../GUI/SDR)
   ];
 
@@ -41,6 +40,8 @@ in
     # file manager
     yazi
     fastfetch
+    termscp
+    # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger
     # IDE
@@ -110,6 +111,7 @@ in
     # indi-full
 
     # coding
+    jetbrains.rust-rover
     vscode
     cursor
     bazecor

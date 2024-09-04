@@ -54,13 +54,14 @@ in
     pamixer
     playerctl
     gtk3
+    rofi-wayland
   ];
 
   # Hypr configuration files
-  xdg.configFile."hypr" = {
-    source = ./config;
-    recursive = true;
-  };
+  # xdg.configFile."hypr" = {
+  #   source = ./config;
+  #   recursive = true;
+  # };
 
   # Hyprlock
   programs.hyprlock = {

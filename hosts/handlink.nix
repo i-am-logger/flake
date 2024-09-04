@@ -47,6 +47,18 @@
 
   # support udev rules for zsa voyager's keyboard
   hardware.keyboard.zsa.enable = true;
+  hardware.hackrf.enable = true;
+  services.udev.extraRules = ''
+    ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", MODE="0666", GROUP="plugdev"
+  '';
+  environment.systemPackages = with pkgs; [
+    hackrf
+    gqrx
+    sdrangel
+    # sdrplay
+    # gnuradioPackages.osmosdr
+    # gnuradio
+  ];
   # to access ios devices
   services.usbmuxd.enable = true;
 

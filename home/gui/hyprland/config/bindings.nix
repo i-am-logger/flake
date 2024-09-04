@@ -9,8 +9,8 @@
 
   # quickly launch program
   bind = [
-    # "$mainMod, Space, exec, rofi -show run"
-    # "$mainMod SHIFT, Space, exec, rofi -show ssh"
+    "$mainMod, Space, exec, rofi -show run"
+    "$mainMod SHIFT, Space, exec, rofi -show ssh"
     "$mainMod, E, exec, brave"
     "$mainMod SHIFT, E, exec, google-chrome-stable"
     "SHIFT, Print, exec, grimblast save area - | swappy -f -"
