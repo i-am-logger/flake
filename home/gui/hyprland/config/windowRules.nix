@@ -8,5 +8,8 @@
     "float,^(thunar)$"
     "animation popin,class:^(thunar)$"
   ];
-  # windowrule = tile, ^(kitty)$
+
+  windowrulev2 = [
+    "float,class:^(brave)$,title:^(Save File)$"
+  ];
 }
