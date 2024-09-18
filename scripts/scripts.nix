@@ -1,6 +1,6 @@
 { writeShellScriptBin, ... }: {
 
-  writeShellScriptBin "name" ''
+  writeShellScriptBin "hi" ''
     echo "hello"
   ''
 

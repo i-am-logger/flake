@@ -9,7 +9,7 @@
 }: {
   powerManagement = {
     enable = true;
-    powertop.enable = true;
+    # powertop.enable = true;
   };
   networking.interfaces.enp118s0.wakeOnLan.enable = false;
   networking.networkmanager.wifi.powersave = true;
