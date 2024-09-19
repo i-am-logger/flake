@@ -8,7 +8,7 @@
     name = "snick";
     initialPassword = "";
     isNormalUser = true;
-    description = "SnIcK";
+    description = "Logger";
     extraGroups = [ "networkmanager" "input" "wheel" "video" "audio" "udev" "plugdev" "usb" "dialout" ];
     shell = pkgs.fish;
   };

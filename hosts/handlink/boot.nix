@@ -30,8 +30,6 @@
 
     grub = {
       efiSupport = true;
-      # efiInstallAsRemovable = true;
-      #useOSProber = true;
       device = "nodev";
 
       # TODO: move to where disk cryptography is done
@@ -39,13 +37,6 @@
 
       #font = "${pkgs.powerline-fonts}/share/fonts/truetype/Hack-Regular.ttf";
       #fontSize = 32; #only for ttf or otf fonts
-      #gfxmodeEfi = "2880x1600";
-      #gfxpayloadEfi = "3840x1080";
-      #gfxmodeEfi = "3840x1080";
-      #    extraConfig = ''
-      #      terminal_input console
-      #      terminal_output console
-      #    '';
 
       extraEntries = ''
         menuentry "Reboot" {

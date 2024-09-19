@@ -24,7 +24,7 @@
     image = Wallpapers/futuristic1.png; #inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-    base16Scheme = ./mission_hacker.yaml;
+    base16Scheme = ./mission_hacker_dark.yaml;
     # base16Scheme = ./example.yaml;
 
     # targets.console.enable = false;
