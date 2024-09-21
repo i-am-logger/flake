@@ -11,9 +11,14 @@
 #   #fillColor = "black";
 # in
 {
+  imports = [
+    ./ls-colors.nix
+  ];
+
   stylix = {
     enable = true;
     polarity = "dark";
+    ls-colors.enable = true;
 
     opacity = {
       applications = 0.8;
@@ -24,7 +29,7 @@
     image = Wallpapers/futuristic1.png; #inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
-    base16Scheme = ./mission_hacker_dark.yaml;
+    base16Scheme = ./mission_hacker.yaml;
     # base16Scheme = ./example.yaml;
 
     # targets.console.enable = false;

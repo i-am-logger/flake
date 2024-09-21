@@ -11,10 +11,10 @@ base06: "D99656" # WHITE             | 21    | TEXT LIGHT FOREGROUND
 base07: "FF8F40" # BRIGHT WHITE CYAN | 15    | TEXT LIGHT BACKGROUND
 base08: "F07178" # RED               | 01,09 | ERROR
 base09: "FF8F40" # BRIGHT ORANGE     | 16    | WARNING
-base0A: "E6B450" # YELLOW            | 03,11 | WARNING
-base0B: "00AF87" # GREEN             | 02,10 | SUCCESS
+base0A: "FF8F40" # YELLOW            | 03,11 | WARNING
+base0B: "E6B450" # GREEN             | 02,10 | SUCCESS
 base0C: "D99656" # CYAN              | 06,14 | INFO
-base0D: "E6B450" # BLUE              | 04,12 | INFO
+base0D: "FF8F40" # BLUE              | 04,12 | INFO
 base0E: "D2A6FF" # MAGENTA           | 05,13 | INFO NOTICE
 base0F: "D99656" # ORANGE            | 17    | WARNING
 

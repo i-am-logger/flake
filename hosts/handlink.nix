@@ -23,12 +23,14 @@
     common/nix.nix
     handlink/network.nix
     common/sound.nix # TODO: fix & power management
-    # common/v4l2loopback.nix
+    common/v4l2loopback.nix
 
     common/environment.nix
     common/hyprland.nix
     common/qemu.nix
     common/appimage.nix
+    common/direnv.nix
+    common/xdg.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix

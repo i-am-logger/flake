@@ -25,7 +25,7 @@
       f = "free -h"; # memory usage
       # df = "df -h"; # disk usage
       g = "git";
-      t = "tree -Cd -L 2";
+      t = "LS_COLORS=false tree -Cd -L 2";
       # r = "ranger";
       y = "yazi";
       h = "hx";

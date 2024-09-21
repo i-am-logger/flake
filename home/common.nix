@@ -6,7 +6,7 @@ in
   imports = [
     ./xdg.nix
     cli/bat.nix
-    cli/direnv.nix
+    # cli/direnv.nix
     cli/git.nix
     cli/lsd.nix
     cli/variables.nix
