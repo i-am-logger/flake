@@ -54,9 +54,12 @@
     ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", MODE="0666", GROUP="plugdev"
   '';
   environment.systemPackages = with pkgs; [
+    soapysdr
+    soapysdr-with-plugins
     hackrf
-    gqrx
+    # gqrx
     sdrangel
+    js8call
     # sdrplay
     # gnuradioPackages.osmosdr
     # gnuradio

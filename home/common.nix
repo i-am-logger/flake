@@ -92,6 +92,7 @@ in
     # Music
     audacious
     spotify
+    musikcube
     # unityhub
     # spotify-tui
     # spotifyd
