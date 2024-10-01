@@ -41,7 +41,7 @@
     #   };
     # themes
     # stylix.url = "github:danth/stylix";
-    #stylix.url = "github:realsnick/stylix";
+    # stylix.url = "github:realsnick/stylix";
     stylix.url = "../../../home/snick/Code/snick/stylix";
   };
 

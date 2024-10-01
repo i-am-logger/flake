@@ -31,6 +31,7 @@
     common/appimage.nix
     common/direnv.nix
     common/xdg.nix
+    common/wlsunset.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix

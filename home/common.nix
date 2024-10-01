@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
-  cursor = pkgs.callPackage ./cursor.nix { };
+  cursor = 
+          pkgs.callPackage ./cursor.nix { };
 in
 {
   imports = [

@@ -28,7 +28,7 @@
 			"custom/left-arrow-light",
 			"custom/left-arrow-dark",
 			"custom/audio",
-			// "cava",
+			"cava",
 			"custom/left-arrow-light",
 			"custom/left-arrow-dark",
 			"battery",
@@ -135,8 +135,7 @@
 			"on-click-right": "pavucontrol"
 		},
 		"cava": {
-			// "cava_config": "$XDG_CONFIG_HOME/cava/config",
-			"cava_config": "$HOME/cava/config",
+			"cava_config": "$XDG_CONFIG_HOME/cava/config",
 			// "format": "  |{}|",
 			"framerate": 120,
 			"autosens": 1,

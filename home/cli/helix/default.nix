@@ -1,11 +1,11 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     helix
     alejandra
 
     # pkgs.nodePackages.bash-language-server
     cmake-language-server
-
 
     zellij
     lazygit
@@ -14,24 +14,26 @@
     rust-analyzer
     lldb
     clang-tools
-    ocamlPackages.ocaml-lsp
+    # ocamlPackages.ocaml-lsp
     vscode-langservers-extracted
-    dockerfile-language-server-nodejs
-    haskellPackages.haskell-language-server
-    nodePackages.typescript-language-server
+    # dockerfile-language-server-nodejs
+    # haskellPackages.haskell-language-server
+    # nodePackages.typescript-language-server
     texlab
-    lua-language-server
-    marksman
+    # lua-language-server
+    # marksman
     # pkgs.nodePackages.pyright
     # pkgs.python310Packages.python-lsp-server
-    nodePackages.vue-language-server
+    # nodePackages.vue-language-server
     yaml-language-server
     taplo
     github-copilot-cli
     # pkgs.vimPlugins.copilot-vim
     tree-sitter
     (tree-sitter.withPlugins (_: tree-sitter.allGrammars))
-    nixpkgs-fmt
+    # nixpkgs-fmt
+    # nixfmt
+    nixfmt-rfc-style
   ];
 
   programs.helix = {
@@ -62,9 +64,21 @@
           enable = true;
         };
         statusline = {
-          left = [ "mode" "file-name" "spinner" ];
+          left = [
+            "mode"
+            "file-name"
+            "spinner"
+          ];
           center = [ "position-percentage" ];
-          right = [ "version-control" "diagnostics" "selections" "position" "file-encoding" "file-line-ending" "file-type" ];
+          right = [
+            "version-control"
+            "diagnostics"
+            "selections"
+            "position"
+            "file-encoding"
+            "file-line-ending"
+            "file-type"
+          ];
           separator = "│";
         };
         lsp = {
@@ -93,11 +107,27 @@
         };
       };
       keys.normal = {
-        esc = [ "collapse_selection" "keep_primary_selection" ];
-        J = [ "delete_selection" "paste_after" ];
-        K = [ "delete_selection" "move_line_up" "paste_before" ];
-        C-u = [ "half_page_up" "align_view_center" ];
-        C-d = [ "half_page_down" "align_view_center" ];
+        esc = [
+          "collapse_selection"
+          "keep_primary_selection"
+        ];
+        J = [
+          "delete_selection"
+          "paste_after"
+        ];
+        K = [
+          "delete_selection"
+          "move_line_up"
+          "paste_before"
+        ];
+        C-u = [
+          "half_page_up"
+          "align_view_center"
+        ];
+        C-d = [
+          "half_page_down"
+          "align_view_center"
+        ];
 
         "[" = "goto_previous_buffer";
         "]" = "goto_next_buffer";
@@ -144,34 +174,37 @@
     };
     languages = {
 
-      language-server = with pkgs; with pkgs.nodePackages_latest; {
-        typescript-language-server = {
-          command = "${typescript-language-server}/bin/typescript-language-server";
-          args = [ "--stdio" ];
+      language-server =
+        with pkgs;
+        with pkgs.nodePackages_latest;
+        {
+          typescript-language-server = {
+            command = "${typescript-language-server}/bin/typescript-language-server";
+            args = [ "--stdio" ];
+          };
+          svelteserver.command = "${svelte-language-server}/bin/svelteserver";
+          tailwindcss-ls.command = "${tailwindcss-language-server}/bin/tailwindcss-language-server";
+          # nixd = {
+          #   command = "${nixd}/bin/nixd";
+          # };
+          # eslint = {
+          #   command = "${eslint}/bin/eslint";
+          #   args = [ "--stdin" ];
+          # };
+          copilot = {
+            command = "github-copilot-cli";
+            args = [ "--stdio" ];
+          };
+          nil.command = "${nil}/bin/nil";
+          rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
+          rust-analyzer.config = {
+            "inlayHints.bindingModeHints.enable" = true;
+            "inlayHints.closingBraceHints.minLines" = 10;
+            "inlayHints.closureReturnTypeHints.enable" = "with_block";
+            "inlayHints.discrimiinantHints.enable" = "skip_trivial";
+            "inlayHints.typeHints.hideClosureInitialization" = false;
+          };
         };
-        svelteserver.command = "${svelte-language-server}/bin/svelteserver";
-        tailwindcss-ls.command = "${tailwindcss-language-server}/bin/tailwindcss-language-server";
-        # nixd = {
-        #   command = "${nixd}/bin/nixd";
-        # };
-        # eslint = {
-        #   command = "${eslint}/bin/eslint";
-        #   args = [ "--stdin" ];
-        # };
-        copilot = {
-          command = "github-copilot-cli";
-          args = [ "--stdio" ];
-        };
-        nil.command = "${nil}/bin/nil";
-        rust-analyzer.command = "${rust-analyzer-unwrapped}/bin/rust-analyzer";
-        rust-analyzer.config = {
-          "inlayHints.bindingModeHints.enable" = true;
-          "inlayHints.closingBraceHints.minLines" = 10;
-          "inlayHints.closureReturnTypeHints.enable" = "with_block";
-          "inlayHints.discrimiinantHints.enable" = "skip_trivial";
-          "inlayHints.typeHints.hideClosureInitialization" = false;
-        };
-      };
 
       #https://github.com/helix-editor/helix/blob/master/languages.toml
       language = [
@@ -182,44 +215,92 @@
         # }
         {
           name = "javascript";
-          formatter = { command = "prettier"; args = [ "--parser" "typescript" ]; };
-          language-servers = [ "typescript-language-server" "eslint" ];
+          formatter = {
+            command = "prettier";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
+          language-servers = [
+            "typescript-language-server"
+            "eslint"
+          ];
           auto-format = true;
         }
         {
           name = "typescript";
-          formatter = { command = "prettier"; args = [ "--parser" "typescript" ]; };
-          language-servers = [ "typescript-language-server" "eslint" ];
+          formatter = {
+            command = "prettier";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
+          language-servers = [
+            "typescript-language-server"
+            "eslint"
+          ];
           auto-format = true;
         }
         {
           name = "svelte";
-          formatter = { command = "prettier"; args = [ "--plugin" "prettier-plugin-svelte" ]; };
-          language-servers = [ "tailwindcss-ls" "svelteserver" "eslint" ];
+          formatter = {
+            command = "prettier";
+            args = [
+              "--plugin"
+              "prettier-plugin-svelte"
+            ];
+          };
+          language-servers = [
+            "tailwindcss-ls"
+            "svelteserver"
+            "eslint"
+          ];
           auto-format = true;
         }
         {
           name = "nix";
           auto-format = true;
-          formatter = { command = "nixpkgs-fmt"; };
-          language-servers = [ "nixd" "nil" "copilot" ];
+          formatter = {
+            command = "nixfmt";
+          };
+          language-servers = [
+            "nixd"
+            "nil"
+            "copilot"
+          ];
         }
         {
           name = "nim";
           auto-format = true;
-          formatter = { command = "nimpretty"; };
+          formatter = {
+            command = "nimpretty";
+          };
           # language-servers = [ "nimlsp" "nimlangserver" ];
         }
         {
           name = "python";
-          language-servers = [ "pylsp" "pyright" ];
-          formatter = { command = "black"; args = [ "--quiet" "-" ]; };
+          language-servers = [
+            "pylsp"
+            "pyright"
+          ];
+          formatter = {
+            command = "black";
+            args = [
+              "--quiet"
+              "-"
+            ];
+          };
           auto-format = true;
         }
         {
           name = "rust";
           auto-format = true;
-          language-servers = [ "rust-analyzer" "copilot" ];
+          language-servers = [
+            "rust-analyzer"
+            "copilot"
+          ];
         }
       ];
     };
