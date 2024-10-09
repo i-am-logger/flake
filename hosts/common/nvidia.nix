@@ -1,4 +1,10 @@
-{ lib, config, ... }: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
   hardware.graphics = {
     enable = true;
   };
@@ -6,13 +12,20 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    open = true;
+    open = false; # true;
     modesetting.enable = true;
     nvidiaSettings = true;
+    # cuda.enable = true;
 
     # package = config.boot.kernelPackages.nvidiaPackages.stable;
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
+
+  environment.systemPackages = with pkgs; [
+    cudatoolkit
+    linuxPackages.nvidia_x11
+    nvidia-docker
+  ];
 
   specialisation = {
     on-the-go.configuration = {
@@ -25,4 +38,3 @@
     };
   };
 }
-
