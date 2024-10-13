@@ -1,9 +1,11 @@
-{ config
-, pkgs
-, lib
-, user
-, ...
-}: {
+{
+  config,
+  pkgs,
+  lib,
+  user,
+  ...
+}:
+{
   boot.loader.grub.configurationLimit = 100;
   #boot.tmp.cleanOnBoot = true;
 
@@ -25,8 +27,9 @@
     };
     package = pkgs.nixVersions.latest;
     #registry.nixpkgs.flake = inputs.nixpkgs;
+    # experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
     extraOptions = ''
-      experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
+      experimental-features = nix-command flakes auto-allocate-uids
       keep-outputs          = true
       keep-derivations      = true
     '';

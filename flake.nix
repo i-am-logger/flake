@@ -3,10 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    #nixos-hardware.url = "../../../home/snick/Code/nix/nixos-hardware";
-
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -19,7 +15,6 @@
       flake = false;
     };
 
-    # secrets.url = "github:realsnick/secrets";
     # managing partitions
     disko = {
       url = "github:nix-community/disko";
@@ -33,12 +28,6 @@
     };
 
     ags.url = "github:Aylur/ags";
-    # nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay";
-    # nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-    # hy3 =
-    #   {
-    #     url = "github:outfoxxed/hy3";
-    #   };
     # themes
     # stylix.url = "github:danth/stylix";
     # stylix.url = "github:realsnick/stylix";
@@ -46,28 +35,21 @@
   };
 
   outputs =
-    inputs @ { self
-    , nixos-hardware
-    , nixpkgs
-    , # nixpkgs-stable,
-      disko
-    , flake-utils
-    , sops-nix
-    , secrets
-    , home-manager
-      # , nix-doom-emacs
-      # , nix-ros-overlay
-      # , hy3
-    , stylix
-    , ...
+    inputs@{
+      self,
+      nixos-hardware,
+      nixpkgs,
+      disko,
+      flake-utils,
+      sops-nix,
+      secrets,
+      home-manager,
+      stylix,
+      ...
     }:
     let
       username = "snick";
       lib = nixpkgs.lib;
-      # pkgs-stable = import nixpkgs-stable {
-      # system = "x86_64-linux";
-      # config.allowUnfree = true;
-      # };
       packages-overlay = import ./packages/overlay.nix;
       pkgs = import nixpkgs {
         system = "x86_64-linux";
@@ -86,21 +68,33 @@
     {
       nixosConfigurations = {
         handlink = lib.nixosSystem {
-          specialArgs = { inherit pkgs secrets disko self inputs username; };
+          specialArgs = {
+            inherit
+              pkgs
+              secrets
+              disko
+              self
+              inputs
+              username
+              ;
+          };
           modules = [
             # hardware
-            nixos-hardware.nixosModules.lenovo-legion-16irx8h #2023
+            nixos-hardware.nixosModules.lenovo-legion-16irx8h # 2023
             # partitioning
-            ({ modulesPath, ... }: {
-              imports = [
-                (modulesPath + "/installer/scan/not-detected.nix")
-                (modulesPath + "/profiles/qemu-guest.nix")
-                disko.nixosModules.disko
-              ];
-              disko.devices = import ./Systems/mirage/configuration-disks.nix {
-                lib = nixpkgs.lib;
-              };
-            })
+            (
+              { modulesPath, ... }:
+              {
+                imports = [
+                  (modulesPath + "/installer/scan/not-detected.nix")
+                  (modulesPath + "/profiles/qemu-guest.nix")
+                  disko.nixosModules.disko
+                ];
+                disko.devices = import ./Systems/mirage/configuration-disks.nix {
+                  lib = nixpkgs.lib;
+                };
+              }
+            )
             # {
             #   nixpkgs.config.permittedInsecurePackages = [
             #     "nix-2.19.3"
@@ -121,7 +115,9 @@
             {
               #home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+              };
               home-manager.users.${username} = {
                 imports = [
                   # nix-doom-emacs.hmModule
