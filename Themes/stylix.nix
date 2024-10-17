@@ -26,10 +26,11 @@
       popups = 0.8;
       terminal = 0.8;
     };
-    image = Wallpapers/futuristic1.png; #inputImage;
+    image = Wallpapers/futuristic1.png; # inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
     base16Scheme = ./mission_hacker.yaml;
+    # base16Scheme = ./mission_hacker_dark.yaml;
     # base16Scheme = ./example.yaml;
 
     # targets.console.enable = false;
@@ -41,10 +42,10 @@
 
     fonts = {
       sizes = {
-        applications = 12;
-        desktop = 12;
-        popups = 12;
-        terminal = 14;
+        applications = 24;
+        desktop = 24;
+        popups = 24;
+        terminal = 24;
       };
       serif = {
         name = "Noto Nerd Font";
