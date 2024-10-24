@@ -84,7 +84,5 @@
   # boot.kernelPackages = pkgs.linuxPackages_latest;
   #boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
-
 }

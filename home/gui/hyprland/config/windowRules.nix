@@ -1,12 +1,12 @@
 {
   windowrule = [
     "float,^(1Password)$"
-    "float,^(pavucontrol)$"
+    "float,^(org.pulseaudio.pavucontrol)$"
     "float,^(.blueman-manager-wrapped)$"
     "float,^(nm-connection-editor)$"
-    "float,^(chromium)$"
-    "float,^(thunar)$"
-    "animation popin,class:^(thunar)$"
+    "float,^(xdg-desktop-portal-gtk)$"
+    # "float,^(thunar)$"
+    # "animation popin,class:^(thunar)$"
   ];
 
   windowrulev2 = [

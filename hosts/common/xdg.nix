@@ -1,12 +1,38 @@
 { pkgs, ... }:
 
 {
+
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
+    extraPortals = [
+      pkgs.xdg-desktop-portal-hyprland
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-wlr # Add this
+
     ];
-    # gtkUsePortal = true;
+    config.common.default = "*";
+
+    wlr.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    qt5.qtwayland
+    libsForQt5.qt5.qtwayland
+    xwaylandvideobridge
+  ];
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1"; # For Electron apps
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_SESSION_DESKTOP = "Hyprland";
+    GDK_BACKEND = "wayland";
+    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    WAYLAND_DISPLAY = "wayland-1";
+
+  };
+
+  services.dbus.enable = true;
 }

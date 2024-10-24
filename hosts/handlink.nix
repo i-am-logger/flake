@@ -1,7 +1,8 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ pkgs, username, ... }: {
+{ pkgs, username, ... }:
+{
   imports = [
     # hardware
     handlink/hardware-configuration.nix
@@ -27,11 +28,13 @@
 
     common/environment.nix
     common/hyprland.nix
+    common/binfmt.nix
     common/qemu.nix
     common/appimage.nix
     common/direnv.nix
     common/xdg.nix
     common/wlsunset.nix
+    common/ollama.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix

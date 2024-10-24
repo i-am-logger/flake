@@ -11,6 +11,8 @@
 
   nix = {
     settings = {
+      max-jobs = "auto";
+      cores = 0; # auto detect
       substituters = [
         #   "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
         "https://cache.nixos.org/"
