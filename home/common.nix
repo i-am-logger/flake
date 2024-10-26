@@ -1,7 +1,6 @@
 { pkgs, ... }:
 let
-  cursor = 
-          pkgs.callPackage ./cursor.nix { };
+  cursor = pkgs.callPackage ./cursor.nix { };
 in
 {
   imports = [
@@ -42,6 +41,7 @@ in
     yazi
     fastfetch
     termscp
+    nvtop
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger

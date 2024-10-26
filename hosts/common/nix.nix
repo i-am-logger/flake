@@ -7,12 +7,30 @@
 }:
 {
   boot.loader.grub.configurationLimit = 100;
-  #boot.tmp.cleanOnBoot = true;
+  boot.tmp.cleanOnBoot = true;
 
   nix = {
     settings = {
       max-jobs = "auto";
       cores = 0; # auto detect
+      build-cores = 0;
+      # parallel-builds = true;
+      sandbox = true;
+
+      system-features = [
+        "cuda"
+        "big-parallel"
+      ];
+
+      extra-platforms = [
+        "x86_64-linux"
+        "cuda"
+      ];
+
+      trusted-users = [
+        "root"
+        "snick"
+      ];
       substituters = [
         #   "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
         "https://cache.nixos.org/"
@@ -20,7 +38,6 @@
       auto-optimise-store = true; # Optimise syslinks
 
       # sandbox - an isolated environment for each build process. It is used to remove further hidden dependencies set by the build environment to improve reproducibility.
-      # sandbox = true;
     };
     gc = {
       automatic = true;
