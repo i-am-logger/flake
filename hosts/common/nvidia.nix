@@ -30,7 +30,7 @@
 
   hardware.nvidia.dynamicBoost.enable = true;
   hardware.nvidia = {
-    open = false; # true;
+    open = true;
     modesetting.enable = true;
     nvidiaSettings = true;
     nvidiaPersistenced = true;

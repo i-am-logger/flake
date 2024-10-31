@@ -99,7 +99,7 @@ in
     # spotifyd
 
     # Chats
-    qtox
+    # qtox
     signal-desktop
     tdesktop # telegram
     tldr
