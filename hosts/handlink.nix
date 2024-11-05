@@ -34,11 +34,12 @@
     common/direnv.nix
     common/xdg.nix
     common/wlsunset.nix
+    common/docker.nix
     common/ollama.nix
+    common/n8n.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix
-    # common/docker.nix
     #common/virtualbox.nix
 
     users/${username}.nix
@@ -53,6 +54,8 @@
 
   # support udev rules for zsa voyager's keyboard
   hardware.keyboard.zsa.enable = true;
+
+  # TODO: move to hackrf.nix
   hardware.hackrf.enable = true;
   services.udev.extraRules = ''
     ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", MODE="0666", GROUP="plugdev"

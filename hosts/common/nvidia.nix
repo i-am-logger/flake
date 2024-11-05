@@ -5,9 +5,10 @@
   ...
 }:
 {
+  hardware.opengl.driSupport32Bit = true;
   hardware.graphics = {
     enable = true;
-
+    enable32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
       # vaapiIntel
@@ -50,7 +51,6 @@
   environment.systemPackages = with pkgs; [
     cudatoolkit
     linuxPackages.nvidia_x11
-    nvidia-docker
   ];
 
   boot.kernelModules = [
