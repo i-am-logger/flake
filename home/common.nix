@@ -40,8 +40,8 @@ in
     # file manager
     yazi
     fastfetch
-    termscp
-    nvtop
+    # termscp
+    nvtopPackages.full
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger

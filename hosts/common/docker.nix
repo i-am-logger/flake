@@ -18,7 +18,6 @@
     enable = true;
     enableOnBoot = false;
     enableNvidia = true;
-
     # rootless = {
     #   enable = true;
     #   # setSocketVariable = true;

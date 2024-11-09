@@ -16,7 +16,7 @@
       build-cores = 0;
       # parallel-builds = true;
       sandbox = true;
-
+      download-buffer-size = 128 * 1024 * 1024;
       system-features = [
         "cuda"
         "big-parallel"
@@ -36,7 +36,6 @@
         "https://cache.nixos.org/"
       ];
       auto-optimise-store = true; # Optimise syslinks
-
       # sandbox - an isolated environment for each build process. It is used to remove further hidden dependencies set by the build environment to improve reproducibility.
     };
     gc = {
