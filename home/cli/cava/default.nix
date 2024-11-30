@@ -2,8 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    cava
-    cavalier #gui
+    # cava
+    # cavalier #gui
   ];
 
   xdg.configFile."cava/config".source = ./config;

@@ -17,7 +17,7 @@
   home = {
     username = "snick";
     homeDirectory = "/home/snick";
-    stateVersion = "24.05";
+    stateVersion = "25.05";
 
   };
   #nixpkgs.allowUnfree = true;

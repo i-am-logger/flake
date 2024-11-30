@@ -7,7 +7,7 @@
     # pkgs.nodePackages.bash-language-server
     cmake-language-server
 
-    zellij
+    # zellij
     lazygit
     nil
     # pkgs.rnix-lsp

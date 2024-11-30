@@ -41,7 +41,7 @@
 
     # persistenced
     # package = config.boot.kernelPackages.nvidiaPackages.stable;
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   # services.udev.extraRules = ''
   #   KERNEL=="nvidia*", RUN+="/run/current-system/sw/bin/chmod 0666 %E{DEVNAME}"
@@ -50,16 +50,18 @@
   environment.systemPackages = with pkgs; [
     cudatoolkit
     linuxPackages.nvidia_x11
+    nvtopPackages.full
   ];
 
   boot.kernelModules = [
     "i915"
     "intel"
     "nvidia"
-    "nvidia_modeset"
-    "nvidia_uvm"
-    "nvidia_drm"
+    # "nvidia_modeset"
+    # "nvidia_uvm"
+    # "nvidia_drm"
   ]; # ""
+  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   # systemd.services.nvidia-control-devices = {
   #   wantedBy = [ "multi-user.target" ];

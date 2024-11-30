@@ -20,14 +20,16 @@ in
     # cli/ranger
     cli/mc
     cli/helix
+    cli/zellij.nix
     cli/cava
     # GUI
     gui/hyprland
+    gui/rio
     gui/kitty
-    gui/ags
+    # gui/ags
     # gui/rofi
     # gui/emacs/doom-emacs.nix
-    gui/chats/discord
+    # gui/chats/discord
     gui/obs-studio.nix
     #(../GUI/SDR)
   ];
@@ -41,7 +43,6 @@ in
     yazi
     fastfetch
     # termscp
-    nvtopPackages.full
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger
@@ -101,7 +102,7 @@ in
     # Chats
     # qtox
     signal-desktop
-    tdesktop # telegram
+    # tdesktop # telegram
     tldr
     # development
     cachix
@@ -113,14 +114,11 @@ in
     # indi-full
 
     # coding
-    jetbrains.rust-rover
-    vscode
-    cursor
+    # jetbrains.rust-rover
+    # vscode
+    # cursor
     bazecor
-    # sky360
-    #libusb1
-    #fxload
-
+    cointop
     #pamixer
   ];
 }

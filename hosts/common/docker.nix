@@ -10,6 +10,7 @@
     runc
     # helm
     nvidia-docker
+    lazydocker
   ];
 
   hardware.nvidia-container-toolkit.enable = true;

@@ -64,7 +64,7 @@ in
   # };
 
   # Hyprlock
-  programs.hyprlock = {
-    enable = true;
-  };
+  # programs.hyprlock = {
+  #   enable = true;
+  # };
 }
