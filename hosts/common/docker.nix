@@ -1,7 +1,6 @@
-{
-  pkgs,
-  username,
-  ...
+{ pkgs
+, username
+, ...
 }:
 {
   environment.systemPackages = with pkgs; [
@@ -18,7 +17,7 @@
   virtualisation.docker = {
     enable = true;
     enableOnBoot = false;
-    enableNvidia = true;
+    # enableNvidia = true;
     # rootless = {
     #   enable = true;
     #   # setSocketVariable = true;

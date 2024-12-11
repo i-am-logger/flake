@@ -7,34 +7,27 @@
 		"height": 28,
 		"modules-left": [
 			"hyprland/workspaces",
-			"custom/right-arrow-dark",
 		],
 		"modules-center": [
-			"custom/left-arrow-dark",
 			"clock",
 			"custom/seperator",
 			"custom/weather",
-			"custom/right-arrow-dark"
 		],
 		"modules-right": [
-			"custom/left-arrow-dark",
-			// "privacy",
-			// "custom/left-arrow-light",
-			// "custom/left-arrow-dark",
+			"privacy",
+			"custom/seperator",
 			"network",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
+			"custom/seperator",
 			"pulseaudio",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
+			"custom/seperator",
 			"custom/audio",
+			"custom/seperator",
 			"cava",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
+			"custom/seperator",
 			"battery",
-			// "upower",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
+			"custom/seperator",
+			"upower",
+			"custom/seperator",
 			"tray"
 		],
 		"custom/seperator": {
@@ -44,22 +37,6 @@
 		"custom/audio": {
 			"format": " |",
 			"tooltop": false
-		},
-		"custom/left-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/left-arrow-light": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-light": {
-			"format": "",
-			"tooltip": false
 		},
 		"hyprland/workspaces": {
 			"active-only": false,
@@ -212,31 +189,13 @@
 			"cpu",
 			"custom/seperator",
 			"temperature",
-			"custom/right-arrow-dark",
-			"custom/right-arrow-light",
+			"custom/seperator",
 			"network",
-			"custom/right-arrow-dark"
 		],
 		"modules-center": [],
 		"modules-right": [],
 		"custom/seperator": {
 			"format": "|",
-			"tooltip": false
-		},
-		"custom/left-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/left-arrow-light": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-light": {
-			"format": "",
 			"tooltip": false
 		},
 		"network": {
@@ -249,31 +208,31 @@
 		},
 		"memory": {
 			"interval": 5,
-			"format": "  {icon} {percentage}%",
+			"format": "{icon} {percentage}%",
 			"tooltip-format": "  RAM {used:0.1f}G/{total:0.1f}G",
 			"format-icons": [
-				"<span color='#69ff94'>▁</span>", // green
-				"<span color='#2aa9ff'>▂</span>", // blue
-				"<span color='#f8f8f2'>▃</span>", // white
-				"<span color='#f8f8f2'>▄</span>", // white
-				"<span color='#ffffa5'>▅</span>", // yellow
-				"<span color='#ffffa5'>▆</span>", // yellow
-				"<span color='#ff9977'>▇</span>", // orange
-				"<span color='#dd532e'>█</span>" // red
+				"<span color='#545862'>  ▁▁</span>", // dark
+				"<span color='#545862'>  ▂▂</span>", // dark
+				"<span color='#2aa9ff'>  ▃▃</span>", // blue
+				"<span color='#2aa9ff'>  ▄▄</span>", // blue
+				"<span color='#ffffa5'>  ▅▅</span>", // yellow
+				"<span color='#ffffa5'>  ▆▆</span>", // yellow
+				"<span color='#ff9977'>  ▇▇</span>", // orange
+				"<span color='#dd532e'>  ██</span>" // red
 			]
 		},
 		"cpu": {
 			"interval": 1,
-			"format": "  {usage:2}% {icon}",
+			"format": "{icon} {usage:2}%",
 			"format-icons": [
-				"<span color='#69ff94'>▁</span>", // green
-				"<span color='#69ff94'>▂</span>", // green
-				"<span color='#69ff94'>▃</span>", // green
-				"<span color='#2aa9ff'>▄</span>", // blue
-				"<span color='#2aa9ff'>▅</span>", // blue
-				"<span color='#ffffa5'>▆</span>", // yellow
-				"<span color='#ff9977'>▇</span>", // orange
-				"<span color='#dd532e'>█</span>" // red
+				"<span color='#545862'>  ▁▁</span>", // dark
+				"<span color='#545862'>  ▂▂</span>", // dark
+				"<span color='#2aa9ff'>  ▃▃</span>", // blue
+				"<span color='#2aa9ff'>  ▄▄</span>", // blue
+				"<span color='#ffffa5'>  ▅▅</span>", // yellow
+				"<span color='#ffffa5'>  ▆▆</span>", // yellow
+				"<span color='#ff9977'>  ▇▇</span>", // orange
+				"<span color='#dd532e'>  ██</span>" // red
 			]
 		},
 		"temperature": {
@@ -281,17 +240,17 @@
 			// "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
 			"critical-threshold": 80,
 			// "format-critical": "{temperatureC}°C ",
-			"format": " {temperatureF}°F {icon}",
+			"format": "{icon} {temperatureF}°F",
 			"tooltip-format": " TEMP {temperatureF}°F",
 			"format-icons": [
-				"<span color='#69ff94'>▁</span>", // green
-				"<span color='#69ff94'>▂</span>", // green
-				"<span color='#69ff94'>▃</span>", // green
-				"<span color='#2aa9ff'>▄</span>", // blue
-				"<span color='#2aa9ff'>▅</span>", // blue
-				"<span color='#ffffa5'>▆</span>", // yellow
-				"<span color='#ff9977'>▇</span>", // orange
-				"<span color='#dd532e'>█</span>" // red
+				"<span color='#545862'> ▁▁</span>", // dark
+				"<span color='#545862'> ▂▂</span>", // dark
+				"<span color='#545862'> ▃▃</span>", // dark
+				"<span color='#2aa9ff'> ▄▄</span>", // blue
+				"<span color='#ffffa5'> ▅▅</span>", // yellow
+				"<span color='#ffffa5'> ▆▆</span>", // yellow
+				"<span color='#ff9977'> ▇▇</span>", // orange
+				"<span color='#dd532e'> ██</span>" // red
 			]
 		},
 		"disk#root": {
@@ -314,32 +273,13 @@
 		"height": 28,
 		"modules-left": [
 			"hyprland/window",
-			"custom/right-arrow-dark"
 		],
 		"modules-center": [],
 		"modules-right": [
-			"custom/left-arrow-dark",
 			"hyprland/language",
-			"custom/left-arrow-light",
-			"custom/left-arrow-dark",
+			"custom/seperator",
 			"keyboard-state",
 		],
-		"custom/left-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/left-arrow-light": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-dark": {
-			"format": "",
-			"tooltip": false
-		},
-		"custom/right-arrow-light": {
-			"format": "",
-			"tooltip": false
-		},
 		// LEFT
 		"hyprland/window": {
 			"format": " {}",

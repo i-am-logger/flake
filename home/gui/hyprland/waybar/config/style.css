@@ -1,21 +1,14 @@
 * {
-  font-size: 20px;
+  font-size: 32px;
   font-family: monospace;
 }
 
 window#waybar {
-  background: #292b2e;
+  background: #1a1a1a;
   color: #545862;
 }
 
-#custom-right-arrow-dark,
-#custom-left-arrow-dark {
-  color: #1a1a1a;
-}
-
-#custom-seperator,
-#custom-right-arrow-light,
-#custom-left-arrow-light {
+#custom-seperator {
   color: #292b2e;
   background: #1a1a1a;
 }

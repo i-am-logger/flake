@@ -50,18 +50,18 @@
       serif = {
         name = "Noto Nerd Font";
         # name = "FiraCode Nerd Font";
-        package = pkgs.nerdfonts;
+        package = pkgs.nerd-fonts.noto;
       };
 
       sansSerif = {
-        name = "Noto Nerd Font";
-        # name = "FiraCode Nerd Font";
-        package = pkgs.nerdfonts;
+        # name = "Noto Nerd Font";
+        name = "FiraCode Nerd Font";
+        package = pkgs.nerd-fonts.fira-code;
       };
 
       monospace = {
         name = "FiraCode Nerd Font";
-        package = pkgs.nerdfonts;
+        package = pkgs.nerd-fonts.fira-code;
       };
 
       emoji = {

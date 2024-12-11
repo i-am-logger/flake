@@ -16,7 +16,7 @@
       build-cores = 0;
       # parallel-builds = true;
       sandbox = true;
-      download-buffer-size = 4 * 1024 * 1024 * 1024;
+      # download-buffer-size = 4 * 1024 * 1024 * 1024;
       system-features = [
         "cuda"
         "big-parallel"

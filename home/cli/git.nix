@@ -4,8 +4,10 @@
 , ...
 }: {
   home.packages = with pkgs; [
+    # git
     gitui
     gh
+    lazygit
   ];
   programs.git = {
     enable = true;
@@ -76,5 +78,4 @@
   };
 
   programs.gitui.enable = true;
-
 }

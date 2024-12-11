@@ -6,9 +6,11 @@
 
     # pkgs.nodePackages.bash-language-server
     cmake-language-server
+    marksman
+    markdown-oxide
 
     # zellij
-    lazygit
+    # lazygit
     nil
     # pkgs.rnix-lsp
     rust-analyzer
@@ -34,6 +36,7 @@
     # nixpkgs-fmt
     # nixfmt
     nixfmt-rfc-style
+    # nixpkgs-fmt
   ];
 
   programs.helix = {
@@ -263,7 +266,7 @@
           name = "nix";
           auto-format = true;
           formatter = {
-            command = "nixfmt";
+            command = "nixpkgs-fmt"; # "nixfmt";
           };
           language-servers = [
             "nixd"
@@ -300,6 +303,17 @@
           language-servers = [
             "rust-analyzer"
             "copilot"
+          ];
+        }
+        {
+          name = "markdown";
+          auto-format = true;
+          formatter = {
+            command = "dprint";
+            args = [ "fmt" "--stdin" "md" ];
+          };
+          language-servers = [
+            "marksman"
           ];
         }
       ];

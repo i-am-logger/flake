@@ -42,6 +42,7 @@ in
     # file manager
     yazi
     fastfetch
+    devenv
     # termscp
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
