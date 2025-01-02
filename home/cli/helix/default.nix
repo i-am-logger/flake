@@ -266,7 +266,7 @@
           name = "nix";
           auto-format = true;
           formatter = {
-            command = "nixpkgs-fmt"; # "nixfmt";
+            command = "nixfmt"; # "nixpkgs-fmt";
           };
           language-servers = [
             "nixd"
