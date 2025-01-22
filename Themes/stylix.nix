@@ -26,14 +26,13 @@
       popups = 0.8;
       terminal = 0.8;
     };
-    image = Wallpapers/futuristic1.png; # inputImage;
+    image = Wallpapers/futuristic2.png; # inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
     base16Scheme = ./mission_hacker.yaml;
     # base16Scheme = ./mission_hacker_dark.yaml;
     # base16Scheme = ./example.yaml;
 
-    # targets.console.enable = false;
     # targets.waybar.enable = false;
     targets.grub = {
       # enable = false;

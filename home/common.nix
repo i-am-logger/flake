@@ -1,7 +1,7 @@
 { pkgs, ... }:
-let
-  cursor = pkgs.callPackage ./cursor.nix { };
-in
+# let
+# in
+# cursor = pkgs.callPackage ./cursor.nix { };
 {
   imports = [
     ./xdg.nix
@@ -18,13 +18,14 @@ in
     cli/btop
     # cli/neofetch
     # cli/ranger
-    cli/mc
+    # cli/mc
     cli/helix
     cli/zellij.nix
     cli/cava
     # GUI
     gui/hyprland
-    gui/rio
+    # gui/rio
+    gui/ghostty
     gui/kitty
     # gui/ags
     # gui/rofi
@@ -41,6 +42,7 @@ in
   home.packages = with pkgs; [
     # file manager
     yazi
+    mc
     fastfetch
     devenv
     # termscp
