@@ -70,7 +70,6 @@
         handlink = lib.nixosSystem {
           specialArgs = {
             inherit
-              pkgs
               secrets
               disko
               self
