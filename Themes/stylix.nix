@@ -26,7 +26,7 @@
       popups = 0.8;
       terminal = 0.8;
     };
-    image = Wallpapers/futuristic2.png; # inputImage;
+    image = Wallpapers/futuristic3.png; # inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
     base16Scheme = ./mission_hacker.yaml;

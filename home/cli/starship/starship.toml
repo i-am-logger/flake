@@ -4,16 +4,16 @@
 
 "$schema" = "https://starship.rs/config-schema.json"
 format = """\
-$git_branch $git_commit $git_status$git_metrics$git_state\
+$shell $nix_shell\
 $fill\ 
+$direnv$pulumi$rust$nim$c$nodejs$golang\
 $line_break\
-$nix_shell$shell$direnv$rust$nim$c$nodejs\
+$git_branch $git_commit $git_status $git_state\
 $fill\
-$battery $username@$hostname\
+$username$hostname $battery \
 $line_break\
 $directory\
 $fill\
-$time\
 $line_break\
 $sudo$character \
 """
@@ -49,29 +49,33 @@ disabled = true
 [azure.subscription_aliases]
 
 [battery]
-full_symbol = "󰁹 "
-charging_symbol = "󰂄 "
-discharging_symbol = "󰂃 "
-unknown_symbol = "󰁽 "
-empty_symbol = "󰂎 "
+full_symbol = "󰁹"
+charging_symbol = "󰂄"
+discharging_symbol = "󰂃"
+unknown_symbol = "󰁽"
+empty_symbol = "󰂎"
 disabled = false
-format = "[$symbol$percentage]($style)"
+format = "[$symbol]($style)"
 
 [[battery.display]]
-threshold = 10
+threshold = 20
 style = "red bold"
 
 [[battery.display]]
-threshold = 30
+threshold = 40
 style = "yellow"
 
 [[battery.display]]
-threshold = 50
+threshold = 60
 style = "purple"
 
 [[battery.display]]
+threshold = 80
+style = "blue"
+
+[[battery.display]]
 threshold = 100
-style = "cyan"
+style = ""
 
 [buf]
 format = "with [$symbol($version )]($style)"
@@ -259,18 +263,18 @@ use_os_path_sep = true
 [directory.substitutions]
 
 [direnv]
-format = " [$symbol$loaded$allowed]($style)"
+format = "[$symbol$loaded]($style)"
 symbol = " "
-style = "blue"
+style = ""
 disabled = false
 detect_extensions = []
 detect_files = [".envrc"]
 detect_folders = []
-allowed_msg = " "
-not_allowed_msg = " "
-denied_msg = " "
-loaded_msg = " "
-unloaded_msg = " "
+allowed_msg = ""
+not_allowed_msg = ""
+denied_msg = ""
+loaded_msg = ""
+unloaded_msg = ""
 
 [docker_context]
 symbol = "🐳 "
@@ -377,9 +381,9 @@ only_nonzero_diffs = true
 disabled = true
 
 [gcloud]
-format = 'on [$symbol$account(@$domain)(\($region\))]($style) '
-symbol = "☁️  "
-style = "bold blue"
+format = '[$symbol$account(@$domain)(\($region\))]($style) '
+symbol = "󱇶 "
+style = ""
 disabled = false
 detect_env_vars = []
 
@@ -389,8 +393,8 @@ detect_env_vars = []
 
 [git_branch]
 format = "[$symbol$branch(:$remote_branch)]($style)"
-symbol = "  "
-style = "blue"
+symbol = " "
+style = "cyan bold"
 truncation_length = 9223372036854775807
 truncation_symbol = "…"
 only_attached = false
@@ -401,7 +405,7 @@ disabled = false
 [git_commit]
 commit_hash_length = 8
 format = '[\($hash$tag\)]($style)'
-style = "white"
+style = "blue"
 only_detached = false
 disabled = false
 tag_symbol = " 🏷  "
@@ -457,10 +461,10 @@ detect_files = ["gleam.toml"]
 detect_folders = []
 
 [golang]
-format = "via [$symbol($version )]($style)"
+format = "[$symbol]($style)"
 version_format = "v${raw}"
-symbol = "🐹 "
-style = "bold cyan"
+symbol = ""
+style = ""
 disabled = false
 not_capable_style = "bold red"
 detect_extensions = ["go"]
@@ -554,12 +558,12 @@ truncation_symbol = "…"
 disabled = false
 
 [hostname]
-ssh_only = false
-ssh_symbol = " 🌐"
+ssh_only = true
+ssh_symbol = " 󰣀"
 trim_at = "."
 detect_env_vars = []
-format = "[$hostname$ssh_symbol]($style)"
-style = "blue"
+format = "[@$hostname$ssh_symbol]($style)"
+style = "purple bold"
 disabled = false
 
 [java]
@@ -681,10 +685,10 @@ style = "bold purple"
 disabled = true
 
 [nim]
-format = " [$symbol($version)]($style)"
+format = "[$symbol]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "blue"
+style = ""
 disabled = false
 detect_extensions = [
     "nim",
@@ -695,20 +699,20 @@ detect_files = ["nim.cfg"]
 detect_folders = []
 
 [nix_shell]
-format = "[$symbol$state]($style) "
+format = "[$symbol$state]($style)"
 symbol = " "
 style = "bold yellow"
-impure_msg = "impure"
+impure_msg = "impure!"
 pure_msg = "pure"
 unknown_msg = "unknown"
 disabled = false
 heuristic = false
 
 [nodejs]
-format = " [$symbol($version )]($style)"
+format = " [$symbol]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "blue"
+style = ""
 disabled = false
 not_capable_style = "bold red"
 detect_extensions = [
@@ -885,10 +889,10 @@ truncation_symbol = "…"
 disabled = true
 
 [pulumi]
-format = "via [$symbol($username@)$stack]($style) "
+format = "[$symbol$project$stack]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "bold 5"
+style = ""
 disabled = false
 search_upwards = true
 
@@ -1000,10 +1004,10 @@ detect_variables = [
 ]
 
 [rust]
-format = " [$symbol($version)]($style)"
+format = "[$symbol]($style)"
 version_format = "v${raw}"
 symbol = " "
-style = "blue"
+style = ""
 disabled = false
 detect_extensions = ["rs"]
 detect_files = ["Cargo.toml"]
@@ -1039,7 +1043,7 @@ nu_indicator = "nu"
 xonsh_indicator = "xsh"
 cmd_indicator = "cmd"
 unknown_indicator = ""
-style = "blue"
+style = ""
 disabled = false
 
 [shlvl]
@@ -1143,9 +1147,9 @@ detect_folders = []
 [username]
 detect_env_vars = []
 format = "[$user]($style)"
-style_root = "red"
-style_user = "blue"
-show_always = true
+style_root = "bold red"
+style_user = "purple"
+show_always = false
 disabled = false
 
 [username.aliases]

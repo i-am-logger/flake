@@ -10,6 +10,7 @@
     cli/git.nix
     cli/lsd.nix
     cli/variables.nix
+    cli/nix-scripts.nix
     # cli/neovim.nix
     # cli/tmux.nix
 

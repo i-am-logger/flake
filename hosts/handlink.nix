@@ -56,21 +56,21 @@
   hardware.keyboard.zsa.enable = true;
 
   # TODO: move to hackrf.nix
-  hardware.hackrf.enable = true;
-  services.udev.extraRules = ''
-    ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", MODE="0666", GROUP="plugdev"
-  '';
-  environment.systemPackages = with pkgs; [
-    soapysdr
-    soapysdr-with-plugins
-    hackrf
-    # gqrx
-    sdrangel
-    js8call
-    # sdrplay
-    # gnuradioPackages.osmosdr
-    # gnuradio
-  ];
+  # hardware.hackrf.enable = true;
+  # services.udev.extraRules = ''
+  # ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", MODE="0666", GROUP="plugdev"
+  # '';
+  # environment.systemPackages = with pkgs; [
+  # soapysdr
+  # soapysdr-with-plugins
+  # hackrf
+  # # gqrx
+  # sdrangel
+  # js8call
+  # sdrplay
+  # gnuradioPackages.osmosdr
+  # gnuradio
+  # ];
   # to access ios devices
   services.usbmuxd.enable = true;
 

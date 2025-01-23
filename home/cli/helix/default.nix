@@ -54,6 +54,10 @@
         auto-completion = true;
         completion-trigger-len = 1;
 
+        end-of-line-diagnostics = "hint";
+        inline-diagnostics = {
+          cursor-line = "error";
+        };
         cursor-shape = {
           insert = "bar";
           normal = "block";
@@ -310,7 +314,11 @@
           auto-format = true;
           formatter = {
             command = "dprint";
-            args = [ "fmt" "--stdin" "md" ];
+            args = [
+              "fmt"
+              "--stdin"
+              "md"
+            ];
           };
           language-servers = [
             "marksman"
