@@ -36,11 +36,11 @@
     common/wlsunset.nix
     common/docker.nix
     common/ollama.nix
-    common/n8n.nix
+    # common/n8n.nix
     # common/nextcloud.nix
     # common/sddm.nix
     # common/ros2.nix
-    #common/virtualbox.nix
+    # common/virtualbox.nix
 
     users/${username}.nix
 

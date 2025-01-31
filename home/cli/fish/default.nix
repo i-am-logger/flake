@@ -61,6 +61,8 @@
         # Get the root directory of the git repository and change to it
         cd (git rev-parse --show-toplevel)
       end
+
+      set fish_cursor_default block
     '';
 
     plugins = [

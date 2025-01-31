@@ -16,7 +16,7 @@ in
     (pkgs.writeScriptBin "rebuild-system" ''
       #!/usr/bin/env bash
       cd ~/.flake
-      ${rebuildCommand}
+      sudo ${rebuildCommand}
     '')
   ];
 }

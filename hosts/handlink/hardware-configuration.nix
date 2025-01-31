@@ -23,7 +23,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [
     "intel"
-    "kvm-intel"
+    # "kvm-intel"
     "fbcon"
   ]; # ""
   boot.extraModulePackages = [ ];

@@ -263,16 +263,16 @@ use_os_path_sep = true
 [directory.substitutions]
 
 [direnv]
-format = "[$symbol$loaded]($style)"
-symbol = " "
-style = ""
+format = "[$allowed]($style)"
+symbol = ""
+style = "bold red"
 disabled = false
 detect_extensions = []
 detect_files = [".envrc"]
 detect_folders = []
-allowed_msg = ""
-not_allowed_msg = ""
-denied_msg = ""
+allowed_msg = ""
+not_allowed_msg = " "
+denied_msg = " "
 loaded_msg = ""
 unloaded_msg = ""
 
@@ -434,18 +434,18 @@ disabled = false
 
 [git_status]
 format = '([$ahead_behind$all_status]($style))'
-style = "blue"
+style = ""
 stashed = '[${count}](cyan) '
-ahead = "[󱓍 ⇡${count}](green) "
-behind = "[󱓍 ⇣${count}](yellow) "
-up_to_date = "󱓏 "
+ahead = "[󱓍 ⇡${count}](purple) "
+behind = "[󱓍 ⇣${count}](red) "
+up_to_date = "[󱓏](green) "
 diverged = "[󰩌 ${count}](red) "
 conflicted = "[ ${count}](red) "
 deleted = "[󱪢 ${count}](red) "
-renamed = "[󱀱 ${count}](blue) "
-modified = "[ ${count}](yellow) "
+renamed = "[󱀱 ${count}](red) "
+modified = "[ ${count}](red) "
 staged = "[ ${count}](green) "
-untracked = "[󱀶 ${count}](08) "
+untracked = "[󱀶 ${count}](red) "
 typechanged = ""
 ignore_submodules = false
 disabled = false
@@ -563,7 +563,7 @@ ssh_symbol = " 󰣀"
 trim_at = "."
 detect_env_vars = []
 format = "[@$hostname$ssh_symbol]($style)"
-style = "purple bold"
+style = "bold yellow"
 disabled = false
 
 [java]
@@ -1148,7 +1148,7 @@ detect_folders = []
 detect_env_vars = []
 format = "[$user]($style)"
 style_root = "bold red"
-style_user = "purple"
+style_user = "bold yellow"
 show_always = false
 disabled = false
 

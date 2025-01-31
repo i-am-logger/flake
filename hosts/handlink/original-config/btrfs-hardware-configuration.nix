@@ -7,14 +7,23 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "thunderbolt" "usb_storage" "usbhid" "sd_mod"];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ahci"
+    "nvme"
+    "thunderbolt"
+    "usb_storage"
+    "usbhid"
+    "sd_mod"
+  ];
+  # boot.kernelModules = ["kvm-intel"];
+  boot.extraModulePackages = [ ];
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-partuuid/aeb4ac26-d9d0-4ec5-9528-16569736645b";
@@ -24,25 +33,38 @@
   fileSystems."/" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
-    options = ["subvol=root" "compress=zstd"];
+    options = [
+      "subvol=root"
+      "compress=zstd"
+    ];
   };
 
   fileSystems."/home" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
-    options = ["subvol=home" "compress=zstd"];
+    options = [
+      "subvol=home"
+      "compress=zstd"
+    ];
   };
 
   fileSystems."/nix" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
-    options = ["subvol=nix" "compress=zstd" "noatime"];
+    options = [
+      "subvol=nix"
+      "compress=zstd"
+      "noatime"
+    ];
   };
 
   fileSystems."/swap" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
-    options = ["subvol=swap" "noatime"];
+    options = [
+      "subvol=swap"
+      "noatime"
+    ];
   };
 
   #swapDevices = [ {

@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   environment.systemPackages = with pkgs; [
     gnupg
     age
@@ -41,7 +42,7 @@
 
     yubico = {
       enable = true;
-      debug = true;
+      debug = false;
       mode = "challenge-response";
       id = [ "17027658" ];
     };

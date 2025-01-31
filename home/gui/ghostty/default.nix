@@ -4,6 +4,10 @@
     ghostty
   ];
 
+  xdg.configFile."ghostty/shaders/" = {
+    source = ./shaders;
+    recursive = true;
+  };
   programs.ghostty = {
     enable = true;
     enableFishIntegration = true;
@@ -14,7 +18,8 @@
       font-size = 18;
       font-thicken = true;
       term = "xterm-256color";
-      shell-integration = "fish";
+      shell-integration-features = "no-cursor";
+      # shell-integration = "fish";
       auto-update-channel = "tip";
       background-opacity = 0.90;
       adjust-cell-width = 1;
@@ -22,7 +27,10 @@
       cursor-style = "block";
       cursor-style-blink = true;
       window-decoration = false;
+      confirm-close-surface = false;
       copy-on-select = true;
+      # custom-shader = "shaders/in-game-crt.glsl";
+      # custom-shader-animation = true;
     };
   };
 }
