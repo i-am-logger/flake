@@ -4,7 +4,18 @@
   ...
 }:
 {
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    # swtpm.enable = true;
+    # ovmf.enable = true;
+    qemu.package = pkgs.qemu_full;
+  };
+
+  virtualisation.libvirtd.qemu.verbatimConfig = ''
+    virtio_user_rng = "on"
+    virtio_user_fs = "on"
+    memory_backing_dir = "/dev/shm"
+  '';
   programs.virt-manager.enable = true;
   users.users.${username}.extraGroups = [ "libvirtd" ];
 

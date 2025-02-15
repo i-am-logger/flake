@@ -441,12 +441,12 @@ behind = "[󱓍 ⇣${count}](red) "
 up_to_date = "[󱓏](green) "
 diverged = "[󰩌 ${count}](red) "
 conflicted = "[ ${count}](red) "
-deleted = "[󱪢 ${count}](red) "
-renamed = "[󱀱 ${count}](red) "
+deleted = "[󱪢 ${count}](green) "
+renamed = "[󱀱 ${count}](green) "
 modified = "[ ${count}](red) "
-staged = "[ ${count}](green) "
+staged = "[󰸩 ${count}](green) "
 untracked = "[󱀶 ${count}](red) "
-typechanged = ""
+typechanged = "type ${count}(yellow)"
 ignore_submodules = false
 disabled = false
 

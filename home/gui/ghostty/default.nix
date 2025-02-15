@@ -15,11 +15,10 @@
     # settings reference  https://ghostty.org/docs/config/reference
     settings = {
       font-family = "FireCode Nerd Font";
-      font-size = 18;
+      font-size = 20;
       font-thicken = true;
       term = "xterm-256color";
       shell-integration-features = "no-cursor";
-      # shell-integration = "fish";
       auto-update-channel = "tip";
       background-opacity = 0.90;
       adjust-cell-width = 1;
@@ -30,7 +29,7 @@
       confirm-close-surface = false;
       copy-on-select = true;
       # custom-shader = "shaders/in-game-crt.glsl";
-      # custom-shader-animation = true;
+      custom-shader-animation = true;
     };
   };
 }

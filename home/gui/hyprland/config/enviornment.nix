@@ -4,9 +4,9 @@
     # ", preferred, auto, 1"
 
     # TODO: for handlink
-    "HDMI-A-1, 2560x1440@144.005997,0x0, 1.0"
+    # "HDMI-A-1, 2560x1440@144.005997,0x0, 1.0"
     # monitor=eDP-1,  2560x1600@240.001999,2560x0, 1.0
-    #monitor=HDMI-A-1, 5120x1440@119.987999,2560x0, 1.0
+    "HDMI-A-1, 5120x1440@119.987999,2560x0, 1.0"
     # monitor=HDMI-A-1, 4096x2160@59.94,0x0, 1.0
   ];
 
@@ -34,5 +34,5 @@
   # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
   # device:epic-mouse-v1 {
   #   sensitivity = -0.5
-  #} 
+  #}
 }

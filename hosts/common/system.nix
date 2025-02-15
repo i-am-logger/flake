@@ -1,11 +1,12 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ self
-, pkgs
-, inputs
-, user
-, ...
+{
+  self,
+  pkgs,
+  inputs,
+  user,
+  ...
 }:
 {
   # Set your time zone.
@@ -85,7 +86,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # services.openssh.enable = true;
   system.autoUpgrade = {
     #enable = true;
     # channel = "https://nixos.org/channels/nixos-stable";

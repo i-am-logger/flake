@@ -211,6 +211,17 @@
             "inlayHints.discrimiinantHints.enable" = "skip_trivial";
             "inlayHints.typeHints.hideClosureInitialization" = false;
           };
+
+          yaml-language-server = {
+            command = "${yaml-language-server}/bin/yaml-language-server";
+            args = [ "--stdio" ];
+            config.yaml.schemas = {
+              "https://json.schemastore.org/github-action.json" = [
+                "action.yml"
+                "action.yaml"
+              ];
+            };
+          };
         };
 
       #https://github.com/helix-editor/helix/blob/master/languages.toml
@@ -323,6 +334,16 @@
           language-servers = [
             "marksman"
           ];
+        }
+        {
+          name = "yaml";
+          scope = "source.yaml";
+          file-types = [
+            "yml"
+            "yaml"
+          ];
+          auto-format = true;
+          language-servers = [ "yaml-language-server" ];
         }
       ];
     };
