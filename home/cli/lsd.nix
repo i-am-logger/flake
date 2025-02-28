@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.lsd = {
@@ -16,6 +21,9 @@
       symlink-arrow = "⇒";
       header = true;
       classic = false;
+      color = {
+        when = "never";
+      };
       # color = "auto";
       # icons = "auto";
       # hyperlink = "auto";

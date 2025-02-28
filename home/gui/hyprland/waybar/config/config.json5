@@ -180,9 +180,13 @@
 		"position": "bottom",
 		"height": 28,
 		"modules-left": [
-			"disk#root",
+			"custom/seperator",
+			"disk#boot",
+			"custom/seperator",
+			"disk#nix",
 			"custom/seperator",
 			"disk#tmp",
+			"disk#root",
 			"custom/seperator",
 			"memory",
 			"custom/seperator",
@@ -253,11 +257,17 @@
 				"<span color='#dd532e'> ██</span>" // red
 			]
 		},
-		"disk#root": {
+		"disk#boot": {
 			"interval": 5,
 			"format": " {path} {percentage_used:2}%",
 			"tooltip-format": "  DISK {used}/{total}",
-			"path": "/",
+			"path": "/boot",
+		},
+		"disk#nix": {
+			"interval": 5,
+			"format": " {path} {percentage_used:2}%",
+			"tooltip-format": "  DISK {used}/{total}",
+			"path": "/nix",
 		},
 		"disk#tmp": {
 			"interval": 5,
@@ -265,6 +275,12 @@
 			"tooltip-format": "  DISK {used}/{total}",
 			"path": "/tmp",
 		},
+		"disk#root": {
+			"interval": 5,
+			"format": " {path} {percentage_used:2}%",
+			"tooltip-format": "  DISK {used}/{total}",
+			"path": "/",
+		}
 	},
 	{
 		// bar 3

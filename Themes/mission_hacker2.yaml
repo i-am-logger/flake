@@ -1,0 +1,47 @@
+# scheme: "Mission Control"
+# author: "Logger (http://github.com/i_am_logger)"
+author: "metalelf0 (https://github.com/metalelf0)"  # Original creator
+base00: "000000"  # Base 00 - Default Background
+base01: "121212"  # Base 01 - Lighter Background
+base02: "222222"  # Base 02 - Selection Background
+base03: "333333"  # Base 03 - Comments, Invisibles, Line Highlighting
+base04: "666666"  # Base 04 - Dark Foreground
+base05: "999999"  # Base 05 - Default Foreground
+base06: "aaaaaa"  # Base 06 - Light Foreground
+base07: "bbbbbb"  # Base 07 - Light Background
+base08: "5f8787"  # Base 08 - Red
+base09: "aa7777"  # Base 09 - Orange
+base0A: "974b46"  # Base 0A - Yellow
+base0B: "777755"  # Base 0B - Green
+base0C: "447777"  # Base 0C - Cyan
+base0D: "445577"  # Base 0D - Blue
+base0E: "775577"  # Base 0E - Magenta
+base0F: "775544"  # Base 0F - Brown
+
+# baseline
+# 
+# scheme: "Mission Control"
+# author: "Logger (http://github.com/i_am_logger)"
+
+# base00: "000000" # BLACK             | 00    | BACKGROUND 
+# base01: "131721" # DARK GRAY         | 18    | BACKGROUND LIGHT
+# base02: "272D38" # GRAY              | 19    | BACKGROUND SELECT 
+# base03: "3E4B59" # BRIGHT BLACK      | 08    | TEXT COMMENT INVISIBLES, LINE HIGHLIGHT
+# base04: "BFBDB6" # DARK WHITE        | 20    | TEXT FOREGROUND - STATUS BAR
+# # base00: "000000"
+# # base01: "121212"
+# # base02: "222222"
+# # base03: "333333"
+# # base04: "999999"
+# base05: "c1c1c1"
+# base06: "999999"
+# base07: "c1c1c1"
+# base08: "5f8787"
+# base09: "aaaaaa"
+# base0A: "974b46"
+# # base0B: "eceee3" # Original
+# base0B: "777755" # Green
+# base0C: "aaaaaa"
+# base0D: "888888"
+# base0E: "999999"
+# base0F: "444444"

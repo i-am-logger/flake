@@ -1,4 +1,6 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 pkgs.python3Packages.buildPythonApplication rec {
   pname = "qspectrumanalyzer";
@@ -12,7 +14,7 @@ pkgs.python3Packages.buildPythonApplication rec {
   };
 
   propagatedBuildInputs = with pkgs.python3Packages; [
-    pyqt5
+    pyqt6
     pyqtgraph
     soapy_power
   ];

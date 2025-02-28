@@ -15,8 +15,8 @@
     models = "/var/lib/ollama/models";
 
     loadModels = [
-      "llama3.2:3b"
-      "llama3.2-vision"
+      # "llama3.2:3b"
+      # "llama3.2-vision"
     ];
     acceleration = "cuda";
   };

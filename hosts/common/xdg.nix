@@ -16,9 +16,9 @@
   };
 
   environment.systemPackages = with pkgs; [
-    qt5.qtwayland
-    libsForQt5.qt5.qtwayland
-    xwaylandvideobridge
+    qt6.qtwayland
+    # libsForQt6.qtwayland
+    # xwaylandvideobridge
   ];
 
   environment.sessionVariables = {

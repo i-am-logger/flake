@@ -103,8 +103,7 @@
             space = " ";
             nbsp = "⍽";
             tab = "→";
-            newline = "⏎";
-
+            # newline = "⏎";
             tabpad = " "; # "·"; # Tabs will look like "→···" (depending on tab width)
           };
         };
