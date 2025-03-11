@@ -8,7 +8,6 @@
 
   master = {
     orientation = "center";
-    always_center_master = true;
     special_scale_factor = 0.5;
   };
 }

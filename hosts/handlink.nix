@@ -28,6 +28,7 @@
 
     common/environment.nix
     common/hyprland.nix
+    # common/notion.nix
     common/binfmt.nix
     common/qemu.nix
     common/appimage.nix
@@ -74,6 +75,7 @@
   # to access ios devices
   services.usbmuxd.enable = true;
 
+  services.fwupd.enable = true; # firmware update
   services.trezord.enable = true;
   security.pam.services.swaylock = { };
   xdg.portal = {

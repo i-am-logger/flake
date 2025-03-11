@@ -2,7 +2,8 @@
 {
   programs.zellij = {
     enable = true;
-    # enableFishIntegration = true;
+    enableFishIntegration = false;
+    enableBashIntegration = false;
     # config = {
     # map-syntax = [ "*.conf:XML" ];
     # };

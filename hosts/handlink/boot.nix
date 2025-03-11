@@ -64,25 +64,23 @@
     "video.report_key_events=0"
     "acpi_call"
   ];
-  #  boot.supportedFilesystems = [ "btrfs" "ext2" "ext3" "ext4" "exfat" "f2fs" "fat8" "fat16" "fat32" "ntfs" "xfs" "zfs" ];
   boot.supportedFilesystems = [
     "btrfs"
     "ext2"
     "ext3"
     "ext4"
     "exfat"
-    "f2fs"
-    "fat8"
+    # "f2fs"
+    # "fat8"
     "fat16"
     "fat32"
     "ntfs"
-    "xfs"
+    # "xfs"
+    # "zfs"
   ];
-  #  boot.supportedFilesystems = [ "ntfs" ];
 
   # boot.kernelPackages = pkgs.linuxPackages_6_10;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
 }
