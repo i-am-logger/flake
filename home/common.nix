@@ -123,6 +123,7 @@
     # cursor
     bazecor
     cointop
+    warp-terminal
     #pamixer
   ];
 }

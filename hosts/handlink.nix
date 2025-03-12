@@ -10,6 +10,7 @@
     common/bluetooth.nix
     handlink/power_management.nix
     handlink/power_management2.nix
+    common/auto-cpufreq.nix
     handlink/udev.nix
 
     # boot
@@ -25,17 +26,18 @@
     handlink/network.nix
     common/sound.nix # TODO: fix & power management
     common/v4l2loopback.nix
+    common/mouse.nix
 
     common/environment.nix
     common/hyprland.nix
     # common/notion.nix
     common/binfmt.nix
-    common/qemu.nix
+    # common/qemu.nix
     common/appimage.nix
     common/direnv.nix
     common/xdg.nix
     common/wlsunset.nix
-    common/docker.nix
+    # common/docker.nix
     common/ollama.nix
     # common/n8n.nix
     # common/nextcloud.nix
