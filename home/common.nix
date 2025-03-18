@@ -14,7 +14,7 @@
     # cli/neovim.nix
     # cli/tmux.nix
 
-    cli/fish
+    # cli/fish
     cli/starship
     cli/btop
     # cli/neofetch

@@ -26,7 +26,7 @@
 
   env = [
     "XCURSOR_SIZE,24"
-    "XCURSOR_THEME,DMZ-White"
+    "XCURSOR_THEME,Bibata-Modern-Classic"
     "GDK_SCALE,2
 "
     "XDG_SESSION_TYPE,wayland"
