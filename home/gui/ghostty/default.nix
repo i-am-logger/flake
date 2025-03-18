@@ -18,7 +18,6 @@
       font-size = 20;
       font-thicken = true;
       term = "xterm-256color";
-      shell-integration-features = "no-cursor";
       auto-update-channel = "tip";
       background-opacity = 0.90;
       adjust-cell-width = 1;

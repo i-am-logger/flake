@@ -71,5 +71,11 @@
         # name = "Twitter Color Emoji";
       };
     };
+
+    cursor = {
+      name = "DMZ-White";
+      package = pkgs.vanilla-dmz;
+      size = 24;
+    };
   };
 }
