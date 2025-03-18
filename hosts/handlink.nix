@@ -10,7 +10,7 @@
     common/bluetooth.nix
     handlink/power_management.nix
     handlink/power_management2.nix
-    common/auto-cpufreq.nix
+    # common/auto-cpufreq.nix
     handlink/udev.nix
 
     # boot

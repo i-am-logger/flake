@@ -1,7 +1,9 @@
-{ pkgs
-, config
-, ...
-}: {
+{
+  pkgs,
+  config,
+  ...
+}:
+{
   environment.systemPackages = with pkgs; [ nextcloud-client ];
   environment.etc."nextcloud-admin-pass".text = "1Q2w3e$R%T";
   services.nextcloud = {

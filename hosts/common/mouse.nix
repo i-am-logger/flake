@@ -14,7 +14,7 @@
   ];
 
   # For better gaming experience, consider disabling mouse acceleration
-  services.xserver.libinput = {
+  services.libinput = {
     enable = true;
     mouse = {
       accelProfile = "flat"; # Disable mouse acceleration
