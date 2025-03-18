@@ -30,10 +30,10 @@
     "hint" = { fg = "base0E"; };                     # Purple for hints
     
     # Diagnostics
-    "diagnostic.error" = { fg = "base08"; underline = { style = "curl" }; };
-    "diagnostic.warning" = { fg = "base0A"; underline = { style = "curl" }; };
-    "diagnostic.info" = { fg = "base0D"; underline = { style = "curl" }; };
-    "diagnostic.hint" = { fg = "base0E"; underline = { style = "curl" }; };
+    "diagnostic.error" = { fg = "base08"; underline = { style = "curl"; }; };
+    "diagnostic.warning" = { fg = "base0A"; underline = { style = "curl"; }; };
+    "diagnostic.info" = { fg = "base0D"; underline = { style = "curl"; }; };
+    "diagnostic.hint" = { fg = "base0E"; underline = { style = "curl"; }; };
     
     # Diff indicators
     "diff.plus" = { fg = "base0B"; };               # Green for additions
