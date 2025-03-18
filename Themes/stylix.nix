@@ -13,6 +13,7 @@
 {
   imports = [
     ./ls-colors.nix
+    ./helix_theme.nix
   ];
 
   stylix = {
@@ -73,8 +74,8 @@
     };
 
     cursor = {
-      name = "DMZ-White";
-      package = pkgs.vanilla-dmz;
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
       size = 24;
     };
   };
