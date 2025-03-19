@@ -10,7 +10,8 @@
   };
   programs.ghostty = {
     enable = true;
-    enableFishIntegration = true;
+    enableFishIntegration = false;
+    enableBashIntegration = true;
     installBatSyntax = true;
     # settings reference  https://ghostty.org/docs/config/reference
     settings = {

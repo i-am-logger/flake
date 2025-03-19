@@ -13,7 +13,6 @@
 {
   imports = [
     ./ls-colors.nix
-    ./helix_theme.nix
   ];
 
   stylix = {

@@ -4,8 +4,9 @@
 { pkgs, ... }:
 {
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.defaultUserShell = pkgs.fish;
+  users.defaultUserShell = pkgs.bash;
   users.users.snick = {
+    shell = pkgs.bash;
     name = "snick";
     initialPassword = "";
     isNormalUser = true;
@@ -24,6 +25,5 @@
       "disk"
       "dialout"
     ];
-    shell = pkgs.fish;
   };
 }
