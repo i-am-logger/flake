@@ -14,7 +14,12 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  
+  nix = {
+		channel.enable = false;
+		settings.nix-path = ["nixpkgs=${pkgs.path}"];
+		settings.experimental-features = [ "nix-command" "flakes" ];
+	};
+
   networking.hostName = "yoga"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
