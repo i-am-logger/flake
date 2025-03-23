@@ -48,7 +48,7 @@
       ...
     }:
     let
-      username = "snick";
+      username = "logger";
       lib = nixpkgs.lib;
       # packages-overlay = import ./packages/overlay.nix;
       pkgs = import nixpkgs {
@@ -67,6 +67,26 @@
     in
     {
       nixosConfigurations = {
+        yoga = lib.nixosSystem {
+          specialArgs = {
+            inherit
+              secrets
+              disko
+              self
+              inputs
+              username
+              ;
+          };
+          modules = [
+           ./Systems/yoga/configuration.nix
+           disko.nixosModules.disko
+            {
+              disko.devices = import ./Systems/yoga/disko.nix {
+                lib = nixpkgs.lib;
+              };
+           }
+          ];
+        };
         handlink = lib.nixosSystem {
           specialArgs = {
             inherit

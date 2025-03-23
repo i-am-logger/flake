@@ -12,7 +12,7 @@
   disk = {
     main = {
       type = "disk";
-      device = "/dev/disk/by-id/some-disk-id";
+      device = "/dev/nvme0n1";
       content = {
         type = "gpt";
         partitions = {
@@ -28,13 +28,13 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "umask=0077" ];
             };
           };
           root = {
             size = "100%";
             content = {
               type = "btrfs";
+              # extraArgs = [ "-f" ]; # override existing partition
 
               subvolumes = {
                 "SYSTEM" = { };
