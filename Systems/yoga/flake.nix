@@ -4,7 +4,7 @@
   inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
 
   outputs = { self, disko, nixpkgs }: {
-    nixosConfigurations.mymachine = nixpkgs.legacyPackages.x86_64-linux.nixos [
+    nixosConfigurations.yoga = nixpkgs.legacyPackages.x86_64-linux.nixos [
       ./configuration.nix
       disko.nixosModules.disko
       {

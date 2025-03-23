@@ -12,7 +12,7 @@
   disk = {
     main = {
       type = "disk";
-      device = "/dev/nvme0n1";
+      device = "/dev/disk/by-id/some-disk-id";
       content = {
         type = "gpt";
         partitions = {
@@ -28,6 +28,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
+              mountOptions = [ "umask=0077" ];
             };
           };
           root = {
