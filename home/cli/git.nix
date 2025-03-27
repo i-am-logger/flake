@@ -18,8 +18,8 @@
     userEmail = "i-am-logger@users.noreply.github.com";
     signing = {
       key = "6AACFE7CBA89F53A"; # gpg --list-secret-keys --keyid-format=long
-      # format = "openpgp";
-      # signByDefault = true;
+      format = "openpgp";
+      signByDefault = true;
     };
 
     aliases = {

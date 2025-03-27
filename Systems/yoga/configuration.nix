@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ./persistence.nix
       ./secure-boot.nix  # Add this line
+      ./yubikey.nix
       # Add lanzaboote module
       inputs.lanzaboote.nixosModules.lanzaboote
     ];
