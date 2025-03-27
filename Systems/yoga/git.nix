@@ -15,7 +15,7 @@
     [user]
       name = logger
       email = i-am-logger@users.noreply.github.com
-      signingkey = 6AACFE7CBA89F53A
+      signingkey = 517BDA94D20F4856
 
     [commit]
       gpgsign = true
@@ -44,9 +44,9 @@
       ca = commit --amend
       co = checkout
       s = status
-      l = log
+      l = log --pretty=format:'%C(yellow)%h%Creset %C(cyan)%G?%Creset %C(white)%d%Creset %s %C(cyan)(%cr) %C(bold blue)<%an>%Creset'
       graph = log --decorate --oneline --graph
-
+      signature = log --pretty=format:'⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%n✧ %C(yellow)%h%Creset %(if:equals=G,%(G?))%C(green)✓%Creset%(else)%C(red)✉%Creset%(end) %C(white)%d%Creset %s%n⌘ %C(cyan)(%cr)%Creset %C(bold blue)<%an>%Creset%n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯'
     [delta]
       features = decorations
       whitespace-error-style = 22 reverse

@@ -11,6 +11,7 @@
       ./persistence.nix
       ./secure-boot.nix  # Add this line
       ./yubikey.nix
+      ./git.nix
       # Add lanzaboote module
       inputs.lanzaboote.nixosModules.lanzaboote
     ];

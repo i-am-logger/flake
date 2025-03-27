@@ -24,19 +24,19 @@
   security.pam = {
     services = {
       login.u2fAuth = true;
-      sudo.u2fAuth = true;
+      sudo.u2fAuth = false;  # Explicitly disable U2F for sudo
       # Enable for display manager (GDM) as well
       gdm.u2fAuth = true;
     };
     u2f = {
       enable = true;
+      control = "required";
       settings = {
         authfile = "/persist/yubikey/authorized_yubikeys";
         cue = true;  # Provide visual feedback when waiting for a token
       };
     };
   };
-
   # Ensure YubiKey configurations persist across reboots
   environment.persistence."/persist" = {
     directories = [
@@ -49,6 +49,7 @@
     users.logger = {
       directories = [
         ".gnupg"
+        ".yubico"   # YubiKey challenge-response files
       ];
     };
   };
