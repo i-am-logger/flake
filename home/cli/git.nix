@@ -14,8 +14,8 @@
     lfs.enable = true;
 
     package = pkgs.gitAndTools.gitFull;
-    userName = "Logger";
-    userEmail = "ido.samuelson@gmail.com";
+    userName = "logger";
+    userEmail = "i-am-logger@users.noreply.github.com";
     signing = {
       key = "6AACFE7CBA89F53A"; # gpg --list-secret-keys --keyid-format=long
       # format = "openpgp";
