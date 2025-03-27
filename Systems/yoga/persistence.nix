@@ -27,10 +27,7 @@
         "Videos"
         "Code"
         "Current-Rice"
-        ".config"
         ".local"
-        ".cache"
-        ".mozilla"    # Firefox data
       ];
     };
   };
