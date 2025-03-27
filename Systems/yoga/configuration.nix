@@ -125,7 +125,7 @@
   users.users.logger = {
     isNormalUser = true;
     description = "Ido Samuelson";
-    initialPassword = "changeme";
+    hashedPassword = "$6$xSY41iEBAU2B0KdA$Qk/yL0097FNXr2xEKVrjk1M6BUbQNgXYibBqlWwvhcV4h1JDE3bBmz61hynlu4w83ypyxgh66qowBjIkamsDC1";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       warp-terminal
