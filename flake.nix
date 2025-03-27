@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
-    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05"; #-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
     # managing secrets
@@ -19,6 +18,10 @@
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence";
     };
 
     # managing /home - user configurations - dotfiles
@@ -40,6 +43,7 @@
       nixos-hardware,
       nixpkgs,
       disko,
+      impermanence,
       flake-utils,
       sops-nix,
       secrets,
@@ -48,9 +52,7 @@
       ...
     }:
     let
-      username = "snick";
       lib = nixpkgs.lib;
-      # packages-overlay = import ./packages/overlay.nix;
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true; # Allow proprietary software
@@ -72,6 +74,7 @@
             inherit
               secrets
               disko
+              impermanence
               self
               inputs
               ;
@@ -94,7 +97,6 @@
               disko
               self
               inputs
-              username
               ;
           };
           modules = [
@@ -132,15 +134,14 @@
             # Home
             home-manager.nixosModules.home-manager
             {
-              #home-manager.useGlobalPkgs = true;
+              # home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {
                 inherit inputs;
               };
-              home-manager.users.${username} = {
+              home-manager.users.snick = {
                 imports = [
-                  # nix-doom-emacs.hmModule
-                  ./home/${username}.nix
+                  ./home/snick.nix
                 ];
               };
             }
@@ -150,14 +151,6 @@
             Themes/stylix.nix
           ];
         };
-
-        #bumblebee = {
-        #  system = "x86_64-linux";
-        #  # specialArgs = { inherit nixpkgs self inputs user; };
-        #  modules = [
-        #    ./bumblebee/configuration.nix
-        #  ];
-        #};
       };
     };
 }

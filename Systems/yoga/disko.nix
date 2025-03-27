@@ -1,9 +1,16 @@
 { ... }: {
   nodev = {
+    "/" = {
+      fsType = "tmpfs";
+      mountOptions = [
+        "size=12G"
+        "mode=755"
+      ];
+    };
     "/tmp" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=28G"
+        "size=16G"
         "mode=755"
       ];
     };
@@ -22,7 +29,6 @@
           };
           ESP = {
             size = "2G";
-            # priority = 1;
             type = "EF00";
             content = {
               type = "filesystem";
@@ -30,27 +36,26 @@
               mountpoint = "/boot";
             };
           };
-          root = {
-            size = "100%";
+          nix = {
+            size = "128G";  # Reduced to 128GB, still plenty for nix store
             content = {
               type = "btrfs";
-              # extraArgs = [ "-f" ]; # override existing partition
-
               subvolumes = {
-                "SYSTEM" = { };
-                "SYSTEM/rootfs" = {
-                  mountpoint = "/";
-                  mountOptions = [ "noatime" ];
-                };
-                "SYSTEM/nix" = {
+                "/nix" = {
                   mountpoint = "/nix";
-                  mountOptions = [ "noatime" "compress=zstd" ];
+                  mountOptions = [ "noatime" "compress=zstd" "autodefrag" "space_cache=v2" ];
                 };
-
-                "DATA" = { };
-                "DATA/home" = {
-                  mountpoint = "/home";
-                  mountOptions = [ "noatime" ];
+              };
+            };
+          };
+          persist = {
+            size = "100%";  # Remaining space for /persist
+            content = {
+              type = "btrfs";
+              subvolumes = {
+                "/persist" = {
+                  mountpoint = "/persist";
+                  mountOptions = [ "noatime" "autodefrag" "space_cache=v2" ];
                 };
               };
             };
