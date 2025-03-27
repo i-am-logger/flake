@@ -54,6 +54,7 @@
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  # services.xserver.windowManager.notion.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -62,7 +63,7 @@
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # services.printing.enable = true;
 
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
@@ -83,13 +84,17 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkg.pname or pkg.name) [
+    "warp-terminal"
+  ];
+
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.logger = {
     isNormalUser = true;
     description = "Ido Samuelson";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-    #  thunderbird
+    warp-terminal
     ];
   };
 

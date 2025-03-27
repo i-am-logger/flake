@@ -11,7 +11,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
 
     secrets = {
-      url = "/home/snick/.secrets/";
+      url = "/home/logger/.secrets/";
       flake = false;
     };
 
