@@ -74,5 +74,8 @@
   environment.shellInit = ''
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye > /dev/null
+    
+    # Set SSH to use gpg-agent
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
   '';
 }
