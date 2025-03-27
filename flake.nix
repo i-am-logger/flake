@@ -35,6 +35,15 @@
     stylix.url = "github:danth/stylix";
     # stylix.url = "github:realsnick/stylix";
     # stylix.url = "../../../home/snick/Code/snick/stylix";
+
+    # NixOS hardware configurations
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    # Secure Boot with lanzaboote
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -49,6 +58,8 @@
       secrets,
       home-manager,
       stylix,
+      lanzaboote,
+      ags,
       ...
     }:
     let
@@ -56,8 +67,6 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true; # Allow proprietary software
-
-        # overlays = [ packages-overlay ];
         # nixpkgs.config.permittedInsecurePackages = [
         #   "nix-2.15.3"
         #   "nix-2.19.3"
