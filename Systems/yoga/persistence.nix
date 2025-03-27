@@ -27,7 +27,6 @@
         "Videos"
         "Code"
         "Current-Rice"
-        ".local"
       ];
     };
   };
