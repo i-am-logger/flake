@@ -1,14 +1,23 @@
+{ ... }:
+
 {
-  imports = [
-    ./common.nix
-    ./cli
-    ./gui
-  ];
+  manual.manpages.enable = true;
+
+  programs = {
+    home-manager.enable = true;
+    bash.enable = true;
+    zellij.enable = true;
+    fzf.enable = true;
+  };
 
   home = {
     username = "logger";
     homeDirectory = "/home/logger";
-    stateVersion = "23.11"; # Use the current NixOS version
-  };
-}
+    stateVersion = "25.05";
 
+  };
+
+  imports = [
+    ./common.nix
+  ];
+}
