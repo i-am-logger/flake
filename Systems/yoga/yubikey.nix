@@ -24,16 +24,17 @@
   security.pam = {
     services = {
       login.u2fAuth = true;
-      sudo.u2fAuth = false;  # Explicitly disable U2F for sudo
+      sudo.u2fAuth = true;  # Enable U2F for sudo
       # Enable for display manager (GDM) as well
       gdm.u2fAuth = true;
     };
     u2f = {
       enable = true;
-      control = "required";
+      control = "sufficient";
       settings = {
         authfile = "/persist/yubikey/authorized_yubikeys";
         cue = true;  # Provide visual feedback when waiting for a token
+        interactive = true;
       };
     };
   };
