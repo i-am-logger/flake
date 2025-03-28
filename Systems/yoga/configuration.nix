@@ -92,8 +92,10 @@
   
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm.wayland = true;
   services.xserver.desktopManager.gnome.enable = true;
   # services.xserver.windowManager.notion.enable = true;
+  services.xserver.windowManager.hyprland.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -124,6 +126,10 @@
   # services.xserver.libinput.enable = true;
 
 
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkg.pname or pkg.name) [
+    "slack"
+    "warp-terminal"
+  ];
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.logger = {
     isNormalUser = true;
@@ -132,6 +138,11 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       sbctl # for secure-boot
+      dotenv-cli
+      direnv
+      nix-direnv
+      slack
+      brave
     ];
   };
 
@@ -148,7 +159,8 @@
     fastfetch
     mc
     git
-    vmtouch
+    # vmtouch
+    hyprland
   ];
 
   # Enable zram with 15% of RAM

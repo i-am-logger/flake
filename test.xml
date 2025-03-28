@@ -1,0 +1,4669 @@
+{
+  "schema_version": "1",
+  "scan_id": "crr-20250327-abc123",
+  "starttime": "1743024460",
+  "endtime": "1743024468",
+  "start_iso": "2025-03-26T21:27:40Z",
+  "end_iso": "2025-03-26T21:27:48Z",
+  "severity": "CRITICAL",
+  "crr_score": 9.8,
+  "stats": {
+    "hosts_scanned": 1,
+    "hosts_down": 0,
+    "total_vulnerabilities_found": 178,
+    "critical_count": 11,
+    "high_count": 101,
+    "medium_count": 60,
+    "low_count": 1
+  },
+  "hosts": {
+    "status": {
+      "state": "up",
+      "last_seen": "2025-03-26T21:27:48Z"
+    },
+    "address": "45.33.32.156",
+    "hostnames": {
+      "hostname": [
+        {
+          "name": "scanme.nmap.org"
+        }
+      ]
+    },
+    "vulnerabilities": [
+      {
+        "id": "CVE-2017-15710",
+        "description": "In Apache httpd 2.0.23 to 2.0.65, 2.2.0 to 2.2.34, and 2.4.0 to 2.4.29, mod_authnz_ldap, if configured with AuthLDAPCharsetConfig, uses the Accept-Language header value to lookup the right charset encoding when verifying the user's credentials. If the header value is not present in the charset conversion table, a fallback mechanism is used to truncate it to a two characters value to allow a quick retry (for example, 'en-US' is truncated to 'en'). A header value of less than two characters forces an out of bound write of one NUL byte to a memory location that is not part of the string. In the worst case, quite unlikely, the process would crash which could be used as a Denial of Service attack. In the more likely case, this memory is already reserved for future use and the issue has no effect at all.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2018-03-26T15:29Z",
+        "updated": "2024-11-21T03:15Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2017-9798",
+        "description": "Apache httpd allows remote attackers to read secret data from process memory if the Limit directive can be set in a user's .htaccess file, or if httpd.conf has certain misconfigurations, aka Optionsbleed. This affects the Apache HTTP Server through 2.2.34 and 2.4.x through 2.4.27. The attacker sends an unauthenticated OPTIONS HTTP request when attempting to read secret data. This is a use-after-free issue and thus secret data is not always sent, and the specific data depends on many factors including configuration. Exploitation with .htaccess can be blocked with a patch to the ap_limit_section function in server/core.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2017-09-18T15:29Z",
+        "updated": "2024-11-21T03:36Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-0736",
+        "description": "In Apache HTTP Server versions 2.4.0 to 2.4.23, mod_session_crypto was encrypting its data/cookie using the configured ciphers with possibly either CBC or ECB modes of operation (AES256-CBC by default), hence no selectable or builtin authenticated encryption. This made it vulnerable to padding oracle attacks, particularly with CBC.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2017-07-27T21:29Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-2161",
+        "description": "In Apache HTTP Server versions 2.4.0 to 2.4.23, malicious input to mod_auth_digest can cause the server to crash, and each instance continues to crash even for subsequently valid requests.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2017-07-27T21:29Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-4975",
+        "description": "Possible CRLF injection allowing HTTP response splitting attacks for sites which use mod_userdir. This issue was mitigated by changes made in 2.4.25 and 2.2.32 which prohibit CR or LF injection into the \"Location\" or other outbound header key or value. Fixed in Apache HTTP Server 2.4.25 (Affected 2.4.1-2.4.23). Fixed in Apache HTTP Server 2.2.32 (Affected 2.2.0-2.2.31).",
+        "score": 6.1,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+        "published": "2018-08-14T12:29Z",
+        "updated": "2024-11-21T02:53Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2013-5704",
+        "description": "The mod_headers module in the Apache HTTP Server 2.2.22 allows remote attackers to bypass \"RequestHeader unset\" directives by placing a header in the trailer portion of data sent with chunked transfer coding.  NOTE: the vendor states \"this is not a security issue in httpd as such.\"",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+        "published": "2014-04-15T10:55Z",
+        "updated": "2024-11-21T01:57Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2015-3185",
+        "description": "The ap_some_auth_required function in server/request.c in the Apache HTTP Server 2.4.x before 2.4.14 does not consider that a Require directive may be associated with an authorization setting rather than an authentication setting, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging the presence of a module that relies on the 2.2 API behavior.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2015-07-20T23:59Z",
+        "updated": "2024-11-21T02:28Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-0117",
+        "description": "The mod_proxy module in the Apache HTTP Server 2.4.x before 2.4.10, when a reverse proxy is enabled, allows remote attackers to cause a denial of service (child-process crash) via a crafted HTTP Connection header.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2014-07-20T11:12Z",
+        "updated": "2024-11-21T02:01Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-3523",
+        "description": "Memory leak in the winnt_accept function in server/mpm/winnt/child.c in the WinNT MPM in the Apache HTTP Server 2.4.x before 2.4.10 on Windows, when the default AcceptFilter is enabled, allows remote attackers to cause a denial of service (memory consumption) via crafted requests.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-07-20T11:12Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-3581",
+        "description": "The cache_merge_headers_out function in modules/cache/cache_util.c in the mod_cache module in the Apache HTTP Server before 2.4.11 allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via an empty HTTP Content-Type header.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-10-10T10:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-8109",
+        "description": "mod_lua.c in the mod_lua module in the Apache HTTP Server 2.3.x and 2.4.x through 2.4.10 does not support an httpd configuration in which the same Lua authorization provider is used with different arguments within different contexts, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging multiple Require directives, as demonstrated by a configuration that specifies authorization for one group to access a certain directory, and authorization for a second group to access a second directory.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2014-12-29T23:59Z",
+        "updated": "2024-11-21T02:18Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2018-1312",
+        "description": "In Apache httpd 2.2.0 to 2.4.29, when generating an HTTP Digest authentication challenge, the nonce sent to prevent reply attacks was not correctly generated using a pseudo-random seed. In a cluster of servers using a common Digest authentication configuration, HTTP requests could be replayed across servers by an attacker without detection.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2018-03-26T15:29Z",
+        "updated": "2024-11-21T03:59Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2017-15710",
+        "description": "In Apache httpd 2.0.23 to 2.0.65, 2.2.0 to 2.2.34, and 2.4.0 to 2.4.29, mod_authnz_ldap, if configured with AuthLDAPCharsetConfig, uses the Accept-Language header value to lookup the right charset encoding when verifying the user's credentials. If the header value is not present in the charset conversion table, a fallback mechanism is used to truncate it to a two characters value to allow a quick retry (for example, 'en-US' is truncated to 'en'). A header value of less than two characters forces an out of bound write of one NUL byte to a memory location that is not part of the string. In the worst case, quite unlikely, the process would crash which could be used as a Denial of Service attack. In the more likely case, this memory is already reserved for future use and the issue has no effect at all.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2018-03-26T15:29Z",
+        "updated": "2024-11-21T03:15Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2017-9798",
+        "description": "Apache httpd allows remote attackers to read secret data from process memory if the Limit directive can be set in a user's .htaccess file, or if httpd.conf has certain misconfigurations, aka Optionsbleed. This affects the Apache HTTP Server through 2.2.34 and 2.4.x through 2.4.27. The attacker sends an unauthenticated OPTIONS HTTP request when attempting to read secret data. This is a use-after-free issue and thus secret data is not always sent, and the specific data depends on many factors including configuration. Exploitation with .htaccess can be blocked with a patch to the ap_limit_section function in server/core.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2017-09-18T15:29Z",
+        "updated": "2024-11-21T03:36Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-0736",
+        "description": "In Apache HTTP Server versions 2.4.0 to 2.4.23, mod_session_crypto was encrypting its data/cookie using the configured ciphers with possibly either CBC or ECB modes of operation (AES256-CBC by default), hence no selectable or builtin authenticated encryption. This made it vulnerable to padding oracle attacks, particularly with CBC.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2017-07-27T21:29Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-2161",
+        "description": "In Apache HTTP Server versions 2.4.0 to 2.4.23, malicious input to mod_auth_digest can cause the server to crash, and each instance continues to crash even for subsequently valid requests.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2017-07-27T21:29Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2016-4975",
+        "description": "Possible CRLF injection allowing HTTP response splitting attacks for sites which use mod_userdir. This issue was mitigated by changes made in 2.4.25 and 2.2.32 which prohibit CR or LF injection into the \"Location\" or other outbound header key or value. Fixed in Apache HTTP Server 2.4.25 (Affected 2.4.1-2.4.23). Fixed in Apache HTTP Server 2.2.32 (Affected 2.2.0-2.2.31).",
+        "score": 6.1,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+        "published": "2018-08-14T12:29Z",
+        "updated": "2024-11-21T02:53Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2013-5704",
+        "description": "The mod_headers module in the Apache HTTP Server 2.2.22 allows remote attackers to bypass \"RequestHeader unset\" directives by placing a header in the trailer portion of data sent with chunked transfer coding.  NOTE: the vendor states \"this is not a security issue in httpd as such.\"",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+        "published": "2014-04-15T10:55Z",
+        "updated": "2024-11-21T01:57Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2015-3185",
+        "description": "The ap_some_auth_required function in server/request.c in the Apache HTTP Server 2.4.x before 2.4.14 does not consider that a Require directive may be associated with an authorization setting rather than an authentication setting, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging the presence of a module that relies on the 2.2 API behavior.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2015-07-20T23:59Z",
+        "updated": "2024-11-21T02:28Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-0117",
+        "description": "The mod_proxy module in the Apache HTTP Server 2.4.x before 2.4.10, when a reverse proxy is enabled, allows remote attackers to cause a denial of service (child-process crash) via a crafted HTTP Connection header.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2014-07-20T11:12Z",
+        "updated": "2024-11-21T02:01Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-3523",
+        "description": "Memory leak in the winnt_accept function in server/mpm/winnt/child.c in the WinNT MPM in the Apache HTTP Server 2.4.x before 2.4.10 on Windows, when the default AcceptFilter is enabled, allows remote attackers to cause a denial of service (memory consumption) via crafted requests.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-07-20T11:12Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-3581",
+        "description": "The cache_merge_headers_out function in modules/cache/cache_util.c in the mod_cache module in the Apache HTTP Server before 2.4.11 allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via an empty HTTP Content-Type header.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-10-10T10:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2014-8109",
+        "description": "mod_lua.c in the mod_lua module in the Apache HTTP Server 2.3.x and 2.4.x through 2.4.10 does not support an httpd configuration in which the same Lua authorization provider is used with different arguments within different contexts, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging multiple Require directives, as demonstrated by a configuration that specifies authorization for one group to access a certain directory, and authorization for a second group to access a second directory.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2014-12-29T23:59Z",
+        "updated": "2024-11-21T02:18Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2018-1312",
+        "description": "In Apache httpd 2.2.0 to 2.4.29, when generating an HTTP Digest authentication challenge, the nonce sent to prevent reply attacks was not correctly generated using a pseudo-random seed. In a cluster of servers using a common Digest authentication configuration, HTTP requests could be replayed across servers by an attacker without detection.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2018-03-26T15:29Z",
+        "updated": "2024-11-21T03:59Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 80,
+            "service": {
+              "name": "http",
+              "product": "Apache httpd",
+              "version": "2.4.7",
+              "extrainfo": "(Ubuntu)",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:http_server:2.4.7"
+        ]
+      },
+      {
+        "id": "CVE-2017-3735",
+        "description": "While parsing an IPAddressFamily extension in an X.509 certificate, it is possible to do a one-byte overread. This would result in an incorrect text display of the certificate. This bug has been present since 2006 and is present in all versions of OpenSSL before 1.0.2m and 1.1.0g.",
+        "score": 5.3,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+        "published": "2017-08-28T19:29Z",
+        "updated": "2024-11-21T03:26Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0702",
+        "description": "The MOD_EXP_CTIME_COPY_FROM_PREBUF function in crypto/bn/bn_exp.c in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g does not properly consider cache-bank access times during modular exponentiation, which makes it easier for local users to discover RSA keys by running a crafted application on the same Intel Sandy Bridge CPU core as a victim and leveraging cache-bank conflicts, aka a \"CacheBleed\" attack.",
+        "score": 5.1,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0703",
+        "description": "The get_client_master_key function in s2_srvr.c in the SSLv2 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a accepts a nonzero CLIENT-MASTER-KEY CLEAR-KEY-LENGTH value for an arbitrary cipher, which allows man-in-the-middle attackers to determine the MASTER-KEY value and decrypt TLS ciphertext data by leveraging a Bleichenbacher RSA padding oracle, a related issue to CVE-2016-0800.",
+        "score": 5.9,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-03-02T11:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0704",
+        "description": "An oracle protection mechanism in the get_client_master_key function in s2_srvr.c in the SSLv2 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a overwrites incorrect MASTER-KEY bytes during use of export cipher suites, which makes it easier for remote attackers to decrypt TLS ciphertext data by leveraging a Bleichenbacher RSA padding oracle, a related issue to CVE-2016-0800.",
+        "score": 5.9,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-03-02T11:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0705",
+        "description": "Double free vulnerability in the dsa_priv_decode function in crypto/dsa/dsa_ameth.c in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g allows remote attackers to cause a denial of service (memory corruption) or possibly have unspecified other impact via a malformed DSA private key.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0797",
+        "description": "Multiple integer overflows in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g allow remote attackers to cause a denial of service (heap memory corruption or NULL pointer dereference) or possibly have unspecified other impact via a long digit string that is mishandled by the (1) BN_dec2bn or (2) BN_hex2bn function, related to crypto/bn/bn.h and crypto/bn/bn_print.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0798",
+        "description": "Memory leak in the SRP_VBASE_get_by_user implementation in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g allows remote attackers to cause a denial of service (memory consumption) by providing an invalid username in a connection attempt, related to apps/s_server.c and crypto/srp/srp_vfy.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0799",
+        "description": "The fmtstr function in crypto/bio/b_print.c in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g improperly calculates string lengths, which allows remote attackers to cause a denial of service (overflow and out-of-bounds read) or possibly have unspecified other impact via a long string, as demonstrated by a large amount of ASN.1 data, a different vulnerability than CVE-2016-2842.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-0800",
+        "description": "The SSLv2 protocol, as used in OpenSSL before 1.0.1s and 1.0.2 before 1.0.2g and other products, requires a server to send a ServerVerify message before establishing that a client possesses certain plaintext RSA data, which makes it easier for remote attackers to decrypt TLS ciphertext data by leveraging a Bleichenbacher RSA padding oracle, aka a \"DROWN\" attack.",
+        "score": 5.9,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-03-01T20:59Z",
+        "updated": "2024-11-21T02:42Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2105",
+        "description": "Integer overflow in the EVP_EncodeUpdate function in crypto/evp/encode.c in OpenSSL before 1.0.1t and 1.0.2 before 1.0.2h allows remote attackers to cause a denial of service (heap memory corruption) via a large amount of binary data.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-05-05T01:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2177",
+        "description": "OpenSSL through 1.0.2h incorrectly uses pointer arithmetic for heap-buffer boundary checks, which might allow remote attackers to cause a denial of service (integer overflow and application crash) or possibly have unspecified other impact by leveraging unexpected malloc behavior, related to s3_srvr.c, ssl_sess.c, and t1_lib.c.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-06-20T01:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2178",
+        "description": "The dsa_sign_setup function in crypto/dsa/dsa_ossl.c in OpenSSL through 1.0.2h does not properly ensure the use of constant-time operations, which makes it easier for local users to discover a DSA private key via a timing side-channel attack.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-06-20T01:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2179",
+        "description": "The DTLS implementation in OpenSSL before 1.1.0 does not properly restrict the lifetime of queue entries associated with unused out-of-order messages, which allows remote attackers to cause a denial of service (memory consumption) by maintaining many crafted DTLS sessions simultaneously, related to d1_lib.c, statem_dtls.c, statem_lib.c, and statem_srvr.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-09-16T05:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2180",
+        "description": "The TS_OBJ_print_bio function in crypto/ts/ts_lib.c in the X.509 Public Key Infrastructure Time-Stamp Protocol (TSP) implementation in OpenSSL through 1.0.2h allows remote attackers to cause a denial of service (out-of-bounds read and application crash) via a crafted time-stamp file that is mishandled by the \"openssl ts\" command.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-08-01T02:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2181",
+        "description": "The Anti-Replay feature in the DTLS implementation in OpenSSL before 1.1.0 mishandles early use of a new epoch number in conjunction with a large sequence number, which allows remote attackers to cause a denial of service (false-positive packet drops) via spoofed DTLS records, related to rec_layer_d1.c and ssl3_record.c.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-09-16T05:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2182",
+        "description": "The BN_bn2dec function in crypto/bn/bn_print.c in OpenSSL before 1.1.0 does not properly validate division results, which allows remote attackers to cause a denial of service (out-of-bounds write and application crash) or possibly have unspecified other impact via unknown vectors.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-09-16T05:59Z",
+        "updated": "2024-11-21T02:47Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-2842",
+        "description": "The doapr_outch function in crypto/bio/b_print.c in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g does not verify that a certain memory allocation succeeds, which allows remote attackers to cause a denial of service (out-of-bounds write or memory consumption) or possibly have unspecified other impact via a long string, as demonstrated by a large amount of ASN.1 data, a different vulnerability than CVE-2016-0799.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-03-03T20:59Z",
+        "updated": "2024-11-21T02:48Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-6302",
+        "description": "The tls_decrypt_ticket function in ssl/t1_lib.c in OpenSSL before 1.1.0 does not consider the HMAC size during validation of the ticket length, which allows remote attackers to cause a denial of service via a ticket that is too short.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-09-16T05:59Z",
+        "updated": "2024-11-21T02:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-6303",
+        "description": "Integer overflow in the MDC2_Update function in crypto/mdc2/mdc2dgst.c in OpenSSL before 1.1.0 allows remote attackers to cause a denial of service (out-of-bounds write and application crash) or possibly have unspecified other impact via unknown vectors.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2016-09-16T05:59Z",
+        "updated": "2024-11-21T02:55Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-6304",
+        "description": "Multiple memory leaks in t1_lib.c in OpenSSL before 1.0.1u, 1.0.2 before 1.0.2i, and 1.1.0 before 1.1.0a allow remote attackers to cause a denial of service (memory consumption) via large OCSP Status Request extensions.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-09-26T19:59Z",
+        "updated": "2024-11-21T02:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-6306",
+        "description": "The certificate parser in OpenSSL before 1.0.1u and 1.0.2 before 1.0.2i might allow remote attackers to cause a denial of service (out-of-bounds read) via crafted certificate operations, related to s3_clnt.c and s3_srvr.c.",
+        "score": 5.9,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2016-09-26T19:59Z",
+        "updated": "2024-11-21T02:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2016-8610",
+        "description": "A denial of service flaw was found in OpenSSL 0.9.8, 1.0.1, 1.0.2 through 1.0.2h, and 1.1.0 in the way the TLS/SSL protocol defined processing of ALERT packets during a connection handshake. A remote attacker could use this flaw to make a TLS/SSL server consume an excessive amount of CPU and fail to accept connections from other clients.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2017-11-13T22:29Z",
+        "updated": "2024-11-21T02:59Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2013-0166",
+        "description": "OpenSSL before 0.9.8y, 1.0.0 before 1.0.0k, and 1.0.1 before 1.0.1d does not properly perform signature verification for OCSP responses, which allows remote OCSP servers to cause a denial of service (NULL pointer dereference and application crash) via an invalid key.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2013-02-08T19:55Z",
+        "updated": "2024-11-21T01:46Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2013-4353",
+        "description": "The ssl3_take_mac function in ssl/s3_both.c in OpenSSL 1.0.1 before 1.0.1f allows remote TLS servers to cause a denial of service (NULL pointer dereference and application crash) via a crafted Next Protocol Negotiation record in a TLS handshake.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2014-01-09T01:55Z",
+        "updated": "2024-11-21T01:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2013-6449",
+        "description": "The ssl_get_algorithm2 function in ssl/s3_lib.c in OpenSSL before 1.0.2 obtains a certain version number from an incorrect data structure, which allows remote attackers to cause a denial of service (daemon crash) via crafted traffic from a TLS 1.2 client.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2013-12-23T22:55Z",
+        "updated": "2024-11-21T01:59Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2013-6450",
+        "description": "The DTLS retransmission implementation in OpenSSL 1.0.0 before 1.0.0l and 1.0.1 before 1.0.1f does not properly maintain data structures for digest and encryption contexts, which might allow man-in-the-middle attackers to trigger the use of a different context and cause a denial of service (application crash) by interfering with packet delivery, related to ssl/d1_both.c and ssl/t1_enc.c.",
+        "score": 5.8,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:P",
+        "published": "2014-01-01T16:05Z",
+        "updated": "2024-11-21T01:59Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2012-2333",
+        "description": "Integer underflow in OpenSSL before 0.9.8x, 1.0.0 before 1.0.0j, and 1.0.1 before 1.0.1c, when TLS 1.1, TLS 1.2, or DTLS is used with CBC encryption, allows remote attackers to cause a denial of service (buffer over-read) or possibly have unspecified other impact via a crafted TLS packet that is not properly handled during a certain explicit IV calculation.",
+        "score": 6.8,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+        "published": "2012-05-14T22:55Z",
+        "updated": "2024-11-21T01:38Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2012-2686",
+        "description": "crypto/evp/e_aes_cbc_hmac_sha1.c in the AES-NI functionality in the TLS 1.1 and 1.2 implementations in OpenSSL 1.0.1 before 1.0.1d allows remote attackers to cause a denial of service (application crash) via crafted CBC data.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2013-02-08T19:55Z",
+        "updated": "2024-11-21T01:39Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0209",
+        "description": "Use-after-free vulnerability in the d2i_ECPrivateKey function in crypto/ec/ec_asn1.c in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a might allow remote attackers to cause a denial of service (memory corruption and application crash) or possibly have unspecified other impact via a malformed Elliptic Curve (EC) private-key file that is improperly handled during import.",
+        "score": 6.8,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0286",
+        "description": "The ASN1_TYPE_cmp function in crypto/asn1/a_type.c in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not properly perform boolean-type comparisons, which allows remote attackers to cause a denial of service (invalid read operation and application crash) via a crafted X.509 certificate to an endpoint that uses the certificate-verification feature.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0287",
+        "description": "The ASN1_item_ex_d2i function in crypto/asn1/tasn_dec.c in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not reinitialize CHOICE and ADB data structures, which might allow attackers to cause a denial of service (invalid write operation and memory corruption) by leveraging an application that relies on ASN.1 structure reuse.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0288",
+        "description": "The X509_to_X509_REQ function in crypto/x509/x509_req.c in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a might allow attackers to cause a denial of service (NULL pointer dereference and application crash) via an invalid certificate key.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0289",
+        "description": "The PKCS#7 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not properly handle a lack of outer ContentInfo, which allows attackers to cause a denial of service (NULL pointer dereference and application crash) by leveraging an application that processes arbitrary PKCS#7 data and providing malformed data with ASN.1 encoding, related to crypto/pkcs7/pk7_doit.c and crypto/pkcs7/pk7_lib.c.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0292",
+        "description": "Integer underflow in the EVP_DecodeUpdate function in crypto/evp/encode.c in the base64-decoding implementation in OpenSSL before 0.9.8za, 1.0.0 before 1.0.0m, and 1.0.1 before 1.0.1h allows remote attackers to cause a denial of service (memory corruption) or possibly have unspecified other impact via crafted base64 data that triggers a buffer overflow.",
+        "score": 7.5,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-0293",
+        "description": "The SSLv2 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a allows remote attackers to cause a denial of service (s2_lib.c assertion failure and daemon exit) via a crafted CLIENT-MASTER-KEY message.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-03-19T22:59Z",
+        "updated": "2024-11-21T02:22Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-1788",
+        "description": "The BN_GF2m_mod_inv function in crypto/bn/bn_gf2m.c in OpenSSL before 0.9.8s, 1.0.0 before 1.0.0e, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b does not properly handle ECParameters structures in which the curve is over a malformed binary polynomial field, which allows remote attackers to cause a denial of service (infinite loop) via a session that uses an Elliptic Curve algorithm, as demonstrated by an attack against a server that supports client authentication.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:26Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-1789",
+        "description": "The X509_cmp_time function in crypto/x509/x509_vfy.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (out-of-bounds read and application crash) via a crafted length field in ASN1_TIME data, as demonstrated by an attack against a server that supports client authentication with a custom verification callback.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:26Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-1790",
+        "description": "The PKCS7_dataDecodefunction in crypto/pkcs7/pk7_doit.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a PKCS#7 blob that uses ASN.1 encoding and lacks inner EncryptedContent data.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:26Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-1791",
+        "description": "Race condition in the ssl3_get_new_session_ticket function in ssl/s3_clnt.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b, when used for a multi-threaded client, allows remote attackers to cause a denial of service (double free and application crash) or possibly have unspecified other impact by providing a NewSessionTicket during an attempt to reuse a ticket that had been obtained earlier.",
+        "score": 6.8,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:26Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-1792",
+        "description": "The do_free_upto function in crypto/cms/cms_smime.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (infinite loop) via vectors that trigger a NULL value of a BIO data structure, as demonstrated by an unrecognized X.660 OID for a hash function.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:26Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-3194",
+        "description": "crypto/rsa/rsa_ameth.c in OpenSSL 1.0.1 before 1.0.1q and 1.0.2 before 1.0.2e allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via an RSA PSS ASN.1 signature that lacks a mask generation function parameter.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2015-12-06T20:59Z",
+        "updated": "2024-11-21T02:28Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-3196",
+        "description": "ssl/s3_clnt.c in OpenSSL 1.0.0 before 1.0.0t, 1.0.1 before 1.0.1p, and 1.0.2 before 1.0.2d, when used for a multi-threaded client, writes the PSK identity hint to an incorrect data structure, which allows remote servers to cause a denial of service (race condition and double free) via a crafted ServerKeyExchange message.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2015-12-06T20:59Z",
+        "updated": "2024-11-21T02:28Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2015-3197",
+        "description": "ssl/s2_srvr.c in OpenSSL 1.0.1 before 1.0.1r and 1.0.2 before 1.0.2f does not prevent use of disabled ciphers, which makes it easier for man-in-the-middle attackers to defeat cryptographic protection mechanisms by performing computations on SSLv2 traffic, related to the get_client_master_key and get_client_hello functions.",
+        "score": 5.9,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2016-02-15T02:59Z",
+        "updated": "2024-11-21T02:28Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3505",
+        "description": "Double free vulnerability in d1_both.c in the DTLS implementation in OpenSSL 0.9.8 before 0.9.8zb, 1.0.0 before 1.0.0n, and 1.0.1 before 1.0.1i allows remote attackers to cause a denial of service (application crash) via crafted DTLS packets that trigger an error condition.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3506",
+        "description": "d1_both.c in the DTLS implementation in OpenSSL 0.9.8 before 0.9.8zb, 1.0.0 before 1.0.0n, and 1.0.1 before 1.0.1i allows remote attackers to cause a denial of service (memory consumption) via crafted DTLS handshake messages that trigger memory allocations corresponding to large length values.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3507",
+        "description": "Memory leak in d1_both.c in the DTLS implementation in OpenSSL 0.9.8 before 0.9.8zb, 1.0.0 before 1.0.0n, and 1.0.1 before 1.0.1i allows remote attackers to cause a denial of service (memory consumption) via zero-length DTLS fragments that trigger improper handling of the return value of a certain insert function.",
+        "score": 5.0,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3508",
+        "description": "The OBJ_obj2txt function in crypto/objects/obj_dat.c in OpenSSL 0.9.8 before 0.9.8zb, 1.0.0 before 1.0.0n, and 1.0.1 before 1.0.1i, when pretty printing is used, does not ensure the presence of '\\0' characters, which allows context-dependent attackers to obtain sensitive information from process stack memory by reading output from X509_name_oneline, X509_name_print_ex, and unspecified other functions.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3509",
+        "description": "Race condition in the ssl_parse_serverhello_tlsext function in t1_lib.c in OpenSSL 1.0.0 before 1.0.0n and 1.0.1 before 1.0.1i, when multithreading and session resumption are used, allows remote SSL servers to cause a denial of service (memory overwrite and client application crash) or possibly have unspecified other impact by sending Elliptic Curve (EC) Supported Point Formats Extension data.",
+        "score": 6.8,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3510",
+        "description": "The ssl3_send_client_key_exchange function in s3_clnt.c in OpenSSL 0.9.8 before 0.9.8zb, 1.0.0 before 1.0.0n, and 1.0.1 before 1.0.1i allows remote DTLS servers to cause a denial of service (NULL pointer dereference and client application crash) via a crafted handshake message in conjunction with a (1) anonymous DH or (2) anonymous ECDH ciphersuite.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3511",
+        "description": "The ssl23_get_client_hello function in s23_srvr.c in OpenSSL 1.0.1 before 1.0.1i allows man-in-the-middle attackers to force the use of TLS 1.0 by triggering ClientHello message fragmentation in communication between a client and server that both support later TLS versions, related to a \"protocol downgrade\" issue.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3512",
+        "description": "Multiple buffer overflows in crypto/srp/srp_lib.c in the SRP implementation in OpenSSL 1.0.1 before 1.0.1i allow remote attackers to cause a denial of service (application crash) or possibly have unspecified other impact via an invalid SRP (1) g, (2) A, or (3) B parameter.",
+        "score": 7.5,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3513",
+        "description": "Memory leak in d1_srtp.c in the DTLS SRTP extension in OpenSSL 1.0.1 before 1.0.1j allows remote attackers to cause a denial of service (memory consumption) via a crafted handshake message.",
+        "score": 7.1,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:C",
+        "published": "2014-10-19T01:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3566",
+        "description": "The SSL protocol 3.0, as used in OpenSSL through 1.0.1i and other products, uses nondeterministic CBC padding, which makes it easier for man-in-the-middle attackers to obtain cleartext data via a padding-oracle attack, aka the \"POODLE\" issue.",
+        "score": 3.4,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N",
+        "published": "2014-10-15T00:55Z",
+        "updated": "2024-11-27T20:15Z",
+        "severity": "LOW",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3567",
+        "description": "Memory leak in the tls_decrypt_ticket function in t1_lib.c in OpenSSL before 0.9.8zc, 1.0.0 before 1.0.0o, and 1.0.1 before 1.0.1j allows remote attackers to cause a denial of service (memory consumption) via a crafted session ticket that triggers an integrity-check failure.",
+        "score": 7.1,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:C",
+        "published": "2014-10-19T01:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-3568",
+        "description": "OpenSSL before 0.9.8zc, 1.0.0 before 1.0.0o, and 1.0.1 before 1.0.1j does not properly enforce the no-ssl3 build option, which allows remote attackers to bypass intended access restrictions via an SSL 3.0 handshake, related to s23_clnt.c and s23_srvr.c.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "published": "2014-10-19T01:55Z",
+        "updated": "2024-11-21T02:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-5139",
+        "description": "The ssl_set_client_disabled function in t1_lib.c in OpenSSL 1.0.1 before 1.0.1i allows remote SSL servers to cause a denial of service (NULL pointer dereference and client application crash) via a ServerHello message that includes an SRP ciphersuite without the required negotiation of that ciphersuite with the client.",
+        "score": 4.3,
+        "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
+        "published": "2014-08-13T23:55Z",
+        "updated": "2024-11-21T02:11Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2014-8176",
+        "description": "The dtls1_clear_queues function in ssl/d1_lib.c in OpenSSL before 0.9.8za, 1.0.0 before 1.0.0m, and 1.0.1 before 1.0.1h frees data structures without considering that application data can arrive between a ChangeCipherSpec message and a Finished message, which allows remote DTLS peers to cause a denial of service (memory corruption and application crash) or possibly have unspecified other impact via unexpected application data.",
+        "score": 7.5,
+        "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "published": "2015-06-12T19:59Z",
+        "updated": "2024-11-21T02:18Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 9929,
+            "service": {
+              "name": "nping-echo",
+              "product": "Nping echo",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:openssl:openssl:1.0.1"
+        ]
+      },
+      {
+        "id": "CVE-2017-9793",
+        "description": "The REST Plugin in Apache Struts 2.1.x, 2.3.7 through 2.3.33 and 2.5 through 2.5.12 is using an outdated XStream library which is vulnerable and allow perform a DoS attack using malicious request with specially crafted XML payload.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2017-09-20T17:29Z",
+        "updated": "2024-11-21T03:36Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:struts:2.5.12"
+        ]
+      },
+      {
+        "id": "CVE-2017-9804",
+        "description": "In Apache Struts 2.3.7 through 2.3.33 and 2.5 through 2.5.12, if an application allows entering a URL in a form field and built-in URLValidator is used, it is possible to prepare a special URL which will be used to overload server process when performing validation of the URL.  NOTE: this vulnerability exists because of an incomplete fix for S2-047 / CVE-2017-7672.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2017-09-20T17:29Z",
+        "updated": "2024-11-21T03:36Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/a:apache:struts:2.5.12"
+        ]
+      },
+      {
+        "id": "CVE-2024-21452",
+        "description": "Transient DOS while decoding an ASN.1 OER message containing a SEQUENCE of unknown extensions.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-04-01T15:15Z",
+        "updated": "2025-01-13T21:53Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21453",
+        "description": "Transient DOS while decoding message of size that exceeds the available system memory.",
+        "score": 0.0,
+        "cvss_vector": "",
+        "published": "2024-04-01T15:15Z",
+        "updated": "2025-01-13T21:55Z",
+        "severity": "UNKNOWN",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21459",
+        "description": "Information disclosure while handling beacon or probe response frame in STA.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2024-08-05T15:15Z",
+        "updated": "2024-11-26T14:23Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21461",
+        "description": "Memory corruption while performing finish HMAC operation when context is freed by keymaster.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-07-01T15:15Z",
+        "updated": "2024-11-21T08:54Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21462",
+        "description": "Transient DOS while loading the TA ELF file.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-07-01T15:15Z",
+        "updated": "2024-11-21T08:54Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21468",
+        "description": "Memory corruption when there is failed unmap operation in GPU.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-04-01T15:15Z",
+        "updated": "2025-01-13T21:54Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-21475",
+        "description": "Memory corruption when the payload received from firmware is not as per the expected protocol size.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-05-06T15:15Z",
+        "updated": "2025-01-15T16:57Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-23353",
+        "description": "Transient DOS while decoding attach reject message received by UE, when IEI is set to ESM_IEI.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-08-05T15:15Z",
+        "updated": "2024-11-26T15:41Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-23356",
+        "description": "Memory corruption during session sign renewal request calls in HLOS.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-08-05T15:15Z",
+        "updated": "2024-11-26T16:40Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-23368",
+        "description": "Memory corruption when allocating and accessing an entry in an SMEM partition.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-07-01T15:15Z",
+        "updated": "2024-11-21T08:57Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-33014",
+        "description": "Transient DOS while parsing ESP IE from beacon/probe response frame.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-08-05T15:15Z",
+        "updated": "2024-11-20T20:35Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-33044",
+        "description": "Memory corruption while Configuring the SMR/S2CR register in Bypass mode.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-12-02T11:15Z",
+        "updated": "2024-12-12T15:23Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-33056",
+        "description": "Memory corruption when allocating and accessing an entry in an SMEM partition continuously.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-12-02T11:15Z",
+        "updated": "2024-12-12T15:25Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-33067",
+        "description": "Information disclosure while invoking callback function of sound model driver from ADSP for every valid opcode received from sound model driver.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2025-01-06T11:15Z",
+        "updated": "2025-01-10T15:39Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-38408",
+        "description": "Cryptographic issue when a controller receives an LMP start encryption command under unexpected conditions.",
+        "score": 9.1,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "published": "2024-11-04T10:15Z",
+        "updated": "2024-11-08T15:07Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-38418",
+        "description": "Memory corruption while parsing the memory map info in IOCTL calls.",
+        "score": 7.0,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2025-02-03T17:15Z",
+        "updated": "2025-02-05T13:57Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-38422",
+        "description": "Memory corruption while processing voice packet with arbitrary data received from ADSP.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-11-04T10:15Z",
+        "updated": "2024-11-07T19:45Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2024-38423",
+        "description": "Memory corruption while processing GPU page table switch.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-11-04T10:15Z",
+        "updated": "2024-11-07T19:46Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-21628",
+        "description": "Memory corruption in WLAN HAL while processing WMI-UTF command or FTM TLV1 command.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:43Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-21656",
+        "description": "Memory corruption in WLAN HOST while receiving an WMI event from firmware.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:43Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-21665",
+        "description": "Memory corruption in Graphics while importing a file.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-05-02T06:15Z",
+        "updated": "2024-11-21T07:43Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-21666",
+        "description": "Memory Corruption in Graphics while accessing a buffer allocated through the graphics pool.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-05-02T06:15Z",
+        "updated": "2024-11-21T07:43Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-22385",
+        "description": "Memory Corruption in Data Modem while making a MO call or MT VOLTE call.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:44Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-22388",
+        "description": "Memory Corruption in Multi-mode Call Processor while processing bit mask API.",
+        "score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:44Z",
+        "severity": "CRITICAL",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-24847",
+        "description": "Transient DOS in Modem while allocating DSM items.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:48Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-24848",
+        "description": "Information Disclosure in Data Modem while performing a VoLTE call with an undefined RTCP FB line value.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:48Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-24849",
+        "description": "Information Disclosure in data Modem while parsing an FMTP line in an SDP message.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:48Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-24852",
+        "description": "Memory Corruption in Core due to secure memory access by user while loading modem image.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:48Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28537",
+        "description": "Memory corruption while allocating memory in COmxApeDec module in Audio.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-08-08T10:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28539",
+        "description": "Memory corruption in WLAN Host when the firmware invokes multiple WMI Service Available command.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28546",
+        "description": "Memory Corruption in SPS Application while exporting public key in sorter TA.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28547",
+        "description": "Memory corruption in SPS Application while requesting for public key in sorter TA.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-04-01T15:15Z",
+        "updated": "2025-01-09T16:17Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28548",
+        "description": "Memory corruption in WLAN HAL while processing Tx/Rx commands from QDART.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28549",
+        "description": "Memory corruption in WLAN HAL while parsing Rx buffer in processing TLV payload.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28550",
+        "description": "Memory corruption in MPP performance while accessing DSM watermark using external memory address.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28551",
+        "description": "Memory corruption in UTILS when modem processes memory specific Diag commands having arbitrary address values as input arguments.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28553",
+        "description": "Information Disclosure in WLAN Host when processing WMI event command.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28556",
+        "description": "Cryptographic issue in HLOS during key management.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28557",
+        "description": "Memory corruption in WLAN HAL while processing command parameters from untrusted WMI payload.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28558",
+        "description": "Memory corruption in WLAN handler while processing PhyID in Tx status handler.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28560",
+        "description": "Memory corruption in WLAN HAL while processing devIndex from untrusted WMI payload.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28563",
+        "description": "Information disclosure in IOE Firmware while handling WMI command.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28566",
+        "description": "Information disclosure in WLAN HAL while handling the WMI state info command.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28569",
+        "description": "Information disclosure in WLAN HAL while handling command through WMI interfaces.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28571",
+        "description": "Information disclosure in WLAN HOST while processing the WLAN scan descriptor list during roaming scan.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28572",
+        "description": "Memory corruption in WLAN HOST while processing the WLAN scan descriptor list.",
+        "score": 8.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28578",
+        "description": "Memory corruption in Core Services while executing the command for removing a single event listener.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-03-04T11:15Z",
+        "updated": "2025-01-10T17:46Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28585",
+        "description": "Memory corruption while loading an ELF segment in TEE Kernel.",
+        "score": 8.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28586",
+        "description": "Information disclosure when the trusted application metadata symbol addresses are accessed while loading an ELF in TEE.",
+        "score": 6.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-28587",
+        "description": "Memory corruption in BT controller while parsing debug commands with specific sub-opcodes at HCI interface level.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T07:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33017",
+        "description": "Memory corruption in Boot while running a ListVars test in UEFI Menu during boot.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33018",
+        "description": "Memory corruption while using the UIM diag command to get the operators name.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33023",
+        "description": "Memory corruption while processing finish_sign command to pass a rsp buffer.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-04-01T15:15Z",
+        "updated": "2025-01-09T16:20Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33027",
+        "description": "Transient DOS in WLAN Firmware while parsing rsn ies.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-10-03T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33030",
+        "description": "Memory corruption in HLOS while running playready use-case.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33032",
+        "description": "Memory corruption in TZ Secure OS while requesting a memory allocation from TA region.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33033",
+        "description": "Memory corruption in Audio during playback with speaker protection.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33038",
+        "description": "Memory corruption while receiving a message in Bus Socket Transport Server.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33040",
+        "description": "Transient DOS in Data Modem during DTLS handshake.",
+        "score": 0.0,
+        "cvss_vector": "",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "UNKNOWN",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33059",
+        "description": "Memory corruption in Audio while processing the VOC packet data from ADSP.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-11-07T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33062",
+        "description": "Transient DOS in WLAN Firmware while parsing a BTM request.",
+        "score": 0.0,
+        "cvss_vector": "",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "UNKNOWN",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33063",
+        "description": "Memory corruption in DSP Services during a remote call from HLOS to DSP.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2025-01-27T21:46Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33066",
+        "description": "Memory corruption in Audio while processing RT proxy port register driver.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-03-04T11:15Z",
+        "updated": "2025-01-10T17:47Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33070",
+        "description": "Transient DOS in Automotive OS due to improper authentication to the secure IO calls.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33072",
+        "description": "Memory corruption in Core while processing control functions.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-02-06T06:16Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33080",
+        "description": "Transient DOS while parsing a vender specific IE (Information Element) of reassociation response management frame.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33086",
+        "description": "Transient DOS while processing multiple IKEV2 Informational Request to device from IPSEC server with different identifiers.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-03-04T11:15Z",
+        "updated": "2025-01-10T17:48Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33088",
+        "description": "Memory corruption when processing cmd parameters while parsing vdev.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33089",
+        "description": "Transient DOS when processing a NULL buffer while parsing WLAN vdev.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33098",
+        "description": "Transient DOS while parsing WPA IES, when it is passed with length more than expected size.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33107",
+        "description": "Memory corruption in Graphics Linux while assigning shared virtual memory region during IOCTL call.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-12-05T03:15Z",
+        "updated": "2025-01-27T21:46Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33109",
+        "description": "Transient DOS while processing a WMI P2P listen start command (0xD00A) sent from host.",
+        "score": 0.0,
+        "cvss_vector": "",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "UNKNOWN",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33110",
+        "description": "The session index variable in PCM host voice audio driver initialized before PCM open, accessed during event callback from ADSP and reset during PCM close may lead to race condition between event callback - PCM close and reset session index causing memory corruption.",
+        "score": 7.0,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-33120",
+        "description": "Memory corruption in Audio when memory map command is executed consecutively in ADSP.",
+        "score": 0.0,
+        "cvss_vector": "",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:04Z",
+        "severity": "UNKNOWN",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43511",
+        "description": "Transient DOS while parsing IPv6 extension header when WLAN firmware receives an IPv6 packet that contains `IPPROTO_NONE` as the next header.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-01-02T06:15Z",
+        "updated": "2024-11-21T08:24Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43513",
+        "description": "Memory corruption while processing the event ring, the context read pointer is untrusted to HLOS and when it is passed with arbitrary values, may point to address in the middle of ring element.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2024-02-06T06:16Z",
+        "updated": "2024-11-21T08:24Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43522",
+        "description": "Transient DOS while key unwrapping process, when the given encrypted key is empty or NULL.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-02-06T06:16Z",
+        "updated": "2024-11-21T08:24Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43528",
+        "description": "Information disclosure when the ADSP payload size received in HLOS in response to Audio Stream Manager matrix session is less than this expected size.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2024-05-06T15:15Z",
+        "updated": "2025-01-15T16:55Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43529",
+        "description": "Transient DOS while processing IKEv2 Informational request messages, when a malformed fragment packet is received.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-05-06T15:15Z",
+        "updated": "2025-01-15T16:55Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43533",
+        "description": "Transient DOS in WLAN Firmware when the length of received beacon is less than length of ieee802.11 beacon frame.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-02-06T06:16Z",
+        "updated": "2024-11-21T08:24Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43536",
+        "description": "Transient DOS while parse fils IE with length equal to 1.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2024-02-06T06:16Z",
+        "updated": "2024-11-21T08:24Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2023-43551",
+        "description": "Cryptographic issue while performing attach with a LTE network, a rogue base station can skip the authentication phase and immediately send the Security Mode Command.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+        "published": "2024-06-03T10:15Z",
+        "updated": "2025-01-27T19:04Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-22076",
+        "description": "information disclosure due to cryptographic issue in Core during RPMB read request.",
+        "score": 5.5,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T06:46Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33227",
+        "description": "Memory corruption in Linux android due to double free while calling unregister provider after register call.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:07Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33231",
+        "description": "Memory corruption due to double free in core while initializing the encryption key.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-04-13T07:15Z",
+        "updated": "2024-11-21T07:07Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33264",
+        "description": "Memory corruption in modem due to stack based buffer overflow while parsing OTASP Key Generation Request Message.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:07Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33275",
+        "description": "Memory corruption due to improper validation of array index in WLAN HAL when received lm_itemNum is out of range.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-09-05T07:15Z",
+        "updated": "2024-11-21T07:07Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33289",
+        "description": "Memory corruption occurs in Modem due to improper validation of array index when malformed APDU is sent from card.",
+        "score": 6.8,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-04-13T07:15Z",
+        "updated": "2024-11-21T07:08Z",
+        "severity": "MEDIUM",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33296",
+        "description": "Memory corruption due to integer overflow to buffer overflow in Modem while parsing Traffic Channel Neighbor List Update message.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-04-13T07:15Z",
+        "updated": "2024-11-21T07:08Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-33302",
+        "description": "Memory corruption due to improper validation of array index in User Identity Module when APN TLV length is greater than command length.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-04-13T07:15Z",
+        "updated": "2024-11-21T07:08Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-40504",
+        "description": "Transient DOS due to reachable assertion in Modem when UE received Downlink Data Indication message from the network.",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-05-02T08:15Z",
+        "updated": "2024-11-21T07:21Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-40507",
+        "description": "Memory corruption due to double free in Core while mapping HLOS address to the list.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:21Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-40521",
+        "description": "Transient DOS due to improper authorization in Modem",
+        "score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:21Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-40529",
+        "description": "Memory corruption due to improper access control in kernel while processing a mapping request from root process.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-06-06T08:15Z",
+        "updated": "2024-11-21T07:21Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      },
+      {
+        "id": "CVE-2022-40532",
+        "description": "Memory corruption due to integer overflow or wraparound in WLAN while sending WMI cmd from host to target.",
+        "score": 7.8,
+        "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "published": "2023-04-13T07:15Z",
+        "updated": "2024-11-21T07:21Z",
+        "severity": "HIGH",
+        "verification_status": "CONFIRMED",
+        "port": [
+          {
+            "protocol": "tcp",
+            "portid": 31337,
+            "service": {
+              "name": "tcpwrapped",
+              "product": "",
+              "version": "",
+              "extrainfo": "",
+              "ostype": ""
+            }
+          }
+        ],
+        "cpe": [
+          "cpe:/o:qualcomm:snapdragon_auto_4g_modem_firmware:-"
+        ]
+      }
+    ]
+  },
+  "scan_metadata": {
+    "scanner_version": "Nmap 7.95 + Ukon CRR 1.0.0",
+    "scan_policy": "full_compliance",
+    "requested_by": "Juan.noreply@ukon.com",
+    "SHA512": "46cff8bc39aa276c5774dcfb64b4e6e239f91891c9a74e6e0aa6c6ad2713d913cc5ecd576ced9415aa0536beb52e10fd3cd14ec3c2912b3f34ab1d8b7b703ea9"
+  }
+}

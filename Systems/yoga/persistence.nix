@@ -37,8 +37,8 @@
         "Videos"
         "Code"
         "Current-Rice"
+        ".mozilla"      # Firefox data
         # ".local/share/warp-terminal"      # Warp Terminal data
-        # ".mozilla"      # Firefox data
         # ".local/share/keyrings"
         # ".local/share/secrets"            # Secret storage
       ];
