@@ -60,7 +60,6 @@
 
   # SSH support for YubiKey
   programs.ssh.startAgent = false;  # Disable default SSH agent
-  services.yubikey-agent.enable = true;  # Enable YubiKey agent for SSH
 
   # GPG agent configuration
   programs.gnupg = {
