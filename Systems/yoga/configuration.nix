@@ -95,7 +95,6 @@
   services.xserver.displayManager.gdm.wayland = true;
   services.xserver.desktopManager.gnome.enable = true;
   # services.xserver.windowManager.notion.enable = true;
-  services.xserver.windowManager.hyprland.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -148,6 +147,7 @@
 
   # Install firefox.
   programs.firefox.enable = true;
+  programs.hyprland.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
