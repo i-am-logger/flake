@@ -12,6 +12,7 @@
       ./secure-boot.nix  # Add this line
       ./yubikey.nix
       ./git.nix
+      ./warp-terminal.nix
       # Add lanzaboote module
       inputs.lanzaboote.nixosModules.lanzaboote
     ];
@@ -122,9 +123,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkg.pname or pkg.name) [
-    "warp-terminal"
-  ];
 
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.logger = {
@@ -133,7 +131,6 @@
     hashedPassword = "$6$xSY41iEBAU2B0KdA$Qk/yL0097FNXr2xEKVrjk1M6BUbQNgXYibBqlWwvhcV4h1JDE3bBmz61hynlu4w83ypyxgh66qowBjIkamsDC1";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-      warp-terminal
       sbctl # for secure-boot
     ];
   };
