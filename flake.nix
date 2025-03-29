@@ -86,6 +86,7 @@
               impermanence
               self
               inputs
+              stylix
               ;
           };
           modules = [
@@ -111,6 +112,9 @@
                 ];
               };
             }
+            # Add stylix module here
+            stylix.nixosModules.stylix
+            ./Themes/stylix.nix
           ];
         };
         handlink = lib.nixosSystem {
