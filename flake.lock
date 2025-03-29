@@ -641,13 +641,13 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1743154046,
+        "lastModified": 1743200157,
         "narHash": "sha256-pQpattmS9VmO3ZIQUFn66az8GSmB4IvYhTTCFn6SUmo=",
-        "path": "/home/logger/.secrets",
+        "path": "/home/logger/.secrets/",
         "type": "path"
       },
       "original": {
-        "path": "/home/logger/.secrets",
+        "path": "/home/logger/.secrets/",
         "type": "path"
       }
     },

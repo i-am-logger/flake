@@ -14,7 +14,7 @@
     "$mainMod, E, exec, brave"
     "$mainMod SHIFT, E, exec, google-chrome-stable"
     "SHIFT, Print, exec, grimblast save area - | swappy -f -"
-    ", Print, exec, grimblast --notify --cursor  copy area"
+    ", Print, exec, grimblast --notify copy area"
 
     # COLORPICKER
     "$mainMod SHIFT, P, exec, hyprpicker -a"

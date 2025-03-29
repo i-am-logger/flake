@@ -89,26 +89,28 @@
               ;
           };
           modules = [
-           ./Systems/yoga/configuration.nix
-           disko.nixosModules.disko
+            ./Systems/yoga/configuration.nix
+            disko.nixosModules.disko
             {
               disko.devices = import ./Systems/yoga/disko.nix {
                 lib = nixpkgs.lib;
               };
-           }
-           home-manager.nixosModules.home-manager
-           {
-             home-manager.useUserPackages = true;
-             home-manager.backupFileExtension = "backup";
-             home-manager.extraSpecialArgs = {
-               inherit inputs;
-             };
-             home-manager.users.logger = {
-               imports = [
-                 ./home/logger.nix
-               ];
-             };
-           }
+            }
+            ./hosts/yoga.nix
+            modules/motd
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+              };
+              home-manager.users.logger = {
+                imports = [
+                  ./home/logger.nix
+                ];
+              };
+            }
           ];
         };
         handlink = lib.nixosSystem {

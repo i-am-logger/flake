@@ -7,9 +7,9 @@
   users.defaultUserShell = pkgs.bash;
   users.users.logger = {
     name = "logger";
-    initialPassword = "";
+    hashedPassword = "$6$xSY41iEBAU2B0KdA$Qk/yL0097FNXr2xEKVrjk1M6BUbQNgXYibBqlWwvhcV4h1JDE3bBmz61hynlu4w83ypyxgh66qowBjIkamsDC1";
     isNormalUser = true;
-    description = "Logger";
+    description = "Ido Samuelson";
     extraGroups = [
       "networkmanager"
       "input"
@@ -25,5 +25,8 @@
       "dialout"
     ];
     shell = pkgs.bash;
-  };
+    packages = with pkgs; [
+      sbctl # for secure-boot
+    ];
+};
 }

@@ -18,13 +18,13 @@
       sandbox = true;
       # download-buffer-size = 4 * 1024 * 1024 * 1024;
       system-features = [
-        "cuda"
+        # "cuda"
         "big-parallel"
       ];
 
       extra-platforms = [
         "x86_64-linux"
-        "cuda"
+        # "cuda"
       ];
 
       trusted-users = [
