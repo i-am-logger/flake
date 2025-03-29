@@ -1,10 +1,17 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs ; [
+  home.packages = with pkgs; [
     waybar
-    fftw #cava 
-    iniparser #cava
+    fftw # cava
+    iniparser # cava
+    font-awesome
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+    blueman
+    papirus-icon-theme # additional icon theme for better compatibility
+    adwaita-icon-theme
   ];
 
   xdg.configFile."waybar/" = {

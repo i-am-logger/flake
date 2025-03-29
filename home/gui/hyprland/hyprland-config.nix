@@ -9,7 +9,7 @@ let
   decorations = import ./config/decorations.nix;
   input = import ./config/input.nix;
   gestures = import ./config/gestures.nix;
-  enviornment = import ./config/enviornment.nix;
+  environment = import ./config/environment.nix;
   layouts = import ./config/layouts.nix;
   windowRules = import ./config/windowRules.nix;
 in
@@ -28,7 +28,7 @@ in
       decorations
       input
       gestures
-      enviornment
+      environment
       layouts
       windowRules
     ];

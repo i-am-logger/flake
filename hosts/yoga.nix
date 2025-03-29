@@ -14,7 +14,7 @@
 
     # system
     # common/system.nix
-    # common/security/security.nix
+    common/security/security.nix
     # common/security/yubikey-gpg.nix
     common/security/1password.nix
     common/nix.nix

@@ -311,20 +311,12 @@
 			"format": "  {}"
 		},
 		// RIGHT
-		"keyboard-state": {
-			// "numlock": true,
-			"capslock": true,
-			// "scrolllock": true,
-			"format": {
-				"numlock": "󰎦  {icon}",
-				// "capslock": "󰪛  {icon}",
-				// "scrolllock": "󰜰  {icon}"
-			},
-			// "format": "{name} {icon}",
-			"format-icons": {
-				"locked": "",
-				"unlocked": ""
-			}
+	"keyboard-state": {
+		"capslock": true,
+		"format-icons": {
+			"locked": "<b><span color='red'>\uea75</span></b>",
+			"unlocked": "\ueb74"
 		}
+	}
 	}
 ]

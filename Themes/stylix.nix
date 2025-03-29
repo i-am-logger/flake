@@ -41,10 +41,10 @@
 
     fonts = {
       sizes = {
-        applications = 18;
-        desktop = 18;
-        popups = 18;
-        terminal = 18;
+        applications = 22;
+        desktop = 22;
+        popups = 22;
+        terminal = 22;
       };
       serif = {
         name = "Noto Nerd Font";
