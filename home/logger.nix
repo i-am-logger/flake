@@ -14,10 +14,11 @@
     username = "logger";
     homeDirectory = "/home/logger";
     stateVersion = "25.05";
-
   };
 
   imports = [
     ./common.nix
+    ./logger/yubikey.nix
+    ./logger/git.nix
   ];
 }

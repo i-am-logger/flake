@@ -2,9 +2,10 @@
 {
   # Enable smartcard/CCID support
   services.pcscd.enable = true;
-
   # YubiKey personalization tool and udev rules
   services.udev.packages = [ pkgs.yubikey-personalization ];
+  # Enable GPG smartcards support
+  hardware.gpgSmartcards.enable = true;
 
   # Required packages for YubiKey functionality
   environment.systemPackages = with pkgs; [
@@ -13,18 +14,14 @@
     yubikey-agent
     pam_u2f
     yubico-pam
-    # GPG related packages
-    gnupg
-    pinentry
-    paperkey
-    pinentry-curses
+    pcsc-tools
   ];
 
   # Enable PAM authentication with YubiKey
   security.pam = {
     services = {
       login.u2fAuth = true;
-      sudo.u2fAuth = true;  # Enable U2F for sudo
+      sudo.u2fAuth = true; # Enable U2F for sudo
       # Enable for display manager (GDM) as well
       gdm.u2fAuth = true;
     };
@@ -33,7 +30,7 @@
       control = "sufficient";
       settings = {
         authfile = "/persist/yubikey/authorized_yubikeys";
-        cue = true;  # Provide visual feedback when waiting for a token
+        cue = true; # Provide visual feedback when waiting for a token
         interactive = true;
       };
     };
@@ -44,13 +41,10 @@
       "/persist/yubikey"
     ];
     files = [
-      "/etc/nixos/.gnupg/gpg.conf"
-      "/etc/nixos/.gnupg/gpg-agent.conf"
     ];
     users.logger = {
       directories = [
-        ".gnupg"
-        ".yubico"   # YubiKey challenge-response files
+        ".yubico"  # YubiKey challenge-response files
       ];
     };
   };
@@ -58,24 +52,6 @@
   # Add user to required groups
   users.users.logger.extraGroups = [ "plugdev" ];
 
-  # SSH support for YubiKey
-  programs.ssh.startAgent = false;  # Disable default SSH agent
-
-  # GPG agent configuration
-  programs.gnupg = {
-    agent = {
-      enable = true;
-      enableSSHSupport = true;  # Use GPG agent for SSH
-      # pinentryFlavor = "curses";  # Use the curses-based dialog
-    };
-  };
-
-  # For compatibility with more applications
-  environment.shellInit = ''
-    export GPG_TTY=$(tty)
-    gpg-connect-agent updatestartuptty /bye > /dev/null
-    
-    # Set SSH to use gpg-agent
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-  '';
+  # Disable system SSH agent in favor of GPG agent
+  programs.ssh.startAgent = false;
 }

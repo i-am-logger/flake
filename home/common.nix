@@ -7,7 +7,6 @@
     ./xdg.nix
     cli/bat.nix
     # cli/direnv.nix
-    cli/git.nix
     cli/lsd.nix
     cli/variables.nix
     cli/nix-scripts.nix

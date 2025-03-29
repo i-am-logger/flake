@@ -17,7 +17,7 @@
     ./persistence.nix
     ./secure-boot.nix # Add this line
     ./yubikey.nix
-    ./git.nix
+    # ./git.nix
     ./warp-terminal.nix
     # Add lanzaboote module
     inputs.lanzaboote.nixosModules.lanzaboote

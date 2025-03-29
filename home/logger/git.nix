@@ -1,23 +1,25 @@
-{ config
-, pkgs
-, lib
-, ...
-}: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   home.packages = with pkgs; [
-    # git
     gitui
     gh
     lazygit
   ];
+
   programs.git = {
     enable = true;
     lfs.enable = true;
-
     package = pkgs.gitAndTools.gitFull;
+
     userName = "logger";
     userEmail = "i-am-logger@users.noreply.github.com";
     signing = {
-      key = "517BDA94D20F4856"; # gpg --list-secret-keys --keyid-format=long
+      key = "3842FC405341B51B";
       format = "openpgp";
       signByDefault = true;
     };
@@ -29,40 +31,26 @@
       s = "status";
       l = "log --pretty=format:'%C(yellow)%h%Creset %C(cyan)%G?%Creset %C(white)%d%Creset %s %C(cyan)(%cr) %C(bold blue)<%an>%Creset'";
       graph = "log --decorate --oneline --graph";
+      signature = "log --pretty=format:'⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%n✧ %C(yellow)%h%Creset %(if:equals=G,%(G?))%C(green)✓%Creset%(else)%C(red)✉%Creset%(end) %C(white)%d%Creset %s%n⌘ %C(cyan)(%cr)%Creset %C(bold blue)<%an>%Creset%n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯'";
     };
+
     extraConfig = {
-      init = {
-        defaultBranch = "main";
-      };
       url = {
         "git@github.com:" = {
-          insteadOf = [
-            "https://github.com/"
-          ];
+          insteadOf = [ "https://github.com/" ];
         };
       };
       core = {
         editor = "hx";
-        autocrlf = "input";
       };
-      diff.algorithm = "histogram";
+      gpg.program = "${pkgs.gnupg}/bin/gpg2";
     };
-    # delta.enable = true;
-    # diff-so-fancy.enable = true;
 
-    ignores = [ "*.img" ".direnv" "result" ];
-
-    # difftastic = {
-    #   enable = true;
-    #   background = "dark";
-    #   display = "inline";
-    # };
-
-    # diff-so-fancy = {
-    #   enable = true;
-
-    # };
-
+    ignores = [
+      "*.img"
+      ".direnv"
+      "result"
+    ];
 
     delta = {
       enable = true;
