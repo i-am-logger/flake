@@ -7,17 +7,16 @@
     pcsclite
   ];
 
-  home.sessionVariables = {
-    SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
-    GPG_TTY = "$(tty)";
-  };
-
-  # Add a shell initialization hook
+  # Add shell initialization hooks
   programs.bash.initExtra = ''
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
-  # Or for Zsh
+  # For Zsh
   programs.zsh.initExtra = ''
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
 
