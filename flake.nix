@@ -112,7 +112,7 @@
                 ];
               };
             }
-            # Add stylix module here
+            # Theme
             stylix.nixosModules.stylix
             ./Themes/stylix.nix
           ];

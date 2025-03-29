@@ -28,5 +28,5 @@
     packages = with pkgs; [
       sbctl # for secure-boot
     ];
-};
+  };
 }

@@ -50,20 +50,6 @@
     "vm.max_map_count" = 262144;
   };
 
-  # nix = {
-  #   channel.enable = false;
-  #   settings = {
-  #     nix-path = ["nixpkgs=${pkgs.path}"];
-  #     experimental-features = [ "nix-command" "flakes" ];
-
-  #     # Build optimizations
-  #     max-jobs = "auto";
-  #     cores = 0;  # Use all cores
-  #     sandbox = true;
-  #     auto-optimise-store = true;
-  #   };
-  # };
-
   networking.hostName = "yoga"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -95,11 +81,9 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
+  # Display Manager - Login Screen
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.displayManager.gdm.wayland = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  # services.xserver.windowManager.notion.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {

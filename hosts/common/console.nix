@@ -1,10 +1,8 @@
-{ config
-, pkgs
-, pkgs-unstable
-, home-manager
-, username
-, ...
-}: {
+{
+  pkgs,
+  ...
+}:
+{
   ### console TTY
   console = {
     enable = true;
@@ -19,9 +17,4 @@
       pkgs.powerline-fonts
     ];
   };
-
-  # services.kmscon = {
-  # enable = true;
-  # hwRender = true;
-  # };
 }

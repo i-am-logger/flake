@@ -4,6 +4,7 @@ let
   general = import ./config/general.nix;
   animations = import ./config/animations.nix;
   autostart = import ./config/autostart.nix;
+  environment = import ./config/environment.nix;
   # bindings = import ./config/bindings.nix;
 in
 {
@@ -16,6 +17,7 @@ in
       general
       animations
       autostart
+      environment
       # bindings
     ];
   };
