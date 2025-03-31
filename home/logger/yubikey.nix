@@ -27,14 +27,14 @@ in
 
   # Add shell initialization hooks
   programs.bash.initExtra = ''
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
 
   # For Zsh
   programs.zsh.initExtra = ''
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
@@ -43,9 +43,13 @@ in
   programs.gpg = {
     enable = true;
     scdaemonSettings = {
-      # disable-ccid = true;
+      disable-ccid = false;
       card-timeout = "10";
       pcsc-driver = "${pkgs.pcsclite}/lib/libpcsclite.so";
+      # reader-port = "Yubico YubiKey";
+      reader-port = "1050:0407:X:0";
+      # reader-port = 0;
+      pcsc-shared = true;
     };
 
     # Keep your existing settings
@@ -58,9 +62,9 @@ in
       fixed-list-mode = true;
       keyid-format = "0xlong";
       list-options = "show-uid-validity";
-      no-comments = true;
-      no-emit-version = true;
-      no-greeting = true;
+      # no-comments = true;
+      # no-emit-version = true;
+      # no-greeting = true;
       no-symkey-cache = true;
       personal-cipher-preferences = "AES256 AES192 AES";
       personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";

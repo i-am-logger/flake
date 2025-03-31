@@ -33,6 +33,7 @@
         ".cache"
         ".config"
         ".flake" # NixOS configuration
+        ".secrets"
         "Desktop"
         "Documents"
         "Downloads"
@@ -42,9 +43,6 @@
         "Code"
         "Current-Rice"
         ".mozilla" # Firefox data
-        # ".local/share/warp-terminal"      # Warp Terminal data
-        # ".local/share/keyrings"
-        # ".local/share/secrets"            # Secret storage
       ];
     };
   };
