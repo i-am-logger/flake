@@ -43,8 +43,8 @@ in
   programs.gpg = {
     enable = true;
     scdaemonSettings = {
-      disable-ccid = false;
-      card-timeout = "5";
+      # disable-ccid = true;
+      card-timeout = "10";
       pcsc-driver = "${pkgs.pcsclite}/lib/libpcsclite.so";
     };
 
@@ -82,19 +82,8 @@ in
     defaultCacheTtl = 600;
     maxCacheTtl = 7200;
     pinentryPackage = pkgs.pinentry-curses;
-    enableExtraSocket = true;
-  };
-
-  # Add a script to help restore your public key if needed in the future
-  home.file."gpg-restore-pubkey.sh" = {
-    text = ''
-      #!/usr/bin/env bash
-      # Script to retrieve your public key from keys.openpgp.org
-      gpg --keyserver hkps://keys.openpgp.org --recv-keys 3842FC405341B51B
-      gpg --edit-key 3842FC405341B51B
-      # Then manually enter 'trust', '5', 'y', 'save'
-    '';
-    executable = true;
+    # enableExtraSocket = true;
+    enableScDaemon = true; # Explicitly enable scdaemon
   };
 
   # Git configuration for GPG signing

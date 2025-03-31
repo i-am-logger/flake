@@ -1,17 +1,17 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
-  # Enable smartcard/CCID support
+  # Core YubiKey services
   services.pcscd.enable = true;
-
-  # YubiKey personalization tool and udev rules
-  services.udev.packages = [
-    pkgs.yubikey-personalization
-    pkgs.libu2f-host # Add U2F host library for better support
-  ];
-
-  # Enable GPG smartcards support
+  services.yubikey-agent.enable = false; # Explicitly disable in favor of gpg-agent
   hardware.gpgSmartcards.enable = true;
 
+  # YubiKey-related packages and support
+  services.udev.packages = [
+    pkgs.yubikey-personalization
+    pkgs.libu2f-host
+  ];
+
+  # Persistence configuration (this is good as is)
   environment.persistence."/persist" = {
     directories = [ "/persist/yubikey" ];
     users.logger = {
@@ -22,39 +22,20 @@
       ];
     };
   };
-  # Enable USB security key support (including YubiKey)
-  # hardware.u2f.enable = true;
 
-  # Required packages for YubiKey functionality
+  # Essential packages only
   environment.systemPackages = with pkgs; [
     yubikey-manager
     yubikey-personalization
-    # Remove yubikey-agent as it conflicts with gpg-agent's SSH support
-    # yubikey-agent
-    pam_u2f
-    yubico-pam
     pcsc-tools
-    gnupg # Ensure system-level gpg is available
+    # Let home-manager handle gnupg
   ];
 
-  # Create a systemd service to ensure pcscd is properly initialized
-  systemd.services.pcscd-init = {
-    description = "Initialize PCSCD for YubiKey";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "pcscd.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.coreutils}/bin/sleep 2"; # Give pcscd time to initialize
-      RemainAfterExit = true;
-    };
-  };
-
-  # Enable PAM authentication with YubiKey
+  # PAM authentication configuration (this is good as is)
   security.pam = {
     services = {
       login.u2fAuth = true;
-      sudo.u2fAuth = true; # Enable U2F for sudo
-      # Enable for display manager (GDM) as well
+      sudo.u2fAuth = true;
       gdm.u2fAuth = true;
     };
     u2f = {
@@ -62,35 +43,18 @@
       control = "sufficient";
       settings = {
         authfile = "/persist/yubikey/authorized_yubikeys";
-        cue = true; # Provide visual feedback when waiting for a token
+        cue = true;
         interactive = true;
       };
     };
   };
 
-  # Create the persistence directories if they don't exist
-  system.activationScripts.yubikey-dirs = ''
-    mkdir -p /persist/yubikey
-    chmod 755 /persist/yubikey
-    if [ ! -e /persist/yubikey/authorized_yubikeys ]; then
-      touch /persist/yubikey/authorized_yubikeys
-      chmod 644 /persist/yubikey/authorized_yubikeys
-    fi
-  '';
-
-  # Add user to required groups
+  # Required user groups
   users.users.logger.extraGroups = [
     "plugdev"
     "pcscd"
   ];
 
-  # Disable system SSH agent in favor of GPG agent
+  # Disable system SSH agent
   programs.ssh.startAgent = false;
-
-  # Add a hook to ensure gpg-agent is properly configured for SSH
-  environment.shellInit = ''
-    if [ -z "$SSH_AUTH_SOCK" ]; then
-      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-    fi
-  '';
 }
