@@ -31,6 +31,14 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.kernelModules = [ "amdgpu" ];
+  boot.kernelParams = [
+    "amdgpu.deep_color=1" # HDR
+    "amdgpu.dc=1" # Display Core
+    "amdgpu.dpm=1"
+  ];
+
   # Kernel and memory optimizations
   boot.kernel.sysctl = {
     # Network optimizations - BBR congestion control
@@ -48,6 +56,24 @@
     "vm.dirty_ratio" = 8;
     "vm.transparent_hugepage" = "madvise";
     "vm.max_map_count" = 262144;
+  };
+
+  hardware.opengl = {
+    enable = true;
+    # driSupport = true;
+    driSupport32Bit = true; # If you need 32-bit application support
+    extraPackages = with pkgs; [
+      amdvlk
+      # rocm-opencl-icd
+      # rocm-opencl-runtime
+      libvdpau-va-gl
+      vaapiVdpau
+      libva-utils
+    ];
+    # For 32-bit application support (e.g., Steam)
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      amdvlk
+    ];
   };
 
   networking.hostName = "yoga"; # Define your hostname.
@@ -139,6 +165,7 @@
     git
     # vmtouch
     hyprland
+    slack
   ];
 
   # Enable zram with 15% of RAM

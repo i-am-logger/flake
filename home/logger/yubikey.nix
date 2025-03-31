@@ -27,14 +27,14 @@ in
 
   # Add shell initialization hooks
   programs.bash.initExtra = ''
-    # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
 
   # For Zsh
   programs.zsh.initExtra = ''
-    # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
@@ -42,36 +42,10 @@ in
   # GPG configuration
   programs.gpg = {
     enable = true;
-    scdaemonSettings = {
-      disable-ccid = false;
-      card-timeout = "10";
-      pcsc-driver = "${pkgs.pcsclite}/lib/libpcsclite.so";
-      # reader-port = "Yubico YubiKey";
-      reader-port = "1050:0407:X:0";
-      # reader-port = 0;
-      pcsc-shared = true;
-    };
 
     # Keep your existing settings
     settings = {
       # card-status-url = "https://keys.openpgp.org/vks/v1/by-fingerprint/B2678F2F11889414D65E9D463842FC405341B51B";
-      cert-digest-algo = "SHA512";
-      charset = "utf-8";
-      default-key = "3842FC405341B51B";
-      default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
-      fixed-list-mode = true;
-      keyid-format = "0xlong";
-      list-options = "show-uid-validity";
-      # no-comments = true;
-      # no-emit-version = true;
-      # no-greeting = true;
-      no-symkey-cache = true;
-      personal-cipher-preferences = "AES256 AES192 AES";
-      personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
-      personal-digest-preferences = "SHA512 SHA384 SHA256";
-      require-cross-certification = true;
-      s2k-cipher-algo = "AES256";
-      s2k-digest-algo = "SHA512";
       trust-model = "tofu+pgp";
       use-agent = true;
       verify-options = "show-uid-validity";
@@ -83,10 +57,8 @@ in
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    defaultCacheTtl = 600;
-    maxCacheTtl = 7200;
     pinentryPackage = pkgs.pinentry-curses;
-    # enableExtraSocket = true;
+    enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
   };
 
