@@ -7,3 +7,8 @@
 5. - [ ] secrets 
 6. - [ ] custom nixos installer - include warp, gnmoe, btop, helix, fastfetch, latestkernel, git, clone of i-am-logger/flake
 7. - [ ] restructure the flake directories 
+
+
+aliases
+
+tree -d -I "result|target|.direnv|.devenvi|node_modules"

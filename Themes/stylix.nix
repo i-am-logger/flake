@@ -21,10 +21,10 @@
     ls-colors.enable = true;
 
     opacity = {
-      applications = 0.8;
-      desktop = 0.8;
-      popups = 0.8;
-      terminal = 0.8;
+      applications = 0.95;
+      desktop = 0.95;
+      popups = 0.95;
+      terminal = 0.95;
     };
     image = Wallpapers/futuristic3.jpg; # inputImage;
 
@@ -42,9 +42,9 @@
     fonts = {
       sizes = {
         applications = 24;
-        desktop = 24;
+        desktop = 32;
         popups = 24;
-        terminal = 24;
+        terminal = 32;
       };
       serif = {
         name = "Noto Nerd Font";

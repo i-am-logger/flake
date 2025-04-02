@@ -23,6 +23,8 @@
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
+  services.hardware.bolt.enable = true;
+
   # Filesystem configurations moved to disko.nix
   # Persistence configuration moved to persistence.nix
 
@@ -34,9 +36,11 @@
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "amdgpu" ];
   boot.kernelParams = [
+    "amdgpu.dc_feature_mask=0xffffffff" # Enable all DC features including DSC
     "amdgpu.deep_color=1" # HDR
     "amdgpu.dc=1" # Display Core
     "amdgpu.dpm=1"
+    "amdgpu.dp_mst=1" # Enable DisplayPort Multi-Stream Transport
   ];
 
   # Kernel and memory optimizations
@@ -58,10 +62,10 @@
     "vm.max_map_count" = 262144;
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     # driSupport = true;
-    driSupport32Bit = true; # If you need 32-bit application support
+    # Support32Bit = true; # If you need 32-bit application support
     extraPackages = with pkgs; [
       amdvlk
       # rocm-opencl-icd
