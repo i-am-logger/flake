@@ -1,28 +1,53 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
-  # Enable smartcard/CCID support
-  services.pcscd.enable = true;
-  # YubiKey personalization tool and udev rules
-  services.udev.packages = [ pkgs.yubikey-personalization ];
-  # Enable GPG smartcards support
+  # Core YubiKey services
+  services.pcscd = {
+    enable = true;
+    plugins = [ pkgs.ccid ];
+  };
+
+  systemd.services.pcscd = {
+    enable = true;
+    wantedBy = [ "multi-user.target" ];
+  };
+
+  services.yubikey-agent.enable = false; # Explicitly disable in favor of gpg-agent
   hardware.gpgSmartcards.enable = true;
 
-  # Required packages for YubiKey functionality
-  environment.systemPackages = with pkgs; [
-    yubikey-manager
-    yubikey-personalization
-    yubikey-agent
-    pam_u2f
-    yubico-pam
-    pcsc-tools
+  # services.udev.extraRules = ''
+  #   # YubiKey rules to allow both pcscd and direct access
+  #   ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", TAG+="systemd", ENV{SYSTEMD_WANTS}="pcscd.service", GROUP="users", MODE="0660"
+  # '';
+  # YubiKey-related packages and support
+  services.udev.packages = [
+    pkgs.yubikey-personalization
+    pkgs.libu2f-host
   ];
 
-  # Enable PAM authentication with YubiKey
+  # Persistence configuration (this is good as is)
+  environment.persistence."/persist" = {
+    directories = [ "/persist/yubikey" ];
+    users.logger = {
+      directories = [
+        ".gnupg"
+        ".yubico"
+        ".ssh"
+      ];
+    };
+  };
+
+  # Essential packages only
+  # environment.systemPackages = with pkgs; [
+  #   # yubikey-manager
+  #   # yubikey-personalization
+  #   # pcsc-tools
+  # ];
+
+  # PAM authentication configuration (this is good as is)
   security.pam = {
     services = {
       login.u2fAuth = true;
-      sudo.u2fAuth = true; # Enable U2F for sudo
-      # Enable for display manager (GDM) as well
+      sudo.u2fAuth = true;
       gdm.u2fAuth = true;
     };
     u2f = {
@@ -30,28 +55,23 @@
       control = "sufficient";
       settings = {
         authfile = "/persist/yubikey/authorized_yubikeys";
-        cue = true; # Provide visual feedback when waiting for a token
+        cue = true;
         interactive = true;
       };
     };
   };
-  # Ensure YubiKey configurations persist across reboots
-  environment.persistence."/persist" = {
-    directories = [
-      "/persist/yubikey"
-    ];
-    files = [
-    ];
-    users.logger = {
-      directories = [
-        ".yubico"  # YubiKey challenge-response files
-      ];
-    };
+
+  # Required user groups
+  users.users.logger.extraGroups = [
+    "plugdev"
+    "pcscd"
+  ];
+
+  environment.sessionVariables = {
+    # This ensures SSH knows to use the GPG agent
+    SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
   };
 
-  # Add user to required groups
-  users.users.logger.extraGroups = [ "plugdev" ];
-
-  # Disable system SSH agent in favor of GPG agent
+  # Disable system SSH agent
   programs.ssh.startAgent = false;
 }

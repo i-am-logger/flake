@@ -1,10 +1,28 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
+let
+
+  # Store the public key in the Nix store
+  yubikey-pubkey = pkgs.writeTextFile {
+    name = "yubikey_pubkey";
+    text = builtins.readFile ./yubikey_pubkey.asc; # Assuming the file is in your config directory
+    destination = "/yubikey_pubkey.asc";
+  };
+
+  gpg-import-yubikey = pkgs.writeShellScriptBin "gpg-import-yubikey" ''
+    #!/usr/bin/env bash
+    echo "Importing YubiKey public key..."
+    gpg --import ${yubikey-pubkey}/yubikey_pubkey.asc
+
+    echo "Setting trust level to ultimate..."
+    echo -e "trust\n5\ny\nsave" | gpg --command-fd 0 --edit-key 3842FC405341B51B
+
+    echo "YubiKey public key import complete"
+  '';
+in
 {
-  # YubiKey-related packages
-  home.packages = with pkgs; [
-    gnupg
-    paperkey
-    pcsclite
+
+  home.packages = [
+    gpg-import-yubikey
   ];
 
   # Add shell initialization hooks
@@ -13,6 +31,7 @@
     export GPG_TTY=$(tty)
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
+
   # For Zsh
   programs.zsh.initExtra = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
@@ -23,21 +42,14 @@
   # GPG configuration
   programs.gpg = {
     enable = true;
-    scdaemonSettings = {
-      reader-port = "Yubikey";
-      disable-ccid = true;
-      card-timeout = "5";
-    };
+
+    # Keep your existing settings
     settings = {
-      no-greeting = true;
-      no-emit-version = true;
-      keyid-format = "0xlong";
-      with-fingerprint = true;
-      list-options = "show-uid-validity";
-      verify-options = "show-uid-validity";
-      use-agent = true;
+      # card-status-url = "https://keys.openpgp.org/vks/v1/by-fingerprint/B2678F2F11889414D65E9D463842FC405341B51B";
       trust-model = "tofu+pgp";
-      default-key = "3842FC405341B51B";
+      use-agent = true;
+      verify-options = "show-uid-validity";
+      with-fingerprint = true;
     };
   };
 
@@ -45,9 +57,24 @@
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    defaultCacheTtl = 600;
-    maxCacheTtl = 7200;
-    pinentryPackage = pkgs.pinentry-curses;
+    pinentryPackage = pkgs.pinentry-qt;
     enableExtraSocket = true;
+    enableScDaemon = true; # Explicitly enable scdaemon
+  };
+
+  # Git configuration for GPG signing
+  programs.git = {
+    userName = "Logger";
+    userEmail = "i-am-logger@users.noreply.github.com";
+    signing = {
+      key = "3842FC405341B51B";
+      format = "openpgp";
+      signByDefault = true;
+    };
+    extraConfig = {
+      gpg = {
+        program = "${pkgs.gnupg}/bin/gpg";
+      };
+    };
   };
 }

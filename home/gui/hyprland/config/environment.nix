@@ -1,6 +1,7 @@
 {
   monitor = [
-    ",highrr,auto,1"
+    ",highres,auto,1"
+    # ",highrr,auto,1"
     # ", preferred, auto, 1"
     # "eDP-1,disable"
   ];

@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  # Enable smartcard support properly
+  services.pcscd.enable = true;
+  hardware.gpgSmartcards.enable = true;
+
   environment.systemPackages = with pkgs; [
     gnupg
     age
@@ -16,10 +20,13 @@
     yubikey-personalization-gui
     yubico-piv-tool
     # flutter
+    # flutter
     # yubioath-flutter
     yubico-pam
+    pcsc-tools
+    pcsclite
+    yubikey-agent
   ];
-
   services.udev.packages = with pkgs; [
     yubikey-personalization
   ];
@@ -30,14 +37,24 @@
     enableSSHSupport = true;
   };
 
-  # Enable smart card mode
-  services.pcscd.enable = true;
+  # Disable system SSH agent in favor of GPG agent
+  programs.ssh.startAgent = false;
 
   # Enable the u2f PAM module for login and sudo requests
   security.pam = {
     services = {
       login.u2fAuth = true;
       sudo.u2fAuth = true;
+      gdm.u2fAuth = true;
+    };
+
+    u2f = {
+      enable = true;
+      control = "sufficient";
+      settings = {
+        cue = true;
+        interactive = true;
+      };
     };
 
     yubico = {
@@ -47,4 +64,7 @@
       id = [ "17027658" ];
     };
   };
+
+  # Ensure user is in the required groups
+  users.users.logger.extraGroups = [ "plugdev" ];
 }

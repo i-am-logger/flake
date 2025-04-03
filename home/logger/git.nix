@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 {
@@ -15,14 +13,6 @@
     enable = true;
     lfs.enable = true;
     package = pkgs.gitAndTools.gitFull;
-
-    userName = "logger";
-    userEmail = "i-am-logger@users.noreply.github.com";
-    signing = {
-      key = "3842FC405341B51B";
-      format = "openpgp";
-      signByDefault = true;
-    };
 
     aliases = {
       ci = "commit";
@@ -43,7 +33,6 @@
       core = {
         editor = "hx";
       };
-      gpg.program = "${pkgs.gnupg}/bin/gpg2";
     };
 
     ignores = [

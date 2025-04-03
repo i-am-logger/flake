@@ -6,33 +6,19 @@
   imports = [
     ./xdg.nix
     cli/bat.nix
-    # cli/direnv.nix
+    cli/direnv.nix
     cli/lsd.nix
     cli/variables.nix
     cli/nix-scripts.nix
-    # cli/neovim.nix
-    # cli/tmux.nix
-
-    # cli/fish
     cli/starship
     cli/btop
-    # cli/neofetch
-    # cli/ranger
-    # cli/mc
+    cli/mc
     cli/helix
     cli/zellij.nix
     cli/cava
     # GUI
     gui/hyprland
-    # gui/rio
     gui/ghostty
-    gui/kitty
-    # gui/ags
-    # gui/rofi
-    # gui/emacs/doom-emacs.nix
-    # gui/chats/discord
-    gui/obs-studio.nix
-    #(../GUI/SDR)
   ];
 
   nixpkgs.config = {
@@ -45,7 +31,7 @@
     mc
     fastfetch
     devenv
-    # termscp
+    termscp
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger
@@ -55,10 +41,11 @@
     #calcurse
     # Web Browsers
     #qutebrowser
-    firefox
-    google-chrome
+    # firefox
+    # google-chrome
     brave
     # UI Virtual Terminals
+    warp-terminal
     alacritty
     #kate
     neo
@@ -66,11 +53,11 @@
     # UI Media Keys
     #playerctl
     #UI Apps
-    # mypaint
+    mypaint
     marktext
     #gimp
     #pfetch # Minimal fetch
-    #github-desktop
+    github-desktop
     # Video/Audio
     #cli-visualizer # Audio visualizer
     feh # Image Viewer
@@ -83,8 +70,8 @@
     #ffmpeg # Video Support (dslr)
     #libGL
     #udiskie # Auto Mounting
-    krusader # dual file browser GUI
-    rpi-imager # Raspberri pi USB Imager
+    # krusader # dual file browser GUI
+    # rpi-imager # Raspberri pi USB Imager
     kdiff3
     krename
     rclone
@@ -106,9 +93,9 @@
     # qtox
     signal-desktop
     # tdesktop # telegram
-    tldr
+    # tldr
     # development
-    cachix
+    # cachix
     # broadcasting
     #screenkey
 
@@ -120,9 +107,8 @@
     # jetbrains.rust-rover
     # vscode
     # cursor
-    bazecor
+    # bazecor
     cointop
-    warp-terminal
     #pamixer
   ];
 }

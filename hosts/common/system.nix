@@ -2,10 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
-  self,
   pkgs,
-  inputs,
-  user,
   ...
 }:
 {
@@ -27,16 +24,12 @@
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = false;
 
   # ssd
   services.fstrim.enable = true;
 
   hardware.graphics.enable = true;
-  hardware.enableAllFirmware = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -47,49 +40,26 @@
     sops
     pass
 
-    usbutils
-    tcpdump
-    zip
-    p7zip
-    wget
-    # git
-    direnv
-    tree
-
-    pciutils
-    screen
-    # neofetch
-    btop
-
     mc
     yazi
     helix
+    fastfetch
+    tree
+    btop
 
-    # inetutils
-    # pure-ftpd
-    # vscode
-    # nixd
+    usbutils
+    pciutils
+    screen
+
+    tcpdump
+    wget
+    curl
+
   ];
-  # nixpkgs.config.packageOverrides = pkgs: {
-  #   pure-ftpd = pkgs.pure-ftpd.overrideAttrs (oldAttrs: {
-  #     configureFlags = oldAttrs.configureFlags ++ [ "--with-puredb" ];
-  #   });
-  # };
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
   system.autoUpgrade = {
-    #enable = true;
-    # channel = "https://nixos.org/channels/nixos-stable";
+    enable = true;
+    channel = "https://nixos.org/channels/nixos-unstable";
   };
 
   # This value determines the NixOS release from which the default
@@ -98,5 +68,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 }

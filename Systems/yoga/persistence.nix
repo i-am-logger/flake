@@ -1,4 +1,9 @@
-{ config, pkgs, impermanence, ... }:
+{
+  config,
+  pkgs,
+  impermanence,
+  ...
+}:
 {
   imports = [
     impermanence.nixosModules.impermanence
@@ -24,11 +29,11 @@
     ];
     users.logger = {
       directories = [
-        ".ssh"      # SSH keys and config
         ".local"
         ".cache"
         ".config"
-        ".flake"    # NixOS configuration
+        ".flake" # NixOS configuration
+        ".secrets"
         "Desktop"
         "Documents"
         "Downloads"
@@ -37,12 +42,8 @@
         "Videos"
         "Code"
         "Current-Rice"
-        ".mozilla"      # Firefox data
-        # ".local/share/warp-terminal"      # Warp Terminal data
-        # ".local/share/keyrings"
-        # ".local/share/secrets"            # Secret storage
+        ".mozilla" # Firefox data
       ];
     };
   };
 }
-

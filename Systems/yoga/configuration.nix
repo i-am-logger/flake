@@ -23,6 +23,8 @@
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
+  services.hardware.bolt.enable = true;
+
   # Filesystem configurations moved to disko.nix
   # Persistence configuration moved to persistence.nix
 
@@ -30,6 +32,16 @@
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.kernelModules = [ "amdgpu" ];
+  boot.kernelParams = [
+    "amdgpu.dc_feature_mask=0xffffffff" # Enable all DC features including DSC
+    "amdgpu.deep_color=1" # HDR
+    "amdgpu.dc=1" # Display Core
+    "amdgpu.dpm=1"
+    "amdgpu.dp_mst=1" # Enable DisplayPort Multi-Stream Transport
+  ];
 
   # Kernel and memory optimizations
   boot.kernel.sysctl = {
@@ -50,34 +62,46 @@
     "vm.max_map_count" = 262144;
   };
 
-  # nix = {
-  #   channel.enable = false;
-  #   settings = {
-  #     nix-path = ["nixpkgs=${pkgs.path}"];
-  #     experimental-features = [ "nix-command" "flakes" ];
+  hardware.graphics = {
+    enable = true;
+    # driSupport = true;
+    enable32Bit = true; # If you need 32-bit application support
+    extraPackages = with pkgs; [
+      amdvlk
+      # rocm-opencl-icd
+      # rocm-opencl-runtime
+      libvdpau-va-gl
+      vaapiVdpau
+      libva-utils
+    ];
+    # For 32-bit application support (e.g., Steam)
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      amdvlk
+    ];
+  };
 
-  #     # Build optimizations
-  #     max-jobs = "auto";
-  #     cores = 0;  # Use all cores
-  #     sandbox = true;
-  #     auto-optimise-store = true;
-  #   };
-  # };
+  networking.hostName = "yoga";
+  networking.wireless.enable = false;
+  hardware.bluetooth.enable = false;
 
-  networking.hostName = "yoga"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  security.auditd.enable = true;
+  security.audit.enable = true;
+  security.audit.rules = [
+    "-a exit,always -F arch=b64 -F euid=0 -S execve"
+    "-a exit,always -F arch=b32 -F euid=0 -S execve"
+  ];
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=0
+    Defaults !tty_tickets
+    Defaults log_output
+    Defaults log_input
+    Defaults logfile=/var/log/sudo.log
+  '';
 
-  # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
   time.timeZone = "America/Denver";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -91,15 +115,6 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  # services.xserver.windowManager.notion.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -155,6 +170,7 @@
     git
     # vmtouch
     hyprland
+    slack
   ];
 
   # Enable zram with 15% of RAM
