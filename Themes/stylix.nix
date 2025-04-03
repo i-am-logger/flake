@@ -43,7 +43,7 @@
       sizes = {
         applications = 24;
         desktop = 32;
-        popups = 24;
+        popups = 22;
         terminal = 32;
       };
       serif = {
