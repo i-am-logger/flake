@@ -57,7 +57,7 @@ in
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    pinentryPackage = pkgs.pinentry-curses;
+    pinentryPackage = pkgs.pinentry-qt;
     enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
   };

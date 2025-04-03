@@ -17,23 +17,23 @@
   };
 
   # # Enable display manager with Wayland support
-  # services.xserver = {
-  #   enable = true;
-  #   displayManager.gdm = {
-  #     enable = true;
-  #     wayland = true;
-  #   };
-  #   windowManager.hypr.enable = true;
-  # };
+  services.xserver = {
+    enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;
+    };
+    windowManager.hypr.enable = true;
+  };
 
-  services.displayManager.sessionPackages = [ pkgs.hyprland ];
+  # services.displayManager.sessionPackages = [ pkgs.hyprland ];
 
   # Preserve existing libinput settings
-  services.libinput = {
-    enable = true;
-    touchpad.disableWhileTyping = true;
-    mouse.disableWhileTyping = true;
-  };
+  # services.libinput = {
+  #   enable = true;
+  #   touchpad.disableWhileTyping = true;
+  #   mouse.disableWhileTyping = true;
+  # };
 
   # Add required packages for Hyprland
   # environment.systemPackages = with pkgs; [

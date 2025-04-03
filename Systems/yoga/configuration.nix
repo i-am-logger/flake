@@ -65,7 +65,7 @@
   hardware.graphics = {
     enable = true;
     # driSupport = true;
-    # Support32Bit = true; # If you need 32-bit application support
+    enable32Bit = true; # If you need 32-bit application support
     extraPackages = with pkgs; [
       amdvlk
       # rocm-opencl-icd
@@ -80,20 +80,28 @@
     ];
   };
 
-  networking.hostName = "yoga"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.hostName = "yoga";
+  networking.wireless.enable = false;
+  hardware.bluetooth.enable = false;
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  security.auditd.enable = true;
+  security.audit.enable = true;
+  security.audit.rules = [
+    "-a exit,always -F arch=b64 -F euid=0 -S execve"
+    "-a exit,always -F arch=b32 -F euid=0 -S execve"
+  ];
 
-  # Enable networking
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=0
+    Defaults !tty_tickets
+    Defaults log_output
+    Defaults log_input
+    Defaults logfile=/var/log/sudo.log
+  '';
+
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
   time.timeZone = "America/Denver";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -107,13 +115,6 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Display Manager - Login Screen
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
