@@ -108,7 +108,7 @@
               };
               home-manager.users.logger = {
                 imports = [
-                  ./home/logger.nix
+                  (./home/logger)
                 ];
               };
             }

@@ -26,10 +26,10 @@ in
   };
 
   # Services
-  services = {
-    # blueman.enable = true;  # Commented out as in original
-    blueman-applet.enable = true;
-  };
+  # services = {
+  #   # blueman.enable = true;  # Commented out as in original
+  #   blueman-applet.enable = true;
+  # };
 
   # Home packages
   home.packages = with pkgs; [

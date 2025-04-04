@@ -45,7 +45,6 @@
     # google-chrome
     brave
     # UI Virtual Terminals
-    warp-terminal
     alacritty
     #kate
     neo

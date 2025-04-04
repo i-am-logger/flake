@@ -57,7 +57,7 @@ in
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    pinentryPackage = pkgs.pinentry-qt;
+    pinentryPackage = pkgs.pinentry-gnome3;
     enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
   };
@@ -67,13 +67,23 @@ in
     userName = "Logger";
     userEmail = "i-am-logger@users.noreply.github.com";
     signing = {
-      key = "3842FC405341B51B";
       format = "openpgp";
       signByDefault = true;
+      key = "3842FC405341B51B";
     };
     extraConfig = {
       gpg = {
         program = "${pkgs.gnupg}/bin/gpg";
+      };
+    };
+  };
+
+  programs.jujutsu = {
+    settings = {
+      user = {
+        userName = "Logger";
+        userEmail = "i-am-logger@users.noreply.github.com";
+        signing-key = "3842FC405341B51B";
       };
     };
   };

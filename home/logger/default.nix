@@ -17,8 +17,9 @@
   };
 
   imports = [
-    ./common.nix
-    ./logger/yubikey.nix
-    ./logger/git.nix
+    ../common.nix
+    ./yubikey.nix
+    ./jujutsu.nix
+    ./git.nix
   ];
 }
