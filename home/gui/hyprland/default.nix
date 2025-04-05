@@ -11,25 +11,12 @@ in
     # ./pyprland  # Commented out as in original
   ];
 
-  # Cursor configuration (commented out as in original)
-  # home.pointerCursor = {
-  #   package = pkgs.gnome.adwaita-icon-theme;
-  #   name = "Adwaita";
-  #   gtk.enable = true;
-  # };
-
   # GTK configuration
   gtk = {
     enable = true;
     # iconTheme = {
     # };
   };
-
-  # Services
-  # services = {
-  #   # blueman.enable = true;  # Commented out as in original
-  #   blueman-applet.enable = true;
-  # };
 
   # Home packages
   home.packages = with pkgs; [

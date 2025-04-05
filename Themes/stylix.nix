@@ -41,9 +41,9 @@
 
     fonts = {
       sizes = {
-        applications = 24;
+        applications = 28;
         desktop = 32;
-        popups = 22;
+        popups = 28;
         terminal = 32;
       };
       serif = {
@@ -73,9 +73,9 @@
     };
 
     cursor = {
-      name = "Bibata-Modern-Classic";
+      name = "Bibata-Modern-Amber";
       package = pkgs.bibata-cursors;
-      size = 24;
+      size = 28;
     };
   };
 }

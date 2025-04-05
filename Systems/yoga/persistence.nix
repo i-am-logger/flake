@@ -34,15 +34,19 @@
         ".config"
         ".flake" # NixOS configuration
         ".secrets"
-        "Desktop"
+        # "Desktop"
         "Documents"
         "Downloads"
-        "Music"
-        "Pictures"
-        "Videos"
+        "Media"
+        # "Music"
+        # "Pictures"
+        # "Videos"
         "Code"
         "Current-Rice"
         ".mozilla" # Firefox data
+      ];
+      files = [
+        ".bash_history"
       ];
     };
   };
