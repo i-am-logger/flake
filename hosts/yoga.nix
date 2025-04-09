@@ -17,7 +17,7 @@
     common/appimage.nix
     common/direnv.nix
     common/xdg.nix
-
+    common/docker.nix
     users/logger.nix
   ];
 

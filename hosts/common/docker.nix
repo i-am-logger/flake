@@ -1,44 +1,43 @@
-{ pkgs
-, username
-, ...
+{
+  pkgs,
+  ...
 }:
 {
   environment.systemPackages = with pkgs; [
     docker-compose
     minikube
     runc
-    # helm
-    nvidia-docker
     lazydocker
   ];
 
-  hardware.nvidia-container-toolkit.enable = true;
-  users.groups.docker.members = [ "${username}" ];
+  users.groups.docker.members = [
+    "logger"
+    "snick"
+  ];
   virtualisation.docker = {
     enable = true;
     enableOnBoot = false;
-    # enableNvidia = true;
-    # rootless = {
-    #   enable = true;
-    #   # setSocketVariable = true;
-    #   daemon.settings = {
-    #     runtimes = {
-    #       nvidia = {
-    #         path = "${pkgs.nvidia-docker}/bin/nvidia-container-runtime";
-    #       };
-    #     };
-    #   };
-    # };
+    storageDriver = "btrfs";
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+    daemon.settings = {
+      data-root = "/var/lib/docker";
+    };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
-  ];
-  # networking.firewall.allowedUDPPorts = [
+  environment.persistence."/persist" = {
+    directories = [ "/var/lib/docker " ];
+    users.logger = {
+      directories = [
+        ".local/share/docker"
+      ];
+    };
+  };
+  # networking.firewall.allowedTCPPorts = [
+  #   6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
   # ];
-  # services.k3s.enable = true;
-  # services.k3s.role = "server";
-  # services.k3s.extraFlags = toString [
-  #   # "--debug" # Optionally add additional args to k3s
+  # networking.firewall.allowedUDPPorts = [
   # ];
 }
