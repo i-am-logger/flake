@@ -19,6 +19,7 @@
     ./yubikey.nix
     # ./git.nix
     ./warp-terminal.nix
+    ./warp-terminal-preview.nix
     # Add lanzaboote module
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
@@ -149,6 +150,7 @@
     builtins.elem (pkg.pname or pkg.name) [
       "slack"
       "warp-terminal"
+      "warp-terminal-preview"
       "1password"
       "1password-cli"
     ];
