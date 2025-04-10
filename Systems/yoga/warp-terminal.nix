@@ -41,6 +41,10 @@ let
       nghttp2
       openssl
       vulkan-loader
+      wayland
+      wayland-protocols
+      libdrm
+      mesa
       xdg-utils
       xorg.libX11
       xorg.libxcb
@@ -55,6 +59,11 @@ let
       libxkbcommon
       vulkan-loader
       wayland
+      wayland-protocols
+      libdrm
+      mesa
+      pipewire
+      xdg-desktop-portal-wlr
       xdg-utils
       xorg.libX11
       xorg.libxcb
@@ -88,7 +97,7 @@ let
         --replace "/opt/warpdotdev" "$out/opt/warpdotdev"
       # Wrap the binary with required environment
       wrapProgram $out/bin/warp-terminal \
-        --set WARP_ENABLE_WAYLAND 0 \
+        --set WARP_ENABLE_WAYLAND 1 \
         --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath finalAttrs.buildInputs}" \
         --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath finalAttrs.runtimeDependencies}"
     '';
@@ -113,7 +122,7 @@ in
   ];
 
   environment.sessionVariables = {
-    WARP_ENABLE_WAYLAND = 0;
+    WARP_ENABLE_WAYLAND = lib.mkForce 1;
   };
 
   # Configure persistence for warp-terminal
