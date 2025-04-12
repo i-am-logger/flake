@@ -20,6 +20,7 @@
     # ./git.nix
     ./warp-terminal.nix
     ./warp-terminal-preview.nix
+    ./vscode.nix
     # Add lanzaboote module
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
@@ -153,6 +154,8 @@
       "warp-terminal-preview"
       "1password"
       "1password-cli"
+      "vscode"
+      "vscode-with-extensions"
     ];
   # Define a user account. Don't forget to set a password with 'passwd'.
 
