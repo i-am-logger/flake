@@ -6,33 +6,33 @@ let
   warp-terminal-base = pkgs.warp-terminal;
 
   # Preview version details
-  warp_preview_version = "0.2025.04.02.08.11.preview_02"; # Underscore to bypass caching
-  warp_preview_hash = "sha256-0zwWsoIGtvWha2cXu5okT2LrEf80ooHdQa4qhMMkyEA=";
+  warp_preview_version = "0.2025.04.09.08.11.preview_02";
+  warp_preview_hash = "sha256-WB7F5nEEQz3dlxLK3MPfjfrUomHK8tvAsWbyyxzPlks=";
 
-  # Define the function separately
-  warp-terminal-preview-fn = 
-    { lib
-    , stdenv
-    , fetchurl
-    , autoPatchelfHook
-    , zstd
-    , alsa-lib
-    , curl
-    , fontconfig
-    , libglvnd
-    , libxkbcommon
-    , vulkan-loader
-    , wayland
-    , waylandProtocols
-    , libdrm
-    , mesa
-    , pipewire
-    , xdgDesktopPortalWlr
-    , xdg-utils
-    , xorg
-    , zlib
-    , makeWrapper
-    , waylandSupport ? true
+  warp-terminal-preview-fn =
+    {
+      lib,
+      stdenv,
+      fetchurl,
+      autoPatchelfHook,
+      zstd,
+      alsa-lib,
+      curl,
+      fontconfig,
+      libglvnd,
+      libxkbcommon,
+      vulkan-loader,
+      wayland,
+      waylandProtocols,
+      libdrm,
+      mesa,
+      pipewire,
+      xdgDesktopPortalWlr,
+      xdg-utils,
+      xorg,
+      zlib,
+      makeWrapper,
+      waylandSupport ? true,
     }:
 
     let
@@ -44,7 +44,7 @@ let
     in
     stdenv.mkDerivation (finalAttrs: {
       inherit pname version;
-      
+
       src = fetchurl {
         url = "https://releases.warp.dev/preview/v${version}/warp-terminal-preview-v${version}-1-${linux_arch}.pkg.tar.zst";
         hash = warp_preview_hash;
@@ -62,13 +62,13 @@ let
         zstd
         makeWrapper
       ];
-      
+
       # Add a debug message to the build
       preBuild = ''
         echo "Building warp-terminal-preview with Wayland support"
         echo "Using waylandProtocols from arguments"
       '';
-      
+
       buildInputs = [
         alsa-lib # libasound.so.2
         curl
@@ -120,10 +120,10 @@ let
         license = lib.licenses.unfree;
       };
     });
-    
+
   # Create a modified copy of the warp-terminal derivation for the preview version
-  warp-terminal-preview = trace "Calling warp-terminal-preview with Wayland support"
-    (pkgs.callPackage warp-terminal-preview-fn {
+  warp-terminal-preview = trace "Calling warp-terminal-preview with Wayland support" (
+    pkgs.callPackage warp-terminal-preview-fn {
       waylandSupport = true;
       # Provide explicit overrides for key dependencies
       waylandProtocols = pkgs.wayland-protocols;
@@ -132,7 +132,8 @@ let
       pipewire = pkgs.pipewire;
       xdgDesktopPortalWlr = pkgs.xdg-desktop-portal-wlr;
       xdg-utils = pkgs.xdg-utils;
-    });
+    }
+  );
 in
 {
   nixpkgs.config.allowUnfreePredicate =
