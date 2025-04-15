@@ -46,26 +46,26 @@
   ];
 
   # Configure environment variables for better Wayland support
-  environment.sessionVariables = {
-    # Enable Wayland support for Electron apps like VS Code
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-  };
+  # environment.sessionVariables = {
+  #   # Enable Wayland support for Electron apps like VS Code
+  #   ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+  # };
 
   # Enable good font rendering for VS Code
-  fonts.fontconfig.enable = true;
+  # fonts.fontconfig.enable = true;
 
-  xdg.mime.enable = true;
-  xdg.icons.enable = true;
+  # xdg.mime.enable = true;
+  # xdg.icons.enable = true;
 
   # Enable D-Bus service
-  services.dbus.enable = true;
+  # services.dbus.enable = true;
 
   # Enable Wayland portals
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-    ];
-  };
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = with pkgs; [
+  #     xdg-desktop-portal-wlr
+  #     xdg-desktop-portal-gtk
+  #   ];
+  # };
 }

@@ -19,7 +19,7 @@
   ];
 
   environment.persistence."/persist" = {
-    directories = [ "/persist/yubikey" ];
+    directories = [ "/yubikey" ];
     users.logger = {
       directories = [
         ".gnupg"

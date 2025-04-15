@@ -90,7 +90,7 @@
 
     # Chats
     # qtox
-    signal-desktop
+    signal-desktop-bin
     # tdesktop # telegram
     # tldr
     # development
