@@ -6,8 +6,10 @@ let
   warp-terminal-base = pkgs.warp-terminal;
 
   # Preview version details
-  warp_preview_version = "0.2025.04.09.08.11.preview_02";
-  warp_preview_hash = "sha256-WB7F5nEEQz3dlxLK3MPfjfrUomHK8tvAsWbyyxzPlks=";
+  #
+  warp_preview_version = "0.2025.04.16.08.11.preview_02";
+
+  warp_preview_hash = "sha256-gAgVkXavOJS+4Tt8gci82eoXUNsHs87OeJoOQka892k=";
 
   warp-terminal-preview-fn =
     {

@@ -1,5 +1,5 @@
 { pkgs, ... }:
-# let
+
 # image_url = "https://www.pixelstalk.net/wp-content/uploads/2016/07/Desktop-autumn-hd-wallpaper-3D.jpg";
 
 #   # inputImage = pkgs.fetchurl {
@@ -9,7 +9,6 @@
 #   #brightness = -30;
 #   #contrast = 0;
 #   #fillColor = "black";
-# in
 {
   imports = [
     ./ls-colors.nix

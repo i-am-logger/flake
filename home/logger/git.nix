@@ -4,11 +4,12 @@
 }:
 {
   home.packages = with pkgs; [
-    gitui
+    # gitui
     gh
     lazygit
   ];
 
+  # programs.gitui.enable = true;
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -55,5 +56,4 @@
     };
   };
 
-  programs.gitui.enable = true;
 }
