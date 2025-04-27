@@ -26,7 +26,7 @@
     # "$mainMod, Super_L, exec, bash ~/.config/rofi/powermenu.sh"
 
     # general bindings
-    "$mainMod, Return, exec, ghostty"
+    "$mainMod, T, exec, ghostty"
     "$mainMod, Q, killactive,"
     # "$mainMod SHIFT, M, exit,"
     "$mainMod, Y, togglefloating,"

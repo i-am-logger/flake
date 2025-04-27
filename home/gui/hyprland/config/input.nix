@@ -7,7 +7,7 @@
     #kb_rules =
     #repeat_rate = 30
     repeat_delay = 200;
-    left_handed = true;
+    left_handed = false;
     #follow_mouse = 2 # 0|1|2|3
     float_switch_override_focus = 2;
     numlock_by_default = "off";
