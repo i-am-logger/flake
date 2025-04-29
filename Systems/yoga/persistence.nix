@@ -47,6 +47,7 @@
       ];
       files = [
         ".bash_history"
+        "/etc/nixos"
       ];
     };
   };

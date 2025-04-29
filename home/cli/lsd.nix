@@ -8,7 +8,7 @@
 {
   programs.lsd = {
     enable = true;
-    enableAliases = true;
+    enableBashIntegration = true;
     settings = {
       date = "+%y-%m-%d %H:%M:%S";
       indicators = true;
