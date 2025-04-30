@@ -16,6 +16,7 @@
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
+      "/etc/nixos"
       "/var/lib/nixos"
       "/var/lib/systemd"
       "/var/log"
@@ -47,7 +48,6 @@
       ];
       files = [
         ".bash_history"
-        "/etc/nixos"
       ];
     };
   };
