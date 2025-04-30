@@ -23,11 +23,11 @@
 
   services.nextjs-ollama-llm-ui.enable = true;
 
-  fileSystems."/var/lib/ollama/models" = {
-    device = "/var/lib/ollama/models";
-    options = [
-      "bind"
-      "persist"
-    ];
-  };
+  # fileSystems."/var/lib/ollama/models" = {
+  #   device = "/var/lib/ollama/models";
+  #   options = [
+  #     "bind"
+  #     "persist"
+  #   ];
+  # };
 }

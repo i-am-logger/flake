@@ -19,6 +19,7 @@
     # GUI
     gui/hyprland
     gui/ghostty
+    gui/wezterm
   ];
 
   nixpkgs.config = {
