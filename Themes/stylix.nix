@@ -28,7 +28,7 @@
     image = Wallpapers/futuristic3.jpg; # inputImage;
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-khold.yaml";
-    base16Scheme = ./mission_hacker2.yaml;
+    base16Scheme = ./mission_hacker_white.yaml;
     # base16Scheme = ./mission_hacker_dark.yaml;
     # base16Scheme = ./example.yaml;
 

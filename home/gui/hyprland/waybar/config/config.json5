@@ -81,7 +81,7 @@
 			"format": "{ifname}",
 			"format-wifi": "  {essid} ({signalStrength}%)",
 			"format-ethernet": "󰈀  {ifname}",
-			"format-disconnected": "OFFLINE",
+			"format-disconnected": "<span color='red'>OFFLINE</span>",
 			"tooltip-format": "󰊗  {ifname} via {gwaddr}",
 			"tooltip-format-wifi": " {ifname}\n󰩟 {ipaddr}/{cidr}\n󰑩 {gwaddr}\n󰘊 {signaldBm}db\n󱑻 {frequency}MHz",
 			"tooltip-format-ethernet": "  {ifname} {ipaddr}/{cidr}",
