@@ -33,7 +33,7 @@
         ".local"
         ".cache"
         ".config"
-        ".flake" # NixOS configuration
+        # ".flake" # NixOS configuration
         ".secrets"
         # "Desktop"
         "Documents"
@@ -50,5 +50,33 @@
         ".bash_history"
       ];
     };
+  };
+
+  system.activationScripts.cloneRepoIfEmpty = {
+    text = ''
+      if [ ! -e /etc/nixos ] || [ -z "$(ls -A /etc/nixos 2>/dev/null)" ]; then
+        echo "Cloning flake repository into /etc/nixos..."
+        mkdir -p /etc/nixos
+        git clone git@github.com:i-am-logger/flake.git /etc/nixos
+      fi
+    '';
+    deps = [
+      "users"
+      "groups"
+    ];
+  };
+
+  system.activationScripts.createFlakeSymlink = {
+    text = ''
+      if [ ! -L /home/logger/.flake ]; then
+        ln -sfn /etc/nixos /home/logger/.flake
+      fi
+    '';
+    deps = [
+      "users"
+      "groups"
+      "cloneRepoIfEmpty"
+    ];
+    # deps = [ "logger" ];
   };
 }

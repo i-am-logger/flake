@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   # Install warp-terminal package
   environment.systemPackages = with pkgs; [
