@@ -7,6 +7,9 @@ let
 
   # Import github-mcp from dedicated configuration file
   mcp-github = import ./mcp/github.nix { inherit pkgs; };
+  
+  # Import filesystem-mcp from dedicated configuration file
+  mcp-filesystem = import ./mcp/filesystem.nix { inherit pkgs; };
 
   # Preview version details
   warp_preview_version = "0.2025.05.21.08.11.preview_01";
@@ -149,6 +152,8 @@ in
     warp-terminal-preview
     # Include github-mcp command
     mcp-github
+    # Include filesystem-mcp command
+    mcp-filesystem
     pkgs.gh # GitHub CLI for auth token
     pkgs.docker # Required for the Docker-based MCP server
   ];
