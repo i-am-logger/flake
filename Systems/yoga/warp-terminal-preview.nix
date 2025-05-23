@@ -5,6 +5,9 @@ let
   # Import the original warp-terminal derivation
   warp-terminal-base = pkgs.warp-terminal;
 
+  # Import github-mcp from dedicated configuration file
+  github-mcp = import ./mcp/github.nix { inherit pkgs; };
+
   # Preview version details
   #
   warp_preview_version = "0.2025.04.30.08.11.preview_03";
@@ -145,6 +148,10 @@ in
 
   environment.systemPackages = [
     warp-terminal-preview
+    # Include github-mcp command 
+    github-mcp
+    pkgs.gh  # GitHub CLI for auth token
+    pkgs.docker  # Required for the Docker-based MCP server
   ];
 
   environment.sessionVariables = {
