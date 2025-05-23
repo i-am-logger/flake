@@ -6,12 +6,11 @@ let
   warp-terminal-base = pkgs.warp-terminal;
 
   # Import github-mcp from dedicated configuration file
-  github-mcp = import ./mcp/github.nix { inherit pkgs; };
+  mcp-github = import ./mcp/github.nix { inherit pkgs; };
 
   # Preview version details
-  #
-  warp_preview_version = "0.2025.04.30.08.11.preview_03";
-  warp_preview_hash = "sha256-lM/IgQPndfU6zsWRwNulRdYEYvyK8bKKpYNtY8tFb/0=";
+  warp_preview_version = "0.2025.05.21.08.11.preview_01";
+  warp_preview_hash = "sha256-WyeFe449j7JF4A2vxjmvjqSUHkoVo5NQdXqXV5wgQOs=";
   warp-terminal-preview-fn =
     {
       lib,
@@ -148,10 +147,10 @@ in
 
   environment.systemPackages = [
     warp-terminal-preview
-    # Include github-mcp command 
-    github-mcp
-    pkgs.gh  # GitHub CLI for auth token
-    pkgs.docker  # Required for the Docker-based MCP server
+    # Include github-mcp command
+    mcp-github
+    pkgs.gh # GitHub CLI for auth token
+    pkgs.docker # Required for the Docker-based MCP server
   ];
 
   environment.sessionVariables = {
