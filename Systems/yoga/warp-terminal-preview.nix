@@ -7,9 +7,15 @@ let
 
   # Import github-mcp from dedicated configuration file
   mcp-github = import ./mcp/github.nix { inherit pkgs; };
-  
+
   # Import filesystem-mcp from dedicated configuration file
   mcp-filesystem = import ./mcp/filesystem.nix { inherit pkgs; };
+
+  # Import git-mcp from dedicated configuration file
+  mcp-git = import ./mcp/git.nix { inherit pkgs; };
+
+  # Import gitingest-mcp from dedicated configuration file
+  mcp-gitingest = import ./mcp/gitingest.nix { inherit pkgs; };
 
   # Preview version details
   warp_preview_version = "0.2025.05.21.08.11.preview_01";
@@ -154,6 +160,10 @@ in
     mcp-github
     # Include filesystem-mcp command
     mcp-filesystem
+    # Include git-mcp command
+    mcp-git
+    # Include gitingest-mcp command
+    mcp-gitingest
     pkgs.gh # GitHub CLI for auth token
     pkgs.docker # Required for the Docker-based MCP server
   ];
