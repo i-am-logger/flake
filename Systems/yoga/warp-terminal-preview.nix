@@ -5,21 +5,13 @@ let
   # Import the original warp-terminal derivation
   warp-terminal-base = pkgs.warp-terminal;
 
-  # Import github-mcp from dedicated configuration file
-  mcp-github = import ./mcp/github.nix { inherit pkgs; };
-
-  # Import filesystem-mcp from dedicated configuration file
-  mcp-filesystem = import ./mcp/filesystem.nix { inherit pkgs; };
-
-  # Import git-mcp from dedicated configuration file
-  mcp-git = import ./mcp/git.nix { inherit pkgs; };
-
-  # Import gitingest-mcp from dedicated configuration file
-  mcp-gitingest = import ./mcp/gitingest.nix { inherit pkgs; };
+  # Import all MCP packages from default.nix
+  mcp-packages = import ./mcp { inherit pkgs; };
 
   # Preview version details
-  warp_preview_version = "0.2025.05.21.08.11.preview_01";
-  warp_preview_hash = "sha256-WyeFe449j7JF4A2vxjmvjqSUHkoVo5NQdXqXV5wgQOs=";
+  #
+  warp_preview_version = "0.2025.05.28.08.11.preview_06";
+  warp_preview_hash = "sha256-Kv2PAO6SQ9KbPfieenlyLkicI60vfvKMbxS4Al0vaOY=";
   warp-terminal-preview-fn =
     {
       lib,
@@ -156,14 +148,8 @@ in
 
   environment.systemPackages = [
     warp-terminal-preview
-    # Include github-mcp command
-    mcp-github
-    # Include filesystem-mcp command
-    mcp-filesystem
-    # Include git-mcp command
-    mcp-git
-    # Include gitingest-mcp command
-    mcp-gitingest
+    # Include all MCP commands
+    ] ++ (lib.attrValues mcp-packages) ++ [
     pkgs.gh # GitHub CLI for auth token
     pkgs.docker # Required for the Docker-based MCP server
   ];

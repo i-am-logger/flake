@@ -12,12 +12,13 @@
 
   services.xserver = {
     enable = true;
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
     windowManager.hypr.enable = true;
   };
+  services.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };
+  # services.windowManager.hypr.enable = true;
 
   # Enable XDG portal for screen sharing
   # xdg.portal = {
