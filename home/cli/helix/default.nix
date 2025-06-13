@@ -29,7 +29,7 @@
     # nodePackages.vue-language-server
     yaml-language-server
     taplo
-    github-copilot-cli
+    gh-copilot
     # pkgs.vimPlugins.copilot-vim
     tree-sitter
     (tree-sitter.withPlugins (_: tree-sitter.allGrammars))

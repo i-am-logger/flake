@@ -10,8 +10,9 @@ let
 
   # Preview version details
   #
-  warp_preview_version = "0.2025.05.28.08.11.preview_06";
-  warp_preview_hash = "sha256-Kv2PAO6SQ9KbPfieenlyLkicI60vfvKMbxS4Al0vaOY=";
+  warp_preview_version = "0.2025.06.11.08.11.preview_01";
+  warp_preview_hash = "sha256-93rWLcv3cintFAaP2t3H2D4rFxqqDw2woMn/bgwpeYk=";
+
   warp-terminal-preview-fn =
     {
       lib,
@@ -146,13 +147,16 @@ in
       "warp-terminal-preview"
     ];
 
-  environment.systemPackages = [
-    warp-terminal-preview
-    # Include all MCP commands
-    ] ++ (lib.attrValues mcp-packages) ++ [
-    pkgs.gh # GitHub CLI for auth token
-    pkgs.docker # Required for the Docker-based MCP server
-  ];
+  environment.systemPackages =
+    [
+      warp-terminal-preview
+      # Include all MCP commands
+    ]
+    ++ (lib.attrValues mcp-packages)
+    ++ [
+      pkgs.gh # GitHub CLI for auth token
+      pkgs.docker # Required for the Docker-based MCP server
+    ];
 
   environment.sessionVariables = {
     WARP_ENABLE_WAYLAND = lib.mkForce 1;
