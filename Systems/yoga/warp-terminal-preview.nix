@@ -10,9 +10,8 @@ let
 
   # Preview version details
   #
-  warp_preview_version = "0.2025.06.11.08.11.preview_01";
-  warp_preview_hash = "sha256-93rWLcv3cintFAaP2t3H2D4rFxqqDw2woMn/bgwpeYk=";
-
+  warp_preview_version = "0.2025.06.25.08.12.preview_02";
+  warp_preview_hash = "sha256-dgzfnex7hj7reK8hQ43zz/38w/Z8/XMtXr34+fNKWOg=";
   warp-terminal-preview-fn =
     {
       lib,
@@ -152,7 +151,7 @@ in
       warp-terminal-preview
       # Include all MCP commands
     ]
-    ++ (lib.attrValues mcp-packages)
+    # ++ (lib.attrValues mcp-packages)
     ++ [
       pkgs.gh # GitHub CLI for auth token
       pkgs.docker # Required for the Docker-based MCP server
