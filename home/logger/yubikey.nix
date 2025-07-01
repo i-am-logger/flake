@@ -81,9 +81,13 @@ in
   programs.jujutsu = {
     settings = {
       user = {
-        userName = "Logger";
-        userEmail = "i-am-logger@users.noreply.github.com";
-        signing-key = "3842FC405341B51B";
+        name = "Logger";
+        email = "i-am-logger@users.noreply.github.com";
+      };
+      signing = {
+        sign-all = true;
+        backend = "gpg";
+        key = "3842FC405341B51B";
       };
     };
   };

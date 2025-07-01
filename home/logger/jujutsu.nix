@@ -12,6 +12,10 @@
     enable = true;
 
     settings = {
+      user = {
+        name = "Logger";
+        email = "i-am-logger@users.noreply.github.com";
+      };
 
       ui = {
         default-command = "status";
