@@ -49,17 +49,21 @@
         b = "branch";
         c = "commit";
         a = "amend";
-        st = "status";
-        op = "operation log";
+        # Removed st and op aliases as they override built-in commands
       };
 
       git = {
         # Git integration settings
-        auto-local-branch = true;
+        auto-local-bookmark = true;  # Renamed from auto-local-branch
         push-branch-prefix = "jj/";
         abandon-unreachable-commits = false;
         # minutes before auto-expiring abandoned commits
         abandoned-commit-expiration = 60 * 24 * 7; # 1 week
+      };
+
+      signing = {
+        # Updated from deprecated signing.sign-all
+        behavior = "own";
       };
 
       # Define operation hooks if needed

@@ -85,7 +85,7 @@ in
         email = "i-am-logger@users.noreply.github.com";
       };
       signing = {
-        sign-all = true;
+        behavior = "own";  # Updated from deprecated sign-all = true
         backend = "gpg";
         key = "3842FC405341B51B";
       };
