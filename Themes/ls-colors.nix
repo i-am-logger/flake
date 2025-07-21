@@ -5,13 +5,15 @@ with lib;
 let
   cfg = config.stylix.ls-colors;
 
-  hexDigitToInt = c:
+  hexDigitToInt =
+    c:
     let
       hexChars = "0123456789abcdef";
     in
     stringLength (head (splitString c (toLower hexChars)));
 
-  hexToRgb = hexColor:
+  hexToRgb =
+    hexColor:
     let
       r = substring 0 2 hexColor;
       g = substring 2 2 hexColor;
@@ -20,7 +22,8 @@ let
     in
     "${toString (toDecimal r)};${toString (toDecimal g)};${toString (toDecimal b)}";
 
-  generateLsColors = colors:
+  generateLsColors =
+    colors:
     let
       mkColor = color: "38;2;${hexToRgb color}";
       colorMap = {
@@ -78,7 +81,7 @@ let
         "*.md" = mkColor colors.base07;
         "*.mp3" = mkColor colors.base0E;
         "*.mp4" = mkColor colors.base0E;
-        # "*.nix" = mkColor colors.base0C;
+        "*.nix" = mkColor colors.base0C;
         # "*.odt" = mkColor colors.base08;
         # "*.ogg" = mkColor colors.base07;
         "*.pdf" = mkColor colors.base07;

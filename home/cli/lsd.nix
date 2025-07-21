@@ -1,7 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
@@ -18,15 +15,15 @@
       sorting = {
         dir-grouping = "first";
       };
-      symlink-arrow = "⇒";
+      symlink-arrow = "~>";
       header = true;
       classic = false;
-      color = {
-        when = "never";
-      };
-      # color = "auto";
-      # icons = "auto";
-      # hyperlink = "auto";
+      # color = {
+      #   when = "never";
+      # };
+      color = "auto";
+      icons = "auto";
+      hyperlink = "auto";
       blocks = [
         "permission"
         "user"
