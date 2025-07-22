@@ -18,11 +18,12 @@
       symlink-arrow = "~>";
       header = true;
       classic = false;
-      # color = {
-      #   when = "never";
-      # };
-      color = "auto";
-      icons = "auto";
+      color = {
+        when = "auto";
+      };
+      icons = {
+        when = "auto";
+      };
       hyperlink = "auto";
       blocks = [
         "permission"

@@ -18,6 +18,9 @@
 
     # COLORPICKER
     "$mainMod SHIFT, P, exec, hyprpicker -a"
+    
+    # SHOW KEYS (for screencasting)
+    "$mainMod SHIFT, S, exec, pkill wshowkeys || wshowkeys -a bottom -F 'Source Code Pro 24' -t 2 -m 50"
 
     # "$mainMod SHIFT, X, exec, swaylock --screenshots --clock --indicator --indicator-radius 500 --indicator-thickness 7 --effect-blur 7x5 --effect-pixelate 8 --effect-greyscale --grace 5 --fade-in 2"
 

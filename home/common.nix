@@ -20,6 +20,7 @@
     gui/hyprland
     gui/ghostty
     gui/wezterm
+    gui/obs-studio.nix
   ];
 
   nixpkgs.config = {
@@ -97,7 +98,7 @@
     # development
     # cachix
     # broadcasting
-    #screenkey
+    wshowkeys # Wayland-compatible key display
 
     # astronomy
     #kstars

@@ -17,6 +17,7 @@
     common/appimage.nix
     common/direnv.nix
     common/xdg.nix
+    common/v4l2loopback.nix
     common/docker.nix
     users/logger.nix
   ];
