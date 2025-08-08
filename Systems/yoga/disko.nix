@@ -1,19 +1,20 @@
-{ ... }: {
+{ ... }:
+{
   nodev = {
     "/" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=12G"
+        "size=32G"
         "mode=755"
       ];
     };
-    "/tmp" = {
-      fsType = "tmpfs";
-      mountOptions = [
-        "size=16G"
-        "mode=755"
-      ];
-    };
+    # "/tmp" = {
+    #   fsType = "tmpfs";
+    #   mountOptions = [
+    #     "size=16G"
+    #     "mode=755"
+    #   ];
+    # };
   };
 
   disk = {
@@ -37,25 +38,34 @@
             };
           };
           nix = {
-            size = "128G";  # Reduced to 128GB, still plenty for nix store
+            size = "128G"; # Reduced to 128GB, still plenty for nix store
             content = {
               type = "btrfs";
               subvolumes = {
                 "/nix" = {
                   mountpoint = "/nix";
-                  mountOptions = [ "noatime" "compress=zstd" "autodefrag" "space_cache=v2" ];
+                  mountOptions = [
+                    "noatime"
+                    "compress=zstd"
+                    "autodefrag"
+                    "space_cache=v2"
+                  ];
                 };
               };
             };
           };
           persist = {
-            size = "100%";  # Remaining space for /persist
+            size = "100%"; # Remaining space for /persist
             content = {
               type = "btrfs";
               subvolumes = {
                 "/persist" = {
                   mountpoint = "/persist";
-                  mountOptions = [ "noatime" "autodefrag" "space_cache=v2" ];
+                  mountOptions = [
+                    "noatime"
+                    "autodefrag"
+                    "space_cache=v2"
+                  ];
                 };
               };
             };

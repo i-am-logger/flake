@@ -27,6 +27,12 @@
       "/var/lib/colord"
       "/var/lib/power-profiles-daemon"
       "/var/lib/upower"
+      {
+        directory = "/var/lib/ollama";
+        user = "ollama";
+        group = "ollama";
+        mode = "0755";
+      }
     ];
     users.logger = {
       directories = [

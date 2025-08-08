@@ -19,6 +19,8 @@
     common/xdg.nix
     common/v4l2loopback.nix
     common/docker.nix
+    common/streamdeck.nix
+    common/ollama.nix
     users/logger.nix
   ];
 

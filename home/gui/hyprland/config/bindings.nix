@@ -130,6 +130,8 @@
     ", XF86AudioLowerVolume, exec, pamixer -d 5"
     ", XF86AudioMute, exec, pamixer -t"
     ", XF86AudioMicMute, exec, pamixer --default-source -t"
+    # Custom mic toggle with notification (for Stream Deck compatibility)
+    "$mainMod SHIFT, M, exec, ~/.local/bin/mic-toggle"
     ", XF86MonBrightnessUp, exec, light -A 5"
     ", XF86MonBrightnessDown, exec, light -U 5"
     ", XF86AudioPlay, exec, playerctl play-pause"

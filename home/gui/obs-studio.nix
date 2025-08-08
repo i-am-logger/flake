@@ -4,6 +4,7 @@
     ffmpeg-full
     twitch-tui # twitch chat in terminal
     streamlink # streamlink for live videostream
+    streamdeck-ui # Stream Deck UI for Linux - required for Stream Deck integration
   ];
   programs.obs-studio = {
     enable = true;
@@ -19,6 +20,7 @@
       # droidcam-obs
       advanced-scene-switcher # automated scene switcher with hotkey support
       # obs-source-record
+      obs-websocket # WebSocket support for Stream Deck integration (legacy support)
     ];
   };
 }

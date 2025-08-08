@@ -21,6 +21,7 @@
     gui/ghostty
     gui/wezterm
     gui/obs-studio.nix
+    gui/streamdeck.nix
   ];
 
   nixpkgs.config = {
