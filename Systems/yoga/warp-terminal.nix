@@ -2,8 +2,8 @@
 
 let
   # Stable version details
-  warp-latest-version = "0.2025.07.09.08.11.stable_01";
-  warp-latest-hash = "sha256-zk3yHo3aimdmgA9bxbQrrZXXWYzNjJRB619PB/MRIG4=";
+  warp-latest-version = "0.2025.08.06.08.12.stable_02";
+  warp-latest-hash = "sha256-/Nhy0fyslK8h5zzhwlDJT+6nhNmdBowj/jGOTCunX4w=";
 
   # Create a properly configured warp-terminal derivation
   warp-terminal-stable = pkgs.stdenv.mkDerivation (finalAttrs: {

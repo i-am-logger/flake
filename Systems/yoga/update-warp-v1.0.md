@@ -898,6 +898,7 @@ YYYY-MM-DD HH:MM:SS: [SUCCESS|FAILURE|LEARNING] - Description
 2025-07-19 02:13:49: SUCCESS - Control loop executed successfully with timeout protection
 2025-07-18 20:15:07: SUCCESS - Control loop executed successfully with timeout protection
 2025-07-19 02:19:57: CRITICAL_FAILURE - System detected updates needed but stopped without applying them
+2025-08-08 23:07:48: CRITICAL_ERROR - Version detection logic completely wrong, missed 08.12 pattern versions, found 0.2025.08.06.08.12.preview_03 exists
 ```
 
 ---
