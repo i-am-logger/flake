@@ -9,9 +9,23 @@
     ];
 
   boot.initrd.availableKernelModules = [ "nvme" "ahci" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  
+  # Kernel parameters to optimize AMD integrated GPU memory allocation
+  boot.kernelParams = [
+    "amdgpu.gttsize=8192"     # Increase GTT (Graphics Translation Table) size to 8GB
+    "amdgpu.vramlimit=4096"   # Set VRAM limit to 4GB (adjust based on available system RAM)
+    "amdgpu.vis_vramlimit=512" # Visible VRAM limit
+    "amdgpu.moverate=1000"    # Faster memory movement
+    
+    # Memory management optimizations for large models
+    "vm.swappiness=10"        # Reduce swapping to keep model in RAM
+    "vm.dirty_ratio=5"        # Reduce dirty page cache to free memory faster
+    "vm.dirty_background_ratio=2"  # Background dirty page writeback
+    "transparent_hugepage=madvise"  # Use huge pages only when requested
+  ];
 
   # fileSystems."/" =
   #   { device = "/dev/disk/by-uuid/10a3fd09-63a1-4cf6-9ddc-ad2c7734672b";
@@ -35,4 +49,22 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  
+  # AMD GPU support
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr.icd
+      amdvlk
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
+  };
+  
+  # Enable ROCm support
+  systemd.tmpfiles.rules = [
+    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+  ];
 }

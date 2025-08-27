@@ -21,5 +21,6 @@
     ./yubikey.nix
     ./jujutsu.nix
     ./git.nix
+    ./ssh.nix
   ];
 }

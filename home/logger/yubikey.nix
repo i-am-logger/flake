@@ -51,6 +51,11 @@ in
       verify-options = "show-uid-validity";
       with-fingerprint = true;
     };
+
+    # Force scdaemon to use PC/SC for PIV/X.509 (disables native CCID)
+    scdaemonSettings = {
+      disable-ccid = true;
+    };
   };
 
   # GPG agent configuration
