@@ -67,6 +67,16 @@ in
     enableScDaemon = true; # Explicitly enable scdaemon
   };
 
+  # Ensure the OpenPGP authentication subkey is authorized for SSH via gpg-agent
+  # Keygrip for auth subkey (from gpg --list-secret-keys --with-keygrip):
+  home.file.".gnupg/sshcontrol" = {
+    text = ''
+E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
+'';
+    # Make sure directory exists with safe perms
+    force = true;
+  };
+
   # Git configuration for GPG signing
   programs.git = {
     userName = "Logger";
