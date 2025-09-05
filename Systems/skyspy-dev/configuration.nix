@@ -15,37 +15,37 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./persistence.nix
-    ./secure-boot.nix # Add this line
     ../common/yubikey.nix
-    # ./git.nix
     ../common/warp-terminal.nix
     ../common/warp-terminal-preview.nix
     ../common/vscode.nix
-    # Add lanzaboote module
-    inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
   services.hardware.bolt.enable = true;
 
-  # Filesystem configurations moved to disko.nix
-  # Persistence configuration moved to persistence.nix
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = lib.mkForce false;
+  # Bootloader - similar to current /etc/nixos setup
+  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.timeout = 5;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.kernelModules = [ "amdgpu" ];
-  boot.kernelParams = [
-    "amdgpu.dc_feature_mask=0xffffffff" # Enable all DC features including DSC
-    "amdgpu.deep_color=1" # HDR
-    "amdgpu.dc=1" # Display Core
-    "amdgpu.dpm=1"
-    "amdgpu.dp_mst=1" # Enable DisplayPort Multi-Stream Transport
-  ];
+  # Intel CPU specific modules
+  boot.kernelModules = [ "kvm-intel" ];
 
-  # Kernel and memory optimizations
+  # Dual-boot support with Windows - based on /etc/nixos config
+  time.hardwareClockInLocalTime = true;
+  boot.supportedFilesystems = [ "ntfs" ];
+  
+  # Windows partition - read-only mount to ~/mnt/windows  
+  fileSystems."/home/logger/mnt/windows" = {
+    device = "/dev/disk/by-uuid/A03C41603C413318";
+    fsType = "ntfs";
+    options = [ "ro" "uid=1000" "gid=100" "dmask=022" "fmask=133" ];
+    noCheck = true;
+  };
+
+  # Kernel and memory optimizations (from yoga)
   boot.kernel.sysctl = {
     # Network optimizations - BBR congestion control
     "net.core.default_qdisc" = "fq";
@@ -64,28 +64,13 @@
     "vm.max_map_count" = 262144;
   };
 
-  hardware.graphics = {
-    enable = true;
-    # driSupport = true;
-    enable32Bit = true; # If you need 32-bit application support
-    extraPackages = with pkgs; [
-      amdvlk
-      # rocm-opencl-icd
-      # rocm-opencl-runtime
-      libvdpau-va-gl
-      vaapiVdpau
-      libva-utils
-    ];
-    # For 32-bit application support (e.g., Steam)
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      amdvlk
-    ];
-  };
+  # Graphics and Nvidia configuration handled by common nvidia module
 
-  networking.hostName = "yoga";
+  networking.hostName = "skyspy-dev";
   networking.wireless.enable = false;
-  hardware.bluetooth.enable = false;
+  hardware.bluetooth.enable = true; # Enable bluetooth
 
+  # Security and audit (from yoga)
   security.auditd.enable = true;
   security.audit.enable = true;
   security.audit.rules = [
@@ -125,59 +110,65 @@
   };
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  # services.printing.enable = true; # Disabled due to conflict with common/system.nix
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    audio.enable = true;  # This was missing!
+    audio.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # wireplumber.enable = true;  # This is enabled by default since nixos-24.05
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
+    jack.enable = true;
+    wireplumber.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  # Audio configuration - ensure speaker is unmuted on boot (from /etc/nixos)
+  systemd.services.fix-audio-speaker = {
+    description = "Unmute Speaker on Boot";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "sound.target" ];
+    script = ''
+      ${pkgs.alsa-utils}/bin/amixer -c 0 sset "Speaker" unmute || true
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
 
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (pkg.pname or pkg.name) [
-      "slack"
-      "warp-terminal"
-      "warp-terminal-preview"
-      "1password"
-      "1password-cli"
-      "vscode"
-      "vscode-with-extensions"
-    ];
-  # Define a user account. Don't forget to set a password with 'passwd'.
+  # Dual-boot support services (from /etc/nixos)
+  services.udisks2.enable = true;         # Auto-mounting support
+  services.timesyncd.enable = true;       # Network time sync (important for dual-boot)
+  services.fstrim.enable = true;          # SSD optimization
 
-  # Install firefox.
-  # programs.firefox.enable = true;
-  # programs.hyprland.enable = true;
+  # Allow unfree packages for nvidia and other proprietary software
+  nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     helix
     btop
     fastfetch
     mc
     git
-    # vmtouch
     hyprland
     slack
+    # Boot and partition management tools
+    efibootmgr      # EFI boot entry management
+    gparted         # Graphical partition editor
+    ntfs3g          # NTFS filesystem support
+    os-prober       # Detect other operating systems
+    # File system tools
+    dosfstools      # FAT/FAT32 tools
+    parted          # Command line partitioning
+    # Audio control tools
+    pavucontrol     # PulseAudio volume control GUI
+    pulseaudio      # PulseAudio utilities
+    alsa-utils      # ALSA utilities (alsamixer, etc.)
+    pipewire        # PipeWire utilities
   ];
 
   # Enable zram with 15% of RAM
@@ -186,7 +177,7 @@
     memoryPercent = 15;
   };
 
-  # Service to load current system into RAM
+  # Service to load current system into RAM (adapted from yoga)
   systemd.services.nix-system-ram = {
     description = "Load current system closure into RAM";
     wantedBy = [ "multi-user.target" ];
@@ -224,5 +215,5 @@
     };
   };
 
-  system.stateVersion = "25.11"; # Did you read the comment?
+  # system.stateVersion = "25.05"; # Commented due to conflict with common/system.nix
 }

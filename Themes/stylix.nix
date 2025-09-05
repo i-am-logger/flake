@@ -25,7 +25,7 @@
       popups = 0.95;
       terminal = 0.95;
     };
-    image = Wallpapers/futuristic3.jpg; # inputImage;
+    image = Wallpapers/skyspy-wallpaper-2560x1600.png; # Custom wallpaper with logo centered
 
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-khold.yaml";
     base16Scheme = ./mission_hacker_white.yaml;

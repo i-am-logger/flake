@@ -36,16 +36,8 @@
     pinentryPackage = pkgs.pinentry-gnome3;
   };
 
-  environment.persistence."/persist" = {
-    directories = [ "/yubikey" ];
-    users.logger = {
-      directories = [
-        ".gnupg"
-        ".yubico"
-        ".ssh"
-      ];
-    };
-  };
+  # Note: skyspy-dev now uses impermanence, so we store yubikey data in /persist
+  # This will be handled by the persistence.nix configuration
 
   security.pam = {
     services = {
@@ -62,7 +54,7 @@
       enable = true;
       control = "sufficient";
       settings = {
-        authfile = "/persist/yubikey/authorized_yubikeys";
+        authfile = "/home/logger/.yubico/authorized_yubikeys";
         cue = true;
         interactive = true;
       };

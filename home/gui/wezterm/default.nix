@@ -14,10 +14,10 @@
 
       -- Terminal settings
       config.enable_wayland = true
-      config.window_background_opacity = 1.0
+      config.window_background_opacity = 0.70
       config.hide_tab_bar_if_only_one_tab = true
       config.default_cursor_style = 'BlinkingBlock'
-      config.cursor_blink_rate = 500
+      config.cursor_blink_rate = 200
       config.cursor_thickness = 1
       config.window_close_confirmation = 'NeverPrompt'
       config.term = 'xterm-256color'

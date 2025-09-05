@@ -179,6 +179,44 @@
             Themes/stylix.nix
           ];
         };
+        skyspy-dev = lib.nixosSystem {
+          specialArgs = {
+            inherit
+              secrets
+              disko
+              impermanence
+              self
+              inputs
+              stylix
+              ;
+          };
+          modules = [
+            # Hardware configuration
+            nixos-hardware.nixosModules.lenovo-legion-16irx8h # 2023
+            ./Systems/skyspy-dev/configuration.nix
+            ./hosts/skyspy-dev.nix
+            modules/motd
+            
+            # Home Manager
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = {
+                inherit inputs;
+              };
+              home-manager.users.logger = {
+                imports = [
+                  (./home/logger)
+                ];
+              };
+            }
+            
+            # Theme
+            stylix.nixosModules.stylix
+            ./Themes/stylix.nix
+          ];
+        };
       };
     };
 }

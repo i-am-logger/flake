@@ -1,0 +1,42 @@
+BCD Fix Commands for INACCESSIBLE BOOT DEVICE Error
+==================================================
+
+The BCD was created successfully but points to wrong drive letters.
+Since you used D:\ for Windows partition, we need to fix the BCD entries.
+
+Run these commands in Windows Recovery Command Prompt:
+
+1. First, assign drive letters again:
+   diskpart
+   list disk
+   select disk 0
+   list partition
+   select partition 1
+   assign letter=S
+   select partition 3
+   assign letter=D
+   exit
+
+2. Check what's in the BCD:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /enum
+
+3. Fix the BCD to use correct partition references instead of drive letters:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {default} device partition=\Device\HarddiskVolume3
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {default} osdevice partition=\Device\HarddiskVolume3
+
+4. Alternative approach - recreate BCD with correct drive:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /delete {default}
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /create /d "Windows" /application osloader
+   
+   (Copy the GUID from the output, replace {NEW-GUID} below with it)
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {NEW-GUID} device partition=D:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {NEW-GUID} path \Windows\system32\winload.efi
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {NEW-GUID} osdevice partition=D:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {NEW-GUID} systemroot \Windows
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {bootmgr} default {NEW-GUID}
+
+5. Verify:
+   bcdedit /store S:\EFI\Microsoft\Boot\BCD /enum
+
+6. Or try the simple approach:
+   bcdboot D:\Windows /s S: /f UEFI

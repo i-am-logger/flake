@@ -37,6 +37,22 @@
     "center,class:^(brave)$,title:^(Save File)$"
     "size 50% 60%,class:^(brave)$,title:^(Save File)$"
     "workspace 25% 20%,class:^(brave)$,title:^(Save File)$"
+
+    # Slack - Main window rules
+    "tile,class:^(Slack)$,title:^(.*)$"
+    "suppressevent maximize,class:^(Slack)$"
+    
+    # Slack - Hide/suppress menu windows and popups
+    "nofocus,class:^(Slack)$,title:^$"
+    "noinitialfocus,class:^(Slack)$,title:^$"
+    "float,class:^(Slack)$,title:^$"
+    "size 0 0,class:^(Slack)$,title:^$"
+    "move -1000 -1000,class:^(Slack)$,title:^$"
+    
+    # Slack - Handle context menus and dropdowns
+    "float,class:^(Slack)$,title:^(Context Menu)$"
+    "nofocus,class:^(Slack)$,title:^(Context Menu)$"
+    "size 0 0,class:^(Slack)$,title:^(Context Menu)$"
   ];
 
   # Converted Thunar rules in new format (kept as comments):

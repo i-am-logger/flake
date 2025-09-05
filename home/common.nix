@@ -46,7 +46,7 @@
     #qutebrowser
     # firefox
     # google-chrome
-    brave
+    # brave # Now provided by custom wrapper in gui/brave
     # UI Virtual Terminals
     alacritty
     #kate

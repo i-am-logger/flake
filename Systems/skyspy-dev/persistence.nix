@@ -9,9 +9,13 @@
     impermanence.nixosModules.impermanence
   ];
 
-  fileSystems."/persist" = {
-    neededForBoot = true;
-  };
+  # Create /persist directory on existing filesystem
+  # No separate partition needed - uses existing disk
+  systemd.tmpfiles.rules = [
+    "d /persist 0755 root root -"
+    "d /persist/home 0755 root root -"
+    "d /persist/home/logger 0755 logger users -"
+  ];
 
   environment.persistence."/persist" = {
     hideMounts = true;
@@ -27,12 +31,17 @@
       "/var/lib/colord"
       "/var/lib/power-profiles-daemon"
       "/var/lib/upower"
+      # Nvidia-specific directories
+      "/var/lib/nvidia-persistenced"
       {
         directory = "/var/lib/ollama";
         user = "ollama";
         group = "ollama";
         mode = "0755";
       }
+      # Development-specific directories
+      "/var/lib/docker" # Docker data
+      "/var/lib/containers" # Container data
       "/yubikey" # YubiKey system configuration
     ];
     users.logger = {
@@ -52,6 +61,14 @@
         "Code"
         "Current-Rice"
         ".mozilla" # Firefox data
+        # Development directories
+        ".docker" # Docker config
+        ".npm" # npm cache
+        ".cargo" # Rust cargo
+        ".rustup" # Rust toolchain
+        ".gradle" # Gradle cache
+        ".m2" # Maven cache
+        ".vscode" # VS Code settings
         # YubiKey and GPG directories
         ".gnupg" # GPG keys and configuration
         ".yubico" # YubiKey authorized keys
