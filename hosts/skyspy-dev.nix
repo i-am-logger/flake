@@ -11,6 +11,7 @@
     common/security/1password.nix
     common/nix.nix
     common/nvidia.nix
+    common/bluetooth.nix
 
     common/environment.nix
     common/hyprland.nix

@@ -68,7 +68,7 @@
 
   networking.hostName = "skyspy-dev";
   networking.wireless.enable = false;
-  hardware.bluetooth.enable = true; # Enable bluetooth
+  # Bluetooth configuration moved to common/bluetooth.nix
 
   # Security and audit (from yoga)
   security.auditd.enable = true;
