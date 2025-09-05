@@ -29,6 +29,9 @@ in
   programs.bash.initExtra = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
+    # Disable GNOME Keyring SSH agent
+    unset GNOME_KEYRING_CONTROL
+    export DISABLE_GNOME_KEYRING=1
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
 
@@ -36,6 +39,9 @@ in
   programs.zsh.initExtra = ''
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export GPG_TTY=$(tty)
+    # Disable GNOME Keyring SSH agent
+    unset GNOME_KEYRING_CONTROL
+    export DISABLE_GNOME_KEYRING=1
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
   '';
 

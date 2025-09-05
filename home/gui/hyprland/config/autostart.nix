@@ -6,5 +6,6 @@
     # "gsettings set org.gnome.desktop.interface cursor-size 24"
     "1password --silent &"
     "wl-paste --watch cliphist store"
+    # "waybar &"  # Backup option if systemd service doesn't work
   ];
 }

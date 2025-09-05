@@ -20,13 +20,14 @@
 
   environment.systemPackages = with pkgs; [
     pinentry-gnome3
-    gnome-keyring
-    libgnome-keyring
-    seahorse # GNOME's keyring manager GUI
+    # gnome-keyring removed - not needed when keyring is disabled
+    # libgnome-keyring removed - not needed when keyring is disabled  
+    # seahorse removed - GNOME keyring manager not needed
   ];
 
-  # Enable GNOME keyring
-  services.gnome.gnome-keyring.enable = true;
+  # Completely disable GNOME keyring to prevent authentication prompts
+  # Applications like Warp will not try to access the keyring
+  services.gnome.gnome-keyring.enable = false;
   security.polkit.enable = true;
 
   # Configure GPG agent for proper GNOME integration
@@ -45,10 +46,10 @@
       sudo.u2fAuth = true;
       gdm = {
         u2fAuth = true;
-        # Enable GNOME keyring unlock on login
-        enableGnomeKeyring = true;
+        # Disable GNOME keyring unlock to prevent login keyring authentication prompts
+        enableGnomeKeyring = false;
       };
-      login.enableGnomeKeyring = true;
+      login.enableGnomeKeyring = false;
     };
     u2f = {
       enable = true;
@@ -72,34 +73,25 @@
     SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
     # Ensure proper GPG TTY setting
     GPG_TTY = "$(tty)";
+    # Disable GNOME Keyring SSH agent to prevent conflicts
+    GNOME_KEYRING_CONTROL = "";
+    # Force applications to use gpg-agent for authentication
+    DISABLE_GNOME_KEYRING = "1";
   };
 
   # Disable system SSH agent
   programs.ssh.startAgent = false;
 
-  # For GNOME keyring integration
-  services.accounts-daemon.enable = true;
-
-  # Enable dconf (required for saving GNOME keyring settings)
+  # GNOME keyring integration disabled - using gpg-agent for all authentication
+  # services.accounts-daemon.enable = true; # Not needed without keyring
+  
+  # Enable dconf for other GNOME applications (not keyring-specific)
   programs.dconf.enable = true;
-
-  # D-Bus activation for gnome-keyring
-  services.dbus.packages = [ pkgs.gnome-keyring ];
-
-  # Additional GNOME services that improve keyring integration
+  
+  # D-Bus packages for keyring removed
+  # services.dbus.packages = [ pkgs.gnome-keyring ]; # Not needed
+  
+  # Keep essential GNOME services that don't depend on keyring
   services.gnome.glib-networking.enable = true;
-  services.gnome.gnome-online-accounts.enable = true;
-
-  # Create config file to set GPG as the primary backend for keyring
-  environment.etc."xdg/autostart/gnome-keyring-gpg.desktop".text = ''
-    [Desktop Entry]
-    Type=Application
-    Name=GPG Password Agent
-    Comment=GNOME Keyring: GPG Agent
-    Exec=${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=gpg
-    OnlyShowIn=GNOME;Unity;MATE;
-    X-GNOME-Autostart-Phase=PreDisplayServer
-    X-GNOME-AutoRestart=false
-    X-GNOME-Autostart-Notify=true
-  '';
+  # services.gnome.gnome-online-accounts.enable = false; # Disabled - depends on keyring
 }
