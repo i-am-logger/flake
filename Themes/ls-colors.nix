@@ -105,6 +105,8 @@ let
         "*.yaml" = mkColor colors.base07;
         "*.yml" = mkColor colors.base07;
         "*.zip" = mkColor colors.base09;
+        "*.iso" = mkColor colors.base09;
+        "*.zst" = mkColor colors.base09;
         # "*.zsh" = mkColor colors.base0C;
       };
     in

@@ -21,7 +21,7 @@
   environment.systemPackages = with pkgs; [
     pinentry-gnome3
     # gnome-keyring removed - not needed when keyring is disabled
-    # libgnome-keyring removed - not needed when keyring is disabled  
+    # libgnome-keyring removed - not needed when keyring is disabled
     # seahorse removed - GNOME keyring manager not needed
   ];
 
@@ -84,13 +84,13 @@
 
   # GNOME keyring integration disabled - using gpg-agent for all authentication
   # services.accounts-daemon.enable = true; # Not needed without keyring
-  
+
   # Enable dconf for other GNOME applications (not keyring-specific)
   programs.dconf.enable = true;
-  
+
   # D-Bus packages for keyring removed
   # services.dbus.packages = [ pkgs.gnome-keyring ]; # Not needed
-  
+
   # Keep essential GNOME services that don't depend on keyring
   services.gnome.glib-networking.enable = true;
   # services.gnome.gnome-online-accounts.enable = false; # Disabled - depends on keyring

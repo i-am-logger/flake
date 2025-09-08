@@ -35,6 +35,7 @@
     fastfetch
     devenv
     termscp
+    tmux
     # (import packages/qspectrumanalyzer.nix { inherit pkgs; })
     # ueberzug # move to yazi
     #ranger
@@ -74,13 +75,12 @@
     #udiskie # Auto Mounting
     # krusader # dual file browser GUI
     # rpi-imager # Raspberri pi USB Imager
-    
+
     # Audio control
     pavucontrol # PulseAudio volume control
     pipewire # Includes wpctl command
     pamixer # Command-line audio mixer
     kdiff3
-    krename
     rclone
     # insync
 
