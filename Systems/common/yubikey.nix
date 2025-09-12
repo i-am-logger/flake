@@ -55,7 +55,7 @@
       enable = true;
       control = "sufficient";
       settings = {
-        authfile = "/home/logger/.yubico/authorized_yubikeys";
+        authfile = "/persist/yubikey/authorized_yubikeys";
         cue = true;
         interactive = true;
       };

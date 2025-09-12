@@ -33,7 +33,6 @@
         group = "ollama";
         mode = "0755";
       }
-      "/yubikey" # YubiKey system configuration
     ];
     users.logger = {
       directories = [
