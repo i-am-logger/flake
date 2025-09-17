@@ -1,11 +1,12 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # rofi-wayland
   ];
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
     plugins = with pkgs; [
       rofi-calc
       rofi-emoji

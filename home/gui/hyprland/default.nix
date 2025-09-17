@@ -41,7 +41,6 @@ in
     pamixer
     playerctl
     gtk3
-    rofi-wayland
   ];
 
   # Hypr configuration files
