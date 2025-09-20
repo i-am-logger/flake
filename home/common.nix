@@ -18,10 +18,11 @@
     cli/cava
     # GUI
     gui/hyprland
-    gui/ghostty
+    # gui/ghostty
     gui/wezterm
     gui/obs-studio.nix
-    gui/streamdeck.nix
+    # gui/streamdeck.nix
+    gui/rofi
   ];
 
   nixpkgs.config = {

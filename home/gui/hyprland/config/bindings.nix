@@ -18,7 +18,7 @@
 
     # COLORPICKER
     "$mainMod SHIFT, P, exec, hyprpicker -a"
-    
+
     # SHOW KEYS (for screencasting)
     "$mainMod SHIFT, S, exec, pkill wshowkeys || wshowkeys -a bottom -F 'Source Code Pro 24' -t 2 -m 50"
 
