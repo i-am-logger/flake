@@ -84,10 +84,28 @@
       ExecStart = "${inputs.ironbar.packages.${pkgs.system}.default}/bin/ironbar";
       Restart = "on-failure";
       RestartSec = 3;
+      # Watch config directory for changes
+      ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
     };
 
     Install = {
       WantedBy = [ "hyprland-session.target" ];
+    };
+  };
+
+  # Path unit to watch for config changes
+  systemd.user.paths.ironbar-config-watcher = {
+    Unit = {
+      Description = "Watch ironbar config for changes";
+    };
+
+    Path = {
+      PathModified = "%h/.config/ironbar/config.toml";
+      Unit = "ironbar.service";
+    };
+
+    Install = {
+      WantedBy = [ "default.target" ];
     };
   };
 }
