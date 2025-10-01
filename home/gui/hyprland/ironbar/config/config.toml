@@ -1,4 +1,5 @@
 [[bars]]
+monitor = "DP-1"
 position = "top"
 height = 28
 
@@ -27,6 +28,7 @@ end = [
 ]
 
 [[bars]]
+monitor = "DP-1"
 position = "bottom"
 height = 28
 
