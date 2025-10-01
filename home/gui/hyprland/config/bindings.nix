@@ -9,7 +9,7 @@
 
   # quickly launch program
   bind = [
-    "$mainMod, Space, exec, rofi -show run"
+    "$mainMod, Space, exec, rofi -show drun"
     "$mainMod SHIFT, Space, exec, rofi -show ssh"
     "$mainMod, E, exec, brave"
     "$mainMod SHIFT, E, exec, google-chrome-stable"

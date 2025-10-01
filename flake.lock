@@ -296,10 +296,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1759316788,
-        "narHash": "sha256-xgdPoyBXdB+3jMrjJKIkGnIT777ORMydN3gDcO0soow=",
+        "lastModified": 1759325211,
+        "narHash": "sha256-KVURWVYspeOOQgIKkwqVF4HCrae9549++ZlBLNbZlNc=",
         "ref": "feature/webapps-module",
-        "rev": "b27f0d6b16a2a85aac020d637a43136a758df5a7",
+        "rev": "c48be9ecdc50dc9f0a2d10d7bd71082422f340df",
         "revCount": 5509,
         "type": "git",
         "url": "file:///home/logger/Code/github/logger/home-manager"
