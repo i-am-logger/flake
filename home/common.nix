@@ -91,7 +91,7 @@
     #jq
     # Music
     audacious
-    spotify
+    spotify # Does not support Secret Service API (proprietary client)
     musikcube
     # unityhub
     # spotify-tui

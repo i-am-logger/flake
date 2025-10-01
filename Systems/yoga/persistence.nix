@@ -55,6 +55,7 @@
         ".gnupg" # GPG keys and configuration
         ".yubico" # YubiKey authorized keys
         ".ssh" # SSH keys
+        ".password-store" # pass password store (GPG-encrypted)
       ];
       files = [
         ".bash_history"

@@ -167,18 +167,34 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
-    helix
-    btop
-    fastfetch
-    mc
-    git
-    # vmtouch
-    hyprland
-    slack
-  ];
+  environment.systemPackages = 
+    let
+      # Helper function to wrap Electron apps with libsecret backend
+      wrapElectronApp = pkg: bin: pkgs.symlinkJoin {
+        name = "${pkg.pname or pkg.name}-with-libsecret";
+        paths = [ pkg ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/${bin} \
+            --add-flags "--password-store=gnome-libsecret"
+        '';
+      };
+    in
+    (with pkgs; [
+      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      #  wget
+      helix
+      btop
+      fastfetch
+      mc
+      git
+      # vmtouch
+      hyprland
+    ]) ++ [
+      # Wrap Electron apps to use gnome-libsecret (works with pass-secret-service + YubiKey)
+      (wrapElectronApp pkgs.slack "slack")
+      (wrapElectronApp pkgs.element-desktop "element-desktop")
+    ];
 
   # Enable zram with 15% of RAM
   zramSwap = {

@@ -33,6 +33,14 @@ in
     unset GNOME_KEYRING_CONTROL
     export DISABLE_GNOME_KEYRING=1
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+    
+    # Update GPG_TTY and notify gpg-agent before each command
+    # This ensures pinentry dialogs work in GUI terminals like Warp
+    _update_gpg_tty() {
+      export GPG_TTY=$(tty)
+      gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+    }
+    PROMPT_COMMAND="_update_gpg_tty; ''${PROMPT_COMMAND}"
   '';
 
   # For Zsh
@@ -71,6 +79,12 @@ in
     pinentry.package = pkgs.pinentry-gnome3;
     enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
+    
+    # Disable caching - require YubiKey touch for every operation
+    defaultCacheTtl = 0;
+    maxCacheTtl = 0;
+    defaultCacheTtlSsh = 0;
+    maxCacheTtlSsh = 0;
   };
 
   # Ensure the OpenPGP authentication subkey is authorized for SSH via gpg-agent

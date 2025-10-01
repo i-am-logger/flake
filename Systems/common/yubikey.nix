@@ -20,13 +20,12 @@
 
   environment.systemPackages = with pkgs; [
     pinentry-gnome3
-    # gnome-keyring removed - not needed when keyring is disabled
-    # libgnome-keyring removed - not needed when keyring is disabled
-    # seahorse removed - GNOME keyring manager not needed
+    pass # GPG-based password manager
+    pass-secret-service # Bridge pass to Secret Service API for apps like Element
+    libsecret # Required for Electron apps to use Secret Service
   ];
 
-  # Completely disable GNOME keyring to prevent authentication prompts
-  # Applications like Warp will not try to access the keyring
+  # Disable GNOME keyring - using pass with GPG/YubiKey instead
   services.gnome.gnome-keyring.enable = false;
   security.polkit.enable = true;
 
@@ -46,7 +45,7 @@
       sudo.u2fAuth = true;
       gdm = {
         u2fAuth = true;
-        # Disable GNOME keyring unlock to prevent login keyring authentication prompts
+        # Disable GNOME keyring - using pass with GPG/YubiKey
         enableGnomeKeyring = false;
       };
       login.enableGnomeKeyring = false;
@@ -69,21 +68,20 @@
   ];
 
   environment.sessionVariables = {
-    # This ensures SSH knows to use the GPG agent
+    # This ensures SSH knows to use the GPG agent for SSH
     SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
     # Ensure proper GPG TTY setting
     GPG_TTY = "$(tty)";
-    # Disable GNOME Keyring SSH agent to prevent conflicts
+    # Disable GNOME Keyring completely - using pass with YubiKey GPG
     GNOME_KEYRING_CONTROL = "";
-    # Force applications to use gpg-agent for authentication
     DISABLE_GNOME_KEYRING = "1";
   };
 
   # Disable system SSH agent
   programs.ssh.startAgent = false;
 
-  # GNOME keyring integration disabled - using gpg-agent for all authentication
-  # services.accounts-daemon.enable = true; # Not needed without keyring
+  # Accounts daemon not needed with pass-based keyring
+  # services.accounts-daemon.enable = false;
 
   # Enable dconf for other GNOME applications (not keyring-specific)
   programs.dconf.enable = true;
@@ -94,4 +92,24 @@
   # Keep essential GNOME services that don't depend on keyring
   services.gnome.glib-networking.enable = true;
   # services.gnome.gnome-online-accounts.enable = false; # Disabled - depends on keyring
+
+  # Systemd user service for pass-secret-service
+  # This provides Secret Service API using pass with GPG/YubiKey
+  systemd.user.services.pass-secret-service = {
+    description = "Pass Secret Service - GPG-based keyring for applications";
+    wantedBy = [ "default.target" ];
+    # Wait for graphical session to be ready
+    after = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service";
+      Restart = "on-failure";
+    };
+    environment = {
+      PASSWORD_STORE_DIR = "%h/.password-store";
+      # Import display environment for pinentry dialogs
+      DISPLAY = ":0";
+      WAYLAND_DISPLAY = "wayland-1";
+    };
+  };
 }
