@@ -45,8 +45,8 @@
     # experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
     extraOptions = ''
       experimental-features = nix-command flakes auto-allocate-uids
-      keep-outputs          = true
-      keep-derivations      = true
+      keep-outputs          = false
+      keep-derivations      = false
       extra-substituters = https://devenv.cachix.org
       extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
     '';
