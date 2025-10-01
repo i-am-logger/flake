@@ -22,7 +22,7 @@
     gui/wezterm
     gui/obs-studio.nix
     # gui/streamdeck.nix
-    gui/rofi
+    gui/walker
   ];
 
   nixpkgs.config = {

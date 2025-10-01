@@ -9,8 +9,8 @@
 
   # quickly launch program
   bind = [
-    "$mainMod, Space, exec, rofi -show drun"
-    "$mainMod SHIFT, Space, exec, rofi -show ssh"
+    "$mainMod, Space, exec, walker -p 'Start…' -w 1000 -h 700"
+    "$mainMod SHIFT, Space, exec, walker --modules ssh -w 1000 -h 700"
     "$mainMod, E, exec, brave"
     "$mainMod SHIFT, E, exec, google-chrome-stable"
     "SHIFT, Print, exec, grimblast save area - | swappy -f -"
@@ -25,8 +25,11 @@
     # "$mainMod SHIFT, X, exec, swaylock --screenshots --clock --indicator --indicator-radius 500 --indicator-thickness 7 --effect-blur 7x5 --effect-pixelate 8 --effect-greyscale --grace 5 --fade-in 2"
 
     "$mainMod SHIFT, X, exec, hyprlock"
-    # "Super_L, exec, pkill rofi || ~/.config/rofi/launcher.sh"
-    # "$mainMod, Super_L, exec, bash ~/.config/rofi/powermenu.sh"
+    
+    # Walker additional modes (Omarchy style)
+    "$mainMod, period, exec, walker -p 'Find files… (type . then filename)' -w 1000 -h 700 -q '.'"
+    "$mainMod, equal, exec, walker -p 'Calculator… (type = then expression)' -w 1000 -h 700 -q '='"
+    "$mainMod, semicolon, exec, walker -p 'Emojis… (type : then emoji name)' -w 1000 -h 700 -q ':'"
 
     # general bindings
     "$mainMod, T, exec, wezterm"
