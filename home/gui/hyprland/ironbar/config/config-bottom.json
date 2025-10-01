@@ -1,0 +1,93 @@
+{
+  "name": "bottom-bar",
+  "position": "bottom",
+  "height": 28,
+  "start": [
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "disk-boot",
+      "cmd": "df -h /boot | awk 'NR==2 {print \" /boot \" $5}'",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "disk-nix",
+      "cmd": "df -h /nix | awk 'NR==2 {print \" /nix \" $5}'",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "disk-tmp",
+      "cmd": "df -h /tmp | awk 'NR==2 {print \" /tmp \" $5}'",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "script",
+      "name": "disk-root",
+      "cmd": "df -h / | awk 'NR==2 {print \" / \" $5}'",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "memory",
+      "cmd": "$HOME/.config/ironbar/scripts/memory.sh",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "cpu",
+      "cmd": "$HOME/.config/ironbar/scripts/cpu.sh",
+      "mode": "poll",
+      "interval": 1
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "temperature",
+      "cmd": "$HOME/.config/ironbar/scripts/temperature.sh",
+      "mode": "poll",
+      "interval": 5
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "network-bandwidth",
+      "cmd": "$HOME/.config/ironbar/scripts/network-bandwidth.sh",
+      "mode": "poll",
+      "interval": 5
+    }
+  ],
+  "center": [],
+  "end": []
+}

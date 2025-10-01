@@ -1,0 +1,101 @@
+* {
+  font-size: 32px;
+  font-family: monospace;
+  color: #545862;
+}
+
+#bar {
+  background-color: #000000;
+  color: #545862;
+}
+
+/* Separator styling */
+.label {
+  color: #292b2e;
+  background-color: #000000;
+}
+
+/* Workspaces */
+.workspaces {
+  background-color: #000000;
+}
+
+.workspaces .item {
+  padding: 0 2px;
+  color: #fdf6e3;
+  background-color: #000000;
+}
+
+.workspaces .item.focused,
+.workspaces .item.active {
+  color: #268bd2;
+}
+
+.workspaces .item:hover {
+  background-color: #000000;
+  padding: 0 3px;
+}
+
+/* Clock */
+.clock {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* Network */
+.network_manager {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* Volume/Pulseaudio */
+.volume {
+  background-color: #000000;
+  color: #268bd2;
+  padding: 0 10px;
+}
+
+/* Battery */
+.battery {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* Tray */
+.tray {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* Scripts (weather, privacy, cava, upower) */
+.script {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* Cava specific - gradient effect */
+.script.cava {
+  color: #000000;
+  background: linear-gradient(to bottom, 
+    #4CAF50 10%, 
+    #4CAF50 50%, 
+    #FFA500 50%, 
+    #FFA500 75%, 
+    #FF0000 80%, 
+    #1A1A1A 90%
+  );
+}
+
+/* Bottom bar specific styles (will be in separate config) */
+.sys-info {
+  background-color: #000000;
+  padding: 0 10px;
+}
+
+/* CPU/Memory/Temp color indicators */
+.script.cpu,
+.script.memory,
+.script.temperature {
+  background-color: #000000;
+  padding: 0 10px;
+}

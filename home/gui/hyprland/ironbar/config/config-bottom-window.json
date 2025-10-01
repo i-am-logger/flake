@@ -1,0 +1,39 @@
+{
+  "name": "bottom-window-bar",
+  "position": "bottom",
+  "height": 28,
+  "margin_bottom": 28,
+  "start": [
+    {
+      "type": "focused",
+      "show_icon": true,
+      "show_title": true,
+      "icon_size": 24,
+      "truncate": {
+        "mode": "end",
+        "length": 60
+      }
+    }
+  ],
+  "center": [],
+  "end": [
+    {
+      "type": "script",
+      "name": "keyboard-layout",
+      "cmd": "hyprctl devices -j | jq -r '.keyboards[] | select(.main==true) | .active_keymap'",
+      "mode": "poll",
+      "interval": 1
+    },
+    {
+      "type": "label",
+      "label": "|"
+    },
+    {
+      "type": "script",
+      "name": "keyboard-state",
+      "cmd": "$HOME/.config/ironbar/scripts/keyboard-state.sh",
+      "mode": "poll",
+      "interval": 1
+    }
+  ]
+}

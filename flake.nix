@@ -31,6 +31,7 @@
     };
 
     ags.url = "github:Aylur/ags";
+    ironbar.url = "github:JakeStanger/ironbar";
     # themes
     stylix.url = "github:danth/stylix";
     # stylix.url = "github:realsnick/stylix";
@@ -60,6 +61,7 @@
       stylix,
       lanzaboote,
       ags,
+      ironbar,
       ...
     }:
     let
