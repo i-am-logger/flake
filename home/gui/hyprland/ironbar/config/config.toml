@@ -14,6 +14,12 @@ center = [
 ]
 
 end = [
+  { type = "script", name = "cpu", cmd = "$HOME/.config/ironbar/scripts/cpu.sh", mode = "poll", interval = 1000 },
+  { type = "label", label = "|" },
+  { type = "script", name = "memory", cmd = "$HOME/.config/ironbar/scripts/memory.sh", mode = "poll", interval = 5000 },
+  { type = "label", label = "|" },
+  { type = "script", name = "temperature", cmd = "$HOME/.config/ironbar/scripts/temperature.sh", mode = "poll", interval = 5000 },
+  { type = "label", label = "|" },
   { type = "script", name = "privacy", cmd = "$HOME/.config/ironbar/scripts/privacy.sh", mode = "poll", interval = 1000 },
   { type = "label", label = "|" },
   { type = "network_manager" },
