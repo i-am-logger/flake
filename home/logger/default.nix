@@ -22,6 +22,7 @@
     ./jujutsu.nix
     ./git.nix
     ./ssh.nix
+    ./webapps.nix
     ../gui/brave
   ];
 }

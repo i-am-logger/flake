@@ -296,17 +296,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1759261733,
-        "narHash": "sha256-G104PUPKBgJmcu4NWs0LUaPpSOTD4jiq4mamLWu3Oc0=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "5a21f4819ee1be645f46d6b255d49f4271ef6723",
-        "type": "github"
+        "lastModified": 1759311883,
+        "narHash": "sha256-xgdPoyBXdB+3jMrjJKIkGnIT777ORMydN3gDcO0soow=",
+        "ref": "feature/webapps-module",
+        "rev": "425544714f408e50b0d229a711d026e1e9ed3df3",
+        "revCount": 5509,
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/home-manager"
       },
       "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
+        "ref": "feature/webapps-module",
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/home-manager"
       }
     },
     "impermanence": {
@@ -584,11 +585,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1759131326,
-        "narHash": "sha256-fFhUx2C0Wtz0YkndtnlpSesrqj4lP3d5BUnMprpXtTk=",
+        "lastModified": 1759305203,
+        "narHash": "sha256-Mj3VQcpE5CVqfhi0Yp2B5qn5EcUwiPD4nCngxUiBHMg=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "fe74ba4ade9f3bb1496fbff27cc7a0ca873e40c4",
+        "rev": "126e6c7625620e949d86578046fe97f418478c42",
         "type": "github"
       },
       "original": {

@@ -26,7 +26,7 @@
 
     # managing /home - user configurations - dotfiles
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "git+file:///home/logger/Code/github/logger/home-manager?ref=feature/webapps-module";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
