@@ -11,7 +11,9 @@ let
     version = warp-latest-version;
 
     src = pkgs.fetchurl {
-      url = "https://releases.warp.dev/stable/v${warp-latest-version}/warp-terminal-v${warp-latest-version}-1-${if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then "x86_64" else "aarch64"}.pkg.tar.zst";
+      url = "https://releases.warp.dev/stable/v${warp-latest-version}/warp-terminal-v${warp-latest-version}-1-${
+        if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then "x86_64" else "aarch64"
+      }.pkg.tar.zst";
       hash = warp-latest-hash;
     };
 
@@ -98,6 +100,7 @@ let
       # Wrap the binary with required environment
       wrapProgram $out/bin/warp-terminal \
         --set WARP_ENABLE_WAYLAND 1 \
+        --set WGPU_BACKEND gl \
         --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath finalAttrs.buildInputs}" \
         --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath finalAttrs.runtimeDependencies}"
     '';
@@ -107,12 +110,16 @@ let
       homepage = "https://www.warp.dev";
       license = lib.licenses.unfree;
       maintainers = with lib.maintainers; [ ];
-      platforms = [ "x86_64-linux" "aarch64-linux" ];
+      platforms = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
     };
   });
 in
 {
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (pkg.pname or pkg.name) [
       "warp-terminal"
     ];

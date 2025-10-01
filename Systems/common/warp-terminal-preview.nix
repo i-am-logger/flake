@@ -10,8 +10,8 @@ let
 
   # Preview version details
   #
-  warp_preview_version = "0.2025.09.10.08.11.preview_01";
-  warp_preview_hash = "sha256-Jgdxu/GEHTrdj8nHx3VsOYqfz047OlLkgpT78VBTwjU=";
+  warp_preview_version = "0.2025.09.24.08.13.preview_03";
+  warp_preview_hash = "sha256-YpYtqUKcOQqfPre/s5B6uvnL0hb5rA0Hf7RQ6skYJTw=";
   warp-terminal-preview-fn =
     {
       lib,
@@ -111,7 +111,9 @@ let
         cp -r opt usr/* $out
 
         ${lib.optionalString waylandSupport ''
-          wrapProgram $out/bin/warp-terminal-preview --set WARP_ENABLE_WAYLAND 1
+          wrapProgram $out/bin/warp-terminal-preview \
+            --set WARP_ENABLE_WAYLAND 1 \
+            --set WGPU_BACKEND gl
         ''}
 
         runHook postInstall
@@ -156,7 +158,8 @@ in
     pkgs.docker # Required for the Docker-based MCP server
   ];
 
-  environment.sessionVariables = {
-    WARP_ENABLE_WAYLAND = lib.mkForce 1;
-  };
+  # environment.sessionVariables = {
+  # WARP_ENABLE_WAYLAND = lib.mkForce 1;
+  # WGPU_BACKEND = "gl";
+  # };
 }
