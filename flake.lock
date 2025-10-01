@@ -296,10 +296,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1759311883,
+        "lastModified": 1759316788,
         "narHash": "sha256-xgdPoyBXdB+3jMrjJKIkGnIT777ORMydN3gDcO0soow=",
         "ref": "feature/webapps-module",
-        "rev": "425544714f408e50b0d229a711d026e1e9ed3df3",
+        "rev": "b27f0d6b16a2a85aac020d637a43136a758df5a7",
         "revCount": 5509,
         "type": "git",
         "url": "file:///home/logger/Code/github/logger/home-manager"
