@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# PipeWire-based audio visualizer for eww
+# Uses pw-record to capture audio data
+
+# Get audio level from pipewire
+get_audio_level() {
+    # Use pw-record to get a very short sample and analyze it
+    local sample=$(timeout 0.1 nix-shell -p pipewire --run "pw-record --format=s16 --rate=44100 --channels=1 /dev/stdout" 2>/dev/null | head -c 1024 | od -An -tu2 | tr -s ' ' | sed 's/^ //')
+    
+    if [ -n "$sample" ]; then
+        # Calculate simple average level
+        local sum=0
+        local count=0
+        for val in $sample; do
+            sum=$((sum + val))
+            count=$((count + 1))
+            if [ $count -gt 20 ]; then break; fi  # Limit processing
+        done
+        
+        if [ $count -gt 0 ]; then
+            local avg=$((sum / count))
+            local level=$((avg / 8192))  # Scale to 0-8 range
+            if [ $level -gt 8 ]; then level=8; fi
+            echo $level
+        else
+            echo 0
+        fi
+    else
+        echo 0
+    fi
+}
+
+# Generate simple visualizer bars
+level=$(get_audio_level)
+bars=""
+
+for i in {1..10}; do
+    if [ $i -le $((level + 1)) ]; then
+        case $i in
+            1) bars+="▁" ;;
+            2) bars+="▂" ;;
+            3) bars+="▃" ;;
+            4) bars+="▄" ;;
+            5) bars+="▅" ;;
+            6) bars+="▆" ;;
+            7) bars+="▇" ;;
+            *) bars+="█" ;;
+        esac
+    else
+        bars+="▁"
+    fi
+done
+
+echo "$bars"

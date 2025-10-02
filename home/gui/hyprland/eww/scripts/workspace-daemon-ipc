@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# WORKING IPC workspace daemon - uses correct socket path!
+EWW_BIN="eww"
+
+# Get current workspace
+get_workspace() {
+    hyprctl activeworkspace -j 2>/dev/null | jq -r .id 2>/dev/null || echo "1"
+}
+
+# Update immediately
+current_ws=$(get_workspace)
+$EWW_BIN update current_workspace="$current_ws"
+echo "Initial workspace: $current_ws"
+
+# Use correct socket path in /run/user/1000/hypr/
+SOCKET_PATH="/run/user/1000/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+echo "Using socket: $SOCKET_PATH"
+
+if [[ -S "$SOCKET_PATH" ]]; then
+    echo "Connected to Hyprland IPC - real-time workspace monitoring!"
+    socat -u UNIX-CONNECT:$SOCKET_PATH - | while read -r event; do
+        if echo "$event" | grep -q "workspace>>"; then
+            new_ws=$(get_workspace)
+            echo "Workspace changed to: $new_ws"
+            $EWW_BIN update current_workspace="$new_ws"
+        fi
+    done 2>/dev/null
+else
+    echo "Socket not found at $SOCKET_PATH"
+    exit 1
+fi

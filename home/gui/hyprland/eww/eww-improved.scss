@@ -1,0 +1,110 @@
+* {
+  all: unset;
+  font-size: 14px;
+  font-family: monospace;
+}
+
+window {
+  background-color: transparent;
+}
+
+.bar {
+  background-color: #000000;
+  color: #545862;
+  padding: 0 4px;
+}
+
+.workspaces {
+  background-color: #000000;
+  padding: 0 2px;
+}
+
+.workspace-button {
+  padding: 0 6px;
+  margin: 0 1px;
+  color: #fdf6e3;
+  background-color: #000000;
+  border: none;
+  min-width: 16px;
+}
+
+.workspace-button.active {
+  color: #268bd2;
+}
+
+.separator {
+  color: #292b2e;
+  background-color: #000000;
+  padding: 0 3px;
+  margin: 0;
+}
+
+/* Center group - tight spacing for datetime and weather */
+.center-group {
+  background-color: #000000;
+  padding: 0 2px;
+  margin: 0;
+}
+
+.datetime {
+  background-color: #000000;
+  padding: 0 2px;
+  margin: 0;
+  color: #fdf6e3;
+}
+
+.weather {
+  background-color: #000000;
+  padding: 0 4px;
+  margin: 0;
+  color: #545862;
+}
+
+.network,
+.volume,
+.cava,
+.battery,
+.cpu,
+.memory,
+.temperature,
+.disk {
+  background-color: #000000;
+  padding: 0 2px;
+  margin: 0;
+  color: #545862;
+}
+
+/* Simplified volume styling without button nesting */
+.volume {
+  color: #268bd2;
+  padding: 0 2px;
+  margin: 0;
+}
+
+.volume.clickable {
+  background-color: transparent;
+  color: #268bd2;
+  padding: 0 2px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.cpu,
+.memory,
+.temperature {
+  color: #fdf6e3;
+}
+
+.cava {
+  color: #4CAF50;
+  font-family: monospace;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.network {
+  color: #fdf6e3;
+}

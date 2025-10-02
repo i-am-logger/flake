@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Simple VU meter style visualizer for eww
+# Uses system audio monitoring
+
+# Get system volume/audio activity
+get_audio_activity() {
+    # Try to get audio activity from various sources
+    local activity=0
+    
+    # Method 1: Check if any audio streams are active
+    if command -v pw-cli >/dev/null 2>&1; then
+        local streams=$(nix-shell -p pipewire --run "pw-cli list-objects" 2>/dev/null | grep -c "Stream/Output/Audio" || echo 0)
+        if [ "$streams" -gt 0 ]; then
+            activity=3
+        fi
+    fi
+    
+    # Method 2: Random variation based on time (fallback for demo)
+    if [ $activity -eq 0 ]; then
+        local seed=$(date +%s%N | cut -b10-19)
+        activity=$((seed % 6))
+    fi
+    
+    echo $activity
+}
+
+# Generate VU meter display
+activity=$(get_audio_activity)
+bars=""
+
+# Create a more dynamic display pattern
+case $activity in
+    0) bars="▁▁▁▁▁▁▁▁▁▁" ;;
+    1) bars="▂▁▁▁▁▁▁▁▁▁" ;;
+    2) bars="▃▂▁▁▁▁▁▁▁▁" ;;
+    3) bars="▄▃▂▁▁▁▁▁▁▁" ;;
+    4) bars="▅▄▃▂▁▁▁▁▁▁" ;;
+    5) bars="▆▅▄▃▂▁▁▁▁▁" ;;
+    6) bars="▇▆▅▄▃▂▁▁▁▁" ;;
+    *) bars="█▇▆▅▄▃▂▁▁▁" ;;
+esac
+
+echo "$bars"

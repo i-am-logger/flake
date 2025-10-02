@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Ultra-fast cava script optimized for 240Hz displays
+# Minimal overhead, maximum performance
+
+FIFO="/tmp/cava-240hz.fifo"
+PIDFILE="/tmp/cava-240hz.pid"
+CONFIG="/tmp/cava-working.conf"
+
+# Ultra-fast cava startup with minimal delay
+start_cava() {
+    [[ -p "$FIFO" ]] || mkfifo "$FIFO" 2>/dev/null
+    
+    # Check if already running (minimal overhead)
+    [[ -f "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE" 2>/dev/null)" 2>/dev/null && return 0
+    
+    # Start cava instantly
+    nohup nix-shell -p cava --run "cava -p '$CONFIG'" > "$FIFO" 2>/dev/null &
+    echo $! > "$PIDFILE"
+}
+
+# Ultra-fast data read with minimal timeout
+read_cava_fast() {
+    [[ -p "$FIFO" ]] && timeout 0.001 head -1 "$FIFO" 2>/dev/null
+}
+
+# Optimized bar processing (unrolled loop)
+process_fast() {
+    local line="$1" bars="" count=0
+    
+    for val in $line; do
+        ((count >= 10)) && break
+        case $val in
+            0|1) bars+="▁" ;;
+            2) bars+="▂" ;;
+            3) bars+="▃" ;;
+            4) bars+="▄" ;;
+            5) bars+="▅" ;;
+            6) bars+="▆" ;;
+            7) bars+="▇" ;;
+            *) bars+="█" ;;
+        esac
+        ((count++))
+    done
+    echo "$bars"
+}
+
+# Execute with minimal overhead
+start_cava
+line=$(read_cava_fast)
+[[ -n "$line" ]] && process_fast "$line" || echo "▁▁▁▁▁▁▁▁▁▁"

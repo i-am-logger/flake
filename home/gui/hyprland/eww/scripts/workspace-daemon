@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Background daemon to update eww workspace in real-time
+# This bypasses deflisten/defpoll issues by using direct eww updates
+
+# Find eww binary path
+EWW_BIN="/nix/store/0hdn5phcyv8z4vbklssvg1v9im18d2fk-eww-0.6.0-unstable-2025-06-30/bin/.eww-wrapped"
+
+# Get current workspace
+get_workspace() {
+    hyprctl activeworkspace -j 2>/dev/null | nix-shell -p jq --run "jq -r .id" 2>/dev/null || echo "1"
+}
+
+# Update eww immediately with current workspace
+current_ws=$(get_workspace)
+$EWW_BIN update current_workspace="$current_ws"
+
+# Find Hyprland socket using environment variable first
+if [[ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]]; then
+    SOCKET_PATH="/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+else
+    INSTANCE=$(hyprctl instances | grep "instance" | head -1 | cut -d' ' -f2 | cut -d':' -f1)
+    SOCKET_PATH="/tmp/hypr/$INSTANCE/.socket2.sock"
+fi
+
+# Real-time monitoring
+if [[ -S "$SOCKET_PATH" ]]; then
+    echo "Starting real-time workspace monitor via IPC socket"
+    nix-shell -p socat --run "socat -u UNIX-CONNECT:$SOCKET_PATH -" | while read -r event; do
+        if echo "$event" | grep -q "workspace>>"; then
+            new_ws=$(get_workspace)
+            $EWW_BIN update current_workspace="$new_ws"
+        fi
+    done 2>/dev/null
+else
+    echo "IPC socket not found, using ultra-fast polling"
+    last_ws="$current_ws"
+    while true; do
+        # Ultra-fast polling - 50ms for minimal latency
+        sleep 0.05
+        new_ws=$(get_workspace)
+        if [[ "$new_ws" != "$last_ws" ]]; then
+            $EWW_BIN update current_workspace="$new_ws"
+            last_ws="$new_ws"
+        fi
+    done
+fi

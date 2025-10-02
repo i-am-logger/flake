@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Real-time Hyprland workspace monitor using IPC - no polling!
+# This script listens to Hyprland's event socket for instant updates
+
+# Get current workspace immediately
+get_workspace() {
+    hyprctl activeworkspace -j 2>/dev/null | jq -r .id 2>/dev/null || echo "1"
+}
+
+# Output current workspace immediately
+get_workspace
+
+# Find Hyprland socket dynamically
+INSTANCE=$(hyprctl instances | grep "instance" | head -1 | cut -d' ' -f2 | cut -d':' -f1)
+SOCKET_PATH="/tmp/hypr/$INSTANCE/.socket2.sock"
+
+# Check if socket exists
+if [[ -S "$SOCKET_PATH" ]]; then
+    # Listen to Hyprland events via IPC socket
+    socat -u UNIX-CONNECT:$SOCKET_PATH - | while read -r event; do
+        # Only update on workspace change events
+        if echo "$event" | grep -q "workspace>>"; then
+            get_workspace
+        fi
+    done 2>/dev/null
+else
+    # Fallback to fast polling if socket not available
+    while true; do
+        sleep 0.1
+        get_workspace
+    done
+fi

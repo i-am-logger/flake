@@ -1,0 +1,75 @@
+;; Variables  
+(deflisten time :initial "Loading..." "bash /home/logger/.config/eww/scripts/time-deflisten")
+(deflisten volume :initial "50" "bash ~/.config/eww/scripts/volume-deflisten")
+(defpoll battery :interval "2s" "cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo 100")
+(defpoll cpu :interval "1s" "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print int(100 - $1)}'")
+(defpoll memory :interval "1s" "free | grep Mem | awk '{print int($3/$2 * 100)}'")
+(defpoll temp :interval "2s" "cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk '{print int($1/1000)}' || echo 0")
+(defpoll network :interval "5s" "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2 || echo 'Wired'")
+(defpoll weather :interval "300s" "curl -s 'wttr.in/?format=%c+%t' 2>/dev/null || echo '☁️'")
+(deflisten cava :initial "▁▁▁▁▁▁▁▁▁▁▁▁▁▁" "bash /home/logger/.config/eww/scripts/cava-deflisten-240hz")
+(deflisten workspaces :initial "[]" "bash ~/.config/eww/scripts/get-workspaces")
+(deflisten current_workspace :initial "1" "bash ~/.config/eww/scripts/hyprland-workspace-monitor")
+
+;; Widgets
+(defwidget workspaces []
+  (box :class "workspaces" :spacing 2
+    (for ws in workspaces
+      (button 
+        :class {ws == current_workspace ? "workspace-button active" : "workspace-button"}
+        :onclick "hyprctl dispatch workspace ${ws}"
+        ws))))
+
+(defwidget sep []
+  (label :class "separator" :text "|"))
+
+;; Improved Top Bar - Fixed spacing issues
+(defwidget bar []
+  (centerbox :class "bar"
+    (box :halign "start" :spacing 4
+      (workspaces))
+    ;; Center section - removed spacing, combined time and weather in single box
+    (box :halign "center" :spacing 0 :class "center-group"
+      (label :class "datetime" :text time)
+      (label :class "weather" :text weather))
+    (box :halign "end" :spacing 4
+      (label :class "network" :text " ${network}")
+      (sep)
+      ;; Simplified volume widget without nested button structure
+      (label :class "volume clickable" :onclick "pamixer -t" :text " ${volume}%")
+      (sep)
+      (label :class "cava" :text cava))))
+
+;; Bottom Bar
+(defwidget bottom_bar []
+  (box :class "bar bottom" :spacing 4
+    (label :class "disk" :text " /boot: 20%")
+    (sep)
+    (label :class "disk" :text " /nix: 45%")
+    (sep)
+    (label :class "disk" :text " /: 60%")))
+
+;; Windows
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (bar))
+
+(defwindow bottom_bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "bottom center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (bottom_bar))

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Alternative workspace daemon using hyprctl for events
+# This should work even when socket paths are unclear
+
+EWW_BIN="/nix/store/0hdn5phcyv8z4vbklssvg1v9im18d2fk-eww-0.6.0-unstable-2025-06-30/bin/.eww-wrapped"
+
+# Get current workspace
+get_workspace() {
+    hyprctl activeworkspace -j 2>/dev/null | nix-shell -p jq --run "jq -r .id" 2>/dev/null || echo "1"
+}
+
+# Update eww immediately
+current_ws=$(get_workspace)
+$EWW_BIN update current_workspace="$current_ws"
+echo "Initial workspace: $current_ws"
+
+# Try using hyprctl's event listener
+echo "Starting hyprctl event monitoring..."
+
+# Use a more direct approach - monitor with minimal latency
+last_ws="$current_ws"
+while true; do
+    sleep 0.02  # 20ms - ultra fast for near-instant response
+    new_ws=$(get_workspace)
+    if [[ "$new_ws" != "$last_ws" ]]; then
+        echo "Workspace changed: $last_ws -> $new_ws"
+        $EWW_BIN update current_workspace="$new_ws"
+        last_ws="$new_ws"
+    fi
+done

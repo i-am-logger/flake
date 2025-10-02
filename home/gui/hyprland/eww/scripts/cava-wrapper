@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Cava wrapper for eww - ensures reliable audio visualization
+# This script restarts cava if it stops unexpectedly
+
+CONFIG_PATH="$HOME/.config/eww/cava-config"
+SCRIPT_PATH="$HOME/.config/eww/scripts/cava-simple"
+
+# Character map for audio levels
+chars=("▁" "▂" "▃" "▄" "▅" "▆" "▇" "█")
+
+# Function to convert cava output to bars
+convert_to_bars() {
+    local line="$1"
+    local bars=""
+    
+    # Convert each character in the line to a bar
+    for (( i=0; i<${#line}; i++ )); do
+        local char="${line:$i:1}"
+        local value=0
+        
+        # Convert character to number (0-7)
+        case "$char" in
+            [0-7]) value="$char" ;;
+            *) value=0 ;;
+        esac
+        
+        # Add corresponding character
+        bars+="${chars[$value]}"
+    done
+    
+    echo "$bars"
+}
+
+# Main loop with restart capability
+while true; do
+    # Start cava and process output
+    cava -p "$CONFIG_PATH" 2>/dev/null | while IFS= read -r line; do
+        if [[ -n "$line" ]]; then
+            convert_to_bars "$line"
+        fi
+    done
+    
+    # If we reach here, cava has stopped - wait a moment before restarting
+    sleep 1
+done

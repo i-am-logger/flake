@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Show only active workspaces dynamically - like waybar
+get_active_workspaces() {
+    hyprctl workspaces -j 2>/dev/null | jq -r 'map(.id) | sort | @json' 2>/dev/null || echo "[1]"
+}
+
+# Output current active workspaces immediately
+get_active_workspaces
+
+# Monitor for workspace creation/destruction
+SOCKET_PATH="/run/user/1000/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+
+if [[ -S "$SOCKET_PATH" ]]; then
+    # Real-time monitoring via IPC
+    socat -u UNIX-CONNECT:$SOCKET_PATH - | while read -r event; do
+        if echo "$event" | grep -q -E "workspace>>|createworkspace>>|destroyworkspace>>"; then
+            get_active_workspaces
+        fi
+    done 2>/dev/null
+else
+    # Fallback polling if no IPC
+    while true; do
+        sleep 1
+        get_active_workspaces
+    done
+fi

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Conservative cava visualizer that artificially scales down values
+# to prevent constant max bars
+
+# Character mapping
+declare -A charmap=(
+    ['0']='▁' ['1']='▁' ['2']='▂' ['3']='▃' ['4']='▄'
+    ['5']='▅' ['6']='▆' ['7']='▇' ['8']='█' ['9']='█'
+)
+
+# Scale down and convert function
+process_line() {
+    local line="$1" output="" char scaled_val
+    
+    for (( i=0; i<${#line}; i++ )); do
+        char="${line:$i:1}"
+        
+        # Artificially scale down values to prevent constant max
+        case "$char" in
+            [0-1]) scaled_val="0" ;;  # Low values stay low
+            [2-3]) scaled_val="1" ;;  
+            [4-5]) scaled_val="2" ;;  
+            6) scaled_val="3" ;;      
+            7) scaled_val="4" ;;      # Max input (7) becomes medium output (4)
+            *) scaled_val="0" ;;
+        esac
+        
+        output+="${charmap[$scaled_val]:-▁}"
+    done
+    
+    printf '%s\n' "$output"
+}
+
+# Use the existing cava config with conservative processing
+exec 3< <(stdbuf -o0 cava -p ~/.config/eww/cava-config 2>/dev/null)
+while IFS= read -r line <&3; do
+    [[ -n "$line" ]] && process_line "$line"
+done

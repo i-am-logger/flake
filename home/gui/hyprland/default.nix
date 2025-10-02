@@ -5,8 +5,9 @@ let
 in
 {
   imports = [
-    # ./waybar  # Replaced with ironbar
-    ./ironbar
+    # ./waybar  # Replaced with AGS
+    # ./ironbar  # Replaced with AGS
+    # ../ags
     ./swappy
     hyprlandConfig
     # ./pyprland  # Commented out as in original

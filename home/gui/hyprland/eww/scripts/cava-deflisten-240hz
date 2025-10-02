@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# High-speed deflisten cava for 240Hz
+# Streams continuously with minimal latency
+
+# Cleanup function
+cleanup() {
+    pkill -f "cava.*cava-working.conf" 2>/dev/null
+    exit 0
+}
+
+trap cleanup EXIT INT TERM
+
+# Immediate output for deflisten - 14 bars to match waybar
+echo "▁▁▁▁▁▁▁▁▁▁▁▁▁▁"
+
+# Ultra-fast cava streaming with optimized settings
+exec cava -p /tmp/cava-working.conf 2>/dev/null | while IFS= read -r line; do
+    # Optimized processing - 14 bars to match waybar
+    bars=""
+    count=0
+    for val in $line; do
+        [ $count -ge 14 ] && break
+        case $val in
+            0|1) bars+="▁" ;;
+            2) bars+="▂" ;;
+            3) bars+="▃" ;;
+            4) bars+="▄" ;;
+            5) bars+="▅" ;;
+            6) bars+="▆" ;;
+            7) bars+="▇" ;;
+            *) bars+="█" ;;
+        esac
+        count=$((count + 1))
+    done
+    echo "$bars"
+done
