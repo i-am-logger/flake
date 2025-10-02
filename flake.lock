@@ -336,16 +336,16 @@
       "locked": {
         "lastModified": 1759325211,
         "narHash": "sha256-KVURWVYspeOOQgIKkwqVF4HCrae9549++ZlBLNbZlNc=",
-        "ref": "feature/webapps-module",
+        "owner": "i-am-logger",
+        "repo": "home-manager",
         "rev": "c48be9ecdc50dc9f0a2d10d7bd71082422f340df",
-        "revCount": 5509,
-        "type": "git",
-        "url": "file:///home/logger/Code/github/logger/home-manager"
+        "type": "github"
       },
       "original": {
+        "owner": "i-am-logger",
         "ref": "feature/webapps-module",
-        "type": "git",
-        "url": "file:///home/logger/Code/github/logger/home-manager"
+        "repo": "home-manager",
+        "type": "github"
       }
     },
     "impermanence": {
@@ -681,7 +681,7 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1743382025,
+        "lastModified": 1757021642,
         "narHash": "sha256-pQpattmS9VmO3ZIQUFn66az8GSmB4IvYhTTCFn6SUmo=",
         "path": "/home/logger/.secrets/",
         "type": "path"
@@ -728,11 +728,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1759305203,
-        "narHash": "sha256-Mj3VQcpE5CVqfhi0Yp2B5qn5EcUwiPD4nCngxUiBHMg=",
+        "lastModified": 1759404594,
+        "narHash": "sha256-k9hd15rLqG7x3OCUPrcQtpleDlOyQjy16ZEseruypNQ=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "126e6c7625620e949d86578046fe97f418478c42",
+        "rev": "3f70c5855572004f9c630ed4a92aa186755361be",
         "type": "github"
       },
       "original": {

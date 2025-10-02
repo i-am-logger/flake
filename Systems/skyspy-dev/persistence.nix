@@ -58,7 +58,7 @@
         # "Music"
         # "Pictures"
         # "Videos"
-        "Code"
+        "GitHub"
         "Current-Rice"
         ".mozilla" # Firefox data
         # Development directories

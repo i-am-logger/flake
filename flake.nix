@@ -26,7 +26,7 @@
 
     # managing /home - user configurations - dotfiles
     home-manager = {
-      url = "git+file:///home/logger/Code/github/logger/home-manager?ref=feature/webapps-module";
+      url = "github:i-am-logger/home-manager?ref=feature/webapps-module";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -198,7 +198,7 @@
             ./Systems/skyspy-dev/configuration.nix
             ./hosts/skyspy-dev.nix
             modules/motd
-            
+
             # Home Manager
             home-manager.nixosModules.home-manager
             {
@@ -213,7 +213,7 @@
                 ];
               };
             }
-            
+
             # Theme
             stylix.nixosModules.stylix
             ./Themes/stylix.nix
