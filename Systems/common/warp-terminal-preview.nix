@@ -152,7 +152,7 @@ in
     warp-terminal-preview
     # Include all MCP commands
   ]
-  # ++ (lib.attrValues mcp-packages)
+  ++ (lib.attrValues mcp-packages)
   ++ [
     pkgs.gh # GitHub CLI for auth token
     pkgs.docker # Required for the Docker-based MCP server
