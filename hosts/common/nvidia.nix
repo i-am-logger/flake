@@ -55,13 +55,18 @@
 
   boot.kernelModules = [
     "i915"
-    "intel"
+    # "intel"  # This module doesn't exist and causes "Failed to find module 'intel'" error
     "nvidia"
-    # "nvidia_modeset"
-    # "nvidia_uvm"
-    # "nvidia_drm"
-  ]; # ""
+    "nvidia_modeset"
+    "nvidia_uvm"
+    "nvidia_drm"
+  ];
   boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  
+  # Fix NVIDIA driver version mismatch by ensuring consistent versions
+  boot.kernelParams = [
+    "nvidia-drm.modeset=1"  # Enable DRM kernel mode setting
+  ];
 
   # systemd.services.nvidia-control-devices = {
   #   wantedBy = [ "multi-user.target" ];

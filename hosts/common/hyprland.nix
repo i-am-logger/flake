@@ -20,9 +20,5 @@
   };
   # services.windowManager.hypr.enable = true;
 
-  # Enable XDG portal for screen sharing
-  # xdg.portal = {
-  #   enable = true;
-  #   extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-  # };
+  # XDG portal is configured in the host configuration
 }

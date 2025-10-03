@@ -91,7 +91,7 @@
     #jq
     # Music
     audacious
-    spotify # Does not support Secret Service API (proprietary client)
+    # spotify # Does not support Secret Service API (proprietary client) - Replaced with webapp
     musikcube
     # unityhub
     # spotify-tui
@@ -99,7 +99,7 @@
 
     # Chats
     # qtox
-    signal-desktop-bin
+    # signal-desktop is now provided by common/electron-apps.nix
     # tdesktop # telegram
     # tldr
     # development

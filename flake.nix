@@ -37,8 +37,10 @@
     # stylix.url = "github:realsnick/stylix";
     # stylix.url = "../../../home/snick/Code/snick/stylix";
 
-    # NixOS hardware configurations
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # NixOS hardware configurations  
+    # Using local fork for Legion-specific fixes
+    nixos-hardware.url = "/home/logger/GitHub/logger/nixos-hardware";
+    # nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # Secure Boot with lanzaboote
     lanzaboote = {

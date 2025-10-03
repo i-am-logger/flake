@@ -12,6 +12,8 @@
     common/nix.nix
     common/nvidia.nix
     common/bluetooth.nix
+    common/sound.nix
+    common/electron-apps.nix
 
     common/environment.nix
     common/hyprland.nix
@@ -22,6 +24,8 @@
     common/v4l2loopback.nix
     common/docker.nix
     common/streamdeck.nix
+    common/systemd-fixes.nix
+    common/pam-fixes.nix
     # common/ollama.nix  # Disabled on skyspy-dev
     users/logger.nix
   ];
@@ -31,8 +35,5 @@
   services.fwupd.enable = true; # firmware update
   services.trezord.enable = true;
   # security.pam.services.swaylock = { };
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-  };
+  # XDG portal is configured in common/xdg.nix
 }

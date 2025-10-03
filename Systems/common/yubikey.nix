@@ -68,14 +68,14 @@
   ];
 
   environment.sessionVariables = {
-    # This ensures SSH knows to use the GPG agent for SSH
-    SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
-    # Ensure proper GPG TTY setting
-    GPG_TTY = "$(tty)";
     # Disable GNOME Keyring completely - using pass with YubiKey GPG
     GNOME_KEYRING_CONTROL = "";
     DISABLE_GNOME_KEYRING = "1";
   };
+
+  # Note: SSH_AUTH_SOCK and GPG_TTY should be set in shell profiles, not session variables
+  # PAM doesn't support command substitution like $(tty) or $(gpgconf ...)
+  # These should be set dynamically in ~/.bashrc or similar shell init files
 
   # Disable system SSH agent
   programs.ssh.startAgent = false;

@@ -4,15 +4,32 @@
 
   xdg.portal = {
     enable = true;
+    configPackages = [ pkgs.xdg-desktop-portal-gtk ];
+    xdgOpenUsePortal = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-hyprland
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-wlr # Add this
-
     ];
-    config.common.default = "*";
-
-    wlr.enable = true;
+    config = {
+      common = {
+        default = [
+          "hyprland"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Settings" = [
+          "gtk"
+        ];
+      };
+      hyprland = {
+        default = [
+          "hyprland"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Settings" = [
+          "gtk"
+        ];
+      };
+    };
   };
 
   environment.systemPackages = with pkgs; [

@@ -9,7 +9,7 @@
     ];
 
   environment.systemPackages = with pkgs; [
-    vscode
+    # vscode  # Replaced with webapp (vscode.dev)
     # (vscode-with-extensions.override {
     #   vscodeExtensions = [
     #     #   # Currently active extensions

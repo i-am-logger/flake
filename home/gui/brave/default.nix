@@ -1,13 +1,15 @@
 { pkgs, ... }:
 let
-  # Wrap Brave to use gnome-libsecret (which works with pass-secret-service)
+  # Wrap Brave to use gnome-libsecret and enable Widevine for DRM content
   brave-with-keyring = pkgs.symlinkJoin {
     name = "brave-with-keyring";
     paths = [ pkgs.brave ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/brave \
-        --add-flags "--password-store=gnome-libsecret"
+        --add-flags "--password-store=gnome-libsecret" \
+        --add-flags "--enable-features=UseOzonePlatform" \
+        --add-flags "--ozone-platform=wayland"
     '';
   };
 in

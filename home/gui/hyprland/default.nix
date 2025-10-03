@@ -25,6 +25,7 @@ in
     wlr-randr
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
+    xdg-desktop-portal-gtk
     brightnessctl
     swww
     waypaper

@@ -192,7 +192,7 @@
       hyprland
     ]) ++ [
       # Wrap Electron apps to use gnome-libsecret (works with pass-secret-service + YubiKey)
-      (wrapElectronApp pkgs.slack "slack")
+      # (wrapElectronApp pkgs.slack "slack")  # Replaced with webapp
       (wrapElectronApp pkgs.element-desktop "element-desktop")
     ];
 

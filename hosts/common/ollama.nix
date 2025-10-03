@@ -17,6 +17,12 @@
     gid = 983;  # Keep the existing GID
   };
 
+  # Ensure ollama directories exist with proper permissions
+  systemd.tmpfiles.rules = [
+    "d /var/lib/ollama 0755 ollama ollama -"
+    "d /var/lib/ollama/models 0755 ollama ollama -"
+  ];
+
   # Install ROCm packages for AMD GPU acceleration
   environment.systemPackages = with pkgs; [
     rocmPackages.rocm-runtime

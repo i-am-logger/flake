@@ -71,6 +71,7 @@
         ".vscode" # VS Code settings
         # YubiKey and GPG directories
         ".gnupg" # GPG keys and configuration
+        ".password-store" # Pass password store for secret service
         ".yubico" # YubiKey authorized keys
         ".ssh" # SSH keys
       ];
