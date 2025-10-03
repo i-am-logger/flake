@@ -23,6 +23,7 @@
     pass # GPG-based password manager
     pass-secret-service # Bridge pass to Secret Service API for apps like Element
     libsecret # Required for Electron apps to use Secret Service
+    libfido2 # Provide FIDO2 provider for OpenSSH sk keys
   ];
 
   # Disable GNOME keyring - using pass with GPG/YubiKey instead
@@ -77,8 +78,11 @@
   # PAM doesn't support command substitution like $(tty) or $(gpgconf ...)
   # These should be set dynamically in ~/.bashrc or similar shell init files
 
-  # Disable system SSH agent
-  programs.ssh.startAgent = false;
+  # Use OpenSSH client with FIDO2 (sk) support and disable the legacy agent
+  programs.ssh = {
+    startAgent = false;
+    package = pkgs.openssh.override { withFIDO = true; };
+  };
 
   # Accounts daemon not needed with pass-based keyring
   # services.accounts-daemon.enable = false;
