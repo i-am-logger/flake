@@ -10,6 +10,12 @@
     xwayland.enable = true;
   };
 
+  # Notification daemon is configured via home-manager
+  # Keep moxnotify available for testing
+  environment.systemPackages = with pkgs; [
+    moxnotify
+  ];
+
   services.xserver = {
     enable = true;
     windowManager.hypr.enable = true;

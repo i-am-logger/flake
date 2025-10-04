@@ -4,10 +4,10 @@
 - [x] secure boot
 - [x] login, github yubikey
 - [x] fix: ubikey requires both touch and password, i rather not require the password)
-- [ ] secrets 
+- [x] secrets 
 - [ ] custom nixos installer - include warp, gnmoe, btop, helix, fastfetch, latestkernel, git, clone of i-am-logger/flake
 - [ ] restructure the flake directories 
-- [ ] bash
+- [x] bash
 - [ ] flake scripts
 
 

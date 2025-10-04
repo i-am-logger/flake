@@ -140,6 +140,11 @@
     ", XF86AudioPlay, exec, playerctl play-pause"
     ", XF86AudioNext, exec, playerctl next"
     ", XF86AudioPrev, exec, playerctl previous"
+    
+    # Notification controls
+    "$mainMod, N, exec, makoctl dismiss"
+    "$mainMod SHIFT, N, exec, makoctl dismiss --all"
+    "$mainMod CTRL, N, exec, ~/.local/bin/toggle-dnd"
   ];
 
   # CLIPBOARD

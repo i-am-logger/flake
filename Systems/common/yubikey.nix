@@ -20,9 +20,12 @@
 
   environment.systemPackages = with pkgs; [
     pinentry-gnome3
-    pass # GPG-based password manager
-    pass-secret-service # Bridge pass to Secret Service API for apps like Element
+    gopass # Go-based password manager with better secret service support
+    ripasso-cursive # Rust-based password manager (TUI)
     libsecret # Required for Electron apps to use Secret Service
+    libnotify # Desktop notifications (notify-send)
+    yubikey-touch-detector # YubiKey touch notifications
+    # mako # Notification daemon moved to hyprland.nix
   ];
 
   # Disable GNOME keyring - using pass with GPG/YubiKey instead
@@ -54,9 +57,15 @@
       enable = true;
       control = "sufficient";
       settings = {
-        authfile = "/persist/yubikey/authorized_yubikeys";
+        # Updated YubiKey credentials to match current YubiKey
+        authfile = pkgs.writeText "u2f_keys" ''
+          logger:o5T6TQ5iYu64pwX0SPEGJWA8jNvLMfpIEnyqvc9cpy3TzIYfDXkACyzh/u3mjZHsKocDHlneOxaXAs6JUsT1+Q==,jnyAExu5aDjmlzHvRTjluntGbp4lWR/rpVhS854dtZo52YFKdt9dQXHmy/tdgqn0K6thceCM0B2SBe3hhI4BDw==,es256,+presence:hF8seRUCsywV9K98qRDZjoSOicDlTEmvoiJpqmNzr00K822BGj3kNIwUWxdrQJD5NCKoF6Q+g7A/7kfNWRdV2g==,ZJOBZWHoeCr1L9zO1kWahMFGYb2INutB2ueIMGxdl2DqIoskKgEEMtUU1TIwqOS0S+AygNmer3f+su4fEpkMNA==,es256,+presence
+        '';
         cue = true;
         interactive = true;
+        max_devices = 2;
+        # Enable desktop notifications for touch requests
+        authpending_file = "/var/run/user/%i/pam-u2f-authpending";
       };
     };
   };
@@ -93,23 +102,27 @@
   services.gnome.glib-networking.enable = true;
   # services.gnome.gnome-online-accounts.enable = false; # Disabled - depends on keyring
 
-  # Systemd user service for pass-secret-service
-  # This provides Secret Service API using pass with GPG/YubiKey
-  systemd.user.services.pass-secret-service = {
-    description = "Pass Secret Service - GPG-based keyring for applications";
-    wantedBy = [ "default.target" ];
-    # Wait for graphical session to be ready
+  # Note: gopass has built-in secret service support
+  # No separate service needed - gopass can act as a Secret Service provider
+  # Applications can access passwords via libsecret API with gopass
+
+  # Note: Notification daemon service moved to hosts/common/hyprland.nix
+
+  # YubiKey touch detector service for desktop notifications
+  systemd.user.services.yubikey-touch-detector = {
+    enable = true;
+    description = "Detects when YubiKey is waiting for a touch";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
     after = [ "graphical-session.target" ];
     serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service";
-      Restart = "on-failure";
-    };
-    environment = {
-      PASSWORD_STORE_DIR = "%h/.password-store";
-      # Import display environment for pinentry dialogs
-      DISPLAY = ":0";
-      WAYLAND_DISPLAY = "wayland-1";
+      ExecStart = "${pkgs.yubikey-touch-detector}/bin/yubikey-touch-detector --libnotify";
+      Restart = "always";
+      RestartSec = 1;
+      # Environment for notifications in Hyprland
+      Environment = [
+        "PATH=${pkgs.libnotify}/bin"
+      ];
     };
   };
 }

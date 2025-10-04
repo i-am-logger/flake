@@ -2,7 +2,7 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:i-am-logger/nixpkgs/add-moxnotify";
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
 

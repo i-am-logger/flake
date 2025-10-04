@@ -1,15 +1,20 @@
 { pkgs, ... }:
 let
-  # Wrap Brave to use gnome-libsecret and enable Widevine for DRM content
-  brave-with-keyring = pkgs.symlinkJoin {
-    name = "brave-with-keyring";
+  # Wrap Brave to use gopass via secret service and GPG agent
+  brave-with-gopass = pkgs.symlinkJoin {
+    name = "brave-with-gopass";
     paths = [ pkgs.brave ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/brave \
-        --add-flags "--password-store=gnome-libsecret" \
+        --add-flags "--password-store=basic" \
+        --add-flags "--disable-password-manager" \
         --add-flags "--enable-features=UseOzonePlatform" \
-        --add-flags "--ozone-platform=wayland"
+        --add-flags "--ozone-platform=wayland" \
+        --add-flags "--force-device-scale-factor=1.25" \
+        --set GNOME_KEYRING_CONTROL "" \
+        --set DISABLE_GNOME_KEYRING "1" \
+        --set SSH_AUTH_SOCK "$(gpgconf --list-dirs agent-ssh-socket)"
     '';
   };
 in
@@ -19,9 +24,9 @@ in
     source = ../../../Themes/Wallpapers/skyspy-wallpaper-2560x1600.png;
   };
 
-  # Install Brave with YubiKey keyring support
+  # Install Brave with YubiKey GPG support via gopass
   home.packages = [
-    brave-with-keyring
+    brave-with-gopass
   ];
 
   # Configure XDG for Brave

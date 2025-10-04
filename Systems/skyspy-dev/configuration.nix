@@ -19,6 +19,7 @@
     ../common/warp-terminal.nix
     ../common/warp-terminal-preview.nix
     ../common/vscode.nix
+    ../common/browser.nix
   ];
 
   services.hardware.bolt.enable = true;

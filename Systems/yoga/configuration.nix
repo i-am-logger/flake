@@ -21,6 +21,7 @@
     ../common/warp-terminal.nix
     ../common/warp-terminal-preview.nix
     ../common/vscode.nix
+    ../common/browser.nix
     # Add lanzaboote module
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
