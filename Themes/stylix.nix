@@ -33,10 +33,12 @@
     # base16Scheme = ./example.yaml;
 
     # targets.waybar.enable = false;
-    targets.grub = {
-      # enable = false;
-      # useImage = false;
-    };
+    
+    # Disable GRUB theming since we use systemd-boot
+    targets.grub.enable = false;
+    
+    # Note: systemd-boot theming is handled automatically by Stylix
+    # when available in the Stylix version
 
     fonts = {
       sizes = {

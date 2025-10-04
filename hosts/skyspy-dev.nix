@@ -26,6 +26,8 @@
     common/streamdeck.nix
     common/systemd-fixes.nix
     common/pam-fixes.nix
+    common/plymouth.nix  # Boot splash screen with NixOS logo
+    common/systemd-boot.nix  # Enhanced boot menu styling
     # common/ollama.nix  # Disabled on skyspy-dev
     users/logger.nix
   ];
