@@ -26,5 +26,10 @@ in
       #!/usr/bin/env bash
       wlr-randr --output eDP-1 --off
     '')
+    (pkgs.writeScriptBin "hypr-logout" ''
+      #!/usr/bin/env bash
+      echo "Logging out and returning to login screen..."
+      ${pkgs.hyprland}/bin/hyprctl dispatch exit
+    '')
   ];
 }
