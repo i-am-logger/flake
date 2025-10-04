@@ -192,6 +192,7 @@
               self
               inputs
               stylix
+              lanzaboote
               ;
           };
           modules = [

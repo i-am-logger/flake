@@ -15,15 +15,13 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./persistence.nix
-    ./secure-boot.nix # Add this line
+    ../common/secure-boot.nix
     ../common/yubikey.nix
     # ./git.nix
     ../common/warp-terminal.nix
     ../common/warp-terminal-preview.nix
     ../common/vscode.nix
     ../common/browser.nix
-    # Add lanzaboote module
-    inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
   services.hardware.bolt.enable = true;

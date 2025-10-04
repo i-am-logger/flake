@@ -1,5 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 {
+  imports = [
+    inputs.lanzaboote.nixosModules.lanzaboote
+  ];
   boot = {
     bootspec.enable = true;
     lanzaboote = {
@@ -16,6 +19,13 @@
   # Add persistence for secure boot keys
   environment.persistence."/persist".directories = [ "/var/lib/sbctl" ];
 
+  # Add sbctl for debugging and troubleshooting Secure Boot
+  environment.systemPackages = with pkgs; [
+    sbctl
+  ];
+
+  # Optional: system.activationScripts.lanzaboote-sign can be uncommented if needed
+  # for manual signing processes, but lanzaboote handles this automatically
   # system.activationScripts.lanzaboote-sign = {
   #   deps = [ "specialfs" ];
   #   text = ''

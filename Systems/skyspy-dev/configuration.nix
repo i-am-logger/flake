@@ -15,6 +15,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./persistence.nix
+    ../common/secure-boot.nix
     ../common/yubikey.nix
     ../common/warp-terminal.nix
     ../common/warp-terminal-preview.nix
@@ -24,8 +25,8 @@
 
   services.hardware.bolt.enable = true;
 
-  # Bootloader - similar to current /etc/nixos setup
-  boot.loader.systemd-boot.enable = true;
+  # Bootloader - systemd-boot disabled in favor of lanzaboote for secure boot
+  boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.timeout = 5;
