@@ -68,7 +68,7 @@
     # driSupport = true;
     enable32Bit = true; # If you need 32-bit application support
     extraPackages = with pkgs; [
-      amdvlk
+      # Note: amdvlk has been removed, RADV is now the default AMD Vulkan driver
       # rocm-opencl-icd
       # rocm-opencl-runtime
       libvdpau-va-gl
@@ -76,9 +76,9 @@
       libva-utils
     ];
     # For 32-bit application support (e.g., Steam)
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      amdvlk
-    ];
+    # Note: amdvlk has been removed, RADV provides 32-bit support by default
+    # extraPackages32 = with pkgs.pkgsi686Linux; [
+    # ];
   };
 
   networking.hostName = "yoga";

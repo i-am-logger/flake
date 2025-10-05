@@ -56,11 +56,8 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       rocmPackages.clr.icd
-      amdvlk
     ];
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
+    # Note: amdvlk has been removed, RADV is now the default AMD Vulkan driver
   };
   
   # Enable ROCm support
