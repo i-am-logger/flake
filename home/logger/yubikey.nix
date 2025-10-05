@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
 
   # Store both YubiKey public keys in the Nix store
@@ -17,17 +17,17 @@ let
   gpg-import-yubikey = pkgs.writeShellScriptBin "gpg-import-yubikey" ''
     #!/usr/bin/env bash
     echo "Importing both YubiKey public keys..."
-    
+
     echo "Importing first YubiKey public key..."
     gpg --import ${yubikey1-pubkey}/yubikey1_pubkey.asc
     echo "Setting trust level to ultimate for first YubiKey..."
-    echo -e "trust\n5\ny\nsave" | gpg --command-fd 0 --edit-key 3842FC405341B51B
-    
+    echo -e "trust\n5\ny\nsave" | gpg --command-fd 0 --edit-key 42BF2C362C094388
+
     echo "Importing second YubiKey public key..."
     gpg --import ${yubikey2-pubkey}/yubikey2_pubkey.asc
     echo "Setting trust level to ultimate for second YubiKey..."
-    echo -e "trust\n5\ny\nsave" | gpg --command-fd 0 --edit-key FBB31AEDA666DBD0
-    
+    echo -e "trust\n5\ny\nsave" | gpg --command-fd 0 --edit-key 9D92E6047DEB1589
+
     echo "Both YubiKey public keys imported and trusted!"
   '';
 in
@@ -37,24 +37,24 @@ in
     gpg-import-yubikey
     # Password management with gopass
     pkgs.gopass
-    pkgs.gopass-jsonapi  # Browser integration for gopass
-    pkgs.passExtensions.pass-import  # Import from other password managers
+    pkgs.gopass-jsonapi # Browser integration for gopass
+    pkgs.passExtensions.pass-import # Import from other password managers
     # Simple GPG wrapper that uses whichever YubiKey is available
     (pkgs.writeShellScriptBin "gpg-smart" ''
       #!/usr/bin/env bash
-      
+
       # Detect which YubiKey is available and use the correct key
       if gpg --card-status 2>/dev/null | grep -q "17027658"; then
         # Second YubiKey is connected (current one)
-        YUBIKEY_ID="FBB31AEDA666DBD0"
+        YUBIKEY_ID="9D92E6047DEB1589"
       elif gpg --card-status 2>/dev/null | grep -q "15147050"; then
         # First YubiKey is connected
-        YUBIKEY_ID="3842FC405341B51B"
+        YUBIKEY_ID="42BF2C362C094388"
       else
         # No YubiKey detected, use default GPG behavior
         exec ${pkgs.gnupg}/bin/gpg "$@"
       fi
-      
+
       # Replace any --local-user with email with our key ID
       args=()
       skip_next=false
@@ -92,16 +92,38 @@ in
         
         args+=("$arg")
       done
-      
+
       # If no --local-user was specified, add it
       if [[ "$*" != *"--local-user"* && "$*" != *"-u"* && "$*" != *u ]]; then
         args=("--local-user" "$YUBIKEY_ID" "''${args[@]}")
       fi
-      
+
       exec ${pkgs.gnupg}/bin/gpg "''${args[@]}"
     '')
   ];
 
+  # Automatically import YubiKey public keys on home-manager activation
+  home.activation.importYubikeyKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    echo "Setting up YubiKey GPG keys..."
+
+    # Delete any keys that are not our current YubiKeys
+    for key_id in $(${pkgs.gnupg}/bin/gpg --list-keys --with-colons | grep ^pub | cut -d: -f5); do
+      if [[ "$key_id" != "42BF2C362C094388" && "$key_id" != "9D92E6047DEB1589" ]]; then
+        echo "Removing old key: $key_id"
+        ${pkgs.gnupg}/bin/gpg --batch --yes --delete-secret-and-public-keys "$key_id" || true
+      fi
+    done
+
+    # Import current YubiKey keys non-interactively
+    ${pkgs.gnupg}/bin/gpg --batch --import ${yubikey1-pubkey}/yubikey1_pubkey.asc || true
+    ${pkgs.gnupg}/bin/gpg --batch --import ${yubikey2-pubkey}/yubikey2_pubkey.asc || true
+
+    # Set trust non-interactively
+    echo "42BF2C362C094388:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
+    echo "9D92E6047DEB1589:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
+
+    echo "YubiKey GPG keyring cleaned and configured"
+  '';
 
   # Add shell initialization hooks
   programs.bash.initExtra = ''
@@ -111,7 +133,7 @@ in
     unset GNOME_KEYRING_CONTROL
     export DISABLE_GNOME_KEYRING=1
     gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
-    
+
     # Update GPG_TTY and notify gpg-agent before each command
     # This ensures pinentry dialogs work in GUI terminals like Warp
     _update_gpg_tty() {
@@ -143,8 +165,8 @@ in
       with-fingerprint = true;
       # Set multiple default keys - GPG will try them in order
       default-key = [
-        "FBB31AEDA666DBD0"  # Current YubiKey (try first)
-        "3842FC405341B51B"  # Backup YubiKey (try second)
+        "42BF2C362C094388" # YubiKey 1
+        "9D92E6047DEB1589" # YubiKey 2
       ];
       default-recipient-self = true;
       auto-key-locate = "local";
@@ -161,10 +183,15 @@ in
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    pinentry.package = pkgs.pinentry-gnome3;
+    # Use GNOME pinentry for manual PIN entry
+    # NOTE: Cannot use gopass-based pinentry due to circular dependency:
+    # pinentry needs gopass → gopass needs GPG → GPG needs pinentry → infinite loop
+    extraConfig = ''
+      pinentry-program /run/current-system/sw/bin/pinentry-gnome3
+    '';
     enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
-    
+
     # Disable caching - require YubiKey touch for every operation
     defaultCacheTtl = 0;
     maxCacheTtl = 0;
@@ -176,11 +203,11 @@ in
   # Keygrips for auth subkeys from both YubiKeys (hardcoded for security)
   home.file.".gnupg/sshcontrol" = {
     text = ''
-# First YubiKey authentication keygrip (ED25519)
-E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
-# Second YubiKey authentication keygrip (ED25519) 
-4F5A6DCB15961D77582DB9BF81451867399C03B6
-'';
+      # First YubiKey authentication keygrip (ED25519)
+      504BF2F0CD516A5FD35A640B1719EA8CD73EF2DA
+      # Second YubiKey authentication keygrip (ED25519) 
+      90687F2920871E0132190BE0142A24C3D3A9090F
+    '';
     force = true;
   };
 
@@ -212,7 +239,7 @@ E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
         email = "i-am-logger@users.noreply.github.com";
       };
       signing = {
-        behavior = "own";  # Updated from deprecated sign-all = true
+        behavior = "own"; # Updated from deprecated sign-all = true
         backend = "gpg";
         # Let GPG choose key based on email
         key = "i-am-logger@users.noreply.github.com";
@@ -234,9 +261,9 @@ E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
   # Newline-separated keys (standard format)
   home.file.".password-store/.gpg-id" = {
     text = ''
-3842FC405341B51B
-FBB31AEDA666DBD0
-'';
+      42BF2C362C094388
+      9D92E6047DEB1589
+    '';
     force = true;
   };
 
@@ -261,7 +288,12 @@ FBB31AEDA666DBD0
   # Browser integration for pass
   programs.browserpass = {
     enable = true;
-    browsers = [ "firefox" "chrome" "chromium" "brave" ];
+    browsers = [
+      "firefox"
+      "chrome"
+      "chromium"
+      "brave"
+    ];
   };
 
   # Gopass browser integration for Brave (replicates gopass-jsonapi configure)
@@ -272,36 +304,36 @@ FBB31AEDA666DBD0
       path = "/home/logger/.config/gopass/gopass_wrapper.sh";
       type = "stdio";
       allowed_origins = [
-        "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/"  # Gopass Bridge extension ID
+        "chrome-extension://kkhfnlkhiapbiehimabddjbimfaijdhk/" # Gopass Bridge extension ID
       ];
     };
     force = true;
   };
-  
+
   # Create gopass wrapper script for browser integration (replicates gopass-jsonapi configure)
   home.file.".config/gopass/gopass_wrapper.sh" = {
     text = ''
       #!/bin/sh
-      
+
       export PATH="$PATH:$HOME/.nix-profile/bin" # required for Nix
       export PATH="$PATH:/usr/local/bin" # required on MacOS/brew  
       export PATH="$PATH:/usr/local/MacGPG2/bin" # required on MacOS/GPGTools GPGSuite
       export GPG_TTY="$(tty)"
-      
+
       # Uncomment to debug gopass-jsonapi
       # export GOPASS_DEBUG_LOG=/tmp/gopass-jsonapi.log
-      
+
       if [ -f ~/.gpg-agent-info ] && [ -n "$(pgrep gpg-agent)" ]; then
         source ~/.gpg-agent-info
         export GPG_AGENT_INFO
       else
         eval $(gpg-agent --daemon)
       fi
-      
+
       export PATH="$PATH:/usr/local/bin"
-      
+
       ${pkgs.gopass-jsonapi}/bin/gopass-jsonapi listen
-      
+
       exit $?
     '';
     executable = true;

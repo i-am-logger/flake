@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# YubiKey Touch Toggle - Nix Wrapper
+# This wrapper ensures yubikey-manager is available via nix-shell
+
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+MAIN_SCRIPT="$SCRIPT_DIR/yubikey-touch-toggle.sh"
+
+if [ ! -f "$MAIN_SCRIPT" ]; then
+    echo "Error: Main script not found at $MAIN_SCRIPT"
+    exit 1
+fi
+
+# Run the main script with yubikey-manager available
+exec nix-shell -p yubikey-manager --run "$MAIN_SCRIPT $*"

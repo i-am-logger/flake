@@ -3,7 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 { pkgs, ... }:
 {
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.defaultUserShell = pkgs.bash;
   users.users.logger = {
     name = "logger";
@@ -20,6 +20,7 @@
       "audio"
       "udev"
       "plugdev"
+      "pcscd"
       "usb"
       "disk"
       "dialout"

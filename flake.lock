@@ -446,8 +446,8 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1759455289,
-        "narHash": "sha256-GyC7HhO78FRRYQ3SwOV13UmLaDxNM8cIip5zr5RqQ/g=",
+        "lastModified": 1759608330,
+        "narHash": "sha256-n8L9FSAxcPmYZu2XqHz8n8PCTEKJwya0X6IORhzUNc8=",
         "path": "/home/logger/GitHub/logger/nixos-hardware",
         "type": "path"
       },

@@ -31,5 +31,10 @@ in
       echo "Logging out and returning to login screen..."
       ${pkgs.hyprland}/bin/hyprctl dispatch exit
     '')
+    (pkgs.writeScriptBin "yk-touch" ''
+      #!/usr/bin/env bash
+      # YubiKey Touch Toggle - Nix Wrapper
+      exec ${pkgs.nix}/bin/nix-shell -p yubikey-manager --run "/etc/nixos/scripts/yubikey-touch-toggle.sh $*"
+    '')
   ];
 }

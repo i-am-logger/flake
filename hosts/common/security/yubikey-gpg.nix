@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  # Import YubiKey constants
+  constants = import ../../../home/logger/yubikey-constants.nix;
+in
 {
   # Enable smartcard support properly
   services.pcscd.enable = true;
@@ -61,7 +65,7 @@
       enable = true;
       debug = false;
       mode = "challenge-response";
-      id = [ "17027658" ];
+      id = [ constants.yubikey1Serial constants.yubikey2Serial ];
     };
   };
 

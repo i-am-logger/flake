@@ -7,4 +7,5 @@ echo "test" | gpg --clearsign
 echo "Testing with card status:"
 gpg --card-status
 echo "Testing key availability:"
-gpg -K 3842FC405341B51B
+gpg -K 42BF2C362C094388
+gpg -K 9D92E6047DEB1589

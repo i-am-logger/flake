@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  # Import YubiKey constants
+  constants = import ../../home/logger/yubikey-constants.nix;
+in
 {
   services.pcscd = {
     enable = true;
@@ -25,6 +29,7 @@
     libsecret # Required for Electron apps to use Secret Service
     libnotify # Desktop notifications (notify-send)
     yubikey-touch-detector # YubiKey touch notifications
+    yubikey-manager # Command line tool for configuring YubiKeys
     # mako # Notification daemon moved to hyprland.nix
   ];
 
@@ -59,22 +64,23 @@
       settings = {
         # Updated YubiKey credentials to match current YubiKey
         authfile = pkgs.writeText "u2f_keys" ''
-          logger:o5T6TQ5iYu64pwX0SPEGJWA8jNvLMfpIEnyqvc9cpy3TzIYfDXkACyzh/u3mjZHsKocDHlneOxaXAs6JUsT1+Q==,jnyAExu5aDjmlzHvRTjluntGbp4lWR/rpVhS854dtZo52YFKdt9dQXHmy/tdgqn0K6thceCM0B2SBe3hhI4BDw==,es256,+presence:hF8seRUCsywV9K98qRDZjoSOicDlTEmvoiJpqmNzr00K822BGj3kNIwUWxdrQJD5NCKoF6Q+g7A/7kfNWRdV2g==,ZJOBZWHoeCr1L9zO1kWahMFGYb2INutB2ueIMGxdl2DqIoskKgEEMtUU1TIwqOS0S+AygNmer3f+su4fEpkMNA==,es256,+presence
+          ${constants.userName}:${constants.yubikey1U2fData}:${constants.yubikey2U2fData}
         '';
         cue = true;
         interactive = true;
         max_devices = 2;
+        # Use common origin for both systems instead of hostname-specific default
+        origin = "pam://";
+        appid = "pam://";
         # Enable desktop notifications for touch requests
         authpending_file = "/var/run/user/%i/pam-u2f-authpending";
       };
     };
   };
 
-  # Required user groups
-  users.users.logger.extraGroups = [
-    "plugdev"
-    "pcscd"
-  ];
+  # Define required groups for YubiKey and hardware access
+  users.groups.plugdev = {};
+  users.groups.pcscd = {};
 
   environment.sessionVariables = {
     # Disable GNOME Keyring completely - using pass with YubiKey GPG
