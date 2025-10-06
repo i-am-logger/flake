@@ -110,7 +110,8 @@ in
     for key_id in $(${pkgs.gnupg}/bin/gpg --list-keys --with-colons | grep ^pub | cut -d: -f5); do
       if [[ "$key_id" != "42BF2C362C094388" && "$key_id" != "9D92E6047DEB1589" ]]; then
         echo "Removing old key: $key_id"
-        ${pkgs.gnupg}/bin/gpg --batch --yes --delete-secret-and-public-keys "$key_id" || true
+        fingerprint=$(${pkgs.gnupg}/bin/gpg --list-keys --with-colons "$key_id" | grep ^fpr | cut -d: -f10 | head -1)
+        ${pkgs.gnupg}/bin/gpg --batch --yes --delete-secret-and-public-keys "$fingerprint!" || true
       fi
     done
 
@@ -118,9 +119,9 @@ in
     ${pkgs.gnupg}/bin/gpg --batch --import ${yubikey1-pubkey}/yubikey1_pubkey.asc || true
     ${pkgs.gnupg}/bin/gpg --batch --import ${yubikey2-pubkey}/yubikey2_pubkey.asc || true
 
-    # Set trust non-interactively
-    echo "42BF2C362C094388:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
-    echo "9D92E6047DEB1589:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
+    # Set trust non-interactively (using fingerprints for reliability)
+    echo "F8BEF681E3EE87A5DE4A9E7F42BF2C362C094388:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
+    echo "3DAEA4C9D37037434CE604799D92E6047DEB1589:6:" | ${pkgs.gnupg}/bin/gpg --import-ownertrust || true
 
     echo "YubiKey GPG keyring cleaned and configured"
   '';
