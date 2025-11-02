@@ -102,6 +102,9 @@
 
   networking.networkmanager.enable = true;
 
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = false;
+
   time.timeZone = "America/Denver";
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -131,7 +134,7 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    audio.enable = true;  # This was missing!
+    audio.enable = true; # This was missing!
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -151,6 +154,7 @@
     pkg:
     builtins.elem (pkg.pname or pkg.name) [
       "slack"
+      "signal-desktop"
       "warp-terminal"
       "warp-terminal-preview"
       "1password"
@@ -166,34 +170,21 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = 
-    let
-      # Helper function to wrap Electron apps with libsecret backend
-      wrapElectronApp = pkg: bin: pkgs.symlinkJoin {
-        name = "${pkg.pname or pkg.name}-with-libsecret";
-        paths = [ pkg ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/${bin} \
-            --add-flags "--password-store=gnome-libsecret"
-        '';
-      };
-    in
-    (with pkgs; [
-      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-      #  wget
-      helix
-      btop
-      fastfetch
-      mc
-      git
-      # vmtouch
-      hyprland
-    ]) ++ [
-      # Wrap Electron apps to use gnome-libsecret (works with pass-secret-service + YubiKey)
-      # (wrapElectronApp pkgs.slack "slack")  # Replaced with webapp
-      (wrapElectronApp pkgs.element-desktop "element-desktop")
-    ];
+  environment.systemPackages = with pkgs; [
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    helix
+    btop
+    fastfetch
+    mc
+    git
+    # vmtouch
+    hyprland
+    # Audio debugging tools
+    alsa-utils # provides amixer, alsamixer, etc.
+    pavucontrol # GUI audio control panel
+    element-desktop
+  ];
 
   # Enable zram with 15% of RAM
   zramSwap = {

@@ -2,7 +2,7 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
-    nixpkgs.url = "github:i-am-logger/nixpkgs/add-moxnotify";
+    nixpkgs.url = "github:i-am-logger/nixpkgs";
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -37,9 +37,10 @@
     # stylix.url = "github:realsnick/stylix";
     # stylix.url = "../../../home/snick/Code/snick/stylix";
 
-    # NixOS hardware configurations  
+    # NixOS hardware configurations
     # Using local fork for Legion-specific fixes
-    nixos-hardware.url = "/home/logger/GitHub/logger/nixos-hardware";
+    # nixos-hardware.url = "/home/logger/GitHub/logger/nixos-hardware";
+    nixos-hardware.url = "github:i-am-logger/nixos-hardware";
     # nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # Secure Boot with lanzaboote

@@ -10,6 +10,7 @@
     common/security/security.nix
     common/security/1password.nix
     common/nix.nix
+    common/electron-apps.nix
 
     common/environment.nix
     common/hyprland.nix
