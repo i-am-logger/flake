@@ -2,6 +2,13 @@
   windowrule = [ ];  # Empty since we're converting all rules to windowrulev2
 
   windowrulev2 = [
+    # Walker - Application launcher overlay
+    "float,class:^(walker)$"
+    "stayfocused,class:^(walker)$"
+    "pin,class:^(walker)$"
+    "noborder,class:^(walker)$"
+    "noblur,class:^(walker)$"
+    
     # 1Password: 20% margins from edges
     "float,class:^(1Password)$"
     "center,class:^(1Password)$"

@@ -33,10 +33,10 @@
     # base16Scheme = ./example.yaml;
 
     # targets.waybar.enable = false;
-    
+
     # Disable GRUB theming since we use systemd-boot
     targets.grub.enable = false;
-    
+
     # Note: systemd-boot theming is handled automatically by Stylix
     # when available in the Stylix version
 
@@ -66,7 +66,7 @@
 
       emoji = {
         name = "Noto Color Emoji";
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
 
         # package = p:gs.twitter-color-emoji;
         # name = "Twitter Color Emoji";

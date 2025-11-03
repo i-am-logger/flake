@@ -13,7 +13,7 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    package = pkgs.gitAndTools.gitFull;
+    package = pkgs.gitFull;
 
     aliases = {
       ci = "commit";

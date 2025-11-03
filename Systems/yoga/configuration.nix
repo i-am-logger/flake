@@ -72,7 +72,7 @@
       # rocm-opencl-icd
       # rocm-opencl-runtime
       libvdpau-va-gl
-      vaapiVdpau
+      # vaapiVdpau
       libva-utils
     ];
     # For 32-bit application support (e.g., Steam)

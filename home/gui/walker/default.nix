@@ -6,15 +6,30 @@
     fd            # For file finder functionality
   ];
 
+  # Enable walker as a systemd service
+  systemd.user.services.walker = {
+    Unit = {
+      Description = "Walker application launcher service";
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.walker}/bin/walker --gapplication-service";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # Walker configuration directory
   home.file.".config/walker/config.toml".text = ''
     # Walker configuration - simple and clean
     close_when_open = true
-    theme = "default"
-    theme_base = []
+    theme = "large"
     hotreload_theme = true
     force_keyboard_focus = true
     timeout = 60
+    ignore_elephant = true
 
     [list]
     max_entries = 200
@@ -102,36 +117,29 @@
   home.file.".config/walker/themes/large.toml".text = ''
     # Custom Walker theme with larger window
     
+    [ui]
+    layer = "top"
+    exclusive = false
+    
     [ui.anchors]
-    bottom = true
-    left = true
-    right = true
-    top = true
+    bottom = false
+    left = false
+    right = false
+    top = false
 
     [ui.window]
-    h_align = "fill"
-    v_align = "fill"
+    h_align = "center"
+    v_align = "center"
 
     [ui.window.box]
     h_align = "center"
     width = 800  # Increased from 450
 
-    [ui.window.box.bar]
-    orientation = "horizontal"
-    position = "end"
-
-    [ui.window.box.bar.entry]
-    h_align = "fill"
-    h_expand = true
-
-    [ui.window.box.bar.entry.icon]
-    h_align = "center"
-    h_expand = true
-    pixel_size = 24
-    theme = ""
-
     [ui.window.box.margins]
-    top = 150  # Reduced from 200 to move it up a bit
+    top = 0
+    bottom = 0
+    left = 0
+    right = 0
 
     [ui.window.box.ai_scroll]
     name = "aiScroll"

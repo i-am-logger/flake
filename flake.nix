@@ -2,7 +2,8 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
-    nixpkgs.url = "github:i-am-logger/nixpkgs";
+    # nixpkgs.url = "github:i-am-logger/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -45,8 +46,7 @@
 
     # Secure Boot with lanzaboote
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/lanzaboote";
     };
   };
 
@@ -71,7 +71,7 @@
       lib = nixpkgs.lib;
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        config.allowUnfree = true; # Allow proprietary software
+        # config.allowUnfree = true; # Allow proprietary software
         # nixpkgs.config.permittedInsecurePackages = [
         #   "nix-2.15.3"
         #   "nix-2.19.3"
