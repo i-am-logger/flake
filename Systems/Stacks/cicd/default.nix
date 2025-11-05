@@ -55,6 +55,13 @@ let
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
           --set runnerScaleSetName="${hostname}-${repo}" \
+          --set minRunners=0 \
+          --set maxRunners=5 \
+          --set runnerGroup="default" \
+          --set template.spec.containers[0].name=runner \
+          --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
+          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,build,copilot-agent${optionalString cfg.enableGpu ",gpu"}"}]' \
+          --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         touch /var/lib/arc-runner-set-${repo}-done
@@ -77,6 +84,12 @@ in
       type = types.str;
       default = "i-am-logger";
       description = "GitHub username for runner authentication";
+    };
+    
+    enableGpu = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable GPU passthrough to runners (requires GPU device plugin)";
     };
   };
 
@@ -166,6 +179,16 @@ EOF
           --namespace arc-systems \
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+        ${optionalString cfg.enableGpu ''
+        # Install AMD GPU device plugin
+        echo "Installing AMD GPU device plugin..."
+        ${pkgs.kubectl}/bin/kubectl apply -f https://raw.githubusercontent.com/ROCm/k8s-device-plugin/master/k8s-ds-amdgpu-dp.yaml
+        
+        # Wait for device plugin to be ready
+        echo "Waiting for GPU device plugin..."
+        sleep 10
+        ''}
 
         touch /var/lib/arc-setup-done
         echo "ARC controller installed successfully"

@@ -19,7 +19,10 @@ myLib.systems.mkSystem {
       vscode.enable = true;
       browser.enable = true;
     };
-    cicd.enable = true;
+    cicd = {
+      enable = true;
+      enableGpu = true;  # AMD Radeon GPU support for runners
+    };
   };
   
   config = ../configs/yoga.nix;
