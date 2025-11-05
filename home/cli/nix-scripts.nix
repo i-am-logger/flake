@@ -36,5 +36,16 @@ in
       # YubiKey Touch Toggle - Nix Wrapper
       exec ${pkgs.nix}/bin/nix-shell -p yubikey-manager --run "/etc/nixos/scripts/yubikey-touch-toggle.sh $*"
     '')
+    (pkgs.writeScriptBin "arc-status" (builtins.readFile ../../scripts/arc-status-script.sh))
+    (pkgs.writeScriptBin "arc-watch" ''
+      #!/usr/bin/env bash
+      ${pkgs.watch}/bin/watch -n 1 -c arc-status
+    '')
+    (pkgs.writeScriptBin "arc-logs" ''
+      #!/usr/bin/env bash
+      POD=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml get pods -n arc-systems -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+      exec ${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml logs -n arc-systems "$POD" -f
+    '')
+    (pkgs.writeScriptBin "arc-tui" (builtins.readFile ../../scripts/arc-tui-script.sh))
   ];
 }

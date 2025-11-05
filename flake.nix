@@ -104,6 +104,7 @@
             }
             ./hosts/yoga.nix
             modules/motd
+            modules/k3s-arc
             home-manager.nixosModules.home-manager
             {
               home-manager.useUserPackages = true;

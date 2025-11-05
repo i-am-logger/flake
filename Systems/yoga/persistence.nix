@@ -33,6 +33,10 @@
         group = "ollama";
         mode = "0755";
       }
+      # k3s and Kubernetes
+      "/var/lib/rancher"
+      "/var/lib/kubelet"
+      "/var/lib/cni"
     ];
     users.logger = {
       directories = [
