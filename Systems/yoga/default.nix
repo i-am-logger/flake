@@ -1,0 +1,27 @@
+{ myLib, ... }:
+
+myLib.systems.mkSystem {
+  hostname = "yoga";
+  machine = myLib.machines.gigabyte-x870e-aorus-elite-wifi7;
+  users = [ myLib.users.logger ];
+  
+  stacks = {
+    security = {
+      enable = true;
+      secureBoot.enable = true;
+      yubikey.enable = true;
+      auditRules.enable = false;
+    };
+    desktop = {
+      enable = true;
+      warp.enable = true;
+      warp.preview = true;
+      vscode.enable = true;
+      browser.enable = true;
+    };
+    cicd.enable = true;
+  };
+  
+  config = ../configs/yoga.nix;
+  extraModules = [ ../../hosts/yoga.nix ];
+}
