@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  # NVIDIA RTX 4070 Laptop GPU configuration
+  # NVIDIA RTX 4080 Laptop GPU configuration
   # TODO: Add NVIDIA-specific configuration when needed
   
   # Enable graphics support

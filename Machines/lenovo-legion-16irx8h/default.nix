@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./drivers/intel-13900hx-cpu.nix
-    ./drivers/nvidia-rtx4070.nix
+    ./drivers/nvidia-rtx4080.nix
     ./drivers/realtek-audio.nix
     ./drivers/network.nix
     ./drivers/realtek-bluetooth.nix

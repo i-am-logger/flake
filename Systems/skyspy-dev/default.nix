@@ -8,6 +8,11 @@ myLib.systems.mkSystem {
   stacks = {
     security.enable = true;
     desktop.enable = true;
+    cicd = {
+      enable = true;
+      enableGpu = true;  # NVIDIA RTX 4080 GPU support for runners
+      gpuVendor = "nvidia";
+    };
   };
   
   config = ../configs/skyspy-dev.nix;

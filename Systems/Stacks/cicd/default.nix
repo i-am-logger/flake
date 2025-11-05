@@ -91,6 +91,12 @@ in
       default = false;
       description = "Enable GPU passthrough to runners (requires GPU device plugin)";
     };
+    
+    gpuVendor = mkOption {
+      type = types.enum [ "amd" "nvidia" ];
+      default = "amd";
+      description = "GPU vendor for device plugin (amd or nvidia)";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -180,7 +186,8 @@ EOF
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 
-        ${optionalString cfg.enableGpu ''
+        ${optionalString cfg.enableGpu (
+          if cfg.gpuVendor == "amd" then ''
         # Install AMD GPU device plugin
         echo "Installing AMD GPU device plugin..."
         ${pkgs.kubectl}/bin/kubectl apply -f https://raw.githubusercontent.com/ROCm/k8s-device-plugin/master/k8s-ds-amdgpu-dp.yaml
@@ -188,7 +195,16 @@ EOF
         # Wait for device plugin to be ready
         echo "Waiting for GPU device plugin..."
         sleep 10
-        ''}
+        '' else ''
+        # Install NVIDIA GPU device plugin
+        echo "Installing NVIDIA GPU device plugin..."
+        ${pkgs.kubectl}/bin/kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.15.0/deployments/static/nvidia-device-plugin.yml
+        
+        # Wait for device plugin to be ready
+        echo "Waiting for GPU device plugin..."
+        sleep 10
+        ''
+        )}
 
         touch /var/lib/arc-setup-done
         echo "ARC controller installed successfully"
