@@ -8,13 +8,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint-and-format:
-    name: Lint and Format Check
+  format-check:
+    name: Format Check
     runs-on: self-hosted
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Check Nix version
+        run: nix --version
         
       - name: Check Nix formatting
         run: |
@@ -28,27 +31,51 @@ jobs:
             nix run nixpkgs#alejandra -- --check .
           fi
 
-  flake-check:
-    name: Flake Check (dry-run)
+  flake-validate:
+    name: Flake Validation
     runs-on: self-hosted
-    needs: lint-and-format
+    needs: format-check
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Run flake check dry-run
+      - name: Validate flake structure
+        run: |
+          echo "Validating flake.nix syntax..."
+          nix flake show --json > /dev/null
+          
+      - name: Check flake metadata
+        run: |
+          echo "Checking flake metadata..."
+          nix flake metadata
+          
+      - name: List all outputs
+        run: |
+          echo "Listing all flake outputs..."
+          nix flake show
+
+  flake-check:
+    name: Flake Check
+    runs-on: self-hosted
+    needs: flake-validate
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run flake check (dry-run)
         run: |
           echo "Running flake check in dry-run mode..."
           nix flake check --dry-run
           
-      - name: Validate flake metadata
+      - name: Run full flake check
         run: |
-          echo "Validating flake metadata..."
-          nix flake metadata
+          echo "Running full flake check..."
+          nix flake check --all-systems
 
   build-systems:
-    name: Build All Systems
+    name: Build Systems
     runs-on: self-hosted
     needs: flake-check
     strategy:
@@ -71,7 +98,7 @@ jobs:
           nix path-info .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel
 
   evaluate-systems:
-    name: Evaluate System Configurations
+    name: Evaluate Configurations
     runs-on: self-hosted
     needs: build-systems
     
@@ -79,38 +106,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Evaluate all system configurations
+      - name: Evaluate yoga configuration
         run: |
           echo "Evaluating yoga configuration..."
           nix eval .#nixosConfigurations.yoga.config.system.name
           nix eval .#nixosConfigurations.yoga.config.networking.hostName
           
+      - name: Evaluate skyspy-dev configuration
+        run: |
           echo "Evaluating skyspy-dev configuration..."
           nix eval .#nixosConfigurations.skyspy-dev.config.system.name
           nix eval .#nixosConfigurations.skyspy-dev.config.networking.hostName
 
   summary:
-    name: CI/CD Summary
+    name: Pipeline Summary
     runs-on: self-hosted
-    needs: [lint-and-format, flake-check, build-systems, evaluate-systems]
+    needs: [format-check, flake-validate, flake-check, build-systems, evaluate-systems]
     if: always()
     
     steps:
-      - name: Check job results
+      - name: Display results
         run: |
           echo "=== CI/CD Pipeline Summary ==="
-          echo "Lint and Format: ${{ needs.lint-and-format.result }}"
+          echo "Format Check: ${{ needs.format-check.result }}"
+          echo "Flake Validation: ${{ needs.flake-validate.result }}"
           echo "Flake Check: ${{ needs.flake-check.result }}"
           echo "Build Systems: ${{ needs.build-systems.result }}"
           echo "Evaluate Systems: ${{ needs.evaluate-systems.result }}"
           
-          if [ "${{ needs.lint-and-format.result }}" = "success" ] && \
+          if [ "${{ needs.format-check.result }}" = "success" ] && \
+             [ "${{ needs.flake-validate.result }}" = "success" ] && \
              [ "${{ needs.flake-check.result }}" = "success" ] && \
              [ "${{ needs.build-systems.result }}" = "success" ] && \
              [ "${{ needs.evaluate-systems.result }}" = "success" ]; then
+            echo ""
             echo "✓ All checks passed!"
             exit 0
           else
+            echo ""
             echo "✗ Some checks failed"
             exit 1
           fi

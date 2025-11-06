@@ -1,41 +1,38 @@
-# CI/CD Workflows
+# CI/CD Workflow
 
-This directory contains GitHub Actions workflows for automated testing and validation of the NixOS flake configuration.
+This directory contains the GitHub Actions workflow for automated testing and validation of the NixOS flake configuration.
 
-## Workflows
+## Workflow
 
 ### Main CI/CD Pipeline (`ci.yml`)
-Comprehensive pipeline that runs on all pushes and pull requests:
-- **Lint and Format**: Checks Nix code formatting using alejandra or nixpkgs-fmt
-- **Flake Check**: Validates flake structure with dry-run check
-- **Build Systems**: Builds all system configurations (yoga, skyspy-dev)
-- **Evaluate Systems**: Evaluates system configurations to ensure they're valid
-- **Summary**: Provides a summary of all check results
+Comprehensive pipeline that runs on all pushes and pull requests with the following jobs:
 
-### Individual Workflows
+1. **Format Check** - Validates Nix code formatting using alejandra or nixpkgs-fmt
+2. **Flake Validation** - Validates flake structure, metadata, and outputs
+3. **Flake Check** - Runs dry-run and full flake checks
+4. **Build Systems** - Builds all system configurations in parallel (yoga, skyspy-dev)
+5. **Evaluate Configurations** - Evaluates system configurations to ensure they're valid
+6. **Pipeline Summary** - Provides a summary of all check results
 
-#### `check.yml` - Flake Check
-Validates the flake structure and runs comprehensive checks:
-- Dry-run check for quick validation
-- Full flake check for all systems
+### Pipeline Flow
 
-#### `format.yml` - Format Check
-Ensures all Nix files follow proper formatting standards using nixpkgs-fmt or alejandra.
-
-#### `build.yml` - Build Systems
-Builds each system configuration independently:
-- `yoga` - Gigabyte X870E AORUS ELITE WIFI7 (AMD)
-- `skyspy-dev` - Lenovo Legion 16IRX8H (Intel/NVIDIA)
-
-#### `test.yml` - System Tests
-Validates flake structure and evaluates system configurations:
-- Flake metadata validation
-- System output listing
-- Configuration evaluation
+```
+Format Check
+     ↓
+Flake Validation
+     ↓
+Flake Check (dry-run + full)
+     ↓
+Build Systems (parallel: yoga, skyspy-dev)
+     ↓
+Evaluate Configurations
+     ↓
+Pipeline Summary
+```
 
 ## Self-Hosted Runners
 
-All workflows are configured to use `runs-on: self-hosted` to leverage your self-hosted GitHub Actions runners. This ensures:
+All jobs are configured to use `runs-on: self-hosted` to leverage your self-hosted GitHub Actions runners. This ensures:
 
 - Access to GPU resources (AMD for yoga, NVIDIA for skyspy-dev)
 - Faster builds with local Nix cache
@@ -45,22 +42,18 @@ All workflows are configured to use `runs-on: self-hosted` to leverage your self
 ## Usage
 
 ### Automatic Triggers
-Workflows automatically run on:
+The workflow automatically runs on:
 - Push to `main` or `master` branches
 - Pull requests targeting `main` or `master` branches
 
 ### Manual Triggers
-All workflows can be manually triggered via:
+The workflow can be manually triggered via:
 ```bash
 # Using GitHub CLI
 gh workflow run ci.yml
-gh workflow run check.yml
-gh workflow run format.yml
-gh workflow run build.yml
-gh workflow run test.yml
 ```
 
-Or through the GitHub web interface: Actions → Select Workflow → Run workflow
+Or through the GitHub web interface: Actions → CI/CD Pipeline → Run workflow
 
 ## Requirements
 
@@ -70,13 +63,87 @@ Your self-hosted runners should have:
 - GPU drivers installed (if testing GPU-enabled systems)
 - Access to any private flake inputs
 
-## Workflow Order
+## Local Testing
 
-For the main CI pipeline (`ci.yml`), jobs run in this order:
-1. Lint and Format Check
-2. Flake Check (dry-run)
-3. Build Systems (parallel for each system)
-4. Evaluate Systems
-5. Summary
+Before pushing, test locally with the same checks:
 
-Each step must pass before the next begins, except for the build step which runs in parallel for multiple systems.
+```bash
+# Check formatting
+alejandra --check .
+# or
+nixpkgs-fmt --check $(find . -name "*.nix" -not -path "*/.*")
+
+# Validate flake
+nix flake show --json > /dev/null
+nix flake metadata
+nix flake show
+
+# Run flake checks
+nix flake check --dry-run
+nix flake check --all-systems
+
+# Build systems
+nix build .#nixosConfigurations.yoga.config.system.build.toplevel -L
+nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel -L
+
+# Evaluate configurations
+nix eval .#nixosConfigurations.yoga.config.system.name
+nix eval .#nixosConfigurations.skyspy-dev.config.system.name
+```
+
+## Monitoring
+
+### Via GitHub CLI
+```bash
+# List recent workflow runs
+gh run list
+
+# Watch a specific run
+gh run watch
+
+# View logs
+gh run view <run-id> --log
+```
+
+### Via GitHub UI
+1. Go to your repository
+2. Click "Actions" tab
+3. Select "CI/CD Pipeline"
+4. View run details and logs
+
+## Troubleshooting
+
+### Workflow Not Starting
+- Check if self-hosted runners are online
+- Verify runner labels match `runs-on: self-hosted`
+- Check runner queue: Settings → Actions → Runners
+
+### Build Failures
+- Check logs in GitHub Actions
+- Test locally using commands above
+- Verify Nix cache is accessible
+- Ensure sufficient disk space
+
+### Format Failures
+```bash
+# Auto-fix formatting issues
+alejandra .
+# or
+find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt {} \;
+
+# Then commit
+git add .
+git commit -m "Fix formatting"
+```
+
+### Flake Check Failures
+```bash
+# See detailed errors
+nix flake check -L
+
+# Show flake metadata
+nix flake metadata
+
+# Show all outputs
+nix flake show
+```

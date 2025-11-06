@@ -2,54 +2,53 @@
 
 ## Overview
 
-Your flake now has a complete CI/CD pipeline using GitHub Actions with self-hosted runners. This ensures fast builds with GPU access and local Nix cache.
+Your flake now has a single comprehensive CI/CD pipeline using GitHub Actions with self-hosted runners. This ensures fast builds with GPU access and local Nix cache.
 
-## Workflows Available
+## Workflow
 
-### 🚀 Main CI Pipeline
+### 🚀 CI/CD Pipeline
 **Workflow:** `.github/workflows/ci.yml`
 
 **What it does:**
-1. Checks code formatting (alejandra/nixpkgs-fmt)
-2. Validates flake structure (dry-run check)
-3. Builds all system configurations in parallel
-4. Evaluates system configurations
-5. Provides a summary of results
+1. **Format Check** - Validates code formatting (alejandra/nixpkgs-fmt)
+2. **Flake Validation** - Validates flake structure and metadata
+3. **Flake Check** - Runs dry-run and full flake checks
+4. **Build Systems** - Builds all system configurations in parallel
+5. **Evaluate Configurations** - Evaluates system configurations
+6. **Pipeline Summary** - Provides a summary of all results
 
 **When it runs:**
 - Every push to main/master
 - Every pull request
-- Manual trigger via GitHub UI
+- Manual trigger via GitHub UI or CLI
 
-### 📋 Individual Workflows
-
-#### Flake Check
-```bash
-gh workflow run check.yml
+**Pipeline Flow:**
 ```
-Runs comprehensive flake validation and checks.
-
-#### Format Check
-```bash
-gh workflow run format.yml
+Format Check → Flake Validation → Flake Check → Build Systems → Evaluate → Summary
 ```
-Validates Nix code formatting standards.
 
-#### Build Systems
-```bash
-gh workflow run build.yml
-```
-Builds yoga and skyspy-dev configurations.
+## Running the Workflow
 
-#### System Tests
+### Automatic
+Pushes and PRs to main/master branches trigger the workflow automatically.
+
+### Manual Trigger
 ```bash
-gh workflow run test.yml
+# Using GitHub CLI
+gh workflow run ci.yml
+
+# Watch it run
+gh run watch
+
+# List recent runs
+gh run list
 ```
-Evaluates and tests system configurations.
+
+Or via GitHub UI: Actions → CI/CD Pipeline → Run workflow
 
 ## Self-Hosted Runner Setup
 
-Your workflows expect self-hosted runners with:
+Your workflow expects self-hosted runners with:
 - ✅ Nix installed
 - ✅ GPU drivers (AMD for yoga, NVIDIA for skyspy-dev)
 - ✅ Sufficient disk space
@@ -177,7 +176,7 @@ nix flake show
 1. Add hardware module in `Hardware/motherboards/`
 2. Create system definition in `Systems/`
 3. Update `flake.nix` nixosConfigurations
-4. Add to build matrix in `.github/workflows/build.yml`
+4. Add to build matrix in `.github/workflows/ci.yml`
 
 ### Managing Workflow Failures
 - Don't ignore CI failures

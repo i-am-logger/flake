@@ -10,27 +10,22 @@
 The systems now use the `hardware` parameter in `mkSystem`, which properly imports the hardware modules.
 
 ### 2. CI/CD Pipeline Setup
-Created comprehensive GitHub Actions workflows for self-hosted runners:
+Created a comprehensive GitHub Actions workflow for self-hosted runners:
 
-#### Main Pipeline (`ci.yml`)
+#### Single Unified Pipeline (`ci.yml`)
 Complete pipeline with sequential jobs:
-1. **Lint and Format Check** - Uses alejandra or nixpkgs-fmt
-2. **Flake Check** - Dry-run validation
-3. **Build Systems** - Parallel builds for yoga and skyspy-dev
-4. **Evaluate Systems** - Configuration evaluation
-5. **Summary** - Pipeline results summary
-
-#### Individual Workflows
-- **`check.yml`** - Flake structure validation and comprehensive checks
-- **`format.yml`** - Nix code formatting validation
-- **`build.yml`** - Independent system builds with path info
-- **`test.yml`** - Flake metadata and system evaluation tests
+1. **Format Check** - Uses alejandra or nixpkgs-fmt
+2. **Flake Validation** - Validates structure, metadata, and outputs
+3. **Flake Check** - Dry-run and full validation
+4. **Build Systems** - Parallel builds for yoga and skyspy-dev
+5. **Evaluate Configurations** - Configuration evaluation
+6. **Pipeline Summary** - Complete results summary
 
 #### Documentation
 - **`workflows/README.md`** - Complete workflow documentation
 - Self-hosted runner requirements
 - Usage instructions
-- Workflow execution order
+- Pipeline flow diagram
 
 ### 3. Refactoring Guide
 Created `REFACTORING_TODO.md` with:
@@ -122,11 +117,7 @@ flake.nix
 ├── hosts/                # Legacy host configurations (to be cleaned up)
 │
 └── .github/workflows/    # CI/CD automation
-    ├── ci.yml            # Main pipeline
-    ├── check.yml         # Flake checks
-    ├── format.yml        # Format validation
-    ├── build.yml         # System builds
-    └── test.yml          # System tests
+    └── ci.yml            # Unified pipeline (format, validate, check, build, evaluate)
 ```
 
 ## Success Criteria
@@ -134,7 +125,7 @@ flake.nix
 The refactoring will be complete when:
 - [ ] All systems build successfully
 - [ ] Flake check passes without errors
-- [ ] All CI/CD workflows pass
+- [ ] CI/CD workflow passes
 - [ ] Code is properly formatted
 - [ ] Hardware modules are fully utilized
 - [ ] Legacy host files are cleaned up
