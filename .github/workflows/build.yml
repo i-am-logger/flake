@@ -1,0 +1,43 @@
+name: Build Systems
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-yoga:
+    name: Build yoga system
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Build yoga configuration
+        run: |
+          nix --version
+          nix build .#nixosConfigurations.yoga.config.system.build.toplevel -L
+        
+      - name: Show build info
+        run: |
+          nix path-info .#nixosConfigurations.yoga.config.system.build.toplevel
+
+  build-skyspy-dev:
+    name: Build skyspy-dev system
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Build skyspy-dev configuration
+        run: |
+          nix --version
+          nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel -L
+        
+      - name: Show build info
+        run: |
+          nix path-info .#nixosConfigurations.skyspy-dev.config.system.build.toplevel

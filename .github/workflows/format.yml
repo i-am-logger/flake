@@ -1,0 +1,27 @@
+name: Format Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: Check Nix Formatting
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check formatting with nixpkgs-fmt
+        run: |
+          nix --version
+          # Check if nixpkgs-fmt is available, otherwise use alejandra
+          if command -v nixpkgs-fmt &> /dev/null; then
+            find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt --check {} +
+          else
+            nix run nixpkgs#nixpkgs-fmt -- --check $(find . -name "*.nix" -not -path "*/.*")
+          fi

@@ -1,0 +1,25 @@
+name: Flake Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Nix Flake Check
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run flake check (dry-run)
+        run: |
+          nix --version
+          nix flake check --dry-run
+        
+      - name: Run full flake check
+        run: nix flake check --all-systems

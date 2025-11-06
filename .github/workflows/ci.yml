@@ -1,0 +1,116 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  lint-and-format:
+    name: Lint and Format Check
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check Nix formatting
+        run: |
+          echo "Checking Nix file formatting..."
+          if command -v alejandra &> /dev/null; then
+            alejandra --check .
+          elif command -v nixpkgs-fmt &> /dev/null; then
+            find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt --check {} +
+          else
+            echo "Installing alejandra..."
+            nix run nixpkgs#alejandra -- --check .
+          fi
+
+  flake-check:
+    name: Flake Check (dry-run)
+    runs-on: self-hosted
+    needs: lint-and-format
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run flake check dry-run
+        run: |
+          echo "Running flake check in dry-run mode..."
+          nix flake check --dry-run
+          
+      - name: Validate flake metadata
+        run: |
+          echo "Validating flake metadata..."
+          nix flake metadata
+
+  build-systems:
+    name: Build All Systems
+    runs-on: self-hosted
+    needs: flake-check
+    strategy:
+      matrix:
+        system: [yoga, skyspy-dev]
+      fail-fast: false
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Build ${{ matrix.system }} configuration
+        run: |
+          echo "Building ${{ matrix.system }} system..."
+          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L
+          
+      - name: Show system info
+        run: |
+          echo "System build complete. Path info:"
+          nix path-info .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel
+
+  evaluate-systems:
+    name: Evaluate System Configurations
+    runs-on: self-hosted
+    needs: build-systems
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Evaluate all system configurations
+        run: |
+          echo "Evaluating yoga configuration..."
+          nix eval .#nixosConfigurations.yoga.config.system.name
+          nix eval .#nixosConfigurations.yoga.config.networking.hostName
+          
+          echo "Evaluating skyspy-dev configuration..."
+          nix eval .#nixosConfigurations.skyspy-dev.config.system.name
+          nix eval .#nixosConfigurations.skyspy-dev.config.networking.hostName
+
+  summary:
+    name: CI/CD Summary
+    runs-on: self-hosted
+    needs: [lint-and-format, flake-check, build-systems, evaluate-systems]
+    if: always()
+    
+    steps:
+      - name: Check job results
+        run: |
+          echo "=== CI/CD Pipeline Summary ==="
+          echo "Lint and Format: ${{ needs.lint-and-format.result }}"
+          echo "Flake Check: ${{ needs.flake-check.result }}"
+          echo "Build Systems: ${{ needs.build-systems.result }}"
+          echo "Evaluate Systems: ${{ needs.evaluate-systems.result }}"
+          
+          if [ "${{ needs.lint-and-format.result }}" = "success" ] && \
+             [ "${{ needs.flake-check.result }}" = "success" ] && \
+             [ "${{ needs.build-systems.result }}" = "success" ] && \
+             [ "${{ needs.evaluate-systems.result }}" = "success" ]; then
+            echo "✓ All checks passed!"
+            exit 0
+          else
+            echo "✗ Some checks failed"
+            exit 1
+          fi
