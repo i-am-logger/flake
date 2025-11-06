@@ -76,7 +76,7 @@ imports = [
   ./Hardware/audio/realtek
   ./Hardware/bluetooth/realtek
   ./Hardware/network
-  ./Hardware/boot/uefi
+  ./Hardware/boot
 ];
 ```
 
