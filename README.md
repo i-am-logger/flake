@@ -1,6 +1,7 @@
 # flake
 
 [![CI/CD Pipeline](https://github.com/i-am-logger/flake/actions/workflows/ci.yml/badge.svg)](https://github.com/i-am-logger/flake/actions/workflows/ci.yml)
+[![Copilot coding agent](https://github.com/i-am-logger/flake/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/i-am-logger/flake/actions/workflows/copilot-swe-agent/copilot)
 
 My Personal NixOS ricing configuration - A comprehensive NixOS flake for system configuration and hardware management.
 
