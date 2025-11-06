@@ -10,7 +10,7 @@ on:
 jobs:
   format-check:
     name: Format Check
-    runs-on: [self-hosted, repo-flake]
+    runs-on: [self-hosted ]
     
     steps:
       - name: Checkout repository
