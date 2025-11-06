@@ -213,8 +213,14 @@ gh run download <run-id>
 - Refactoring guide: `REFACTORING_TODO.md`
 - Summary: `REFACTORING_SUMMARY.md`
 - Hardware analysis: `HARDWARE_ANALYSIS.md`
+- **Runner debugging: `RUNNER_DEBUGGING.md`** ← Troubleshoot runner issues
+- **Runner quick ref: `RUNNER_QUICKREF.md`** ← Common commands
 
 ### Common Issues
+- **"Waiting for a runner"**: See `RUNNER_DEBUGGING.md` for complete guide
+  - Check: `kubectl get runners -n arc-runners`
+  - Verify: Runner registered to correct repo
+  - Check labels: `kubectl get pods -n arc-runners -o yaml | grep RUNNER_LABELS`
 - **"Nix command not found"**: Install Nix on runner
 - **"Permission denied"**: Check runner permissions
 - **"Disk full"**: Clean up Nix store: `nix-collect-garbage -d`
@@ -223,4 +229,5 @@ gh run download <run-id>
 ### Resources
 - [GitHub Actions Docs](https://docs.github.com/en/actions)
 - [Self-hosted Runners](https://docs.github.com/en/actions/hosting-your-own-runners)
+- [Actions Runner Controller](https://github.com/actions/actions-runner-controller)
 - [Nix Manual](https://nixos.org/manual/nix/stable/)
