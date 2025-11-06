@@ -2,7 +2,6 @@
 
 myLib.systems.mkSystem {
   hostname = "yoga";
-  machine = myLib.machines.gigabyte-x870e-aorus-elite-wifi7;
   users = [ myLib.users.logger ];
   
   stacks = {

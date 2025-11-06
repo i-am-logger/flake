@@ -2,6 +2,6 @@
 
 {
   systems = import ./systems.nix { inherit inputs lib nixpkgs; };
-  machines = import ./machines.nix { };
+  hardware = import ./hardware.nix { };
   users = import ./users.nix { };
 }
