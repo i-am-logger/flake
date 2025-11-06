@@ -5,6 +5,7 @@ let
   repositories = [
     "loial"
     "logger"
+    "flake"
   ];
   
   githubUsername = "i-am-logger";
