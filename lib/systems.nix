@@ -3,7 +3,8 @@
 {
   mkSystem = {
     hostname,
-    machine,
+    hardware ? [],  # List of hardware modules
+    machine ? null,  # Deprecated: use hardware instead
     users ? [],
     stacks ? {},
     config ? null,
@@ -15,18 +16,20 @@
         inherit (inputs) secrets disko impermanence stylix lanzaboote self;
       };
       
-      modules = [
-        # Machine hardware
-        machine.path
+      modules = (builtins.trace "Hardware modules: ${builtins.toString hardware}" hardware) ++ [
       ]
-      ++ (lib.optionals (machine.disko != null) [
+      ++ (lib.optionals (machine != null) [
+        # Machine hardware (deprecated approach)
+        machine.path
+      ])
+      ++ (lib.optionals (machine != null && machine.disko != null) [
         # Disko partitioning (if machine uses it)
         inputs.disko.nixosModules.disko
         {
           disko.devices = import machine.disko { lib = nixpkgs.lib; };
         }
       ])
-      ++ (lib.optionals (machine.nixos-hardware != null) [
+      ++ (lib.optionals (machine != null && machine.nixos-hardware != null) [
         # NixOS hardware module (if specified)
         inputs.nixos-hardware.nixosModules.${machine.nixos-hardware}
       ])
