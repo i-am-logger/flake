@@ -7,8 +7,8 @@ let
 
   # Preview version details
   #
-  warp_preview_version = "0.2025.09.24.08.13.preview_03";
-  warp_preview_hash = "sha256-YpYtqUKcOQqfPre/s5B6uvnL0hb5rA0Hf7RQ6skYJTw=";
+  warp_preview_version = "0.2025.11.06.20.04.preview_01";
+  warp_preview_hash = "sha256-FvNExniCGC87M22oZicc+gkF66swEWb6ROxDrW4pUus=";
   warp-terminal-preview-fn =
     {
       lib,

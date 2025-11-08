@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -6,9 +11,9 @@ let
   cfg = config.stacks.cicd;
   # List of repositories to create runner sets for
   repositories = [
+    "flake"
     "loial"
     "logger"
-    "flake"
   ];
   
   githubUsername = "i-am-logger";
@@ -22,9 +27,9 @@ let
       after = [ "arc-setup.service" ];
       wantedBy = [ "multi-user.target" ];
       
-      unitConfig = {
-        ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
-      };
+      # unitConfig = {
+      #   ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
+      # };
 
       serviceConfig = {
         Type = "oneshot";
@@ -50,7 +55,7 @@ let
         fi
 
         # Install runner scale set for ${repo} with hostname in name
-        ${pkgs.kubernetes-helm}/bin/helm install arc-runner-set-${repo} \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
@@ -61,7 +66,7 @@ let
           --set runnerGroup="default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,build,copilot-agent${optionalString cfg.enableGpu ",gpu"}"}]' \
+          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,linux,x64,k8s,docker,build,copilot-agent,repo-${repo},host-${hostname},${hostname}-${repo}${optionalString cfg.enableGpu ",gpu-${cfg.gpuVendor}"}"}]' \
           --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
@@ -94,7 +99,10 @@ in
     };
     
     gpuVendor = mkOption {
-      type = types.enum [ "amd" "nvidia" ];
+      type = types.enum [
+        "amd"
+        "nvidia"
+      ];
       default = "amd";
       description = "GPU vendor for device plugin (amd or nvidia)";
     };
@@ -119,27 +127,30 @@ in
   # This runs once at activation to populate the token file
   system.activationScripts.createGithubRunnerToken = {
     text = ''
-      if [ ! -f /persist/etc/github-runner-token ]; then
-        echo "Creating GitHub runner token file..."
-        mkdir -p /persist/etc
-        
-        # Try to get token from gh CLI (run as logger user)
-        if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth status &>/dev/null; then
-          GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth token)
-          cat > /persist/etc/github-runner-token << EOF
-GITHUB_TOKEN=$GITHUB_TOKEN
-GITHUB_USERNAME=i-am-logger
-EOF
-          chmod 600 /persist/etc/github-runner-token
-          chown root:root /persist/etc/github-runner-token
-          echo "GitHub runner token file created"
-        else
-          echo "WARNING: gh CLI not authenticated. Please run 'gh auth login' as logger user."
-          echo "Then run: sudo nixos-rebuild switch"
-        fi
-      fi
+            if [ ! -f /persist/etc/github-runner-token ]; then
+              echo "Creating GitHub runner token file..."
+              mkdir -p /persist/etc
+              
+              # Try to get token from gh CLI (run as logger user)
+              if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth status &>/dev/null; then
+                GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth token)
+                cat > /persist/etc/github-runner-token << EOF
+      GITHUB_TOKEN=$GITHUB_TOKEN
+      GITHUB_USERNAME=i-am-logger
+      EOF
+                chmod 600 /persist/etc/github-runner-token
+                chown root:root /persist/etc/github-runner-token
+                echo "GitHub runner token file created"
+              else
+                echo "WARNING: gh CLI not authenticated. Please run 'gh auth login' as logger user."
+                echo "Then run: sudo nixos-rebuild switch"
+              fi
+            fi
     '';
-    deps = [ "users" "groups" ];
+    deps = [
+      "users"
+      "groups"
+    ];
   };
 
   # Setup ARC controller after k3s is ready and deploy runner scale sets
