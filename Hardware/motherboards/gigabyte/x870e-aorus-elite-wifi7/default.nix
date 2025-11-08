@@ -3,8 +3,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./drivers/uefi-boot.nix  # Keep for kernel config
-    
+    ./drivers/uefi-boot.nix # Keep for kernel config
+
     # Shared hardware modules
     ../../../cpu/amd
     ../../../gpu/amd
@@ -13,7 +13,7 @@
     ../../../network
     ../../../boot
   ];
-  
+
   # Enable secure boot
   hardware.boot.secure = true;
 

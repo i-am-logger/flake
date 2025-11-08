@@ -34,20 +34,20 @@
   # Ensure user avatar is accessible to display manager
   system.activationScripts.userAvatar = {
     text = ''
-      # Create directory for user icons if it doesn't exist
-      mkdir -p /var/lib/AccountsService/icons
-      mkdir -p /var/lib/AccountsService/users
+            # Create directory for user icons if it doesn't exist
+            mkdir -p /var/lib/AccountsService/icons
+            mkdir -p /var/lib/AccountsService/users
       
-      # Copy the user avatar to the standard location
-      cp /etc/nixos/home/logger/logger.png /var/lib/AccountsService/icons/logger
-      chmod 644 /var/lib/AccountsService/icons/logger
+            # Copy the user avatar to the standard location
+            cp /etc/nixos/home/logger/logger.png /var/lib/AccountsService/icons/logger
+            chmod 644 /var/lib/AccountsService/icons/logger
       
-      # Create AccountsService user configuration
-      cat > /var/lib/AccountsService/users/logger << EOF
-[User]
-Icon=/var/lib/AccountsService/icons/logger
-EOF
-      chmod 644 /var/lib/AccountsService/users/logger
+            # Create AccountsService user configuration
+            cat > /var/lib/AccountsService/users/logger << EOF
+      [User]
+      Icon=/var/lib/AccountsService/icons/logger
+      EOF
+            chmod 644 /var/lib/AccountsService/users/logger
     '';
     deps = [ "users" ];
   };

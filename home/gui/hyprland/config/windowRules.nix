@@ -1,5 +1,5 @@
 {
-  windowrule = [ ];  # Empty since we're converting all rules to windowrulev2
+  windowrule = [ ]; # Empty since we're converting all rules to windowrulev2
 
   windowrulev2 = [
     # Walker - Application launcher overlay
@@ -8,7 +8,7 @@
     "pin,class:^(walker)$"
     "noborder,class:^(walker)$"
     "noblur,class:^(walker)$"
-    
+
     # 1Password: 20% margins from edges
     "float,class:^(1Password)$"
     "center,class:^(1Password)$"
@@ -48,14 +48,14 @@
     # Slack - Main window rules
     "tile,class:^(Slack)$,title:^(.*)$"
     "suppressevent maximize,class:^(Slack)$"
-    
+
     # Slack - Hide/suppress menu windows and popups
     "nofocus,class:^(Slack)$,title:^$"
     "noinitialfocus,class:^(Slack)$,title:^$"
     "float,class:^(Slack)$,title:^$"
     "size 0 0,class:^(Slack)$,title:^$"
     "move -1000 -1000,class:^(Slack)$,title:^$"
-    
+
     # Slack - Handle context menus and dropdowns
     "float,class:^(Slack)$,title:^(Context Menu)$"
     "nofocus,class:^(Slack)$,title:^(Context Menu)$"

@@ -1,10 +1,9 @@
-{
-  config,
-  pkgs,
-  username,
-  secrets,
-  sops,
-  ...
+{ config
+, pkgs
+, username
+, secrets
+, sops
+, ...
 }: {
   sops.age.keyFile = "/home/snick/.config/sops/age/keys.txt";
   sops.secrets."github/snick/runner_token" = {
@@ -22,5 +21,5 @@
 
   virtualisation.docker.enable = true;
 
-  systemd.services.github-runner.serviceConfig.SupplementaryGroups = ["docker"];
+  systemd.services.github-runner.serviceConfig.SupplementaryGroups = [ "docker" ];
 }

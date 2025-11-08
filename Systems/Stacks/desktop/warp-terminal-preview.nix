@@ -10,29 +10,29 @@ let
   warp_preview_version = "0.2025.11.06.20.04.preview_01";
   warp_preview_hash = "sha256-FvNExniCGC87M22oZicc+gkF66swEWb6ROxDrW4pUus=";
   warp-terminal-preview-fn =
-    {
-      lib,
-      stdenv,
-      fetchurl,
-      autoPatchelfHook,
-      zstd,
-      alsa-lib,
-      curl,
-      fontconfig,
-      libglvnd,
-      libxkbcommon,
-      vulkan-loader,
-      wayland,
-      waylandProtocols,
-      libdrm,
-      mesa,
-      pipewire,
-      xdgDesktopPortalWlr,
-      xdg-utils,
-      xorg,
-      zlib,
-      makeWrapper,
-      waylandSupport ? true,
+    { lib
+    , stdenv
+    , fetchurl
+    , autoPatchelfHook
+    , zstd
+    , alsa-lib
+    , curl
+    , fontconfig
+    , libglvnd
+    , libxkbcommon
+    , vulkan-loader
+    , wayland
+    , waylandProtocols
+    , libdrm
+    , mesa
+    , pipewire
+    , xdgDesktopPortalWlr
+    , xdg-utils
+    , xorg
+    , zlib
+    , makeWrapper
+    , waylandSupport ? true
+    ,
     }:
 
     let

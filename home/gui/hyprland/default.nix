@@ -29,24 +29,24 @@ in
       default-timeout = 5000; # 5 seconds
       ignore-timeout = true; # Don't auto-dismiss critical notifications (like GPG/YubiKey)
       layer = "overlay";
-      
+
       # Position and sizing - adjusted for better readability
       anchor = "top-center";
-      width = 800;  # Much wider for big text
+      width = 800; # Much wider for big text
       height = 200; # A bit taller too
       margin = "60,20,10,20"; # top,right,bottom,left - lower and more centered
       padding = "20";
       border-size = 2;
       border-radius = 8;
-      
+
       # Behavior
       max-visible = 5;
       sort = "+time"; # Newest on top
-      
+
       # Note: Mako doesn't support animations
       # For smooth animations, consider using swaync or dunst instead
     };
-    
+
     # GPG/YubiKey specific - don't timeout critical notifications
     extraConfig = ''
       [urgency=critical]
@@ -68,7 +68,7 @@ in
       [mode=do-not-disturb app-name="yubikey-touch-detector"]
       invisible=0
     '';
-    
+
     # Note: Key bindings are handled via Hyprland keybindings and makoctl
     # Super+N = dismiss newest notification
     # Super+Shift+N = dismiss all notifications  

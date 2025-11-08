@@ -25,7 +25,7 @@
     # "$mainMod SHIFT, X, exec, swaylock --screenshots --clock --indicator --indicator-radius 500 --indicator-thickness 7 --effect-blur 7x5 --effect-pixelate 8 --effect-greyscale --grace 5 --fade-in 2"
 
     "$mainMod SHIFT, X, exec, hyprlock"
-    
+
     # Walker additional modes (Omarchy style)
     "$mainMod, period, exec, walker -p 'Find files… (type . then filename)' -w 1000 -h 700 -q '.'"
     "$mainMod, equal, exec, walker -p 'Calculator… (type = then expression)' -w 1000 -h 700 -q '='"
@@ -140,7 +140,7 @@
     ", XF86AudioPlay, exec, playerctl play-pause"
     ", XF86AudioNext, exec, playerctl next"
     ", XF86AudioPrev, exec, playerctl previous"
-    
+
     # Notification controls
     "$mainMod, N, exec, makoctl dismiss"
     "$mainMod SHIFT, N, exec, makoctl dismiss --all"

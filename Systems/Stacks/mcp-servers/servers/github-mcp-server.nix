@@ -1,5 +1,5 @@
-{
-  pkgs ? import <nixpkgs> { },
+{ pkgs ? import <nixpkgs> { }
+,
 }:
 
 # GitHub MCP Server package (from github.com/mcp/github/github-mcp-server)

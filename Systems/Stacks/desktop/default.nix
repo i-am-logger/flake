@@ -8,27 +8,27 @@ in
 {
   options.stacks.desktop = {
     enable = mkEnableOption "desktop stack (warp + vscode + browser)";
-    
+
     warp = {
       enable = mkOption {
         type = types.bool;
         default = true;
         description = "Enable Warp terminal";
       };
-      
+
       preview = mkOption {
         type = types.bool;
         default = false;
         description = "Enable Warp terminal preview version";
       };
     };
-    
+
     vscode.enable = mkOption {
       type = types.bool;
       default = true;
       description = "Enable VSCode";
     };
-    
+
     browser.enable = mkOption {
       type = types.bool;
       default = true;

@@ -79,8 +79,8 @@ in
   };
 
   # Define required groups for YubiKey and hardware access
-  users.groups.plugdev = {};
-  users.groups.pcscd = {};
+  users.groups.plugdev = { };
+  users.groups.pcscd = { };
 
   environment.sessionVariables = {
     # Disable GNOME Keyring completely - using pass with YubiKey GPG

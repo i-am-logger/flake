@@ -6,7 +6,7 @@
     nixosUser = ../hosts/users/logger.nix;
     homeManager = ../home/logger;
   };
-  
+
   snick = {
     name = "snick";
     nixosUser = ../hosts/users/snick.nix;
