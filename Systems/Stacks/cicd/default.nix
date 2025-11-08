@@ -66,7 +66,7 @@ let
           --set runnerGroup="default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}${optionalString cfg.enableGpu ",gpu"}"}]' \
+          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}"}]' \
           --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
