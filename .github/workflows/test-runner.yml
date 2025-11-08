@@ -2,11 +2,6 @@ name: Test Self-Hosted Runner
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - integration-work
-    paths:
-      - '.github/workflows/test-runner.yml'
 
 jobs:
   test-runner:
@@ -22,13 +17,10 @@ jobs:
           echo "🖥️  Hostname: $(hostname)"
           echo "🐧 OS: $(uname -a)"
           echo "💾 Disk space:"
-          df -h / /nix /persist
+          df -h
           echo ""
           echo "🧠 Memory:"
           free -h
-          echo ""
-          echo "🔧 Nix version:"
-          nix --version
       
       - name: Check GPU availability
         run: |
@@ -50,10 +42,12 @@ jobs:
           echo "🐳 Docker info:"
           docker info
       
-      - name: Nix build test
+      - name: Container test
         run: |
-          echo "🔨 Testing Nix build capability..."
-          nix-build -E '(import <nixpkgs> {}).hello'
+          echo "📦 Testing container capabilities..."
+          echo "Current working directory: $(pwd)"
+          echo "User: $(whoami)"
+          echo "Available shells: $(cat /etc/shells 2>/dev/null || echo 'N/A')"
       
       - name: Runner labels
         run: |
