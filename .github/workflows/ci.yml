@@ -16,6 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        
       - name: Check Nix version
         run: nix --version
         
@@ -39,6 +45,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
         
       - name: Validate flake structure
         run: |
@@ -64,6 +76,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        
       - name: Run flake check (dry-run)
         run: |
           echo "Running flake check in dry-run mode..."
@@ -87,6 +105,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        
       - name: Build ${{ matrix.system }} configuration
         run: |
           echo "Building ${{ matrix.system }} system..."
@@ -105,6 +129,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
         
       - name: Evaluate yoga configuration
         run: |
