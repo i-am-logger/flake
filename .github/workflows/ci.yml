@@ -16,14 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-        
-      - name: Check Nix version
-        run: nix --version
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         
       - name: Check Nix formatting
         run: |
@@ -46,11 +40,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         
       - name: Validate flake structure
         run: |
@@ -76,11 +67,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         
       - name: Run flake check (dry-run)
         run: |
@@ -105,11 +93,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         
       - name: Build ${{ matrix.system }} configuration
         run: |
@@ -130,11 +115,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-        
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         
       - name: Evaluate yoga configuration
         run: |

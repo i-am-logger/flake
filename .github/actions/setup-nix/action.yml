@@ -1,0 +1,16 @@
+name: 'Setup Nix'
+description: 'Install Nix with caching - reusable setup for all workflows'
+runs:
+  using: composite
+  steps:
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+      
+    - name: Setup Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
+      
+    - name: Verify Nix installation
+      shell: bash
+      run: |
+        echo "✓ Nix version: $(nix --version)"
+        echo "✓ Nix store: $NIX_STORE_DIR"
