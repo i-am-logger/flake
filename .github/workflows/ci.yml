@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  format-check:
-    name: Format Check
+  validate-and-check:
+    name: Validate & Check
     runs-on: host-yoga-repo-flake
     
     steps:
@@ -28,18 +28,6 @@ jobs:
             echo "Using nixpkgs-fmt from nixpkgs..."
             nix run nixpkgs#nixpkgs-fmt -- --check .
           fi
-
-  flake-validate:
-    name: Flake Validation
-    runs-on: host-yoga-repo-flake
-    needs: format-check
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
         
       - name: Validate flake structure
         run: |
@@ -55,33 +43,16 @@ jobs:
         run: |
           echo "Listing all flake outputs..."
           nix flake show
-
-  flake-check:
-    name: Flake Check
-    runs-on: host-yoga-repo-flake
-    needs: flake-validate
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
         
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
-        
-      - name: Run flake check (dry-run)
+      - name: Run flake check
         run: |
-          echo "Running flake check in dry-run mode..."
-          nix flake check --dry-run
-          
-      - name: Run full flake check
-        run: |
-          echo "Running full flake check..."
+          echo "Running flake check..."
           nix flake check --all-systems
 
   build-systems:
     name: Build Systems
     runs-on: host-yoga-repo-flake
-    needs: flake-check
+    needs: validate-and-check
     strategy:
       matrix:
         system: [yoga, skyspy-dev]
@@ -94,6 +65,11 @@ jobs:
       - name: Setup Nix
         uses: ./.github/actions/setup-nix
         
+      - name: Build ${{ matrix.system }} configuration (dry-run)
+        run: |
+          echo "Dry-run building ${{ matrix.system }} system..."
+          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel --dry-run
+          
       - name: Build ${{ matrix.system }} configuration
         run: |
           echo "Building ${{ matrix.system }} system..."
@@ -131,22 +107,18 @@ jobs:
   summary:
     name: Pipeline Summary
     runs-on: host-yoga-repo-flake
-    needs: [format-check, flake-validate, flake-check, build-systems, evaluate-systems]
+    needs: [validate-and-check, build-systems, evaluate-systems]
     if: always()
     
     steps:
       - name: Display results
         run: |
           echo "=== CI/CD Pipeline Summary ==="
-          echo "Format Check: ${{ needs.format-check.result }}"
-          echo "Flake Validation: ${{ needs.flake-validate.result }}"
-          echo "Flake Check: ${{ needs.flake-check.result }}"
+          echo "Validate & Check: ${{ needs.validate-and-check.result }}"
           echo "Build Systems: ${{ needs.build-systems.result }}"
           echo "Evaluate Systems: ${{ needs.evaluate-systems.result }}"
           
-          if [ "${{ needs.format-check.result }}" = "success" ] && \
-             [ "${{ needs.flake-validate.result }}" = "success" ] && \
-             [ "${{ needs.flake-check.result }}" = "success" ] && \
+          if [ "${{ needs.validate-and-check.result }}" = "success" ] && \
              [ "${{ needs.build-systems.result }}" = "success" ] && \
              [ "${{ needs.evaluate-systems.result }}" = "success" ]; then
             echo ""
