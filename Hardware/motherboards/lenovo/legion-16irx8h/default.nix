@@ -15,6 +15,12 @@
     ../../../boot
   ];
 
+  # NVIDIA PRIME configuration for hybrid graphics
+  hardware.nvidia.prime = {
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
+
   # Platform architecture
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

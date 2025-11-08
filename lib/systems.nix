@@ -1,5 +1,13 @@
 { inputs, lib, nixpkgs, ... }:
 
+let
+  # Helper to check if a disko.nix exists next to a hardware module
+  getDisko = hardwarePath:
+    let
+      diskoPath = hardwarePath + "/disko.nix";
+    in
+      if builtins.pathExists diskoPath then diskoPath else null;
+in
 {
   mkSystem = {
     hostname,
@@ -10,6 +18,11 @@
     config ? null,
     extraModules ? [],
   }:
+    let
+      # Find disko configs from hardware modules
+      diskoConfigs = builtins.filter (x: x != null) (map getDisko hardware);
+      hasDisko = (builtins.length diskoConfigs) > 0;
+    in
     lib.nixosSystem {
       specialArgs = {
         inherit inputs;
@@ -18,6 +31,13 @@
       
       modules = (builtins.trace "Hardware modules: ${builtins.toString hardware}" hardware) ++ [
       ]
+      ++ (lib.optionals hasDisko [
+        # Disko partitioning from hardware modules
+        inputs.disko.nixosModules.disko
+        {
+          disko.devices = lib.mkMerge (map (diskoPath: import diskoPath { lib = nixpkgs.lib; }) diskoConfigs);
+        }
+      ])
       ++ (lib.optionals (machine != null) [
         # Machine hardware (deprecated approach)
         machine.path
