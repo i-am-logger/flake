@@ -63,7 +63,7 @@ let
           --set runnerScaleSetName="${hostname}-${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set runnerGroup="default" \
+          --set runnerGroup="Default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
           --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}"}]' \
