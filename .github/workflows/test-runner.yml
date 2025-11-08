@@ -11,7 +11,7 @@ on:
 jobs:
   test-runner:
     name: Test Self-Hosted Runner
-    runs-on: [self-hosted, yoga-flake]
+    runs-on: host-yoga-repo-flake
     
     steps:
       - name: Checkout repository

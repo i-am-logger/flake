@@ -60,7 +60,7 @@ let
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
-          --set runnerScaleSetName="${hostname}-${repo}" \
+          --set runnerScaleSetName="host-${hostname}-repo-${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
           --set runnerGroup="Default" \
