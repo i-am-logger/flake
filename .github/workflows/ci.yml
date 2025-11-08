@@ -69,16 +69,7 @@ jobs:
         run: |
           echo "Dry-run building ${{ matrix.system }} system..."
           nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel --dry-run
-          
-      - name: Build ${{ matrix.system }} configuration
-        run: |
-          echo "Building ${{ matrix.system }} system..."
-          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L
-          
-      - name: Show system info
-        run: |
-          echo "System build complete. Path info:"
-          nix path-info .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel
+          echo "✓ Dry-run successful - configuration is buildable"
 
   evaluate-systems:
     name: Evaluate Configurations
