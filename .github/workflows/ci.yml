@@ -10,7 +10,7 @@ on:
 jobs:
   format-check:
     name: Format Check
-    runs-on: [self-hosted ]
+    runs-on: host-yoga-repo-flake
     
     steps:
       - name: Checkout repository
@@ -33,7 +33,7 @@ jobs:
 
   flake-validate:
     name: Flake Validation
-    runs-on: self-hosted
+    runs-on: host-yoga-repo-flake
     needs: format-check
     
     steps:
@@ -57,7 +57,7 @@ jobs:
 
   flake-check:
     name: Flake Check
-    runs-on: self-hosted
+    runs-on: host-yoga-repo-flake
     needs: flake-validate
     
     steps:
@@ -76,7 +76,7 @@ jobs:
 
   build-systems:
     name: Build Systems
-    runs-on: self-hosted
+    runs-on: host-yoga-repo-flake
     needs: flake-check
     strategy:
       matrix:
@@ -99,7 +99,7 @@ jobs:
 
   evaluate-systems:
     name: Evaluate Configurations
-    runs-on: self-hosted
+    runs-on: host-yoga-repo-flake
     needs: build-systems
     
     steps:
@@ -120,7 +120,7 @@ jobs:
 
   summary:
     name: Pipeline Summary
-    runs-on: self-hosted
+    runs-on: host-yoga-repo-flake
     needs: [format-check, flake-validate, flake-check, build-systems, evaluate-systems]
     if: always()
     
