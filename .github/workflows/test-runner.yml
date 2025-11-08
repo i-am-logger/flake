@@ -11,7 +11,7 @@ on:
 jobs:
   test-runner:
     name: Test Self-Hosted Runner
-    runs-on: [self-hosted, repo-flake]
+    runs-on: self-hosted
     
     steps:
       - name: Checkout repository
