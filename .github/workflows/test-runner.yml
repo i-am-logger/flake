@@ -10,12 +10,8 @@ on:
 
 jobs:
   test-runner:
-    name: Test Runner on ${{ matrix.host }}
-    runs-on: [self-hosted, host-${{ matrix.host }}, repo-flake]
-    strategy:
-      matrix:
-        host: [yoga]
-      fail-fast: false
+    name: Test Self-Hosted Runner
+    runs-on: [self-hosted, repo-flake]
     
     steps:
       - name: Checkout repository
