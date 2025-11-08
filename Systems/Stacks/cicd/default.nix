@@ -55,6 +55,7 @@ let
         fi
 
         # Install runner scale set for ${repo} with hostname in name
+        # Using dind mode with proper configuration
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
@@ -64,10 +65,7 @@ let
           --set minRunners=0 \
           --set maxRunners=5 \
           --set runnerGroup="Default" \
-          --set template.spec.containers[0].name=runner \
-          --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}"}]' \
-          --set-json 'containerMode={"type":"dind"}' \
+          --set containerMode.type="dind" \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         touch /var/lib/arc-runner-set-${repo}-done

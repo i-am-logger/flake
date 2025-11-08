@@ -56,8 +56,11 @@ in
       KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
     };
 
-    # Open API port
-    networking.firewall.allowedTCPPorts = [ cfg.apiPort ];
+    # Open API port and trust k3s network interfaces
+    networking.firewall = {
+      allowedTCPPorts = [ cfg.apiPort ];
+      trustedInterfaces = [ "cni0" "flannel.1" ];
+    };
 
     # Make kubeconfig readable by users
     systemd.services.k3s-kubeconfig-permissions = mkIf cfg.kubeconfigReadable {
@@ -75,5 +78,11 @@ in
         chmod 644 /etc/rancher/k3s/k3s.yaml
       '';
     };
+
+    # Prevent NetworkManager from managing k3s interfaces
+    environment.etc."NetworkManager/conf.d/k3s-unmanaged.conf".text = ''
+      [keyfile]
+      unmanaged-devices=interface-name:cni*;interface-name:flannel*;interface-name:veth*
+    '';
   };
 }
