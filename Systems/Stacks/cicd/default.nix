@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -6,6 +11,7 @@ let
   cfg = config.stacks.cicd;
   # List of repositories to create runner sets for
   repositories = [
+    "flake"
     "loial"
     "logger"
   ];
@@ -21,9 +27,9 @@ let
       after = [ "arc-setup.service" ];
       wantedBy = [ "multi-user.target" ];
       
-      unitConfig = {
-        ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
-      };
+      # unitConfig = {
+      #   ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
+      # };
 
       serviceConfig = {
         Type = "oneshot";
@@ -49,18 +55,18 @@ let
         fi
 
         # Install runner scale set for ${repo} with hostname in name
-        ${pkgs.kubernetes-helm}/bin/helm install arc-runner-set-${repo} \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
-          --set runnerScaleSetName="${hostname}-${repo}" \
+          --set runnerScaleSetName="host-${hostname}-repo-${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set runnerGroup="default" \
+          --set runnerGroup="Default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,build,copilot-agent${optionalString cfg.enableGpu ",gpu"}"}]' \
+          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}"}]' \
           --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
@@ -93,7 +99,10 @@ in
     };
     
     gpuVendor = mkOption {
-      type = types.enum [ "amd" "nvidia" ];
+      type = types.enum [
+        "amd"
+        "nvidia"
+      ];
       default = "amd";
       description = "GPU vendor for device plugin (amd or nvidia)";
     };
@@ -114,31 +123,36 @@ in
       jq
     ];
 
-  # Create GitHub token environment file from gh CLI
+  # Create GitHub token environment file from pass
   # This runs once at activation to populate the token file
+  # To set the token: pass insert github/runner-pat
   system.activationScripts.createGithubRunnerToken = {
     text = ''
       if [ ! -f /persist/etc/github-runner-token ]; then
         echo "Creating GitHub runner token file..."
         mkdir -p /persist/etc
         
-        # Try to get token from gh CLI (run as logger user)
-        if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth status &>/dev/null; then
-          GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth token)
+        # Try to get PAT from pass (run as logger user)
+        if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.pass}/bin/pass show github/runner-pat &>/dev/null; then
+          GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.pass}/bin/pass show github/runner-pat)
           cat > /persist/etc/github-runner-token << EOF
 GITHUB_TOKEN=$GITHUB_TOKEN
 GITHUB_USERNAME=i-am-logger
 EOF
           chmod 600 /persist/etc/github-runner-token
           chown root:root /persist/etc/github-runner-token
-          echo "GitHub runner token file created"
+          echo "GitHub runner token file created from pass"
         else
-          echo "WARNING: gh CLI not authenticated. Please run 'gh auth login' as logger user."
+          echo "WARNING: GitHub PAT not found in pass at github/runner-pat"
+          echo "Please run: pass insert github/runner-pat"
           echo "Then run: sudo nixos-rebuild switch"
         fi
       fi
     '';
-    deps = [ "users" "groups" ];
+    deps = [
+      "users"
+      "groups"
+    ];
   };
 
   # Setup ARC controller after k3s is ready and deploy runner scale sets
@@ -181,7 +195,7 @@ EOF
         ${pkgs.kubernetes-helm}/bin/helm repo update
 
         # Install ARC controller
-        ${pkgs.kubernetes-helm}/bin/helm install arc \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc \
           --namespace arc-systems \
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller

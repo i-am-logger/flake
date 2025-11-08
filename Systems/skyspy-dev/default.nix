@@ -4,6 +4,11 @@ myLib.systems.mkSystem {
   hostname = "skyspy-dev";
   users = [ myLib.users.logger ];
   
+  # Hardware configuration
+  hardware = [
+    ../../Hardware/motherboards/lenovo/legion-16irx8h
+  ];
+  
   stacks = {
     security.enable = true;
     desktop.enable = true;

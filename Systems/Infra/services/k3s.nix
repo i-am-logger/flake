@@ -51,6 +51,11 @@ in
       k3s
     ];
 
+    # Set KUBECONFIG environment variable system-wide
+    environment.variables = {
+      KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+    };
+
     # Open API port
     networking.firewall.allowedTCPPorts = [ cfg.apiPort ];
 

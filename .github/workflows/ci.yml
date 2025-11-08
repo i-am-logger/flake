@@ -1,0 +1,149 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  format-check:
+    name: Format Check
+    runs-on: [self-hosted ]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check Nix version
+        run: nix --version
+        
+      - name: Check Nix formatting
+        run: |
+          echo "Checking Nix file formatting..."
+          if command -v alejandra &> /dev/null; then
+            alejandra --check .
+          elif command -v nixpkgs-fmt &> /dev/null; then
+            find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt --check {} +
+          else
+            echo "Installing alejandra..."
+            nix run nixpkgs#alejandra -- --check .
+          fi
+
+  flake-validate:
+    name: Flake Validation
+    runs-on: self-hosted
+    needs: format-check
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Validate flake structure
+        run: |
+          echo "Validating flake.nix syntax..."
+          nix flake show --json > /dev/null
+          
+      - name: Check flake metadata
+        run: |
+          echo "Checking flake metadata..."
+          nix flake metadata
+          
+      - name: List all outputs
+        run: |
+          echo "Listing all flake outputs..."
+          nix flake show
+
+  flake-check:
+    name: Flake Check
+    runs-on: self-hosted
+    needs: flake-validate
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Run flake check (dry-run)
+        run: |
+          echo "Running flake check in dry-run mode..."
+          nix flake check --dry-run
+          
+      - name: Run full flake check
+        run: |
+          echo "Running full flake check..."
+          nix flake check --all-systems
+
+  build-systems:
+    name: Build Systems
+    runs-on: self-hosted
+    needs: flake-check
+    strategy:
+      matrix:
+        system: [yoga, skyspy-dev]
+      fail-fast: false
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Build ${{ matrix.system }} configuration
+        run: |
+          echo "Building ${{ matrix.system }} system..."
+          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L
+          
+      - name: Show system info
+        run: |
+          echo "System build complete. Path info:"
+          nix path-info .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel
+
+  evaluate-systems:
+    name: Evaluate Configurations
+    runs-on: self-hosted
+    needs: build-systems
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Evaluate yoga configuration
+        run: |
+          echo "Evaluating yoga configuration..."
+          nix eval .#nixosConfigurations.yoga.config.system.name
+          nix eval .#nixosConfigurations.yoga.config.networking.hostName
+          
+      - name: Evaluate skyspy-dev configuration
+        run: |
+          echo "Evaluating skyspy-dev configuration..."
+          nix eval .#nixosConfigurations.skyspy-dev.config.system.name
+          nix eval .#nixosConfigurations.skyspy-dev.config.networking.hostName
+
+  summary:
+    name: Pipeline Summary
+    runs-on: self-hosted
+    needs: [format-check, flake-validate, flake-check, build-systems, evaluate-systems]
+    if: always()
+    
+    steps:
+      - name: Display results
+        run: |
+          echo "=== CI/CD Pipeline Summary ==="
+          echo "Format Check: ${{ needs.format-check.result }}"
+          echo "Flake Validation: ${{ needs.flake-validate.result }}"
+          echo "Flake Check: ${{ needs.flake-check.result }}"
+          echo "Build Systems: ${{ needs.build-systems.result }}"
+          echo "Evaluate Systems: ${{ needs.evaluate-systems.result }}"
+          
+          if [ "${{ needs.format-check.result }}" = "success" ] && \
+             [ "${{ needs.flake-validate.result }}" = "success" ] && \
+             [ "${{ needs.flake-check.result }}" = "success" ] && \
+             [ "${{ needs.build-systems.result }}" = "success" ] && \
+             [ "${{ needs.evaluate-systems.result }}" = "success" ]; then
+            echo ""
+            echo "✓ All checks passed!"
+            exit 0
+          else
+            echo ""
+            echo "✗ Some checks failed"
+            exit 1
+          fi

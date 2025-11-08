@@ -4,6 +4,11 @@ myLib.systems.mkSystem {
   hostname = "yoga";
   users = [ myLib.users.logger ];
   
+  # Hardware configuration
+  hardware = [
+    ../../Hardware/motherboards/gigabyte/x870e-aorus-elite-wifi7
+  ];
+  
   stacks = {
     security = {
       enable = true;

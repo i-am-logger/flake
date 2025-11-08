@@ -1,8 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   # List of repositories to create runner sets for
   repositories = [
+    "flake"
     "loial"
     "logger"
   ];
@@ -46,7 +52,7 @@ let
         fi
 
         # Install runner scale set for ${repo} with hostname in name
-        ${pkgs.kubernetes-helm}/bin/helm install arc-runner-set-${repo} \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
@@ -79,6 +85,11 @@ in
     jq
   ];
 
+  # Set KUBECONFIG environment variable system-wide
+  environment.variables = {
+    KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+  };
+
   # Open k3s API port
   networking.firewall.allowedTCPPorts = [ 6443 ];
 
@@ -86,27 +97,30 @@ in
   # This runs once at activation to populate the token file
   system.activationScripts.createGithubRunnerToken = {
     text = ''
-      if [ ! -f /persist/etc/github-runner-token ]; then
-        echo "Creating GitHub runner token file..."
-        mkdir -p /persist/etc
-        
-        # Try to get token from gh CLI (run as logger user)
-        if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth status &>/dev/null; then
-          GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth token)
-          cat > /persist/etc/github-runner-token << EOF
-GITHUB_TOKEN=$GITHUB_TOKEN
-GITHUB_USERNAME=i-am-logger
-EOF
-          chmod 600 /persist/etc/github-runner-token
-          chown root:root /persist/etc/github-runner-token
-          echo "GitHub runner token file created"
-        else
-          echo "WARNING: gh CLI not authenticated. Please run 'gh auth login' as logger user."
-          echo "Then run: sudo nixos-rebuild switch"
-        fi
-      fi
+            if [ ! -f /persist/etc/github-runner-token ]; then
+              echo "Creating GitHub runner token file..."
+              mkdir -p /persist/etc
+              
+              # Try to get token from gh CLI (run as logger user)
+              if ${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth status &>/dev/null; then
+                GITHUB_TOKEN=$(${pkgs.sudo}/bin/sudo -u logger ${pkgs.gh}/bin/gh auth token)
+                cat > /persist/etc/github-runner-token << EOF
+      GITHUB_TOKEN=$GITHUB_TOKEN
+      GITHUB_USERNAME=i-am-logger
+      EOF
+                chmod 600 /persist/etc/github-runner-token
+                chown root:root /persist/etc/github-runner-token
+                echo "GitHub runner token file created"
+              else
+                echo "WARNING: gh CLI not authenticated. Please run 'gh auth login' as logger user."
+                echo "Then run: sudo nixos-rebuild switch"
+              fi
+            fi
     '';
-    deps = [ "users" "groups" ];
+    deps = [
+      "users"
+      "groups"
+    ];
   };
 
   # Setup ARC controller after k3s is ready and deploy runner scale sets
@@ -165,7 +179,7 @@ EOF
         ${pkgs.kubernetes-helm}/bin/helm repo update
 
         # Install ARC controller
-        ${pkgs.kubernetes-helm}/bin/helm install arc \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc \
           --namespace arc-systems \
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
