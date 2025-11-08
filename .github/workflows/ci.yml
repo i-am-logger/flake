@@ -22,13 +22,11 @@ jobs:
       - name: Check Nix formatting
         run: |
           echo "Checking Nix file formatting..."
-          if command -v alejandra &> /dev/null; then
-            alejandra --check .
-          elif command -v nixpkgs-fmt &> /dev/null; then
-            find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt --check {} +
+          if command -v nixpkgs-fmt &> /dev/null; then
+            nixpkgs-fmt --check .
           else
-            echo "Installing alejandra..."
-            nix run nixpkgs#alejandra -- --check .
+            echo "Using nixpkgs-fmt from nixpkgs..."
+            nix run nixpkgs#nixpkgs-fmt -- --check .
           fi
 
   flake-validate:
