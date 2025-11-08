@@ -1,0 +1,72 @@
+name: Test Self-Hosted Runner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - integration-work
+    paths:
+      - '.github/workflows/test-runner.yml'
+
+jobs:
+  test-runner:
+    name: Test Runner on ${{ matrix.host }}
+    runs-on: [self-hosted, host-${{ matrix.host }}, repo-flake]
+    strategy:
+      matrix:
+        host: [yoga]
+      fail-fast: false
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: System information
+        run: |
+          echo "🖥️  Hostname: $(hostname)"
+          echo "🐧 OS: $(uname -a)"
+          echo "💾 Disk space:"
+          df -h / /nix /persist
+          echo ""
+          echo "🧠 Memory:"
+          free -h
+          echo ""
+          echo "🔧 Nix version:"
+          nix --version
+      
+      - name: Check GPU availability
+        run: |
+          if command -v rocm-smi &> /dev/null; then
+            echo "🎮 AMD GPU detected:"
+            rocm-smi
+          elif command -v nvidia-smi &> /dev/null; then
+            echo "🎮 NVIDIA GPU detected:"
+            nvidia-smi
+          else
+            echo "ℹ️  No GPU tools found (rocm-smi or nvidia-smi)"
+          fi
+      
+      - name: Docker availability
+        run: |
+          echo "🐳 Docker version:"
+          docker --version
+          echo ""
+          echo "🐳 Docker info:"
+          docker info
+      
+      - name: Nix build test
+        run: |
+          echo "🔨 Testing Nix build capability..."
+          nix-build -E '(import <nixpkgs> {}).hello'
+      
+      - name: Runner labels
+        run: |
+          echo "🏷️  This runner has the following labels:"
+          echo "  - self-hosted"
+          echo "  - host-$(hostname)"
+          echo "  - repo-flake"
+      
+      - name: Success message
+        run: |
+          echo "✅ Self-hosted runner test completed successfully!"
+          echo "🎉 Runner is working properly on $(hostname)"
