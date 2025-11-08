@@ -66,7 +66,7 @@ let
           --set runnerGroup="default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,linux,x64,k8s,docker,build,copilot-agent,repo-${repo},host-${hostname},${hostname}-${repo}${optionalString cfg.enableGpu ",gpu-${cfg.gpuVendor}"}"}]' \
+          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}${optionalString cfg.enableGpu ",gpu"}"}]' \
           --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
@@ -193,7 +193,7 @@ in
         ${pkgs.kubernetes-helm}/bin/helm repo update
 
         # Install ARC controller
-        ${pkgs.kubernetes-helm}/bin/helm install arc \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc \
           --namespace arc-systems \
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller

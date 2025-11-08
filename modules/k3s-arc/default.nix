@@ -179,7 +179,7 @@ in
         ${pkgs.kubernetes-helm}/bin/helm repo update
 
         # Install ARC controller
-        ${pkgs.kubernetes-helm}/bin/helm install arc \
+        ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc \
           --namespace arc-systems \
           --create-namespace \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
