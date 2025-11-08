@@ -12,6 +12,6 @@
     fi
     cd /home/logger/GitHub/logger/nixpkgs || exit 1
     nix-shell -p nixpkgs-review --run "nixpkgs-review pr $1 --no-shell"
-  ''
+  '';
 
-  }
+}
