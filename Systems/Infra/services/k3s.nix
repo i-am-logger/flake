@@ -8,25 +8,25 @@ in
 {
   options.infra.services.k3s = {
     enable = mkEnableOption "k3s Kubernetes cluster";
-    
+
     role = mkOption {
       type = types.enum [ "server" "agent" ];
       default = "server";
       description = "k3s role - server or agent";
     };
-    
+
     disableTraefik = mkOption {
       type = types.bool;
       default = true;
       description = "Disable built-in Traefik ingress controller";
     };
-    
+
     apiPort = mkOption {
       type = types.port;
       default = 6443;
       description = "k3s API server port";
     };
-    
+
     kubeconfigReadable = mkOption {
       type = types.bool;
       default = true;

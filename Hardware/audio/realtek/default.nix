@@ -2,7 +2,7 @@
 
 {
   # Realtek audio driver configuration
-  
+
   # Enable sound with pipewire
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;

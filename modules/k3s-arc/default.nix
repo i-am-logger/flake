@@ -1,8 +1,7 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }:
 
 let
@@ -12,10 +11,10 @@ let
     "loial"
     "logger"
   ];
-  
+
   githubUsername = "i-am-logger";
   hostname = config.networking.hostName;
-  
+
   # Generate runner set services for each repository
   mkRunnerSetService = repo: {
     name = "arc-runner-set-${repo}";
@@ -23,7 +22,7 @@ let
       description = "Deploy GitHub Actions Runner Scale Set for ${repo}";
       after = [ "arc-setup.service" ];
       wantedBy = [ "multi-user.target" ];
-      
+
       unitConfig = {
         ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
       };
@@ -145,7 +144,7 @@ in
       description = "Setup GitHub Actions Runner Controller";
       after = [ "k3s.service" ];
       wantedBy = [ "multi-user.target" ];
-      
+
       unitConfig = {
         ConditionPathExists = "!/var/lib/arc-setup-done";
       };

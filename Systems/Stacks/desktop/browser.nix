@@ -6,7 +6,7 @@
     enable = true;
     extensions = [
       # "naepdomgkenhinolocfifgehidddafch"  # Browserpass CE extension (disabled)
-      "aeblfdkhhhdcdjpifhhbdiojplfjncoa"  # 1Password extension
+      "aeblfdkhhhdcdjpifhhbdiojplfjncoa" # 1Password extension
     ];
   };
 }

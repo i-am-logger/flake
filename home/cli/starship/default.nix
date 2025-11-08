@@ -8,7 +8,7 @@
     enable = true;
     settings = {
       "$schema" = "https://starship.rs/config-schema.json";
-      
+
       # Main format - exactly like your TOML
       format = lib.concatStrings [
         "$shell $nix_shell"
@@ -24,7 +24,7 @@
         "$line_break"
         "$sudo$character "
       ];
-      
+
       right_format = "";
       continuation_prompt = "[∙](bright-black) ";
       scan_timeout = 1;
@@ -94,8 +94,8 @@
         disabled = false;
         detect_extensions = [ "c" "h" ];
         detect_files = [ "configure.ac" ];
-        detect_folders = [];
-        commands = [[ "cc" "--version" ] [ "gcc" "--version" ] [ "clang" "--version" ]];
+        detect_folders = [ ];
+        commands = [ [ "cc" "--version" ] [ "gcc" "--version" ] [ "clang" "--version" ] ];
       };
 
       # Character - exactly from your TOML
@@ -190,7 +190,7 @@
         truncation_symbol = "…";
         only_attached = false;
         always_show_remote = false;
-        ignore_branches = [];
+        ignore_branches = [ ];
         disabled = false;
       };
 
@@ -267,7 +267,7 @@
         ssh_only = true;
         ssh_symbol = " 󰣀";
         trim_at = ".";
-        detect_env_vars = [];
+        detect_env_vars = [ ];
         format = "[@$hostname$ssh_symbol]($style)";
         style = "bold yellow";
         disabled = false;
@@ -306,7 +306,7 @@
         disabled = false;
         detect_extensions = [ "nim" "nims" "nimble" ];
         detect_files = [ "nim.cfg" ];
-        detect_folders = [];
+        detect_folders = [ ];
       };
 
       # Nix shell - exactly from your TOML
@@ -415,7 +415,7 @@
         disabled = false;
         detect_extensions = [ "rs" ];
         detect_files = [ "Cargo.toml" ];
-        detect_folders = [];
+        detect_folders = [ ];
       };
 
       # Shell - exactly from your TOML
@@ -474,7 +474,7 @@
 
       # Username - exactly from your TOML
       username = {
-        detect_env_vars = [];
+        detect_env_vars = [ ];
         format = "[$user]($style)";
         style_root = "bold red";
         style_user = "bold yellow";

@@ -5,7 +5,7 @@
   boot.loader = {
     # Fast boot timeout - 2 seconds
     timeout = lib.mkDefault 2;
-    
+
     # EFI configuration
     efi = {
       canTouchEfiVariables = lib.mkDefault true;

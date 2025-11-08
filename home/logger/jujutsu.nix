@@ -1,6 +1,5 @@
-{
-  pkgs,
-  ...
+{ pkgs
+, ...
 }:
 
 {
@@ -54,7 +53,7 @@
 
       git = {
         # Git integration settings
-        auto-local-bookmark = true;  # Renamed from auto-local-branch
+        auto-local-bookmark = true; # Renamed from auto-local-branch
         push-branch-prefix = "jj/";
         abandon-unreachable-commits = false;
         # minutes before auto-expiring abandoned commits

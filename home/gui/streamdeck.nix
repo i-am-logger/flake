@@ -233,15 +233,15 @@ in
   home.packages = with pkgs; [
     # Stream Deck software
     streamdeck-ui
-    
+
     # Audio utilities (already have pamixer from your config)
     pamixer
-    
+
     # Notification support
     libnotify
-    
+
     # Additional useful packages for Stream Deck
-    imagemagick  # For image processing
+    imagemagick # For image processing
     # ffmpeg already provided by obs-studio.nix (ffmpeg-full)
   ];
 
@@ -251,9 +251,9 @@ in
       source = micToggleScript;
       executable = true;
     };
-    
+
     ".local/bin/mic-status" = {
-      source = micStatusScript;  
+      source = micStatusScript;
       executable = true;
     };
 
@@ -266,9 +266,9 @@ in
       source = audioToggleScript;
       executable = true;
     };
-    
+
     ".local/bin/audio-status" = {
-      source = audioStatusScript;  
+      source = audioStatusScript;
       executable = true;
     };
 
@@ -281,9 +281,9 @@ in
       source = obsVirtualCamToggleScript;
       executable = true;
     };
-    
+
     ".local/bin/obs-virtualcam-status" = {
-      source = obsVirtualCamStatusScript;  
+      source = obsVirtualCamStatusScript;
       executable = true;
     };
 
@@ -297,7 +297,7 @@ in
       # You can replace this with a custom icon file
       text = "";
     };
-    
+
     ".local/share/streamdeck/icons/mic-live.png" = {
       # You can replace this with a custom icon file  
       text = "";
@@ -307,7 +307,7 @@ in
       # You can replace this with a custom icon file
       text = "";
     };
-    
+
     ".local/share/streamdeck/icons/audio-live.png" = {
       # You can replace this with a custom icon file  
       text = "";
@@ -326,13 +326,13 @@ in
       After = [ "graphical-session.target" ];
       Wants = [ "graphical-session.target" ];
     };
-    
+
     Service = {
       ExecStart = "${pkgs.streamdeck-ui}/bin/streamdeck";
       Restart = "always";
       RestartSec = 3;
     };
-    
+
     Install = {
       WantedBy = [ "default.target" ];
     };

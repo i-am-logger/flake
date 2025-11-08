@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 
-{  
+{
   home.packages = with pkgs; [
     pkgs.neofetch
     pkgs.w3m

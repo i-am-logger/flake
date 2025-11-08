@@ -9,9 +9,9 @@
 
   config = lib.mkIf (config.stacks.desktop.enable && config.stacks.desktop.audioTools.enable) {
     environment.systemPackages = with pkgs; [
-      alsa-utils    # ALSA utilities (amixer, alsamixer, etc.)
-      pavucontrol   # PulseAudio/PipeWire GUI volume control
-      pulseaudio    # PulseAudio utilities
+      alsa-utils # ALSA utilities (amixer, alsamixer, etc.)
+      pavucontrol # PulseAudio/PipeWire GUI volume control
+      pulseaudio # PulseAudio utilities
     ];
   };
 }

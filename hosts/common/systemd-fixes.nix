@@ -15,7 +15,7 @@
 
   # Configure kernel audit buffer settings and hardware fixes
   boot.kernelParams = [
-    "audit_backlog_limit=2048"  # Increase from default 1024
+    "audit_backlog_limit=2048" # Increase from default 1024
     "audit=1"
     # Generic hardware fixes
     # (Hardware-specific fixes like TSC, ACPI thermal moved to nixos-hardware)
@@ -56,12 +56,12 @@
   boot.kernel.sysctl = {
     # Increase virtual memory areas for applications like streamdeck-ui
     "vm.max_map_count" = lib.mkDefault 2147483642;
-    
+
     # Better memory management
     "vm.swappiness" = lib.mkDefault 10;
     "vm.dirty_ratio" = lib.mkDefault 10;
     "vm.dirty_background_ratio" = lib.mkDefault 5;
-    
+
     # Improve network performance (allow override by specific configs)
     "net.core.default_qdisc" = lib.mkDefault "fq";
     "net.ipv4.tcp_congestion_control" = lib.mkDefault "bbr";

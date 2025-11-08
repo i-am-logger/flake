@@ -4,8 +4,8 @@
   imports = [
     ./hardware-configuration.nix
     ./drivers/windows-dual-boot.nix
-    ./drivers/uefi-boot.nix  # Keep for kernel config
-    
+    ./drivers/uefi-boot.nix # Keep for kernel config
+
     # Shared hardware modules  
     ../../../cpu/intel
     ../../../gpu/nvidia

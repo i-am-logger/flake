@@ -1,10 +1,9 @@
 # Proposed updated default.nix for nixos-hardware/lenovo/legion/16irx8h
 # This adds the audio fix that should be contributed upstream
 
-{
-  lib,
-  config,
-  ...
+{ lib
+, config
+, ...
 }:
 {
   imports = [

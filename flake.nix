@@ -51,21 +51,20 @@
   };
 
   outputs =
-    inputs@{
-      self,
-      nixos-hardware,
-      nixpkgs,
-      disko,
-      impermanence,
-      flake-utils,
-      sops-nix,
-      secrets,
-      home-manager,
-      stylix,
-      lanzaboote,
-      ags,
-      ironbar,
-      ...
+    inputs@{ self
+    , nixos-hardware
+    , nixpkgs
+    , disko
+    , impermanence
+    , flake-utils
+    , sops-nix
+    , secrets
+    , home-manager
+    , stylix
+    , lanzaboote
+    , ags
+    , ironbar
+    , ...
     }:
     let
       lib = nixpkgs.lib;
@@ -83,6 +82,8 @@
       myLib = import ./lib { inherit inputs lib nixpkgs; };
     in
     {
+      formatter.x86_64-linux = pkgs.nixpkgs-fmt;
+
       nixosConfigurations = {
         yoga = import ./Systems/yoga { inherit myLib; };
         skyspy-dev = import ./Systems/skyspy-dev { inherit myLib; };

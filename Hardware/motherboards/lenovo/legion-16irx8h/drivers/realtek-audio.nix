@@ -3,13 +3,13 @@
 {
   # Realtek ALC3287 audio chipset driver configuration
   # Lenovo Legion Pro 7 16IRX8H specific
-  
+
   # Disable PulseAudio in favor of PipeWire
   services.pulseaudio.enable = false;
-  
+
   # Enable RealtimeKit for low-latency audio
   security.rtkit.enable = true;
-  
+
   # PipeWire audio server with JACK support
   services.pipewire = {
     enable = true;
@@ -20,7 +20,7 @@
     jack.enable = true;
     wireplumber.enable = true;
   };
-  
+
   # Hardware fix: Unmute speaker on boot
   # The speaker is muted by default on this hardware
   systemd.services.fix-audio-speaker = {

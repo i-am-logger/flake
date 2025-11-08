@@ -8,16 +8,16 @@ in
 {
   # Install icon theme packages for webapp icons
   home.packages = with pkgs; [
-    papirus-icon-theme  # Best webapp icon coverage
-    adwaita-icon-theme  # GNOME default icons
+    papirus-icon-theme # Best webapp icon coverage
+    adwaita-icon-theme # GNOME default icons
   ];
 
   programs.webApps = {
     enable = true;
-    
+
     # Use chromium with Widevine enabled for DRM content like Spotify
     browser = chromiumWithWidevine;
-    
+
     apps = {
       gmail = {
         url = "https://mail.google.com";
@@ -27,7 +27,7 @@ in
         mimeTypes = [ "x-scheme-handler/mailto" ];
         startupWmClass = "gmail-webapp";
       };
-      
+
       # Electron app replacements
       vscode = {
         url = "https://vscode.dev";
@@ -36,7 +36,7 @@ in
         categories = [ "Development" "TextEditor" ];
         startupWmClass = "vscode-webapp";
       };
-      
+
       spotify = {
         url = "https://open.spotify.com";
         name = "Spotify";
@@ -44,7 +44,7 @@ in
         categories = [ "Audio" "Music" "AudioVideo" ];
         startupWmClass = "spotify-webapp";
       };
-      
+
       # Social and Development
       github = {
         url = "https://github.com";
@@ -53,7 +53,7 @@ in
         categories = [ "Development" "Network" ];
         startupWmClass = "github-webapp";
       };
-      
+
       discord = {
         url = "https://discord.com/app";
         name = "Discord";
@@ -61,7 +61,7 @@ in
         categories = [ "Network" "Chat" "Game" ];
         startupWmClass = "discord-webapp";
       };
-      
+
       whatsapp = {
         url = "https://web.whatsapp.com";
         name = "WhatsApp";
@@ -69,7 +69,7 @@ in
         categories = [ "Network" "Chat" "InstantMessaging" ];
         startupWmClass = "whatsapp-webapp";
       };
-      
+
       # Media
       youtube = {
         url = "https://youtube.com";
@@ -78,7 +78,7 @@ in
         categories = [ "AudioVideo" "Network" "Video" ];
         startupWmClass = "youtube-webapp";
       };
-      
+
       netflix = {
         url = "https://netflix.com";
         name = "Netflix";
@@ -86,7 +86,7 @@ in
         categories = [ "AudioVideo" "Video" "Network" ];
         startupWmClass = "netflix-webapp";
       };
-      
+
       twitch = {
         url = "https://twitch.tv";
         name = "Twitch";
@@ -94,7 +94,7 @@ in
         categories = [ "AudioVideo" "Video" "Network" "Game" ];
         startupWmClass = "twitch-webapp";
       };
-      
+
       # Video Conferencing
       zoom = {
         url = "https://zoom.us/signin";
@@ -103,7 +103,7 @@ in
         categories = [ "Network" "VideoConference" "Office" ];
         startupWmClass = "zoom-webapp";
       };
-      
+
       # AI Assistants
       chatgpt = {
         url = "https://chat.openai.com";
@@ -112,7 +112,7 @@ in
         categories = [ "Network" "Office" "Education" ];
         startupWmClass = "chatgpt-webapp";
       };
-      
+
       claude = {
         url = "https://claude.ai";
         name = "Claude";
@@ -120,7 +120,7 @@ in
         categories = [ "Network" "Office" "Education" ];
         startupWmClass = "claude-webapp";
       };
-      
+
       grok = {
         url = "https://grok.com";
         name = "Grok";
@@ -128,7 +128,7 @@ in
         categories = [ "Network" "Office" "Education" ];
         startupWmClass = "grok-webapp";
       };
-      
+
       x = {
         url = "https://x.com";
         name = "X (Twitter)";

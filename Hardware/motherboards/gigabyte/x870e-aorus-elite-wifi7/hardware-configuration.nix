@@ -5,26 +5,27 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "nvme" "ahci" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  
+
   # Kernel parameters to optimize AMD integrated GPU memory allocation
   boot.kernelParams = [
-    "amdgpu.gttsize=8192"     # Increase GTT (Graphics Translation Table) size to 8GB
-    "amdgpu.vramlimit=4096"   # Set VRAM limit to 4GB (adjust based on available system RAM)
+    "amdgpu.gttsize=8192" # Increase GTT (Graphics Translation Table) size to 8GB
+    "amdgpu.vramlimit=4096" # Set VRAM limit to 4GB (adjust based on available system RAM)
     "amdgpu.vis_vramlimit=512" # Visible VRAM limit
-    "amdgpu.moverate=1000"    # Faster memory movement
-    
+    "amdgpu.moverate=1000" # Faster memory movement
+
     # Memory management optimizations for large models
-    "vm.swappiness=10"        # Reduce swapping to keep model in RAM
-    "vm.dirty_ratio=5"        # Reduce dirty page cache to free memory faster
-    "vm.dirty_background_ratio=2"  # Background dirty page writeback
-    "transparent_hugepage=madvise"  # Use huge pages only when requested
+    "vm.swappiness=10" # Reduce swapping to keep model in RAM
+    "vm.dirty_ratio=5" # Reduce dirty page cache to free memory faster
+    "vm.dirty_background_ratio=2" # Background dirty page writeback
+    "transparent_hugepage=madvise" # Use huge pages only when requested
   ];
 
   # fileSystems."/" =
@@ -49,7 +50,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  
+
   # AMD GPU support
   hardware.graphics = {
     enable = true;
@@ -59,7 +60,7 @@
     ];
     # Note: amdvlk has been removed, RADV is now the default AMD Vulkan driver
   };
-  
+
   # Enable ROCm support
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"

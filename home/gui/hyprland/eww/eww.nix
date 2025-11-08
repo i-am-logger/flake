@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
@@ -16,15 +16,15 @@ pkgs.mkShell {
     wlr-randr
     slurp
     # For scripts
-    pulseaudio  # pactl for volume-deflisten
-    jq          # JSON processing for get-workspaces
-    socat       # Socket communication for workspace monitoring
-    util-linux  # date command
-    bash        # Bash shell for scripts
+    pulseaudio # pactl for volume-deflisten
+    jq # JSON processing for get-workspaces
+    socat # Socket communication for workspace monitoring
+    util-linux # date command
+    bash # Bash shell for scripts
     # Fonts
-    nerd-fonts.fira-code  # FiraCode Nerd Font to match stylix
+    nerd-fonts.fira-code # FiraCode Nerd Font to match stylix
   ];
-  
+
   shellHook = ''
     echo "Eww testing environment ready!"
     echo "Run 'eww open bar' to start the bar"

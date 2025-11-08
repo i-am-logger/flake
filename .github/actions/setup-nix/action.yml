@@ -1,0 +1,26 @@
+name: 'Setup Nix'
+description: 'Install Nix with caching - reusable setup for all workflows'
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        # Install xz-utils which is required by magic-nix-cache-action
+        if ! command -v xz &> /dev/null; then
+          echo "Installing xz-utils..."
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xz-utils
+        fi
+        
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+      
+    - name: Setup Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@main
+      
+    - name: Verify Nix installation
+      shell: bash
+      run: |
+        echo "✓ Nix version: $(nix --version)"
+        echo "✓ Nix store: $NIX_STORE_DIR"

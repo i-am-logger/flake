@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.stacks.mcp-servers;
-  
+
   # MCP Server packages
   mcp-packages = {
     # rs-mcp-filesystem = pkgs.callPackage ./servers/filesystem.nix { };

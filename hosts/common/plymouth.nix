@@ -6,7 +6,7 @@
     # Let Stylix handle the theme - it creates a cohesive look
     # with your system's color scheme and styling
     # Stylix will automatically configure the "stylix" Plymouth theme
-    
+
     # If you want to override Stylix later, you can uncomment:
     # theme = lib.mkForce "nixos-bgrt";  # NixOS logo with spinner
     # theme = lib.mkForce "spinner";     # Simple Windows-like spinner

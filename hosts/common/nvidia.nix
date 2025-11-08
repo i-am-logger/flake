@@ -1,8 +1,7 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
+{ pkgs
+, lib
+, config
+, ...
 }:
 {
   hardware.graphics = {
@@ -62,10 +61,10 @@
     "nvidia_drm"
   ];
   boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-  
+
   # Fix NVIDIA driver version mismatch by ensuring consistent versions
   boot.kernelParams = [
-    "nvidia-drm.modeset=1"  # Enable DRM kernel mode setting
+    "nvidia-drm.modeset=1" # Enable DRM kernel mode setting
   ];
 
   # systemd.services.nvidia-control-devices = {

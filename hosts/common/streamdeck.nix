@@ -23,8 +23,8 @@
   '';
 
   # Ensure the user is in the required groups
-  users.groups.streamdeck = {};
-  
+  users.groups.streamdeck = { };
+
   # Add necessary system packages with Qt platform fixes
   environment.systemPackages = with pkgs; [
     streamdeck-ui
@@ -32,7 +32,7 @@
     libsForQt5.qt5.qtwayland
     qt6.qtwayland
   ];
-  
+
   # Fix Qt platform plugin issues for streamdeck-ui
   environment.sessionVariables = {
     # Set Qt platform plugins path
@@ -42,7 +42,7 @@
     # Enable Qt logging for debugging
     QT_LOGGING_RULES = "qt.qpa.plugin.debug=false";
   };
-  
+
   # Disable streamdeck-ui system service if it's causing issues
   # Users should run it manually from their desktop session
   systemd.user.services.streamdeck-ui = {

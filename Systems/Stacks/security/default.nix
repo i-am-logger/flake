@@ -13,19 +13,19 @@ in
 
   options.stacks.security = {
     enable = mkEnableOption "security stack (secure-boot + yubikey + audit)";
-    
+
     secureBoot.enable = mkOption {
       type = types.bool;
       default = true;
       description = "Enable secure boot with lanzaboote";
     };
-    
+
     yubikey.enable = mkOption {
       type = types.bool;
       default = true;
       description = "Enable YubiKey support";
     };
-    
+
     auditRules.enable = mkOption {
       type = types.bool;
       default = true;
@@ -64,7 +64,7 @@ in
         "-a exit,always -F arch=b64 -F euid=0 -S execve"
         "-a exit,always -F arch=b32 -F euid=0 -S execve"
       ];
-      
+
       security.sudo.extraConfig = ''
         Defaults timestamp_timeout=0
         Defaults !tty_tickets

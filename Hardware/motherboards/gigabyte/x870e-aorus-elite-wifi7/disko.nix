@@ -4,15 +4,15 @@
     "/" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=16G"  # Reduced from 32G to free more RAM for GPU
+        "size=16G" # Reduced from 32G to free more RAM for GPU
         "mode=755"
-        "noatime"   # Reduce disk I/O overhead
+        "noatime" # Reduce disk I/O overhead
       ];
     };
     "/tmp" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=8G"   # Moderate size for temporary files
+        "size=8G" # Moderate size for temporary files
         "mode=755"
         "noatime"
       ];
@@ -21,7 +21,7 @@
     "/tmp/gpu-workdir" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=16G"  # Fast storage for GPU temp files
+        "size=16G" # Fast storage for GPU temp files
         "mode=755"
         "noatime"
       ];
