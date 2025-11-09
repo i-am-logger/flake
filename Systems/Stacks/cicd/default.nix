@@ -27,10 +27,6 @@ let
       after = [ "arc-setup.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      # unitConfig = {
-      #   ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
-      # };
-
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -54,23 +50,23 @@ let
           exit 1
         fi
 
-        # Install runner scale set for ${repo} with hostname in name
+        # Install runner scale set for ${repo} - repo-level registration
+        # Adds hostname label so workflows can target specific machines
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
-          --set runnerScaleSetName="host-${hostname}-repo-${repo}" \
+          --set runnerScaleSetName="${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set runnerGroup="Default" \
           --set template.spec.containers[0].name=runner \
           --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set-json 'template.spec.containers[0].env=[{"name":"RUNNER_LABELS","value":"self-hosted,host-${hostname},repo-${repo}"}]' \
+          --set template.spec.containers[0].env[0].name=RUNNER_LABELS \
+          --set template.spec.containers[0].env[0].value="hostname:${hostname}" \
           --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
-        touch /var/lib/arc-runner-set-${repo}-done
         echo "Runner scale set for ${repo} deployed successfully"
       '';
     };
@@ -79,12 +75,6 @@ in
 {
   options.stacks.cicd = {
     enable = mkEnableOption "CI/CD stack (GitHub Actions Runners + k3s)";
-
-    repositories = mkOption {
-      type = types.listOf types.str;
-      default = repositories;
-      description = "List of repositories to create runner sets for";
-    };
 
     githubUsername = mkOption {
       type = types.str;
@@ -199,6 +189,29 @@ in
             --namespace arc-systems \
             --create-namespace \
             oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+          # Patch ClusterRole to add missing RBAC permissions for secrets and pods
+          # The controller needs these to create JIT config secrets for runner pods
+          # See: https://github.com/actions/actions-runner-controller/discussions/3160
+          ${pkgs.kubectl}/bin/kubectl patch clusterrole arc-gha-rs-controller --type=json -p='[
+            {"op": "add", "path": "/rules/-", "value": {
+              "apiGroups": [""],
+              "resources": ["secrets"],
+              "verbs": ["create", "delete", "get", "list", "patch", "update", "watch"]
+            }},
+            {"op": "add", "path": "/rules/-", "value": {
+              "apiGroups": [""],
+              "resources": ["pods"],
+              "verbs": ["create", "delete", "get", "patch", "update"]
+            }},
+            {"op": "add", "path": "/rules/-", "value": {
+              "apiGroups": ["rbac.authorization.k8s.io"],
+              "resources": ["roles", "rolebindings"],
+              "verbs": ["create", "delete", "get", "patch", "update"]
+            }}
+          ]'
+
+          echo "RBAC permissions patched for ARC controller"
 
           ${optionalString cfg.enableGpu (
             if cfg.gpuVendor == "amd" then ''

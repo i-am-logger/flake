@@ -6,12 +6,13 @@ on:
 jobs:
   test-runner:
     name: Test Self-Hosted Runner
-    runs-on: host-yoga-repo-flake
-    
+    runs-on:
+      - flake
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: System information
         run: |
           echo "🖥️  Hostname: $(hostname)"
@@ -21,7 +22,7 @@ jobs:
           echo ""
           echo "🧠 Memory:"
           free -h
-      
+
       - name: Check GPU availability
         run: |
           if command -v rocm-smi &> /dev/null; then
@@ -33,7 +34,7 @@ jobs:
           else
             echo "ℹ️  No GPU tools found (rocm-smi or nvidia-smi)"
           fi
-      
+
       - name: Docker availability
         run: |
           echo "🐳 Docker version:"
@@ -41,21 +42,21 @@ jobs:
           echo ""
           echo "🐳 Docker info:"
           docker info
-      
+
       - name: Container test
         run: |
           echo "📦 Testing container capabilities..."
           echo "Current working directory: $(pwd)"
           echo "User: $(whoami)"
           echo "Available shells: $(cat /etc/shells 2>/dev/null || echo 'N/A')"
-      
+
       - name: Runner labels
         run: |
           echo "🏷️  This runner has the following labels:"
           echo "  - self-hosted"
           echo "  - host-$(hostname)"
           echo "  - repo-flake"
-      
+
       - name: Success message
         run: |
           echo "✅ Self-hosted runner test completed successfully!"

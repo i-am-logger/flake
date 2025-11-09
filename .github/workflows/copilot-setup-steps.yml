@@ -5,7 +5,8 @@ on:
 
 jobs:
   copilot-setup-steps:
-    runs-on: host-yoga-repo-flake
+    runs-on:
+      - flake
     permissions:
       contents: write
       pull-requests: write
