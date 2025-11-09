@@ -19,6 +19,9 @@ let
   githubUsername = "i-am-logger";
   hostname = config.networking.hostName;
 
+  # Custom NixOS runner image from GHCR
+  runnerImageName = "ghcr.io/i-am-logger/github-runner:latest";
+
   # Generate runner set services for each repository
   mkRunnerSetService = repo: {
     name = "arc-runner-set-${repo}";
@@ -61,6 +64,7 @@ let
           --set minRunners=0 \
           --set maxRunners=5 \
           --set-json 'containerMode={"type":"dind"}' \
+          ${optionalString cfg.useCustomImage "--set template.spec.containers[0].image=\"${runnerImageName}\""} \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         echo "Runner scale set for ${repo} deployed successfully"
@@ -76,6 +80,12 @@ in
       type = types.str;
       default = "i-am-logger";
       description = "GitHub username for runner authentication";
+    };
+
+    useCustomImage = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Use custom NixOS-based runner image instead of default";
     };
 
     enableGpu = mkOption {

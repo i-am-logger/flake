@@ -1,0 +1,60 @@
+name: Release PR Validation
+
+on:
+  push:
+    branches:
+      - 'release-please--**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Release
+    runs-on: flake
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+      
+      - name: Check Nix formatting
+        run: |
+          echo "Checking Nix file formatting..."
+          if command -v nixpkgs-fmt &> /dev/null; then
+            nixpkgs-fmt --check .
+          else
+            nix run nixpkgs#nixpkgs-fmt -- --check .
+          fi
+      
+      - name: Validate flake
+        run: |
+          echo "Validating flake.nix syntax..."
+          nix flake show --json > /dev/null
+      
+      - name: Build runner image
+        run: |
+          echo "Building GitHub Actions runner image..."
+          nix build .#github-runner-image
+          echo "✓ Runner image builds successfully"
+      
+      - name: Test runner image
+        run: |
+          echo "Testing GitHub Actions runner image..."
+          nix build .#checks.x86_64-linux.github-runner-test
+          echo "✓ Runner image tests passed"
+      
+      - name: Build system configurations
+        run: |
+          echo "Testing system configurations..."
+          nix build .#nixosConfigurations.yoga.config.system.build.toplevel --dry-run
+          nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel --dry-run
+          echo "✓ All system configurations are buildable"
+      
+      - name: Build installer ISO
+        run: |
+          echo "Building installer ISO..."
+          nix build .#installer-iso
+          echo "✓ Installer ISO builds successfully"
