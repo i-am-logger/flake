@@ -7,10 +7,13 @@ jobs:
   copilot-setup-steps:
     runs-on: host-yoga-repo-flake
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
+      issues: write
     
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_SERVER_URL: ${{ github.server_url }}
       GITHUB_API_URL: ${{ github.api_url }}
       GITHUB_GRAPHQL_URL: ${{ github.graphql_url }}
@@ -21,11 +24,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends wget xz-utils ca-certificates curl git
+          sudo update-ca-certificates || true
+
       - name: Setup Node.js for MCP servers
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Set GitHub host for CodeQL
         run: |
           echo "GITHUB_HOST=github.com" >> $GITHUB_ENV
