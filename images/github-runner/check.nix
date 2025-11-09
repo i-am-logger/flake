@@ -2,12 +2,12 @@
 
 let
   image = import ./. { inherit pkgs; };
-  
+
   # Extract and verify the image contents without loading into Docker
-  verifyImage = pkgs.runCommand "github-runner-image-check" 
+  verifyImage = pkgs.runCommand "github-runner-image-check"
     {
       buildInputs = [ pkgs.jq pkgs.skopeo ];
-    } 
+    }
     ''
       echo "Checking GitHub runner image structure..."
       
