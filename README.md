@@ -55,16 +55,41 @@ flake/
 
 ## Usage
 
+### Available Outputs
+
+This flake provides two NixOS system configurations:
+
+- **yoga** - Lenovo Yoga laptop configuration with desktop environment
+- **skyspy-dev** - Development workstation configuration
+
 ### Building a System
+
+To build and switch to a configuration:
 
 ```bash
 nixos-rebuild switch --flake .#<system-name>
 ```
 
-### Available Systems
+Replace `<system-name>` with either `yoga` or `skyspy-dev`.
 
-- `yoga` - Lenovo Yoga configuration
-- `skyspy-dev` - Development environment
+### Testing Configurations
+
+Before deploying changes, you can validate and test the configurations:
+
+```bash
+# Validate flake structure
+nix flake check
+
+# Dry-run build (check if configuration is buildable without building)
+nix build .#nixosConfigurations.yoga.config.system.build.toplevel --dry-run
+nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel --dry-run
+
+# Build configuration without switching
+nix build .#nixosConfigurations.yoga.config.system.build.toplevel
+nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel
+```
+
+The CI/CD pipeline automatically runs these checks on every push and pull request.
 
 ## Hardware Modules
 
