@@ -6,8 +6,9 @@ on:
 jobs:
   test-runner:
     name: Test Self-Hosted Runner
-    runs-on:
-      - flake
+    runs-on: flake
+    container:
+      image: nixos/nix:latest
 
     steps:
       - name: Checkout repository
