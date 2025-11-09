@@ -10,8 +10,7 @@ on:
 jobs:
   validate-and-check:
     name: Validate & Check
-    runs-on:
-      - flake
+    runs-on: flake
     
     steps:
       - name: Checkout repository
@@ -52,8 +51,7 @@ jobs:
 
   build-systems:
     name: Build Systems
-    runs-on:
-      - flake
+    runs-on: flake
     needs: validate-and-check
     strategy:
       matrix:
@@ -75,8 +73,7 @@ jobs:
 
   evaluate-systems:
     name: Evaluate Configurations
-    runs-on:
-      - flake
+    runs-on: flake
     needs: build-systems
     
     steps:
@@ -100,8 +97,7 @@ jobs:
 
   summary:
     name: Pipeline Summary
-    runs-on:
-      - flake
+    runs-on: flake
     needs: [validate-and-check, build-systems, evaluate-systems]
     if: always()
     

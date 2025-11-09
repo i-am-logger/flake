@@ -51,7 +51,7 @@ let
         fi
 
         # Install runner scale set for ${repo} - repo-level registration
-        # Adds hostname label so workflows can target specific machines
+        # Using kubernetes mode with work volume configuration
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
@@ -60,11 +60,7 @@ let
           --set runnerScaleSetName="${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set template.spec.containers[0].name=runner \
-          --set template.spec.containers[0].image=ghcr.io/actions/actions-runner:latest \
-          --set template.spec.containers[0].env[0].name=RUNNER_LABELS \
-          --set template.spec.containers[0].env[0].value="hostname:${hostname}" \
-          --set-json 'containerMode={"type":"dind"}' \
+          --set-json 'containerMode={"type":"kubernetes","kubernetesModeWorkVolumeClaim":{"accessModes":["ReadWriteOnce"],"storageClassName":"local-path","resources":{"requests":{"storage":"1Gi"}}}}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         echo "Runner scale set for ${repo} deployed successfully"
@@ -129,7 +125,7 @@ in
         GITHUB_TOKEN=$GITHUB_TOKEN
         GITHUB_USERNAME=i-am-logger
         EOF
-                  chmod 600 /persist/etc/github-runner-token
+                  chmod 644 /persist/etc/github-runner-token
                   chown root:root /persist/etc/github-runner-token
                   echo "GitHub runner token file created from pass"
                 else
