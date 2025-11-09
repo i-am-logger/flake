@@ -10,6 +10,7 @@ let
     "flake"
     "loial"
     "logger"
+    "pds"
   ];
 
   githubUsername = "i-am-logger";
@@ -174,7 +175,7 @@ in
         # Add ARC helm repo
         ${pkgs.kubernetes-helm}/bin/helm repo add actions-runner-controller \
           https://actions-runner-controller.github.io/actions-runner-controller
-        
+
         ${pkgs.kubernetes-helm}/bin/helm repo update
 
         # Install ARC controller

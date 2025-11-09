@@ -13,6 +13,7 @@ let
     "flake"
     "loial"
     "logger"
+    "pds"
   ];
 
   githubUsername = "i-am-logger";
