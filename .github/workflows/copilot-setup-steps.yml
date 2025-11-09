@@ -6,8 +6,6 @@ on:
 jobs:
   copilot-setup-steps:
     runs-on: flake
-    container:
-      image: nixos/nix:latest
     permissions:
       contents: write
       pull-requests: write

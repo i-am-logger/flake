@@ -41,6 +41,7 @@ in
       role = cfg.role;
       extraFlags = toString (
         optionals cfg.disableTraefik [ "--disable=traefik" ]
+        ++ [ "--kube-apiserver-arg=feature-gates=SidecarContainers=true" ]
       );
     };
 

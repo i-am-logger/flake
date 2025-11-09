@@ -51,7 +51,7 @@ let
         fi
 
         # Install runner scale set for ${repo} - repo-level registration
-        # Using kubernetes mode with work volume configuration
+        # Using dind mode (requires SidecarContainers feature gate enabled in k3s)
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
@@ -60,7 +60,7 @@ let
           --set runnerScaleSetName="${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set-json 'containerMode={"type":"kubernetes","kubernetesModeWorkVolumeClaim":{"accessModes":["ReadWriteOnce"],"storageClassName":"local-path","resources":{"requests":{"storage":"1Gi"}}}}' \
+          --set-json 'containerMode={"type":"dind"}' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         echo "Runner scale set for ${repo} deployed successfully"
