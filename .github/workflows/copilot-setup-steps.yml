@@ -13,10 +13,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Install CodeQL
+        run: |
+          set -e
+          echo "Installing CodeQL for Copilot coding agent..."
+          
+          CODEQL_VERSION="2.15.5"
+          CODEQL_HOME="/opt/hostedtoolcache/CodeQL/${CODEQL_VERSION}/x64"
+          
+          # Create directory structure
+          sudo mkdir -p "${CODEQL_HOME}"
+          
+          # Download and extract CodeQL
+          wget -q "https://github.com/github/codeql-action/releases/download/codeql-bundle-v${CODEQL_VERSION}/codeql-bundle-linux64.tar.gz"
+          sudo tar -xzf codeql-bundle-linux64.tar.gz -C "${CODEQL_HOME}" --strip-components=1
+          rm codeql-bundle-linux64.tar.gz
+          
+          # Set permissions
+          sudo chmod -R 755 "${CODEQL_HOME}"
+          
+          # Add to PATH
+          echo "${CODEQL_HOME}/codeql" >> $GITHUB_PATH
+          
+          # Verify installation
+          ls -la "${CODEQL_HOME}"
+          echo "✓ CodeQL installed successfully"
+      
       - name: Test self-hosted runner
         run: |
           echo "✓ Running on self-hosted ARC runner"
           echo "Hostname: $(hostname)"
           echo "Runner: $(whoami)"
           echo "Working directory: $(pwd)"
-          ls -la
