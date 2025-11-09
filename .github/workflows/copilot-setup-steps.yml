@@ -26,6 +26,11 @@ jobs:
         with:
           node-version: '20'
       
+      - name: Set GitHub host for CodeQL
+        run: |
+          echo "GITHUB_HOST=github.com" >> $GITHUB_ENV
+          echo "✓ Set GITHUB_HOST=github.com"
+      
       - name: Install required tools
         run: |
           set -e
