@@ -57,10 +57,21 @@ flake/
 
 ### Available Outputs
 
-This flake provides two NixOS system configurations:
+This flake provides:
 
-- **yoga** - Lenovo Yoga laptop configuration with desktop environment
-- **skyspy-dev** - Development workstation configuration
+- **yoga** - Desktop system (AMD Ryzen, Gigabyte X870E)
+- **skyspy-dev** - Laptop system (Lenovo Legion 16IRX8H, dual-boot)
+- **installer-iso** - Bootable installer ISO for both systems
+
+### Quick Start: Installer ISO
+
+Build a bootable USB installer that can install or update both systems:
+
+```bash
+./build-installer.sh
+```
+
+See [ISO-QUICKSTART.md](./ISO-QUICKSTART.md) for complete instructions.
 
 ### Building a System
 
@@ -71,6 +82,17 @@ nixos-rebuild switch --flake .#<system-name>
 ```
 
 Replace `<system-name>` with either `yoga` or `skyspy-dev`.
+
+### Unified Installer Script
+
+For both fresh installs and updates:
+
+```bash
+sudo ./install.sh yoga install         # Install or update yoga
+sudo ./install.sh skyspy-dev install   # Install or update skyspy-dev
+```
+
+See [INSTALLER.md](./INSTALLER.md) for details.
 
 ### Testing Configurations
 
@@ -90,6 +112,30 @@ nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel
 ```
 
 The CI/CD pipeline automatically runs these checks on every push and pull request.
+
+## Release Process
+
+This repository uses [release-please](https://github.com/googleapis/release-please) for automated releases based on [Conventional Commits](https://www.conventionalcommits.org/).
+
+### How It Works
+
+1. **Commit with conventional format**: Use prefixes like `feat:`, `fix:`, `docs:`, `chore:` in your commit messages
+2. **Automatic PR creation**: Release Please creates/updates a release PR with version bump and changelog
+3. **Validation**: Release PR is automatically validated (runner image, installer ISO, system configs)
+4. **Auto-merge**: Once all checks pass, the PR auto-merges
+5. **Release artifacts published**:
+   - GitHub Runner images: `ghcr.io/i-am-logger/github-runner:latest` and `ghcr.io/i-am-logger/github-runner:<version>`
+   - Installer ISO: Attached to the GitHub release
+
+### Pre-release Artifacts (on every push to main)
+
+- **GitHub Runner**: `ghcr.io/i-am-logger/github-runner:edge` and `ghcr.io/i-am-logger/github-runner:sha-<commit>`
+- **Installer ISO**: Available as workflow artifact `installer-iso-sha-<commit>`
+
+### Release Artifacts (on version release)
+
+- **GitHub Runner**: `ghcr.io/i-am-logger/github-runner:latest` and `ghcr.io/i-am-logger/github-runner:<version>`
+- **Installer ISO**: Attached to GitHub release as downloadable asset
 
 ## Hardware Modules
 
