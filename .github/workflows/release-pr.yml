@@ -46,15 +46,9 @@ jobs:
           nix build .#checks.x86_64-linux.github-runner-test
           echo "✓ Runner image tests passed"
       
-      - name: Build system configurations
+      - name: Validate system configurations
         run: |
-          echo "Testing system configurations..."
+          echo "Validating system configurations..."
           nix build .#nixosConfigurations.yoga.config.system.build.toplevel --dry-run
           nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel --dry-run
-          echo "✓ All system configurations are buildable"
-      
-      - name: Build installer ISO
-        run: |
-          echo "Building installer ISO..."
-          nix build .#installer-iso
-          echo "✓ Installer ISO builds successfully"
+          echo "✓ All system configurations are valid"

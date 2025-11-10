@@ -59,37 +59,8 @@ jobs:
           echo "  - ghcr.io/i-am-logger/github-runner:sha-${{ steps.sha.outputs.short }}"
           echo "  - ghcr.io/i-am-logger/github-runner:edge"
 
-  build-installer:
-    name: Build Installer ISO
-    runs-on: flake
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Setup Nix
-        uses: ./.github/actions/setup-nix
-      
-      - name: Build installer ISO
-        run: |
-          echo "Building installer ISO..."
-          nix build .#installer-iso
-      
-      - name: Get short SHA
-        id: sha
-        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      
-      - name: Upload installer as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: installer-iso-sha-${{ steps.sha.outputs.short }}
-          path: result/iso/*.iso
-          retention-days: 30
-
   release:
-    needs: [build-runner-image, build-installer]
+    needs: [build-runner-image]
     runs-on: flake
     permissions:
       contents: write
@@ -155,26 +126,3 @@ jobs:
           echo "Release runner image published:"
           echo "  - ghcr.io/i-am-logger/github-runner:${TAG_NAME}"
           echo "  - ghcr.io/i-am-logger/github-runner:latest"
-      
-      - name: Build and publish release installer ISO
-        if: ${{ steps.release.outputs.release_created }}
-        env:
-          TAG_NAME: ${{ steps.release.outputs.tag_name }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Building installer ISO for release $TAG_NAME..."
-          
-          # Build the installer ISO
-          nix build .#installer-iso
-          
-          # Find the ISO file
-          ISO_FILE=$(find result/iso -name '*.iso' -type f | head -n 1)
-          ISO_NAME=$(basename "$ISO_FILE")
-          
-          echo "Uploading installer ISO to release: $ISO_NAME"
-          
-          # Upload to GitHub release
-          gh release upload "$TAG_NAME" "$ISO_FILE" --clobber
-          
-          echo "Release installer ISO published:"
-          echo "  - $ISO_NAME attached to release $TAG_NAME"
