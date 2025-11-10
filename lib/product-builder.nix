@@ -2,25 +2,99 @@
 
 let
   productTypes = import ./types.nix { inherit lib; };
+  
+  # Helper to get disko config from hardware path
+  getDisko = hardwarePath:
+    let
+      diskoPath = hardwarePath + "/disko.nix";
+    in
+    if builtins.pathExists diskoPath then diskoPath else null;
+    
+  # Helper to resolve motherboard path
+  getMotherboardPath = motherboard:
+    let
+      # Map motherboard name to hardware module path
+      motherboardPaths = {
+        "gigabyte-x870e-aorus-elite-wifi7" = ../../Hardware/motherboards/gigabyte/x870e-aorus-elite-wifi7;
+        "lenovo-legion-16irx8h" = ../../Hardware/motherboards/lenovo/legion-16irx8h;
+      };
+    in
+    motherboardPaths.${motherboard} or (throw "Unknown motherboard: ${motherboard}");
 in
 
 {
-  # Main builder function
+  # Main builder function that creates a NixOS system from a product specification
   buildProduct = productSpec:
     let
       # Validate product specification
       validated = validateProduct productSpec;
       
-      # Translate to system configuration
-      systemConfig = translateProduct validated;
+      # Get hardware module paths
+      hardwarePaths = getHardwarePaths validated;
       
-      # Build NixOS system
-      nixosSystem = lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = systemConfig.modules;
-      };
+      # Find disko configs
+      diskoConfigs = builtins.filter (x: x != null) (map getDisko hardwarePaths);
+      hasDisko = (builtins.length diskoConfigs) > 0;
+      
+      # Get users
+      userModules = getUserModules (validated.users or []);
+      
+      # Translate capabilities to stacks configuration
+      stacksConfig = translateCapabilitiesToStacks (validated.capabilities or {});
     in
-    nixosSystem;
+    lib.nixosSystem {
+      specialArgs = {
+        inherit inputs;
+        inherit (inputs) secrets disko impermanence stylix lanzaboote self;
+      };
+
+      modules = hardwarePaths
+        ++ (lib.optionals hasDisko [
+          # Disko partitioning from hardware modules
+          inputs.disko.nixosModules.disko
+          {
+            disko.devices = lib.mkMerge (map (diskoPath: import diskoPath { lib = nixpkgs.lib; }) diskoConfigs);
+          }
+        ])
+        ++ [
+          # Set hostname
+          { networking.hostName = validated.name; }
+
+          # NixOS users
+          {
+            imports = map (user: user.nixosUser) userModules;
+          }
+
+          # Home Manager for users
+          inputs.home-manager.nixosModules.home-manager
+          {
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users = lib.genAttrs
+              (map (user: user.name) userModules)
+              (name:
+                let user = lib.findFirst (u: u.name == name) null userModules;
+                in { imports = [ user.homeManager ]; }
+              );
+          }
+
+          # Infrastructure and Stacks
+          ../Systems/Infra
+          ../Systems/Stacks
+          { stacks = stacksConfig; }
+
+          # Theme
+          inputs.stylix.nixosModules.stylix
+          ../Themes/stylix.nix
+
+          # Common modules
+          ../modules/motd
+          
+          # Product-specific system configuration
+          (translateSystem (validated.system or {}))
+        ];
+    };
     
   # Validation
   validateProduct = spec:
@@ -37,99 +111,48 @@ in
     then throw "Product validation failed: ${builtins.toString errors}"
     else spec;
     
-  # Translation from product spec to NixOS modules
-  translateProduct = spec: {
-    modules = [
-      # Hardware modules
-      (translateHardware (spec.hardware or {}))
-      
-      # Capability modules  
-      (translateCapabilities (spec.capabilities or {}))
-      
-      # User modules
-      (translateUsers (spec.users or []))
-      
-      # UI modules
-      (translateUI (spec.ui or {}))
-      
-      # System modules
-      (translateSystem (spec.system or {}))
-      
-      # Base configuration
-      {
-        networking.hostName = spec.name;
-        system.stateVersion = "24.05";
-      }
-    ];
-  };
+  # Get hardware module paths
+  getHardwarePaths = spec:
+    let
+      hwSpec = spec.hardware;
+      motherboard = hwSpec.motherboard or (throw "Hardware specification must include motherboard");
+    in
+    [ (getMotherboardPath motherboard) ];
   
-  translateHardware = hwSpec: {
-    # Enable the specified motherboard
-    hardware.motherboard.${hwSpec.motherboard or hwSpec.platform or "generic"}.enable = lib.mkDefault true;
+  # Get user modules from user names
+  getUserModules = users:
+    let
+      usersLib = import ./users.nix { };
+    in
+    if builtins.isList users then
+      map (userName: usersLib.${userName} or (throw "Unknown user: ${userName}")) users
+    else
+      throw "Users must be a list of user names";
+  
+  # Translate capabilities to stacks configuration (matching existing stacks structure)
+  translateCapabilitiesToStacks = capSpec: {
+    security = lib.optionalAttrs (capSpec ? security) {
+      enable = true;
+      secureBoot.enable = capSpec.security.secureBoot.enable or false;
+      yubikey.enable = capSpec.security.yubikey.enable or false;
+      auditRules.enable = capSpec.security.audit.enable or false;
+    };
     
-    # CPU configuration
-    hardware.cpu = lib.mkIf (hwSpec ? cpu) (
-      if builtins.isAttrs hwSpec.cpu then hwSpec.cpu
-      else { enable = true; model = hwSpec.cpu; }
-    );
+    desktop = lib.optionalAttrs (capSpec ? desktop) {
+      enable = true;
+      warp.enable = capSpec.desktop.warp.enable or false;
+      warp.preview = capSpec.desktop.warp.preview or false;
+      vscode.enable = capSpec.desktop.vscode.enable or false;
+      browser.enable = capSpec.desktop.browser.enable or false;
+    };
     
-    # GPU configuration
-    hardware.gpu = lib.mkIf (hwSpec ? gpu) (
-      if builtins.isAttrs hwSpec.gpu then hwSpec.gpu
-      else { enable = true; model = hwSpec.gpu; }
-    );
-    
-    # Audio configuration
-    hardware.audio = lib.mkIf (hwSpec ? audio) (
-      if builtins.isAttrs hwSpec.audio then hwSpec.audio
-      else { enable = hwSpec.audio; }
-    );
-    
-    # Bluetooth configuration
-    hardware.bluetooth = lib.mkIf (hwSpec ? bluetooth) (
-      if builtins.isAttrs hwSpec.bluetooth then hwSpec.bluetooth
-      else { enable = hwSpec.bluetooth; }
-    );
-    
-    # Network configuration
-    hardware.network = lib.mkIf (hwSpec ? wifi || hwSpec ? ethernet) {
-      wifi = lib.mkIf (hwSpec ? wifi) (
-        if builtins.isAttrs hwSpec.wifi then hwSpec.wifi
-        else { enable = hwSpec.wifi; }
-      );
-      ethernet = lib.mkIf (hwSpec ? ethernet) (
-        if builtins.isAttrs hwSpec.ethernet then hwSpec.ethernet
-        else { enable = hwSpec.ethernet; }
-      );
+    cicd = lib.optionalAttrs (capSpec ? cicd) {
+      enable = true;
+      enableGpu = capSpec.cicd.gpuSupport.enable or false;
     };
   };
   
-  translateCapabilities = capSpec: {
-    # Map capabilities to stacks
-    capabilities = capSpec;
-  };
-  
-  translateUsers = users: 
-    if builtins.isList users then {
-      # Simple list of usernames
-      users.users = builtins.listToAttrs (map (user:
-        { 
-          name = user; 
-          value = { 
-            isNormalUser = true;
-            extraGroups = [ "wheel" "networkmanager" ];
-          }; 
-        }
-      ) users);
-    } else {
-      # Attrset of user configurations
-      users.users = users;
-    };
-  
-  translateUI = uiSpec: {
-    ui = uiSpec;
-  };
-  
+  # Translate system-level configuration
   translateSystem = sysSpec: {
     time.timeZone = sysSpec.timezone or "UTC";
     i18n.defaultLocale = sysSpec.locale or "en_US.UTF-8";
