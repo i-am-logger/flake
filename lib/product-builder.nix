@@ -65,11 +65,43 @@ in
   
   translateHardware = hwSpec: {
     # Enable the specified motherboard
-    hardware.motherboard.${hwSpec.platform or "generic"}.enable = lib.mkDefault true;
+    hardware.motherboard.${hwSpec.motherboard or hwSpec.platform or "generic"}.enable = lib.mkDefault true;
     
-    # Apply component overrides if specified
-    hardware.motherboard.${hwSpec.platform or "generic"}.components =
-      hwSpec.components or {};
+    # CPU configuration
+    hardware.cpu = lib.mkIf (hwSpec ? cpu) (
+      if builtins.isAttrs hwSpec.cpu then hwSpec.cpu
+      else { enable = true; model = hwSpec.cpu; }
+    );
+    
+    # GPU configuration
+    hardware.gpu = lib.mkIf (hwSpec ? gpu) (
+      if builtins.isAttrs hwSpec.gpu then hwSpec.gpu
+      else { enable = true; model = hwSpec.gpu; }
+    );
+    
+    # Audio configuration
+    hardware.audio = lib.mkIf (hwSpec ? audio) (
+      if builtins.isAttrs hwSpec.audio then hwSpec.audio
+      else { enable = hwSpec.audio; }
+    );
+    
+    # Bluetooth configuration
+    hardware.bluetooth = lib.mkIf (hwSpec ? bluetooth) (
+      if builtins.isAttrs hwSpec.bluetooth then hwSpec.bluetooth
+      else { enable = hwSpec.bluetooth; }
+    );
+    
+    # Network configuration
+    hardware.network = lib.mkIf (hwSpec ? wifi || hwSpec ? ethernet) {
+      wifi = lib.mkIf (hwSpec ? wifi) (
+        if builtins.isAttrs hwSpec.wifi then hwSpec.wifi
+        else { enable = hwSpec.wifi; }
+      );
+      ethernet = lib.mkIf (hwSpec ? ethernet) (
+        if builtins.isAttrs hwSpec.ethernet then hwSpec.ethernet
+        else { enable = hwSpec.ethernet; }
+      );
+    };
   };
   
   translateCapabilities = capSpec: {

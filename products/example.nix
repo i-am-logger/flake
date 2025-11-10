@@ -1,7 +1,7 @@
 # Example product specification using the product-driven architecture
-# Simple, declarative system definition
+# Hardware-first declarative system definition
 
-{ myLib }:
+{ myLib, pkgs }:
 
 with myLib.dsl;
 
@@ -10,30 +10,42 @@ system "example-workstation" {
   purpose = "Example demonstrating product-driven syntax";
   
   hardware = {
-    platform = "gigabyte-x870e-aorus-elite-wifi7";
+    motherboard = "gigabyte-x870e-aorus-elite-wifi7";
     
-    # Component control (optional)
-    components = {
-      # All components enabled by default
-      # Can disable specific ones:
-      # bluetooth.enable = false;
-    };
+    # Direct hardware specification - no nesting
+    cpu = amd.ryzen9-7950x3d;
+    gpu = amd.radeon780m;
+    audio = true;
+    bluetooth = false;  # Disable bluetooth
+    wifi = { enable = true; standard = wifi7; };
+    ethernet = { enable = true; speed = "2.5gbe"; };
   };
   
   capabilities = {
+    # Security - explicit options instead of opinionated levels
     security = {
-      level = high;
-      features.yubikey = true;
+      firewall.enable = true;
+      audit.enable = true;
+      secureboot.enable = true;
+      yubikey.enable = true;
     };
     
+    # Desktop - direct package references
     desktop = {
-      type = full;
-      terminal = warp;
-      editor = vscode;
+      terminal = pkgs.warp-terminal;
+      editor = pkgs.vscode;
+      browser = pkgs.firefox;
     };
     
+    # Development - explicit features
     development = {
-      type = containers;
+      docker.enable = true;
+      podman.enable = false;
+      languages = {
+        rust.enable = true;
+        go.enable = true;
+        python.enable = true;
+      };
     };
   };
   

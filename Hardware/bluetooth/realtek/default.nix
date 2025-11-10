@@ -1,10 +1,20 @@
 { config, lib, pkgs, ... }:
 
 {
-  # Realtek Bluetooth configuration
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = lib.mkDefault true;
+  options.hardware.bluetooth = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Bluetooth support";
+    };
   };
-  services.blueman.enable = true;
+
+  config = lib.mkIf config.hardware.bluetooth.enable {
+    # Realtek Bluetooth configuration
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = lib.mkDefault true;
+    };
+    services.blueman.enable = true;
+  };
 }

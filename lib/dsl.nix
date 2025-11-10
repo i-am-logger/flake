@@ -54,22 +54,6 @@ rec {
   laptop = "laptop";
   desktop = "desktop";
   
-  # Security levels
-  none = "none";
-  low = "low";
-  medium = "medium";
-  high = "high";
-  maximum = "maximum";
-  
-  # Desktop types
-  minimal = "minimal";
-  standard = "standard";
-  full = "full";
-  
-  # Development types
-  basic = "basic";
-  containers = "containers";
-  
   # User roles
   admin = "admin";
   developer = "developer";
@@ -80,18 +64,6 @@ rec {
   zsh = "zsh";
   fish = "fish";
   nushell = "nushell";
-  
-  # Terminal emulators
-  warp = "warp";
-  warp-preview = "warp-preview";
-  alacritty = "alacritty";
-  kitty = "kitty";
-  
-  # Editors
-  vscode = "vscode";
-  helix = "helix";
-  neovim = "neovim";
-  vim = "vim";
   
   # Hardware platform shortcuts
   gigabyte = {
