@@ -8,6 +8,6 @@
   # Product-driven architecture
   types = import ./types.nix { inherit lib; };
   productBuilder = import ./product-builder.nix { inherit inputs lib nixpkgs; };
-  presets = import ./presets.nix { inherit lib inputs nixpkgs; };
   dsl = import ./dsl.nix { inherit lib inputs nixpkgs; };
 }
+

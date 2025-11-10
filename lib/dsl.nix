@@ -1,32 +1,12 @@
 { lib, inputs, nixpkgs }:
 
 rec {
-  # Import product builder and presets
+  # Import product builder
   productBuilder = import ./product-builder.nix { inherit lib inputs nixpkgs; };
-  presetsLib = import ./presets.nix { inherit lib inputs nixpkgs; };
   
-  # Main system function - handles both preset-based and full specs
+  # Simple system function - no presets, just declarative specs
   system = name: spec:
-    let
-      # Check if using a preset
-      finalSpec = if builtins.hasAttr "preset" spec then
-        let
-          # Get the preset configuration
-          presetPath = lib.splitString "." spec.preset;
-          presetConfig = lib.getAttrFromPath presetPath presetsLib.presets;
-          
-          # Merge preset with overrides (spec overrides preset)
-          specWithoutPreset = builtins.removeAttrs spec [ "preset" ];
-          mergedConfig = lib.recursiveUpdate presetConfig specWithoutPreset;
-        in
-        mergedConfig
-      else
-        spec;
-    in
-    productBuilder.buildProduct (finalSpec // { inherit name; });
-  
-  # Export presets for reference
-  presets = presetsLib.presets;
+    productBuilder.buildProduct (spec // { inherit name; });
     
   # Component references - CPU
   amd = {
