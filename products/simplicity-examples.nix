@@ -103,7 +103,7 @@ with myLib.dsl;
       
       # Maximum performance hardware
       cpu = amd.ryzen9-7950x;
-      gpu = amd.radeon;  # Dedicated GPU
+      gpu = amd.radeon7900xtx;  # Specific high-end GPU model
       audio = { enable = true; model = "realtek-alc4080"; };
       bluetooth = true;
       wifi = { enable = true; standard = wifi7; };
@@ -139,7 +139,7 @@ with myLib.dsl;
       motherboard = "generic-server";
       
       # Server-optimized: no GUI hardware
-      cpu = intel.xeon;
+      cpu = intel.xeon-silver;
       gpu = false;  # No GPU needed
       audio = false;  # No audio on server
       bluetooth = false;

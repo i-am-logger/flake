@@ -8,26 +8,38 @@ rec {
   system = name: spec:
     productBuilder.buildProduct (spec // { inherit name; });
     
-  # Component references - CPU
+  # Component references - CPU (specific models only)
   amd = {
-    ryzen = "amd-ryzen";
-    ryzen9 = "amd-ryzen9";
+    # CPUs - specific models
     ryzen9-7950x = "amd-ryzen9-7950x";
     ryzen9-7950x3d = "amd-ryzen9-7950x3d";
-    radeon = "amd-radeon";
+    ryzen9-7900x = "amd-ryzen9-7900x";
+    ryzen7-7800x3d = "amd-ryzen7-7800x3d";
+    ryzen5-7600x = "amd-ryzen5-7600x";
+    
+    # GPUs - specific models
     radeon780m = "amd-radeon-780m";
+    radeon7900xtx = "amd-radeon-7900xtx";
+    radeon7900xt = "amd-radeon-7900xt";
+    radeon7800xt = "amd-radeon-7800xt";
   };
   
   intel = {
-    xeon = "intel-xeon";
-    i9 = "intel-i9";
+    # CPUs - specific models
     i9-13900hx = "intel-i9-13900hx";
+    i9-13900k = "intel-i9-13900k";
+    i7-13700k = "intel-i7-13700k";
+    i5-13600k = "intel-i5-13600k";
+    xeon-e2388g = "intel-xeon-e2388g";
+    xeon-silver = "intel-xeon-silver-4314";
   };
   
-  # Component references - GPU
+  # Component references - GPU (NVIDIA specific models)
   nvidia = {
-    rtx4080 = "nvidia-rtx4080";
     rtx4090 = "nvidia-rtx4090";
+    rtx4080 = "nvidia-rtx4080";
+    rtx4070ti = "nvidia-rtx4070ti";
+    rtx4060ti = "nvidia-rtx4060ti";
   };
   
   # Component references - Audio
