@@ -2,6 +2,10 @@
 
 [![CI/CD Pipeline](https://github.com/i-am-logger/flake/actions/workflows/ci.yml/badge.svg)](https://github.com/i-am-logger/flake/actions/workflows/ci.yml)
 [![Copilot coding agent](https://github.com/i-am-logger/flake/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/i-am-logger/flake/actions/workflows/copilot-swe-agent/copilot)
+[![Release](https://img.shields.io/github/v/release/i-am-logger/flake)]()
+
+[![Stars](https://img.shields.io/github/stars/i-am-logger/flake)]()
+[![Sponsors](https://img.shields.io/github/sponsors/i-am-logger)]()
 
 My Personal NixOS ricing configuration - A comprehensive NixOS flake for system configuration and hardware management.
 
