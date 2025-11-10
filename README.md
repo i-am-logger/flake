@@ -9,6 +9,36 @@
 
 My Personal NixOS ricing configuration - A comprehensive NixOS flake for system configuration and hardware management.
 
+## 🎯 Product-Driven Architecture
+
+This repository is evolving toward a **product-driven architecture** that transforms NixOS configuration from imperative build scripts to declarative product specifications.
+
+**📚 [View Complete Architecture Documentation →](./docs/README.md)**
+
+### Quick Comparison
+
+**Before (Package-oriented):**
+```nix
+# Multiple files, imperative, technical
+myLib.systems.mkSystem {
+  hostname = "yoga";
+  hardware = [ ../../Hardware/... ];
+  stacks = { security.enable = true; ... };
+}
+```
+
+**After (Product-oriented):**
+```nix
+# Single file, declarative, semantic
+system "yoga" {
+  type = workstation;
+  hardware.platform = gigabyte.x870e;
+  capabilities.security.level = high;
+}
+```
+
+**Benefits:** 70% less code, type-safe, self-documenting, component-based hardware.
+
 ## Overview
 
 This repository contains a modular NixOS configuration using flakes, with a focus on:
