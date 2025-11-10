@@ -1,5 +1,5 @@
-# Windows-like Simplicity Examples
-# Demonstrating the philosophy: Simple by default, powerful when needed
+# Unified System Examples
+# All use the same 'system' function, with optional preset support
 
 { myLib }:
 
@@ -8,49 +8,49 @@ let
 in
 
 {
-  # LEVEL 1: Ultra-Simple (3 parameters - Windows installer level)
-  # Just specify: name, hardware, and user
-  # Everything else uses smart defaults
+  # SIMPLE: Minimal configuration with preset
+  # Preset handles all the complexity
   
-  minimal-example = dsl.quickSystem 
-    "my-computer"              # Name
-    "gigabyte-x870e-aorus-elite-wifi7"  # Hardware
-    "john";                    # User
+  minimal-workstation = with dsl; system "my-workstation" {
+    preset = "workstation.developer";
+    hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+    users = [ "john" ];
+  };
   
-  # Behind the scenes, this gives you:
-  # - Developer workstation preset (security: high, desktop: full, dev: containers)
-  # - Performance-optimized settings
-  # - All hardware components enabled
-  # - User with developer privileges
+  # Behind the scenes, preset provides:
+  # - type = workstation
+  # - security.level = high
+  # - desktop.type = full
+  # - development.type = containers
+  # - performance.profile = performance
   
   
-  # LEVEL 2: Simple with Preset (Windows "Custom Install")
-  # Choose a preset, customize a bit
+  # CUSTOMIZED: Preset with specific overrides
+  # Start with preset, change what you need
   
-  simple-example = dsl.simpleSystem {
-    name = "dev-machine";
-    hardware = "gigabyte-x870e-aorus-elite-wifi7";
-    preset = "workstation.poweruser";  # Or: workstation.default, laptop.travel, server.secure
+  custom-laptop = with dsl; system "travel-laptop" {
+    preset = "laptop.travel";  # Maximum security + battery optimization
     
-    # Override just what you need
-    overrides = {
-      users = [ "alice" "bob" ];
-      system.timezone = "America/Denver";
-    };
+    hardware.platform = "lenovo-legion-16irx8h";
+    users = [ "alice" ];
+    
+    # Override preset defaults
+    capabilities.desktop.terminal = alacritty;  # Lighter than default
+    system.timezone = "America/Denver";
   };
   
   
-  # LEVEL 3: Full Control (Power user - like Windows Registry)
-  # Full declarative specification when you need it
+  # FULL CONTROL: No preset, explicit configuration
+  # When you need complete control
   
-  full-example = with dsl; system "my-workstation" {
+  custom-workstation = with dsl; system "my-custom-workstation" {
     type = workstation;
     purpose = "High-performance development";
     
     hardware = {
-      platform = gigabyte.x870e;
+      platform = "gigabyte-x870e-aorus-elite-wifi7";
       
-      # Disable what you don't need
+      # Disable components you don't need
       components = {
         bluetooth.enable = false;  # Save power
       };

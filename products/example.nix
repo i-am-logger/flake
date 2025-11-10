@@ -1,5 +1,5 @@
-# Example product specifications demonstrating different complexity levels
-# Choose the level that matches your needs
+# Example product specifications demonstrating the unified system approach
+# All complexity levels use the same 'system' function
 
 { myLib }:
 
@@ -8,51 +8,59 @@ let
 in
 
 {
-  # LEVEL 1: Ultra-Simple (Beginner)
-  # Just 3 parameters - works out of the box
+  # SIMPLE: Using a preset with minimal configuration
+  # Preset provides opinionated defaults, you just override what you need
   
-  simple = dsl.quickSystem 
-    "example-workstation"                    # Name
-    "gigabyte-x870e-aorus-elite-wifi7"       # Hardware
-    "logger";                                # User
-  
-  # That's it! You get:
-  # - Developer workstation (security: high, desktop: full, dev: containers)
-  # - Performance-optimized settings
-  # - All hardware components enabled
-  
-  
-  # LEVEL 2: Preset-based (Intermediate)
-  # Choose a preset, customize specific things
-  
-  preset-based = dsl.simpleSystem {
-    name = "example-workstation";
-    hardware = "gigabyte-x870e-aorus-elite-wifi7";
-    preset = "workstation.poweruser";
+  simple-preset = with dsl; system "simple-workstation" {
+    preset = "workstation.developer";  # Opinionated preset
     
-    overrides = {
-      users = [ "logger" ];
-      system.timezone = "America/Denver";
-      capabilities.security.features.yubikey = true;
+    # Just specify the essentials
+    hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+    users = [ "logger" ];
+    system.timezone = "America/Denver";
+  };
+  
+  # The preset provides:
+  # - type = workstation
+  # - capabilities.security.level = high
+  # - capabilities.desktop.type = full
+  # - capabilities.development.type = containers
+  # - system.performance.profile = performance
+  
+  
+  # INTERMEDIATE: Preset with custom overrides
+  
+  custom-preset = with dsl; system "custom-workstation" {
+    preset = "laptop.travel";  # Start with travel preset
+    
+    # Override specific parts
+    hardware.platform = "lenovo-legion-16irx8h";
+    users = [ "alice" ];
+    
+    # Override preset defaults
+    capabilities = {
+      desktop = {
+        type = standard;  # Override from minimal
+        terminal = alacritty;
+      };
     };
+    
+    system.timezone = "Europe/London";
   };
   
   
-  # LEVEL 3: Full Control (Advanced)
-  # Complete declarative specification
+  # ADVANCED: Full specification without preset
   
-  full-control = with dsl; system "example-workstation" {
+  full-control = with dsl; system "full-workstation" {
     type = workstation;
-    purpose = "Example demonstrating full product-driven syntax";
+    purpose = "High-performance development workstation";
     
     hardware = {
       platform = "gigabyte-x870e-aorus-elite-wifi7";
       
-      # Component overrides (optional)
+      # Component control
       components = {
-        # All components enabled by default
-        # Can disable specific ones:
-        # bluetooth.enable = false;
+        bluetooth.enable = false;  # Disable if not needed
       };
     };
     

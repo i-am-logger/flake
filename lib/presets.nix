@@ -1,15 +1,12 @@
-# Product Presets - Windows-like Simplicity
-## Opinionated Defaults with Override Capability
-
 { lib, inputs, nixpkgs }:
 
 rec {
-  # Import core builder
+  # Import product builder
   productBuilder = import ./product-builder.nix { inherit lib inputs nixpkgs; };
   
-  # Presets - Opinionated system configurations (Windows-like simplicity)
+  # Presets - Opinionated configurations that can be referenced in system
   presets = {
-    # Workstation presets - Full development environments
+    # Workstation presets
     workstation = {
       default = {
         type = "workstation";
@@ -48,7 +45,7 @@ rec {
       };
     };
     
-    # Server presets - Headless systems
+    # Server presets
     server = {
       default = {
         type = "server";
@@ -71,7 +68,7 @@ rec {
       };
     };
     
-    # Laptop presets - Mobile computing
+    # Laptop presets
     laptop = {
       default = {
         type = "laptop";
@@ -96,32 +93,4 @@ rec {
       };
     };
   };
-  
-  # Simple system builder - Just name, hardware, and optional overrides
-  simpleSystem = { name, hardware, preset ? "workstation.default", overrides ? {} }:
-    let
-      # Get the preset configuration
-      presetPath = lib.splitString "." preset;
-      presetConfig = lib.getAttrFromPath presetPath presets;
-      
-      # Merge preset with overrides (overrides win)
-      finalConfig = lib.recursiveUpdate presetConfig overrides;
-      
-      # Add hardware
-      configWithHardware = finalConfig // {
-        inherit name;
-        hardware = { platform = hardware; };
-      };
-    in
-    productBuilder.buildProduct configWithHardware;
-  
-  # Ultra-simple system - Just 3 parameters
-  quickSystem = name: hardware: users:
-    simpleSystem {
-      inherit name hardware;
-      preset = "workstation.developer";
-      overrides = {
-        users = if builtins.isList users then users else [ users ];
-      };
-    };
 }

@@ -7,87 +7,106 @@ This document explains how the product-driven architecture achieves Windows-like
 
 ## Philosophy: Progressive Disclosure
 
-Like Windows, the architecture provides **three levels of complexity**:
+Like Windows, the architecture provides **progressive levels of complexity** using a **single unified interface**:
 
-1. **Beginner** - Works out of the box (Windows installer)
-2. **Intermediate** - Choose presets, tweak settings (Windows settings app)
-3. **Advanced** - Full control over every detail (Windows registry/group policy)
+1. **Beginner** - Use presets (Windows installer with defaults)
+2. **Intermediate** - Preset + custom overrides (Windows settings app)
+3. **Advanced** - Full explicit configuration (Windows registry/group policy)
 
-Users start simple and only learn complexity when they need it.
+All use the same `system` function - you just specify more or less detail.
 
 ---
 
-## Level 1: Ultra-Simple (Beginner)
+## Single System Function
 
-**Windows equivalent:** Click "Next" through the installer
+**Everything uses `system`** - no need to learn different functions:
 
-**3 parameters:** Name, Hardware, User
+```nix
+with dsl;
+
+system "name" {
+  # Start simple with a preset, or go full control - your choice
+}
+```
+
+---
+
+## Level 1: Simple with Preset (Beginner)
+
+**Windows equivalent:** Click "Next" with default settings
+
+**Minimal configuration using opinionated preset:**
 
 ```nix
 { myLib }:
 
-dsl.quickSystem 
-  "my-computer"              # Computer name
-  "gigabyte-x870e-aorus-elite-wifi7"  # What's inside
-  "john";                    # Who uses it
+with myLib.dsl;
+
+system "my-computer" {
+  preset = "workstation.developer";
+  
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  users = [ "john" ];
+}
 ```
 
-**What you get automatically:**
-- ✅ Secure workstation (high security)
-- ✅ Full desktop environment (terminal, editor, browser, office)
-- ✅ Development tools (containers, languages)
-- ✅ Optimized performance
-- ✅ User with developer privileges
+**What the preset provides automatically:**
+- ✅ type = workstation
+- ✅ Security level = high
+- ✅ Full desktop environment (terminal, editor, browser)
+- ✅ Development tools (Docker, containers)
+- ✅ Performance-optimized settings
 - ✅ Sane defaults for everything
 
-**Like Windows:** It just works. No configuration needed.
+**Like Windows:** Opinionated defaults that just work.
 
 ---
 
-## Level 2: Simple with Presets (Intermediate)
+## Level 2: Preset with Overrides (Intermediate)
 
-**Windows equivalent:** Customize settings during install, Settings app
+**Windows equivalent:** Settings app - change what you want
 
-**Choose a preset, override what you need**
+**Start with a preset, customize specific parts:**
 
 ### Available Presets
 
 #### Workstation Presets
 ```nix
-"workstation.default"    # Standard workstation
-"workstation.developer"  # Development workstation (default)
-"workstation.poweruser"  # All features enabled
+"workstation.default"    # Standard workstation (medium security, standard desktop)
+"workstation.developer"  # Development workstation (high security, full desktop, containers)
+"workstation.poweruser"  # All features enabled (high security, full desktop, full dev)
 ```
 
 #### Server Presets
 ```nix
-"server.default"         # Standard server
+"server.default"         # Standard server (high security, headless)
 "server.secure"          # Maximum security server
 ```
 
 #### Laptop Presets
 ```nix
-"laptop.default"         # Balanced laptop
-"laptop.travel"          # Battery-optimized, maximum security
+"laptop.default"         # Balanced laptop (high security, standard desktop)
+"laptop.travel"          # Battery + security optimized (maximum security, minimal desktop, powersave)
 ```
 
-### Example: Laptop for Travel
+### Example: Customized Laptop
 
 ```nix
-dsl.simpleSystem {
-  name = "travel-laptop";
-  hardware = "lenovo-legion-16irx8h";
-  preset = "laptop.travel";
+with dsl;
+
+system "travel-laptop" {
+  preset = "laptop.travel";  # Start with travel preset
   
-  # Override just what you need
-  overrides = {
-    users = [ "alice" ];
-    capabilities.desktop.terminal = "alacritty";  # Prefer lighter terminal
-  };
-};
+  hardware.platform = "lenovo-legion-16irx8h";
+  users = [ "alice" ];
+  
+  # Override specific preset defaults
+  capabilities.desktop.terminal = alacritty;  # Prefer lighter terminal
+  system.timezone = "Europe/London";
+}
 ```
 
-**Like Windows Settings:** Choose from presets, customize specific things.
+**Like Windows Settings:** Choose from presets, override what you need.
 
 ---
 
@@ -95,7 +114,7 @@ dsl.simpleSystem {
 
 **Windows equivalent:** Registry Editor, Group Policy, PowerShell
 
-**Complete declarative specification**
+**Complete explicit specification without preset:**
 
 ```nix
 with dsl;
@@ -178,14 +197,15 @@ system "custom-workstation" {
 **Change anything when you need to:**
 
 ```nix
-# Start with a preset
-preset = "workstation.developer";
+with dsl;
 
-# Override specific parts
-overrides = {
-  capabilities.security.level = "maximum";  # More security
+system "custom" {
+  preset = "workstation.developer";  # Start with preset
+  
+  # Override specific parts
+  capabilities.security.level = maximum;  # More security
   hardware.components.bluetooth.enable = false;  # Less power usage
-};
+}
 ```
 
 **Like Windows:** Change display settings, disable services, customize everything.
@@ -197,36 +217,36 @@ overrides = {
 ### Workstation.Default
 **For:** Office users, students
 ```
-Security:  Medium    (Firewall + basic protection)
-Desktop:   Standard  (Terminal + editor + browser)
-Dev:       Basic     (Git + languages)
+Security:    Medium   (Firewall + basic protection)
+Desktop:     Standard (Terminal + editor + browser)
+Development: Basic    (Git + languages)
 Performance: Balanced
 ```
 
-### Workstation.Developer (Default for quickSystem)
+### Workstation.Developer
 **For:** Software developers
 ```
-Security:  High      (Firewall + audit + secureboot)
-Desktop:   Full      (Terminal + editor + browser + office)
-Dev:       Containers (Docker + languages)
+Security:    High       (Firewall + audit + secureboot)
+Desktop:     Full       (Terminal + editor + browser + office)
+Development: Containers (Docker + languages)
 Performance: Performance
 ```
 
 ### Workstation.Poweruser
 **For:** Advanced users, system administrators
 ```
-Security:  High      (Firewall + audit + secureboot)
-Desktop:   Full      (All applications)
-Dev:       Full      (Docker + Kubernetes + all languages)
+Security:    High (Firewall + audit + secureboot)
+Desktop:     Full (All applications)
+Development: Full (Docker + Kubernetes + all languages)
 Performance: Performance
 ```
 
 ### Server.Default
 **For:** General servers
 ```
-Security:  High      (Hardened configuration)
-Desktop:   None      (Headless)
-Dev:       None      (Server only)
+Security:    High     (Hardened configuration)
+Desktop:     None     (Headless)
+Development: None     (Server only)
 Performance: Balanced
 ```
 
@@ -281,27 +301,23 @@ myLib.systems.mkSystem {
 # + hosts/yoga.nix (30 lines)
 ```
 
-### After (Simple - 1 file, 8 lines)
+### After (Simple - 1 file, ~10 lines)
 
 ```nix
 # products/yoga.nix
 { myLib }:
 
-myLib.dsl.simpleSystem {
-  name = "yoga";
-  hardware = "gigabyte-x870e-aorus-elite-wifi7";
+with myLib.dsl;
+
+system "yoga" {
   preset = "workstation.poweruser";
-  overrides.users = [ "logger" ];
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  users = [ "logger" ];
+  system.timezone = "America/Denver";
 }
 ```
 
-**Or even simpler (3 lines):**
-
-```nix
-{ myLib }:
-
-myLib.dsl.quickSystem "yoga" "gigabyte-x870e-aorus-elite-wifi7" "logger"
-```
+**90% code reduction**, same functionality!
 
 ---
 
@@ -310,19 +326,24 @@ myLib.dsl.quickSystem "yoga" "gigabyte-x870e-aorus-elite-wifi7" "logger"
 ### Use Case 1: New Developer Laptop
 
 ```nix
-dsl.quickSystem "dev-laptop" "lenovo-legion-16irx8h" "alice"
-```
+with dsl;
 
-**Result:** Ready-to-code laptop with Docker, VSCode, all languages, high security.
+system "dev-laptop" {
+  preset = "workstation.developer";
+  hardware.platform = "lenovo-legion-16irx8h";
+  users = [ "alice" ];
+}
+```
 
 ### Use Case 2: Home Server
 
 ```nix
-dsl.simpleSystem {
-  name = "home-server";
-  hardware = "generic-server";
+with dsl;
+
+system "home-server" {
   preset = "server.default";
-  overrides.users.admin.sshKeys = [ "ssh-ed25519 AAA..." ];
+  hardware.platform = "generic-server";
+  users.admin.sshKeys = [ "ssh-ed25519 AAA..." ];
 }
 ```
 
@@ -331,18 +352,20 @@ dsl.simpleSystem {
 ### Use Case 3: Gaming PC
 
 ```nix
-dsl.simpleSystem {
-  name = "gaming-rig";
-  hardware = "gigabyte-x870e-aorus-elite-wifi7";
+with dsl;
+
+system "gaming-rig" {
   preset = "workstation.default";
-  overrides = {
-    users = [ "gamer" ];
-    capabilities.gaming = {
-      enable = true;
-      platform = "steam";
-    };
-    system.performance.profile = "performance";
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  users = [ "gamer" ];
+  
+  # Add gaming capability
+  capabilities.gaming = {
+    enable = true;
+    platform = "steam";
   };
+  
+  system.performance.profile = "performance";
 }
 ```
 
@@ -351,19 +374,20 @@ dsl.simpleSystem {
 ### Use Case 4: Maximum Security Workstation
 
 ```nix
-dsl.simpleSystem {
-  name = "secure-workstation";
-  hardware = "gigabyte-x870e-aorus-elite-wifi7";
+with dsl;
+
+system "secure-workstation" {
   preset = "workstation.poweruser";
-  overrides = {
-    capabilities.security = {
-      level = "maximum";
-      features = {
-        secureboot = true;
-        yubikey = true;
-        apparmor = true;
-        audit = true;
-      };
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  
+  # Override for maximum security
+  capabilities.security = {
+    level = maximum;
+    features = {
+      secureboot = true;
+      yubikey = true;
+      apparmor = true;
+      audit = true;
     };
   };
 }
@@ -375,19 +399,31 @@ dsl.simpleSystem {
 
 ## Why This Works (Like Windows)
 
-### 1. Progressive Learning Curve
+### 1. Single Unified Interface
 
 ```
-Beginner:     quickSystem → 3 parameters
-              ↓
-Intermediate: simpleSystem → preset + overrides  
-              ↓
-Advanced:     system → full declarative spec
+Everyone uses 'system' - no multiple functions to learn
+  ↓
+Add preset for simplicity, or skip for full control
+  ↓
+Same syntax, different detail levels
 ```
 
-**Like Windows:** Start with installer, move to Settings, advance to Registry.
+**Like Windows:** One installer, one Settings app - just different levels of customization.
 
-### 2. Sensible Defaults
+### 2. Progressive Detail
+
+```
+Simple:       system with preset → minimal config
+              ↓
+Intermediate: system with preset + overrides → customize specifics
+              ↓
+Advanced:     system without preset → full declarative spec
+```
+
+**Like Windows:** Default install → Settings customization → Registry tweaking.
+
+### 3. Sensible Defaults
 
 - Security is ON by default (not off)
 - Common tools are included
@@ -396,17 +432,22 @@ Advanced:     system → full declarative spec
 
 **Like Windows:** Defender enabled, drivers installed, sound works.
 
-### 3. Easy Customization
+### 4. Easy Customization
 
 Change one thing without understanding everything:
 
 ```nix
-overrides.capabilities.desktop.terminal = "alacritty"
+with dsl;
+
+system "my-system" {
+  preset = "workstation.developer";
+  capabilities.desktop.terminal = alacritty;  # Just change this
+}
 ```
 
 **Like Windows:** Change wallpaper without knowing DirectX.
 
-### 4. Discoverable Options
+### 5. Discoverable Options
 
 IDE autocomplete shows available presets:
 - `workstation.default`
@@ -415,7 +456,7 @@ IDE autocomplete shows available presets:
 
 **Like Windows:** Settings app shows all options.
 
-### 5. Validation & Safety
+### 6. Validation & Safety
 
 Type checking prevents mistakes:
 
@@ -434,8 +475,8 @@ If you're coming from Windows system administration:
 
 | Windows Concept | NixOS Equivalent |
 |----------------|------------------|
-| Windows Installer | `quickSystem` |
-| Settings App | `simpleSystem` with presets |
+| Default Install | `system` with preset |
+| Settings App | `system` with preset + overrides |
 | Group Policy | `system` with full config |
 | Registry | Full declarative specification |
 | Windows Edition (Home/Pro) | Presets (default/developer/poweruser) |
@@ -451,19 +492,29 @@ If you're coming from Windows system administration:
 ### 1. Start Simple
 
 ```nix
-# Day 1: Just get it working
-quickSystem "my-pc" "gigabyte-x870e-aorus-elite-wifi7" "me"
+# Day 1: Use a preset
+with dsl;
+
+system "my-pc" {
+  preset = "workstation.developer";
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  users = [ "me" ];
+}
 ```
 
-### 2. Add Complexity When Needed
+### 2. Add Customization When Needed
 
 ```nix
-# Day 30: Need more security
-simpleSystem {
-  name = "my-pc";
-  hardware = "gigabyte-x870e-aorus-elite-wifi7";
+# Day 30: Override specific settings
+with dsl;
+
+system "my-pc" {
   preset = "workstation.developer";
-  overrides.capabilities.security.level = "maximum";
+  hardware.platform = "gigabyte-x870e-aorus-elite-wifi7";
+  users = [ "me" ];
+  
+  # Add more security
+  capabilities.security.level = maximum;
 }
 ```
 
@@ -471,19 +522,28 @@ simpleSystem {
 
 ```nix
 # Month 3: Custom requirements
+with dsl;
+
 system "my-pc" {
-  # Full specification
+  # Full specification without preset
+  type = workstation;
+  hardware.platform = gigabyte.x870e;
+  # ... complete custom config
 }
 ```
 
-### 4. Use Presets as Templates
+### 4. Use Presets as Learning Tools
 
 ```nix
-# Learn from presets, customize from there
-preset = "workstation.poweruser";
-overrides = {
-  # Your specific changes
-};
+# See what a preset includes, then customize
+with dsl;
+
+system "custom" {
+  preset = "workstation.poweruser";  # Start here
+  
+  # Override just what you need
+  capabilities.desktop.terminal = alacritty;
+}
 ```
 
 ---
