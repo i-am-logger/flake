@@ -59,8 +59,59 @@ jobs:
           echo "  - ghcr.io/i-am-logger/github-runner:sha-${{ steps.sha.outputs.short }}"
           echo "  - ghcr.io/i-am-logger/github-runner:edge"
 
+  check-installer-changes:
+    name: Check Installer Changes
+    runs-on: flake
+    outputs:
+      changed: ${{ steps.filter.outputs.installer }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Check for installer-related changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            installer:
+              - 'installer-iso.nix'
+              - 'install.sh'
+              - 'build-installer.sh'
+              - 'INSTALLER.md'
+
+  build-installer:
+    name: Build Installer ISO
+    runs-on: flake
+    needs: check-installer-changes
+    if: needs.check-installer-changes.outputs.changed == 'true'
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+      
+      - name: Build installer ISO
+        run: |
+          echo "Building installer ISO (installer files changed)..."
+          nix build .#installer-iso
+      
+      - name: Get short SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      
+      - name: Upload installer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-iso-sha-${{ steps.sha.outputs.short }}
+          path: result/iso/*.iso
+          retention-days: 30
+
   release:
-    needs: [build-runner-image]
+    needs: [build-runner-image, check-installer-changes]
     runs-on: flake
     permissions:
       contents: write
@@ -126,3 +177,26 @@ jobs:
           echo "Release runner image published:"
           echo "  - ghcr.io/i-am-logger/github-runner:${TAG_NAME}"
           echo "  - ghcr.io/i-am-logger/github-runner:latest"
+      
+      - name: Build and publish installer ISO to release
+        if: ${{ steps.release.outputs.release_created && needs.check-installer-changes.outputs.changed == 'true' }}
+        env:
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Building installer ISO for release $TAG_NAME (installer was updated)..."
+          
+          # Build the installer ISO
+          nix build .#installer-iso
+          
+          # Find the ISO file
+          ISO_FILE=$(find result/iso -name '*.iso' -type f | head -n 1)
+          ISO_NAME=$(basename "$ISO_FILE")
+          
+          echo "Uploading installer ISO to release: $ISO_NAME"
+          
+          # Upload to GitHub release
+          gh release upload "$TAG_NAME" "$ISO_FILE" --clobber
+          
+          echo "Installer ISO published to release:"
+          echo "  - $ISO_NAME attached to release $TAG_NAME"

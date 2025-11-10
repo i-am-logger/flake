@@ -125,22 +125,41 @@ This repository uses [release-please](https://github.com/googleapis/release-plea
 
 1. **Commit with conventional format**: Use prefixes like `feat:`, `fix:`, `docs:`, `chore:` in your commit messages
 2. **Automatic PR creation**: Release Please creates/updates a release PR with version bump and changelog
-3. **Validation**: Release PR is automatically validated (runner image build/test, system config validation)
+3. **Validation**: Release PR is automatically validated (runner image build/test, system config validation, installer ISO if changed)
 4. **Auto-merge**: Once all checks pass, the PR auto-merges
 5. **Release artifacts published**:
    - GitHub Runner images: `ghcr.io/i-am-logger/github-runner:latest` and `ghcr.io/i-am-logger/github-runner:<version>`
+   - Installer ISO: Attached to release (only when installer files are updated)
 
 ### Pre-release Artifacts (on every push to main)
 
 - **GitHub Runner**: `ghcr.io/i-am-logger/github-runner:edge` and `ghcr.io/i-am-logger/github-runner:sha-<commit>`
+- **Installer ISO**: Available as workflow artifact `installer-iso-sha-<commit>` (only when installer files change)
 
 ### Release Artifacts (on version release)
 
 - **GitHub Runner**: `ghcr.io/i-am-logger/github-runner:latest` and `ghcr.io/i-am-logger/github-runner:<version>`
+- **Installer ISO**: Attached to GitHub release (only when installer files were updated in that release)
 
-### Building Installer ISO
+### Smart Installer ISO Releases
 
-The installer ISO can be built separately when needed:
+The installer ISO is intelligently tracked and released only when relevant files change:
+
+**Monitored files:**
+- `installer-iso.nix` - ISO configuration
+- `install.sh` - Installation script
+- `build-installer.sh` - Build helper
+- `INSTALLER.md` - Installer documentation
+
+**Behavior:**
+- Changes to installer files trigger ISO build in CI
+- Pre-release builds create workflow artifacts for testing
+- Release builds attach the ISO to the GitHub release
+- If installer files haven't changed, no ISO is built or released
+
+### Building Installer ISO Manually
+
+The installer ISO can always be built manually when needed:
 
 ```bash
 # Build installer ISO
@@ -149,8 +168,6 @@ nix build .#installer-iso
 # Or use the convenience script
 ./build-installer.sh
 ```
-
-The installer ISO is not tied to version releases and can be built from any commit.
 
 ## Hardware Modules
 
