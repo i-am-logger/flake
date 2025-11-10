@@ -1,12 +1,19 @@
 { lib, inputs, nixpkgs }:
 
 rec {
-  # Import product builder
+  # Import product builder and presets
   productBuilder = import ./product-builder.nix { inherit lib inputs nixpkgs; };
+  presets = import ./presets.nix { inherit lib inputs nixpkgs; };
   
-  # system "name" { ... }
+  # system "name" { ... } - Full control
   system = name: spec:
     productBuilder.buildProduct (spec // { inherit name; });
+  
+  # simpleSystem - Preset-based with overrides
+  simpleSystem = presets.simpleSystem;
+  
+  # quickSystem - Ultra-simple: name, hardware, users
+  quickSystem = presets.quickSystem;
     
   # Component references - CPU
   amd = {
