@@ -87,6 +87,9 @@
       nixosConfigurations = {
         yoga = import ./Systems/yoga { inherit myLib; };
         skyspy-dev = import ./Systems/skyspy-dev { inherit myLib; };
+        
+        # New product-driven architecture (parallel testing)
+        yoga-product = myLib.productBuilder.buildProduct (import ./products/yoga.nix { inherit myLib; });
 
         # Installer ISO for both systems
         installer-iso = lib.nixosSystem {
