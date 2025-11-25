@@ -145,6 +145,7 @@
     "$mainMod, N, exec, makoctl dismiss"
     "$mainMod SHIFT, N, exec, makoctl dismiss --all"
     "$mainMod CTRL, N, exec, ~/.local/bin/toggle-dnd"
+    "$mainMod, H, exec, ~/.local/bin/show-notifications"
   ];
 
   # CLIPBOARD

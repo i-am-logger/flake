@@ -73,6 +73,7 @@ in
     # Super+N = dismiss newest notification
     # Super+Shift+N = dismiss all notifications  
     # Super+Ctrl+N = toggle do-not-disturb mode
+    # Super+H = invoke/show oldest notification (helps when you see a count but can't view them)
   };
 
   # DND toggle script
@@ -101,6 +102,21 @@ in
       else
           notify-send "🔔 Notifications Enabled" "All notifications are now visible" --urgency=normal --expire-time=3000
       fi
+    '';
+    executable = true;
+  };
+
+  # Show notification history script
+  home.file.".local/bin/show-notifications" = {
+    text = ''
+      #!/usr/bin/env bash
+      
+      # Show notification history by invoking the oldest notification
+      # This helps users see what notifications they have when they see a count but can't view them
+      
+      # Invoke the default action on the oldest notification
+      # This will bring up the notification or perform its default action
+      makoctl invoke
     '';
     executable = true;
   };
