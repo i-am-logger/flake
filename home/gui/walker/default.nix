@@ -2,8 +2,8 @@
 {
   home.packages = with pkgs; [
     walker
-    libqalculate  # For calculator functionality
-    fd            # For file finder functionality
+    libqalculate # For calculator functionality
+    fd # For file finder functionality
   ];
 
   # Walker configuration directory

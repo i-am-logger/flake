@@ -2,12 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
+{ config
+, pkgs
+, lib
+, inputs
+, ...
 }:
 
 {
@@ -132,7 +131,7 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    audio.enable = true;  # This was missing!
+    audio.enable = true; # This was missing!
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -167,7 +166,7 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = 
+  environment.systemPackages =
     let
       # Helper function to wrap Electron apps with libsecret backend
       wrapElectronApp = pkg: bin: pkgs.symlinkJoin {

@@ -79,7 +79,7 @@ in
     pinentry.package = pkgs.pinentry-gnome3;
     enableExtraSocket = true;
     enableScDaemon = true; # Explicitly enable scdaemon
-    
+
     # Disable caching - require YubiKey touch for every operation
     defaultCacheTtl = 0;
     maxCacheTtl = 0;
@@ -91,8 +91,8 @@ in
   # Keygrip for auth subkey (from gpg --list-secret-keys --with-keygrip):
   home.file.".gnupg/sshcontrol" = {
     text = ''
-E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
-'';
+      E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
+    '';
     # Make sure directory exists with safe perms
     force = true;
   };
@@ -120,7 +120,7 @@ E546B8F9F3944F6E4C155CC4A403A3427EEFC78E
         email = "i-am-logger@users.noreply.github.com";
       };
       signing = {
-        behavior = "own";  # Updated from deprecated sign-all = true
+        behavior = "own"; # Updated from deprecated sign-all = true
         backend = "gpg";
         key = "3842FC405341B51B";
       };

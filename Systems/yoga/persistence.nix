@@ -1,8 +1,7 @@
-{
-  config,
-  pkgs,
-  impermanence,
-  ...
+{ config
+, pkgs
+, impermanence
+, ...
 }:
 {
   imports = [

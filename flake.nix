@@ -48,21 +48,20 @@
   };
 
   outputs =
-    inputs@{
-      self,
-      nixos-hardware,
-      nixpkgs,
-      disko,
-      impermanence,
-      flake-utils,
-      sops-nix,
-      secrets,
-      home-manager,
-      stylix,
-      lanzaboote,
-      ags,
-      ironbar,
-      ...
+    inputs@{ self
+    , nixos-hardware
+    , nixpkgs
+    , disko
+    , impermanence
+    , flake-utils
+    , sops-nix
+    , secrets
+    , home-manager
+    , stylix
+    , lanzaboote
+    , ags
+    , ironbar
+    , ...
     }:
     let
       lib = nixpkgs.lib;
@@ -198,7 +197,7 @@
             ./Systems/skyspy-dev/configuration.nix
             ./hosts/skyspy-dev.nix
             modules/motd
-            
+
             # Home Manager
             home-manager.nixosModules.home-manager
             {
@@ -213,7 +212,7 @@
                 ];
               };
             }
-            
+
             # Theme
             stylix.nixosModules.stylix
             ./Themes/stylix.nix

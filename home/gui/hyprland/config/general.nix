@@ -17,7 +17,7 @@
 
   # Layer rules for better performance
   layerrule = [
-    "noanim, walker"  # Disable animations for Walker launcher
+    "noanim, walker" # Disable animations for Walker launcher
   ];
 
 }

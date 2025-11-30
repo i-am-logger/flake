@@ -23,8 +23,8 @@
   '';
 
   # Ensure the user is in the required groups
-  users.groups.streamdeck = {};
-  
+  users.groups.streamdeck = { };
+
   # Add necessary system packages
   environment.systemPackages = with pkgs; [
     streamdeck-ui

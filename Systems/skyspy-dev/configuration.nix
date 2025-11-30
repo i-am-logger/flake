@@ -2,12 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
+{ config
+, pkgs
+, lib
+, inputs
+, ...
 }:
 
 {
@@ -36,7 +35,7 @@
   # Dual-boot support with Windows - based on /etc/nixos config
   time.hardwareClockInLocalTime = true;
   boot.supportedFilesystems = [ "ntfs" ];
-  
+
   # Windows partition - read-only mount to ~/mnt/windows  
   fileSystems."/home/logger/mnt/windows" = {
     device = "/dev/disk/by-uuid/A03C41603C413318";
@@ -140,9 +139,9 @@
   };
 
   # Dual-boot support services (from /etc/nixos)
-  services.udisks2.enable = true;         # Auto-mounting support
-  services.timesyncd.enable = true;       # Network time sync (important for dual-boot)
-  services.fstrim.enable = true;          # SSD optimization
+  services.udisks2.enable = true; # Auto-mounting support
+  services.timesyncd.enable = true; # Network time sync (important for dual-boot)
+  services.fstrim.enable = true; # SSD optimization
 
   # Allow unfree packages for nvidia and other proprietary software
   nixpkgs.config.allowUnfree = true;
@@ -157,18 +156,18 @@
     hyprland
     slack
     # Boot and partition management tools
-    efibootmgr      # EFI boot entry management
-    gparted         # Graphical partition editor
-    ntfs3g          # NTFS filesystem support
-    os-prober       # Detect other operating systems
+    efibootmgr # EFI boot entry management
+    gparted # Graphical partition editor
+    ntfs3g # NTFS filesystem support
+    os-prober # Detect other operating systems
     # File system tools
-    dosfstools      # FAT/FAT32 tools
-    parted          # Command line partitioning
+    dosfstools # FAT/FAT32 tools
+    parted # Command line partitioning
     # Audio control tools
-    pavucontrol     # PulseAudio volume control GUI
-    pulseaudio      # PulseAudio utilities
-    alsa-utils      # ALSA utilities (alsamixer, etc.)
-    pipewire        # PipeWire utilities
+    pavucontrol # PulseAudio volume control GUI
+    pulseaudio # PulseAudio utilities
+    alsa-utils # ALSA utilities (alsamixer, etc.)
+    pipewire # PipeWire utilities
   ];
 
   # Enable zram with 15% of RAM

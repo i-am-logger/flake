@@ -1,24 +1,24 @@
-{
-  pkgs ? import <nixpkgs> { },
+{ pkgs ? import <nixpkgs> { }
+,
 }:
 
 let
   python3 = pkgs.python312;
   pythonPackages = python3.pkgs;
-  
+
   gitingestMcp = pythonPackages.buildPythonApplication {
     pname = "gitingest-mcp";
     version = "0.1.4";
-    
+
     src = pkgs.fetchFromGitHub {
       owner = "narumiruna";
       repo = "gitingest-mcp";
       rev = "main";
       hash = "sha256-3bNBg5QaVdRJ/PfppMQRRN+3GYegE2WzMle+gT1/GA8=";
     };
-    
+
     format = "pyproject";
-    
+
     nativeBuildInputs = with pythonPackages; [
       pip
       setuptools
@@ -26,7 +26,7 @@ let
       poetry-core
       hatchling
     ];
-    
+
     propagatedBuildInputs = with pythonPackages; [
       pkgs.gitingest
       loguru
@@ -45,14 +45,14 @@ let
       EOF
       chmod +x $out/bin/gitingestmcp
     '';
-    
+
     meta = with pkgs.lib; {
       description = "GitIngest MCP Server";
       homepage = "https://github.com/narumiruna/gitingest-mcp";
       license = licenses.mit;
     };
   };
-  
+
 in
 # GitIngest MCP Server package
 pkgs.writeShellScriptBin "rs-mcp-gitingest" ''
