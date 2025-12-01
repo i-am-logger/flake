@@ -13,7 +13,6 @@ let
     "flake"
     "loial"
     "logger"
-    "pds"
   ];
 
   githubUsername = "i-am-logger";
@@ -26,6 +25,10 @@ let
       description = "Deploy GitHub Actions Runner Scale Set for ${repo}";
       after = [ "arc-setup.service" ];
       wantedBy = [ "multi-user.target" ];
+
+      # unitConfig = {
+      #   ConditionPathExists = "!/var/lib/arc-runner-set-${repo}-done";
+      # };
 
       serviceConfig = {
         Type = "oneshot";
@@ -50,19 +53,21 @@ let
           exit 1
         fi
 
-        # Install runner scale set for ${repo} - repo-level registration
-        # Using dind mode (requires SidecarContainers feature gate enabled in k3s)
+        # Install runner scale set for ${repo} with hostname in name
+        # Using dind mode with proper configuration
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
-          --set runnerScaleSetName="${repo}" \
+          --set runnerScaleSetName="host-${hostname}-repo-${repo}" \
           --set minRunners=0 \
           --set maxRunners=5 \
-          --set-json 'containerMode={"type":"dind"}' \
+          --set runnerGroup="Default" \
+          --set containerMode.type="dind" \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
+        touch /var/lib/arc-runner-set-${repo}-done
         echo "Runner scale set for ${repo} deployed successfully"
       '';
     };
@@ -71,6 +76,12 @@ in
 {
   options.stacks.cicd = {
     enable = mkEnableOption "CI/CD stack (GitHub Actions Runners + k3s)";
+
+    repositories = mkOption {
+      type = types.listOf types.str;
+      default = repositories;
+      description = "List of repositories to create runner sets for";
+    };
 
     githubUsername = mkOption {
       type = types.str;
@@ -125,7 +136,7 @@ in
         GITHUB_TOKEN=$GITHUB_TOKEN
         GITHUB_USERNAME=i-am-logger
         EOF
-                  chmod 644 /persist/etc/github-runner-token
+                  chmod 600 /persist/etc/github-runner-token
                   chown root:root /persist/etc/github-runner-token
                   echo "GitHub runner token file created from pass"
                 else
@@ -185,29 +196,6 @@ in
             --namespace arc-systems \
             --create-namespace \
             oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
-
-          # Patch ClusterRole to add missing RBAC permissions for secrets and pods
-          # The controller needs these to create JIT config secrets for runner pods
-          # See: https://github.com/actions/actions-runner-controller/discussions/3160
-          ${pkgs.kubectl}/bin/kubectl patch clusterrole arc-gha-rs-controller --type=json -p='[
-            {"op": "add", "path": "/rules/-", "value": {
-              "apiGroups": [""],
-              "resources": ["secrets"],
-              "verbs": ["create", "delete", "get", "list", "patch", "update", "watch"]
-            }},
-            {"op": "add", "path": "/rules/-", "value": {
-              "apiGroups": [""],
-              "resources": ["pods"],
-              "verbs": ["create", "delete", "get", "patch", "update"]
-            }},
-            {"op": "add", "path": "/rules/-", "value": {
-              "apiGroups": ["rbac.authorization.k8s.io"],
-              "resources": ["roles", "rolebindings"],
-              "verbs": ["create", "delete", "get", "patch", "update"]
-            }}
-          ]'
-
-          echo "RBAC permissions patched for ARC controller"
 
           ${optionalString cfg.enableGpu (
             if cfg.gpuVendor == "amd" then ''
