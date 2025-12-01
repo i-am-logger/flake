@@ -87,6 +87,24 @@
       nixosConfigurations = {
         yoga = import ./Systems/yoga { inherit myLib; };
         skyspy-dev = import ./Systems/skyspy-dev { inherit myLib; };
+
+        # Installer ISO for both systems
+        installer-iso = lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./installer-iso.nix ];
+        };
       };
+
+      # Installer ISO package for easy building
+      packages.x86_64-linux.installer-iso = self.nixosConfigurations.installer-iso.config.system.build.isoImage;
+
+      # GitHub Actions Runner Docker Image
+      packages.x86_64-linux.github-runner-image = import ./images/github-runner { inherit pkgs; };
+
+      # Lightweight check that verifies image builds and structure (no Docker loading)
+      checks.x86_64-linux.github-runner-check = import ./images/github-runner/check.nix { inherit pkgs; };
+
+      # Full integration test with Docker (run manually: nix build .#github-runner-test)
+      packages.x86_64-linux.github-runner-test = import ./images/github-runner/test.nix { inherit pkgs; };
     };
 }

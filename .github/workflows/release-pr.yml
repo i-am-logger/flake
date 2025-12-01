@@ -1,0 +1,82 @@
+name: Release PR Validation
+
+on:
+  push:
+    branches:
+      - 'release-please--**'
+
+permissions:
+  contents: read
+
+jobs:
+  check-installer-changes:
+    name: Check Installer Changes
+    runs-on: flake
+    outputs:
+      changed: ${{ steps.filter.outputs.installer }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Check for installer-related changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            installer:
+              - 'installer-iso.nix'
+              - 'install.sh'
+              - 'build-installer.sh'
+              - 'INSTALLER.md'
+
+  validate:
+    name: Validate Release
+    runs-on: flake
+    needs: check-installer-changes
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+      
+      - name: Check Nix formatting
+        run: |
+          echo "Checking Nix file formatting..."
+          if command -v nixpkgs-fmt &> /dev/null; then
+            nixpkgs-fmt --check .
+          else
+            nix run nixpkgs#nixpkgs-fmt -- --check .
+          fi
+      
+      - name: Validate flake
+        run: |
+          echo "Validating flake.nix syntax..."
+          nix flake show --json > /dev/null
+      
+      - name: Build runner image
+        run: |
+          echo "Building GitHub Actions runner image..."
+          nix build .#github-runner-image
+          echo "✓ Runner image builds successfully"
+      
+      - name: Test runner image
+        run: |
+          echo "Testing GitHub Actions runner image..."
+          nix build .#checks.x86_64-linux.github-runner-test
+          echo "✓ Runner image tests passed"
+      
+      - name: Validate system configurations
+        run: |
+          echo "Validating system configurations..."
+          nix build .#nixosConfigurations.yoga.config.system.build.toplevel --dry-run
+          nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel --dry-run
+          echo "✓ All system configurations are valid"
+      
+      - name: Build installer ISO (if changed)
+        if: needs.check-installer-changes.outputs.changed == 'true'
+        run: |
+          echo "Building installer ISO (installer files changed)..."
+          nix build .#installer-iso
+          echo "✓ Installer ISO builds successfully"
