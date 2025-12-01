@@ -18,14 +18,14 @@ myLib.systems.mkSystem {
     };
     desktop = {
       enable = true;
-      warp.enable = true;
-      warp.preview = true;
+      warp.enable = false;
+      warp.preview = false;
       vscode.enable = true;
       browser.enable = true;
     };
     cicd = {
-      enable = true;
-      enableGpu = true; # AMD Radeon GPU support for runners
+      enable = false;
+      enableGpu = false; # AMD Radeon GPU support for runners
     };
   };
 

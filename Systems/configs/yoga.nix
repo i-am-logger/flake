@@ -2,7 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, lib, ... }:
+{ config
+, pkgs
+, lib
+, ...
+}:
 
 {
   imports = [
@@ -89,8 +93,9 @@
     builtins.elem (pkg.pname or pkg.name) [
       "slack"
       "signal-desktop"
-      "warp-terminal"
-      "warp-terminal-preview"
+      "claude-code"
+      # "warp-terminal"
+      # "warp-terminal-preview"
       "1password"
       "1password-cli"
       "vscode"

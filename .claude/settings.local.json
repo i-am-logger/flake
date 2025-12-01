@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /etc/nixos show:*)",
+      "Bash(git -C /etc/nixos show HEAD:Systems/yoga/default.nix)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

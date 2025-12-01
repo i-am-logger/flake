@@ -15,6 +15,9 @@ let
   githubUsername = "i-am-logger";
   hostname = config.networking.hostName;
 
+  # Custom NixOS runner image from GHCR
+  runnerImageName = "ghcr.io/i-am-logger/github-runner:latest";
+
   # Generate runner set services for each repository
   mkRunnerSetService = repo: {
     name = "arc-runner-set-${repo}";
@@ -51,12 +54,14 @@ let
         fi
 
         # Install runner scale set for ${repo} with hostname in name
+        # Using custom NixOS runner image from GHCR
         ${pkgs.kubernetes-helm}/bin/helm upgrade --install arc-runner-set-${repo} \
           --namespace arc-runners \
           --create-namespace \
           --set githubConfigUrl="https://github.com/${githubUsername}/${repo}" \
           --set githubConfigSecret.github_token="$GITHUB_TOKEN" \
           --set runnerScaleSetName="${hostname}-${repo}" \
+          --set template.spec.containers[0].image="${runnerImageName}" \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
         touch /var/lib/arc-runner-set-${repo}-done
