@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-pamixer --get-volume
-while sleep 0.1; do
-    pamixer --get-volume
-done

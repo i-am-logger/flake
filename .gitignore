@@ -1,1 +1,9 @@
 result
+
+# Claude Code - Ignore runtime state, keep agent definitions
+.claude/c2/messages.jsonl
+.claude/c2/tasks.json
+.claude/c2/agents.json
+.claude/learning/*.md
+.claude/artifacts/
+!.claude/learning/README.md
