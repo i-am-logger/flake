@@ -289,14 +289,17 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1765174863,
-        "narHash": "sha256-b3Xxp8jbOT+Qhyi80Zqf9W3SvhtpgsRwnv8lAloSG+o=",
-        "path": "/home/logger/Code/github/logger/mynixos",
-        "type": "path"
+        "lastModified": 1765266708,
+        "narHash": "sha256-lqgfZEmQfXNrDL/fgOCDYbVoThhpjZjfFcyRKrVP4xk=",
+        "owner": "i-am-logger",
+        "repo": "mynixos",
+        "rev": "90cfa87eb3fd61c89b6264e23819b75c951388c2",
+        "type": "github"
       },
       "original": {
-        "path": "/home/logger/Code/github/logger/mynixos",
-        "type": "path"
+        "owner": "i-am-logger",
+        "repo": "mynixos",
+        "type": "github"
       }
     },
     "nixos-hardware": {
@@ -430,11 +433,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765079830,
-        "narHash": "sha256-i9GMbBLkeZ7MVvy7+aAuErXkBkdRylHofrAjtpUPKt8=",
+        "lastModified": 1765231718,
+        "narHash": "sha256-qdBzo6puTgG4G2RHG0PkADg22ZnQo1JmSVFRxrD4QM4=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "aeb517262102f13683d7a191c7e496b34df8d24c",
+        "rev": "7fd1416aba1865eddcdec5bb11339b7222c2363e",
         "type": "github"
       },
       "original": {

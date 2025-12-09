@@ -3,7 +3,7 @@
 
   inputs = {
     # mynixos - Typed functional DSL providing all dependencies
-    mynixos.url = "/home/logger/Code/github/logger/mynixos";
+    mynixos.url = "github:i-am-logger/mynixos";
 
     # Personal secrets (not managed by mynixos)
     secrets = {
