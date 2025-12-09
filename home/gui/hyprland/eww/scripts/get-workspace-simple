@@ -1,2 +1,0 @@
-#!/bin/bash
-hyprctl activeworkspace -j 2>/dev/null | nix-shell -p jq --run "jq -r .id" 2>/dev/null || echo "1"

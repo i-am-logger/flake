@@ -1,0 +1,356 @@
+#!/usr/bin/env bash
+# nix-system-diff - Full recursive diff between two NixOS system derivations
+#
+# This compares EVERYTHING: /etc, symlinks, systemd units, home-manager configs, etc.
+#
+# Usage:
+#   nix-system-diff 600                           # Compare generation 600 vs current flake build
+#   nix-system-diff 600 601                       # Compare two generations
+#   nix-system-diff /nix/store/... /nix/store/... # Compare two store paths
+#   nix-system-diff --current                     # Compare running system vs flake build
+
+set -uo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+FLAKE_PATH="${FLAKE_PATH:-/etc/nixos}"
+REAL_HOSTNAME="${REAL_HOSTNAME:-$(hostname)}"
+OUTPUT_FILE=""
+VERBOSE=false
+
+# Patterns to exclude from diff (noise)
+EXCLUDE_PATTERNS=(
+    "terminfo"
+    "\.pyc$"
+    "__pycache__"
+)
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS] SOURCE [TARGET]
+
+Compare two NixOS system derivations recursively.
+
+Arguments:
+  SOURCE     Generation number, store path, or --current
+  TARGET     Generation number, store path, or --flake (default: --flake)
+
+Options:
+  -o FILE          Write diff to file instead of stdout
+  -f FLAKE_PATH    Flake path (default: /etc/nixos)
+  -h HOSTNAME      Hostname for flake evaluation (default: current hostname)
+  --verbose        Show full file contents in diff
+  --etc-only       Only diff /etc
+  --summary        Only show summary (files changed, not content)
+  -h, --help       Show this help
+
+Examples:
+  $0 600                    # Gen 600 vs current flake build
+  $0 600 601                # Gen 600 vs Gen 601
+  $0 --current              # Running system vs flake build
+  $0 600 --current          # Gen 600 vs running system
+  $0 600 -o diff.txt        # Save to file
+
+EOF
+}
+
+resolve_system_path() {
+    local input="$1"
+
+    if [[ "$input" == "--current" ]]; then
+        readlink -f /run/current-system
+    elif [[ "$input" == "--flake" ]]; then
+        nix eval "$FLAKE_PATH#nixosConfigurations.$REAL_HOSTNAME.config.system.build.toplevel" --raw 2>/dev/null
+    elif [[ "$input" =~ ^[0-9]+$ ]]; then
+        local profile="/nix/var/nix/profiles/system-${input}-link"
+        if [[ -L "$profile" ]]; then
+            readlink -f "$profile"
+        else
+            echo "Error: Generation $input not found" >&2
+            exit 1
+        fi
+    elif [[ "$input" =~ ^/nix/store/ ]]; then
+        echo "$input"
+    else
+        echo "Error: Invalid input: $input" >&2
+        exit 1
+    fi
+}
+
+# Parse arguments
+SOURCE=""
+TARGET="--flake"
+ETC_ONLY=false
+SUMMARY_ONLY=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -o)
+            OUTPUT_FILE="$2"
+            shift 2
+            ;;
+        -f)
+            FLAKE_PATH="$2"
+            shift 2
+            ;;
+        -H)
+            REAL_HOSTNAME="$2"
+            shift 2
+            ;;
+        --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        --etc-only)
+            ETC_ONLY=true
+            shift
+            ;;
+        --summary)
+            SUMMARY_ONLY=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --current|--flake)
+            if [[ -z "$SOURCE" ]]; then
+                SOURCE="$1"
+            else
+                TARGET="$1"
+            fi
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            usage
+            exit 1
+            ;;
+        *)
+            if [[ -z "$SOURCE" ]]; then
+                SOURCE="$1"
+            else
+                TARGET="$1"
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "$SOURCE" ]]; then
+    echo "Error: SOURCE is required" >&2
+    usage
+    exit 1
+fi
+
+# Resolve paths
+echo -e "${BLUE}Resolving system paths...${NC}" >&2
+SRC_PATH=$(resolve_system_path "$SOURCE")
+TGT_PATH=$(resolve_system_path "$TARGET")
+
+echo -e "${CYAN}Source: $SRC_PATH${NC}" >&2
+echo -e "${CYAN}Target: $TGT_PATH${NC}" >&2
+
+if [[ "$SRC_PATH" == "$TGT_PATH" ]]; then
+    echo -e "${GREEN}Both paths are identical - no differences.${NC}"
+    exit 0
+fi
+
+# Function to recursively diff, following symlinks into /nix/store
+diff_trees() {
+    local src="$1"
+    local tgt="$2"
+    local prefix="${3:-}"
+
+    # Get the actual directories (follow symlinks)
+    local src_real=$(readlink -f "$src" 2>/dev/null || echo "$src")
+    local tgt_real=$(readlink -f "$tgt" 2>/dev/null || echo "$tgt")
+
+    if [[ ! -e "$src_real" && ! -e "$tgt_real" ]]; then
+        return
+    fi
+
+    if [[ ! -e "$src_real" ]]; then
+        echo -e "${GREEN}+ $prefix (added)${NC}"
+        if [[ "$VERBOSE" == "true" && -f "$tgt_real" ]]; then
+            head -50 "$tgt_real" 2>/dev/null | sed 's/^/  + /'
+        fi
+        return
+    fi
+
+    if [[ ! -e "$tgt_real" ]]; then
+        echo -e "${RED}- $prefix (removed)${NC}"
+        if [[ "$VERBOSE" == "true" && -f "$src_real" ]]; then
+            head -50 "$src_real" 2>/dev/null | sed 's/^/  - /'
+        fi
+        return
+    fi
+
+    # Both exist - compare
+    if [[ -f "$src_real" && -f "$tgt_real" ]]; then
+        if ! diff -q "$src_real" "$tgt_real" >/dev/null 2>&1; then
+            echo -e "${YELLOW}~ $prefix (modified)${NC}"
+            if [[ "$SUMMARY_ONLY" != "true" ]]; then
+                diff -u "$src_real" "$tgt_real" 2>/dev/null | head -100 | sed 's/^/  /'
+            fi
+        fi
+    elif [[ -d "$src_real" && -d "$tgt_real" ]]; then
+        # Both are directories - recurse
+        local all_entries=$(cd "$src_real" && ls -A 2>/dev/null; cd "$tgt_real" && ls -A 2>/dev/null)
+        local unique_entries=$(echo "$all_entries" | sort -u)
+
+        for entry in $unique_entries; do
+            diff_trees "$src_real/$entry" "$tgt_real/$entry" "$prefix/$entry"
+        done
+    else
+        echo -e "${YELLOW}~ $prefix (type changed)${NC}"
+    fi
+}
+
+# Main diff function
+run_diff() {
+    echo ""
+    echo -e "${BLUE}╔════════════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║                    NixOS System Derivation Diff                            ║${NC}"
+    echo -e "${BLUE}╠════════════════════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${BLUE}║${NC} OLD: $(echo "$SRC_PATH" | tail -c 72)"
+    echo -e "${BLUE}║${NC} NEW: $(echo "$TGT_PATH" | tail -c 72)"
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+
+    # 1. Compare /etc
+    echo -e "${CYAN}━━━ /etc configuration ━━━${NC}"
+    SRC_ETC=$(readlink -f "$SRC_PATH/etc" 2>/dev/null)
+    TGT_ETC=$(readlink -f "$TGT_PATH/etc" 2>/dev/null)
+
+    if [[ -d "$SRC_ETC" && -d "$TGT_ETC" ]]; then
+        diff -rq "$SRC_ETC" "$TGT_ETC" 2>/dev/null | grep -v terminfo | grep -v __pycache__ | while read -r line; do
+            if [[ "$line" =~ ^"Only in $SRC_ETC" ]]; then
+                file="${line#Only in $SRC_ETC}"
+                file="${file#: }"
+                file="${file#/}"
+                echo -e "${RED}- /etc/$file${NC}"
+            elif [[ "$line" =~ ^"Only in $TGT_ETC" ]]; then
+                file="${line#Only in $TGT_ETC}"
+                file="${file#: }"
+                file="${file#/}"
+                echo -e "${GREEN}+ /etc/$file${NC}"
+            elif [[ "$line" =~ "differ" ]]; then
+                # Extract relative path
+                file=$(echo "$line" | sed "s|Files $SRC_ETC/||" | sed 's| and .*||')
+                echo -e "${YELLOW}~ /etc/$file${NC}"
+                if [[ "$SUMMARY_ONLY" != "true" ]]; then
+                    diff -u "$SRC_ETC/$file" "$TGT_ETC/$file" 2>/dev/null | head -50 | sed 's/^/  /'
+                fi
+            fi
+        done
+    fi
+
+    if [[ "$ETC_ONLY" == "true" ]]; then
+        return
+    fi
+
+    # 2. Compare systemd units
+    echo ""
+    echo -e "${CYAN}━━━ systemd units ━━━${NC}"
+    for unit_type in system user; do
+        SRC_UNITS="$SRC_ETC/systemd/$unit_type"
+        TGT_UNITS="$TGT_ETC/systemd/$unit_type"
+
+        if [[ -d "$SRC_UNITS" || -d "$TGT_UNITS" ]]; then
+            diff -rq "$SRC_UNITS" "$TGT_UNITS" 2>/dev/null | while read -r line; do
+                if [[ "$line" =~ ^"Only in $SRC_UNITS" ]]; then
+                    file="${line##*: }"
+                    echo -e "${RED}- systemd/$unit_type/$file${NC}"
+                elif [[ "$line" =~ ^"Only in $TGT_UNITS" ]]; then
+                    file="${line##*: }"
+                    echo -e "${GREEN}+ systemd/$unit_type/$file${NC}"
+                elif [[ "$line" =~ "differ" ]]; then
+                    file=$(echo "$line" | sed "s|Files $SRC_UNITS/||" | sed 's| and .*||')
+                    echo -e "${YELLOW}~ systemd/$unit_type/$file${NC}"
+                fi
+            done
+        fi
+    done
+
+    # 3. Compare sw (system packages)
+    echo ""
+    echo -e "${CYAN}━━━ system packages (sw/bin) ━━━${NC}"
+    SRC_SW=$(readlink -f "$SRC_PATH/sw" 2>/dev/null)
+    TGT_SW=$(readlink -f "$TGT_PATH/sw" 2>/dev/null)
+
+    if [[ -d "$SRC_SW/bin" && -d "$TGT_SW/bin" ]]; then
+        removed=$(comm -23 <(ls "$SRC_SW/bin" | sort) <(ls "$TGT_SW/bin" | sort) | wc -l)
+        added=$(comm -13 <(ls "$SRC_SW/bin" | sort) <(ls "$TGT_SW/bin" | sort) | wc -l)
+        echo "  Packages: -$removed removed, +$added added"
+
+        if [[ "$VERBOSE" == "true" ]]; then
+            echo -e "  ${RED}Removed:${NC}"
+            comm -23 <(ls "$SRC_SW/bin" | sort) <(ls "$TGT_SW/bin" | sort) | head -20 | sed 's/^/    - /'
+            echo -e "  ${GREEN}Added:${NC}"
+            comm -13 <(ls "$SRC_SW/bin" | sort) <(ls "$TGT_SW/bin" | sort) | head -20 | sed 's/^/    + /'
+        fi
+    fi
+
+    # 4. Compare kernel
+    echo ""
+    echo -e "${CYAN}━━━ kernel ━━━${NC}"
+    SRC_KERNEL=$(readlink "$SRC_PATH/kernel" 2>/dev/null || echo "N/A")
+    TGT_KERNEL=$(readlink "$TGT_PATH/kernel" 2>/dev/null || echo "N/A")
+    if [[ "$SRC_KERNEL" != "$TGT_KERNEL" ]]; then
+        echo -e "${YELLOW}~ kernel changed${NC}"
+        echo "  Old: $SRC_KERNEL"
+        echo "  New: $TGT_KERNEL"
+    else
+        echo "  (unchanged)"
+    fi
+
+    # 5. Compare initrd
+    echo ""
+    echo -e "${CYAN}━━━ initrd ━━━${NC}"
+    SRC_INITRD=$(readlink "$SRC_PATH/initrd" 2>/dev/null || echo "N/A")
+    TGT_INITRD=$(readlink "$TGT_PATH/initrd" 2>/dev/null || echo "N/A")
+    if [[ "$SRC_INITRD" != "$TGT_INITRD" ]]; then
+        echo -e "${YELLOW}~ initrd changed${NC}"
+        echo "  Old: $SRC_INITRD"
+        echo "  New: $TGT_INITRD"
+    else
+        echo "  (unchanged)"
+    fi
+
+    # 6. Top-level files
+    echo ""
+    echo -e "${CYAN}━━━ top-level system files ━━━${NC}"
+    for f in activate init nixos-version kernel-params boot.json; do
+        SRC_FILE="$SRC_PATH/$f"
+        TGT_FILE="$TGT_PATH/$f"
+        if [[ -f "$SRC_FILE" && -f "$TGT_FILE" ]]; then
+            if ! diff -q "$SRC_FILE" "$TGT_FILE" >/dev/null 2>&1; then
+                echo -e "${YELLOW}~ $f${NC}"
+                if [[ "$SUMMARY_ONLY" != "true" && "$f" != "activate" && "$f" != "init" ]]; then
+                    diff -u "$SRC_FILE" "$TGT_FILE" 2>/dev/null | head -30 | sed 's/^/  /'
+                fi
+            fi
+        elif [[ -f "$TGT_FILE" && ! -f "$SRC_FILE" ]]; then
+            echo -e "${GREEN}+ $f${NC}"
+        elif [[ -f "$SRC_FILE" && ! -f "$TGT_FILE" ]]; then
+            echo -e "${RED}- $f${NC}"
+        fi
+    done
+
+    echo ""
+    echo -e "${GREEN}━━━ diff complete ━━━${NC}"
+}
+
+# Run diff
+if [[ -n "$OUTPUT_FILE" ]]; then
+    run_diff > "$OUTPUT_FILE" 2>&1
+    echo "Diff written to: $OUTPUT_FILE"
+else
+    run_diff
+fi
