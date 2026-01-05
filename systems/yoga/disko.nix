@@ -12,7 +12,7 @@
     "/tmp" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=8G" # Moderate size for temporary files
+        "size=28G" # Restored to original size for temporary files
         "mode=755"
         "noatime"
       ];

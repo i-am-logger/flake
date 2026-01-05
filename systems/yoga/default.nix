@@ -57,10 +57,8 @@ mynixos.lib.mkSystem {
     };
 
     # Theme configuration
-    themes = {
-      type = "stylix";
-      config = ../../themes/stylix.nix;
-    };
+    # DISABLED: stylix has compatibility issues with newer nixpkgs/home-manager
+    themes.enable = false;
 
     # Environment configuration
     environment = {
@@ -163,10 +161,13 @@ mynixos.lib.mkSystem {
   # WORKAROUND: Manually set home-manager config until mynixos Phase 2.2 is complete
   # mynixos should auto-generate this from my.users, but it's not implemented yet
   extraModules = [
-    {
+    ({ pkgs, ... }: {
+      # Add fonts that were previously provided by stylix
+      fonts.packages = [ pkgs.nerd-fonts.fira-code ];
+
       home-manager.users.logger = {
         home.stateVersion = "25.05";
       };
-    }
+    })
   ];
 }
