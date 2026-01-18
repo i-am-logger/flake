@@ -115,7 +115,8 @@ mynixos.lib.mkSystem {
       let
         baseUsers = import ../../users;
       in
-      baseUsers // {
+      baseUsers
+      // {
         # System-specific configuration for skyspy-dev
         logger = baseUsers.logger // {
           # Windows mount
@@ -162,6 +163,11 @@ mynixos.lib.mkSystem {
       home-manager.users.logger = {
         home.stateVersion = "25.05";
       };
+
+      # Package overlays
+      nixpkgs.overlays = [
+        (import ../../overlays/opencode.nix)
+      ];
     }
   ];
 }

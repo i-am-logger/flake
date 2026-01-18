@@ -148,7 +148,11 @@ mynixos.lib.mkSystem {
         # System-specific GitHub overrides for yoga
         logger = baseUsers.logger // {
           github = baseUsers.logger.github // {
-            repositories = [ "loial" "logger" "pds" ];
+            repositories = [
+              "loial"
+              "logger"
+              "pds"
+            ];
           };
         };
       };
@@ -161,13 +165,23 @@ mynixos.lib.mkSystem {
   # WORKAROUND: Manually set home-manager config until mynixos Phase 2.2 is complete
   # mynixos should auto-generate this from my.users, but it's not implemented yet
   extraModules = [
-    ({ pkgs, ... }: {
-      # Add fonts that were previously provided by stylix
-      fonts.packages = [ pkgs.nerd-fonts.fira-code ];
+    (
+      { pkgs, ... }:
+      {
+        # Add fonts that were previously provided by stylix
+        fonts.packages = [ pkgs.nerd-fonts.fira-code ];
+        environment.systemPackages = with pkgs; [
+          # warp-terminal
+        ];
+        home-manager.users.logger = {
+          home.stateVersion = "25.05";
+        };
 
-      home-manager.users.logger = {
-        home.stateVersion = "25.05";
-      };
-    })
+        # Package overlays
+        nixpkgs.overlays = [
+          (import ../../overlays/opencode.nix)
+        ];
+      }
+    )
   ];
 }
