@@ -32,10 +32,8 @@ mynixos.lib.mkSystem {
     };
 
     # Theme configuration
-    themes = {
-      type = "stylix";
-      config = ../../themes/stylix.nix;
-    };
+    # DISABLED: stylix has compatibility issues with newer nixpkgs/home-manager
+    themes.enable = false;
 
     # Environment configuration
     environment = {

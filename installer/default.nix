@@ -1,4 +1,9 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ config
+, pkgs
+, lib
+, modulesPath
+, ...
+}:
 
 {
   imports = [
@@ -9,7 +14,10 @@
   isoImage.volumeID = "NIXOS_INSTALLER";
 
   # Enable flakes and experimental features
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Include essential tools for installation
   environment.systemPackages = with pkgs; [
@@ -53,7 +61,7 @@
   };
 
   # Automatic network configuration
-  networking.wireless.enable = false;
+  networking.wireless.enable = lib.mkDefault false;
   networking.networkmanager.enable = true;
 
   # Include the installer script in the ISO

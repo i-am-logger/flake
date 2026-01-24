@@ -1,21 +1,22 @@
-# Override opencode to v1.1.25
-# nixpkgs has v1.1.23, we need the latest version
+# Override opencode to v1.1.34
+# Auto-updated by scripts/update-opencode.sh
 final: prev:
 let
-  version = "1.1.25";
+  version = "1.1.34";
   src = prev.fetchFromGitHub {
     owner = "anomalyco";
     repo = "opencode";
     tag = "v${version}";
-    hash = "sha256-aF+4LL0x9wU2Ktrv/nJE2VXgUeXFrwJ16pa1sGNhpi4=";
+    hash = "sha256-ardM8zEJWvTvsFMQZWivjGPB2uIqFw6QPAzrRjAHQKY=";
   };
 in
 {
   opencode = prev.opencode.overrideAttrs (old: {
     inherit version src;
+    patches = [ ];
     node_modules = old.node_modules.overrideAttrs {
       inherit version src;
-      outputHash = "sha256-1mxHtlq18f2dIkOkdxdCPlX6M9I3bd1DA8JCB4blqZE=";
+      outputHash = "sha256-fw+sh1g7KuG9UAPVsvRiQLGgGCokrGn9lQ8ox8dnyeY=";
     };
   });
 }
