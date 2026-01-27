@@ -80,4 +80,11 @@
     # Defaults: yazi, fastfetch, bat, lsd = true
     # Others disabled unless explicitly enabled
   };
+
+  # Theme configuration via vogix
+  themes.vogix = {
+    scheme = "base16";
+    theme = "catppuccin";
+    variant = "mocha";
+  };
 }
