@@ -2,8 +2,8 @@
   description = "My Personal NixOS ricing";
 
   inputs = {
-    nixpkgs.url = "github:i-am-logger/nixpkgs/add-moxnotify";
-    # nixpkgs.url = "/home/snick/Code/snick/nix/nixpkgs";
+    # Use nixos-unstable
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
     # managing secrets
@@ -37,7 +37,7 @@
     # stylix.url = "github:realsnick/stylix";
     # stylix.url = "../../../home/snick/Code/snick/stylix";
 
-    # NixOS hardware configurations  
+    # NixOS hardware configurations
     # Using local fork for Legion-specific fixes
     nixos-hardware.url = "/home/logger/GitHub/logger/nixos-hardware";
     # nixos-hardware.url = "github:NixOS/nixos-hardware/master";

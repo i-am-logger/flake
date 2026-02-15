@@ -15,7 +15,7 @@
   ];
 
   stylix = {
-    enable = true;
+    enable = false;
     polarity = "dark";
     ls-colors.enable = true;
 
@@ -33,7 +33,7 @@
     # base16Scheme = ./example.yaml;
 
     # targets.waybar.enable = false;
-    
+
     # Disable GRUB theming since we use systemd-boot
     targets.grub.enable = false;
     
@@ -66,9 +66,9 @@
 
       emoji = {
         name = "Noto Color Emoji";
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
 
-        # package = p:gs.twitter-color-emoji;
+        # package = pkgs.twitter-color-emoji;
         # name = "Twitter Color Emoji";
       };
     };

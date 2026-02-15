@@ -5,7 +5,7 @@ let
 in
 {
   imports = [
-    # ./waybar  # Replaced with AGS
+    ./waybar
     # ./ironbar  # Replaced with AGS
     # ../ags
     ./swappy
@@ -107,6 +107,7 @@ in
 
   # Home packages
   home.packages = with pkgs; [
+    nerd-fonts.fira-code
     wlr-randr
     xdg-desktop-portal
     xdg-desktop-portal-hyprland

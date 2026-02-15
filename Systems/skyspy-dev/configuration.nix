@@ -15,29 +15,30 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./persistence.nix
-    ../common/secure-boot.nix
+    # ../common/secure-boot.nix  # Disabled temporarily - rust prebuilt issues
     ../common/yubikey.nix
-    ../common/warp-terminal.nix
-    ../common/warp-terminal-preview.nix
+    # ../common/warp-terminal.nix  # Disabled temporarily
+    # ../common/warp-terminal-preview.nix  # Disabled temporarily
     ../common/vscode.nix
     ../common/browser.nix
   ];
 
   services.hardware.bolt.enable = true;
 
-  # Bootloader - systemd-boot disabled in favor of lanzaboote for secure boot
-  boot.loader.systemd-boot.enable = lib.mkForce false;
+  # Bootloader - re-enable systemd-boot (secure boot disabled temporarily)
+  boot.loader.systemd-boot.enable = lib.mkForce true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.timeout = 2; # Fast boot - press key to access menu
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_18; # pinned: nvidia 580.x doesn't build against 6.19 yet
 
   # Intel CPU specific modules
   boot.kernelModules = [ "kvm-intel" ];
 
-  # Mask audit-rules.service since rules are loaded early via kernel cmdline
-  # The service tries to reload immutable rules and fails (cosmetic issue only)
+  # Mask audit-rules services since rules include -e 2 (immutable mode)
+  # which prevents reloading rules during nixos-rebuild switch
   systemd.services.audit-rules.enable = false;
+  systemd.services.audit-rules-nixos.enable = false;
 
   # Dual-boot support with Windows - based on /etc/nixos config
   time.hardwareClockInLocalTime = true;
@@ -79,7 +80,7 @@
   # Graphics and Nvidia configuration handled by common nvidia module
 
   networking.hostName = "skyspy-dev";
-  networking.wireless.enable = false;
+  networking.wireless.enable = lib.mkForce true;
   # Bluetooth configuration moved to common/bluetooth.nix
 
   # Security and audit - comprehensive logging
@@ -147,6 +148,14 @@
     active = no
   '';
 
+  security.sudo.extraRules = [
+    {
+      users = [ "logger" ];
+      commands = [
+        { command = "/run/current-system/sw/bin/nixos-rebuild"; options = [ "NOPASSWD" ]; }
+      ];
+    }
+  ];
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=0
     Defaults !tty_tickets
@@ -264,7 +273,7 @@
 
         # Cache frequently used applications
         ${pkgs.vmtouch}/bin/vmtouch -dl /nix/store/*-firefox-*
-        ${pkgs.vmtouch}/bin/vmtouch -dl /nix/store/*-warp-terminal-*
+        # ${pkgs.vmtouch}/bin/vmtouch -dl /nix/store/*-warp-terminal-*
 
         # Report status
         echo "Current system closure size:"
@@ -274,7 +283,7 @@
         ${pkgs.vmtouch}/bin/vmtouch -e $(readlink -f /run/current-system)
         ${pkgs.vmtouch}/bin/vmtouch -e /nix/var/nix/profiles/per-user/logger/profile
         ${pkgs.vmtouch}/bin/vmtouch -e /nix/store/*-firefox-*
-        ${pkgs.vmtouch}/bin/vmtouch -e /nix/store/*-warp-terminal-*
+        # ${pkgs.vmtouch}/bin/vmtouch -e /nix/store/*-warp-terminal-*
       '';
 
       MemoryMax = "16G";

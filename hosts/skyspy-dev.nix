@@ -9,6 +9,7 @@
     common/system.nix
     common/security/security.nix
     common/security/1password.nix
+    common/security/yubikey-gpg.nix
     common/nix.nix
     common/nvidia.nix
     common/bluetooth.nix

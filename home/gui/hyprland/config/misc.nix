@@ -8,7 +8,7 @@
     enable_swallow = false;
     # swallow_regex =
     focus_on_activate = true;
-    font_family = "Fira Code Nerd Font";
+    font_family = "FiraCode Nerd Font";
     # background_color = "121212";
   };
 }

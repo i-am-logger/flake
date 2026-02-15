@@ -37,6 +37,16 @@ in
   services.gnome.gnome-keyring.enable = false;
   security.polkit.enable = true;
 
+  # Allow wheel group to access PC/SC smart card reader and cards
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id.indexOf("org.debian.pcsc-lite.") == 0 &&
+          subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   # Configure GPG agent for proper GNOME integration
   programs.gnupg.agent = {
     enable = true;

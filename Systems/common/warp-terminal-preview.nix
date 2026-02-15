@@ -32,7 +32,10 @@ let
       pipewire,
       xdgDesktopPortalWlr,
       xdg-utils,
-      xorg,
+      libx11,
+      libxcb,
+      libxcursor,
+      libxi,
       zlib,
       makeWrapper,
       waylandSupport ? true,
@@ -91,10 +94,10 @@ let
         stdenv.cc.libc
         vulkan-loader
         xdg-utils
-        xorg.libX11
-        xorg.libxcb
-        xorg.libXcursor
-        xorg.libXi
+        libx11
+        libxcb
+        libxcursor
+        libxi
         # Wayland dependencies
         wayland
         waylandProtocols

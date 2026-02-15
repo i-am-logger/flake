@@ -10,8 +10,8 @@
     left_handed = true;
     #follow_mouse = 2 # 0|1|2|3
     float_switch_override_focus = 2;
-    numlock_by_default = "off";
-    natural_scroll = "yes";
+    numlock_by_default = false;
+    natural_scroll = true;
 
     touchpad = {
       natural_scroll = 1;

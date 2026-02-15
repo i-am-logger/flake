@@ -48,10 +48,10 @@ let
       libdrm
       mesa
       xdg-utils
-      xorg.libX11
-      xorg.libxcb
-      xorg.libXcursor
-      xorg.libXi
+      libx11
+      libxcb
+      libxcursor
+      libxi
       zlib
       (lib.getLib stdenv.cc.cc) # libstdc++.so and libgcc_s.so
     ];
@@ -67,10 +67,10 @@ let
       pipewire
       xdg-desktop-portal-wlr
       xdg-utils
-      xorg.libX11
-      xorg.libxcb
-      xorg.libXcursor
-      xorg.libXi
+      libx11
+      libxcb
+      libxcursor
+      libxi
     ];
 
     sourceRoot = ".";

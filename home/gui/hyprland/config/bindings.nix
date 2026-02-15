@@ -70,9 +70,6 @@
     "$mainMod SHIFT, k, swapwindow, u"
     "$mainMod SHIFT, j, swapwindow, d"
 
-    # resize window
-    "ALT, R, submap, resize"
-
     # Switch workspaces with mainMod + [0-9]
     "$mainMod, 1, workspace, 1"
     "$mainMod, 2, workspace, 2"
@@ -147,10 +144,6 @@
     "$mainMod CTRL, N, exec, ~/.local/bin/toggle-dnd"
   ];
 
-  # CLIPBOARD
-  "exec-once" = [
-    "wl-paste --watch cliphist store"
-  ];
   # TODO: select old item
   # $ cliphist list | dmenu | cliphist decode | wl-copy
   # TODO: delete old item

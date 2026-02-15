@@ -8,7 +8,7 @@
 
   group = {
     groupbar = {
-      font_family = "Fira Code Nerd Font";
+      font_family = "FiraCode Nerd Font";
       font_size = 28;
       height = 32;
       indicator_height = 5;
@@ -17,7 +17,7 @@
 
   # Layer rules for better performance
   layerrule = [
-    "noanim, walker"  # Disable animations for Walker launcher
+    "match:namespace walker, no_anim 1"
   ];
 
 }

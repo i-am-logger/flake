@@ -29,14 +29,12 @@
     # nodePackages.vue-language-server
     yaml-language-server
     taplo
-    gh-copilot
+    github-copilot-cli
     # pkgs.vimPlugins.copilot-vim
     tree-sitter
     (tree-sitter.withPlugins (_: tree-sitter.allGrammars))
     # nixpkgs-fmt
-    # nixfmt
-    nixfmt-rfc-style
-    # nixpkgs-fmt
+    nixfmt
   ];
 
   programs.helix = {

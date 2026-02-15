@@ -214,15 +214,17 @@ in
 
   # Git configuration for GPG signing - use smart wrapper
   programs.git = {
-    userName = "Logger";
-    userEmail = "i-am-logger@users.noreply.github.com";
     signing = {
       format = "openpgp";
       signByDefault = true;
       # Use email - smart wrapper will choose the right key
       key = "i-am-logger@users.noreply.github.com";
     };
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Logger";
+        email = "i-am-logger@users.noreply.github.com";
+      };
       gpg = {
         # Use smart wrapper that detects available YubiKey
         program = "gpg-smart";

@@ -19,13 +19,9 @@ in
 
     # Yubico's tools
     yubikey-manager
-    yubikey-manager-qt
+    yubioath-flutter
     yubikey-personalization
-    yubikey-personalization-gui
     yubico-piv-tool
-    # flutter
-    # flutter
-    # yubioath-flutter
     yubico-pam
     pcsc-tools
     pcsclite

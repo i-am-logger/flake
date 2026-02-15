@@ -1,6 +1,8 @@
-{ ... }:
+{ lib, ... }:
 
 {
+  disabledModules = [ ];
+
   manual.manpages.enable = true;
 
   programs = {
@@ -16,13 +18,20 @@
     stateVersion = "25.11";
   };
 
+  # Qt configuration
+  qt = {
+    enable = lib.mkForce false;
+    platformTheme = lib.mkDefault { name = "gtk"; };
+    style = lib.mkDefault { name = null; };
+  };
+
   imports = [
     ../common.nix
     ./yubikey.nix
     ./jujutsu.nix
     ./git.nix
     ./ssh.nix
-    ./webapps.nix
+    # ./webapps.nix  # Disabled temporarily - chromium dependency build issues
     ../gui/brave
   ];
 }

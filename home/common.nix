@@ -61,6 +61,7 @@
     marktext
     #gimp
     #pfetch # Minimal fetch
+    claude-code
     github-desktop
     # Video/Audio
     #cli-visualizer # Audio visualizer

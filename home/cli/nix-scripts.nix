@@ -18,7 +18,7 @@ in
       cd ~/.flake
       sudo ${rebuildCommand}
     '')
-    (pkgs.writeScriptBin "dp-on" ''
+(pkgs.writeScriptBin "dp-on" ''
       #!/usr/bin/env bash
       wlr-randr --output eDP-1 --on
     '')

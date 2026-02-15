@@ -5,6 +5,7 @@
   # won't require another YubiKey touch.
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
   };
 
   home.file.".ssh/config".text = ''
