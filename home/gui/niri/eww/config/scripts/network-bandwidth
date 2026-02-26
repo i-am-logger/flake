@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# Network bandwidth - compute delta from sysfs rx/tx bytes
+
+# Find active network interface
+iface=$(ip route get 1.1.1.1 2>/dev/null | head -1 | awk '{for(i=1;i<=NF;i++) if($i=="dev") print $(i+1)}')
+
+if [ -z "$iface" ]; then
+    echo $'\uf062' " 0b/s | " $'\uf063' " 0b/s"
+    exit 0
+fi
+
+# Read current values
+rx1=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
+tx1=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
+
+# Previous values stored in tmp
+prev_file="/tmp/eww-netbw-$iface"
+
+if [ -f "$prev_file" ]; then
+    read -r prev_rx prev_tx < "$prev_file"
+else
+    prev_rx=$rx1
+    prev_tx=$tx1
+fi
+
+# Store current for next run
+echo "$rx1 $tx1" > "$prev_file"
+
+# Calculate delta (2s interval)
+rx_delta=$(( (rx1 - prev_rx) / 2 ))
+tx_delta=$(( (tx1 - prev_tx) / 2 ))
+
+# Ensure non-negative
+[ "$rx_delta" -lt 0 ] && rx_delta=0
+[ "$tx_delta" -lt 0 ] && tx_delta=0
+
+# Format to human readable bits/s
+format_bits() {
+    local bytes=$1
+    local bits=$((bytes * 8))
+    if [ "$bits" -ge 1073741824 ]; then
+        echo "$(awk "BEGIN{printf \"%.1f\", $bits/1073741824}")Gb/s"
+    elif [ "$bits" -ge 1048576 ]; then
+        echo "$(awk "BEGIN{printf \"%.1f\", $bits/1048576}")Mb/s"
+    elif [ "$bits" -ge 1024 ]; then
+        echo "$(awk "BEGIN{printf \"%.1f\", $bits/1024}")Kb/s"
+    else
+        echo "${bits}b/s"
+    fi
+}
+
+up=$(format_bits $tx_delta)
+down=$(format_bits $rx_delta)
+
+UP_ICON=$'\uf062'
+DOWN_ICON=$'\uf063'
+echo "${UP_ICON} ${up} | ${DOWN_ICON} ${down}"

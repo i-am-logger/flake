@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Privacy indicators - check for active screenshare/audio-in via pipewire
+
+indicators=""
+
+# Check for active screen capture
+if pw-cli list-objects 2>/dev/null | grep -q "media.class.*Video/Source"; then
+    screen_nodes=$(pw-cli list-objects 2>/dev/null | grep -B5 "node.name.*screen" | grep -c "state.*running")
+    if [ "$screen_nodes" -gt 0 ]; then
+        indicators+=" "
+    fi
+fi
+
+# Check for active audio input (microphone)
+mic_active=$(pactl list source-outputs 2>/dev/null | grep -c "Corked: no")
+if [ "$mic_active" -gt 0 ]; then
+    indicators+=" "
+fi
+
+echo "$indicators"

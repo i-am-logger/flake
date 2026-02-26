@@ -1,0 +1,23 @@
+[general]
+framerate = 30
+bars = 14
+autosens = 1
+lower_cutoff_freq = 20
+higher_cutoff_freq = 18000
+
+[input]
+method = pulse
+source = auto
+
+[output]
+method = raw
+raw_target = /dev/stdout
+data_format = ascii
+ascii_max_range = 8
+bar_delimiter = 32
+frame_delimiter = 10
+channels = mono
+mono_option = average
+
+[smoothing]
+noise_reduction = 0.77

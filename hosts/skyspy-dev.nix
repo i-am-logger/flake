@@ -18,6 +18,7 @@
 
     common/environment.nix
     common/hyprland.nix
+    common/niri.nix
     common/binfmt.nix
     common/appimage.nix
     common/direnv.nix
@@ -27,13 +28,15 @@
     common/streamdeck.nix
     common/systemd-fixes.nix
     common/pam-fixes.nix
-    common/plymouth.nix  # Boot splash screen with NixOS logo
-    common/systemd-boot.nix  # Enhanced boot menu styling
+    common/plymouth.nix # Boot splash screen with NixOS logo
+    common/systemd-boot.nix # Enhanced boot menu styling
     # common/ollama.nix  # Disabled on skyspy-dev
     users/logger.nix
   ];
 
   services.usbmuxd.enable = true;
+
+  # services.openssh.enable = true;
 
   services.fwupd.enable = true; # firmware update
   services.trezord.enable = true;

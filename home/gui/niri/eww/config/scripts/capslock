@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Caps lock state from LED brightness
+
+brightness=$(cat /sys/class/leds/input*::capslock/brightness 2>/dev/null | head -1)
+
+if [ "$brightness" = "1" ]; then
+    echo "CAPS"
+else
+    echo ""
+fi

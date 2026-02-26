@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Helper: takes percentage as $1 and optional icon prefix as $2
+# Outputs: [icon] bar_chars
+
+pct=${1:-0}
+icon=${2:-}
+
+if [ "$pct" -le 12 ]; then
+    bar="▁▁"
+elif [ "$pct" -le 25 ]; then
+    bar="▂▂"
+elif [ "$pct" -le 37 ]; then
+    bar="▃▃"
+elif [ "$pct" -le 50 ]; then
+    bar="▄▄"
+elif [ "$pct" -le 62 ]; then
+    bar="▅▅"
+elif [ "$pct" -le 75 ]; then
+    bar="▆▆"
+elif [ "$pct" -le 87 ]; then
+    bar="▇▇"
+else
+    bar="██"
+fi
+
+if [ -n "$icon" ]; then
+    echo "${icon} ${bar}"
+else
+    echo "$bar"
+fi

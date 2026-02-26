@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Battery status with Nerd Font icon
+
+BAT="/sys/class/power_supply/BAT0"
+
+if [ ! -d "$BAT" ]; then
+    echo $'\uf0e7' "100%"
+    exit 0
+fi
+
+capacity=$(cat "$BAT/capacity" 2>/dev/null || echo "100")
+status=$(cat "$BAT/status" 2>/dev/null || echo "Unknown")
+
+# Nerd Font battery icons
+if [ "$status" = "Charging" ]; then
+    icon=$'\uf0e7'    # lightning bolt
+elif [ "$capacity" -ge 80 ]; then
+    icon=$'\uf240'    # battery-full
+elif [ "$capacity" -ge 60 ]; then
+    icon=$'\uf241'    # battery-three-quarters
+elif [ "$capacity" -ge 40 ]; then
+    icon=$'\uf242'    # battery-half
+elif [ "$capacity" -ge 20 ]; then
+    icon=$'\uf243'    # battery-quarter
+else
+    icon=$'\uf244'    # battery-empty
+fi
+
+echo "$icon ${capacity}%"

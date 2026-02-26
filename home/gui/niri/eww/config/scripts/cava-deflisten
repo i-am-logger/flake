@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo "▁▁▁▁▁▁▁▁▁▁▁▁▁▁"
+
+stdbuf -oL cava -p "$SCRIPT_DIR/cava-config" 2>/dev/null | awk '{
+    out = ""
+    for (i = 1; i <= NF && i <= 14; i++) {
+        v = $i + 0
+        if      (v <= 1) out = out "▁"
+        else if (v == 2) out = out "▂"
+        else if (v == 3) out = out "▃"
+        else if (v == 4) out = out "▄"
+        else if (v == 5) out = out "▅"
+        else if (v == 6) out = out "▆"
+        else if (v == 7) out = out "▇"
+        else             out = out "█"
+    }
+    print out
+    fflush()
+}'

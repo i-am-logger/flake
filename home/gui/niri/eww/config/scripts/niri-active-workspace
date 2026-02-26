@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Niri active workspace listener - outputs focused workspace index on changes
+
+get_active() {
+    niri msg -j workspaces 2>/dev/null | jq '[.[] | select(.is_focused)] | .[0].idx // 1' 2>/dev/null || echo "1"
+}
+
+# Output initial state
+get_active
+
+# Listen for workspace events via niri event stream
+niri msg event-stream 2>/dev/null | while IFS= read -r line; do
+    case "$line" in
+        "Workspace focused:"*|"Workspaces changed:"*)
+            get_active
+            ;;
+    esac
+done

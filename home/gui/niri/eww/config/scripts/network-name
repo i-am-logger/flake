@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Network name + signal strength
+
+# Try wifi first
+wifi_info=$(nmcli -t -f active,ssid,signal dev wifi 2>/dev/null | grep '^yes' | head -1)
+
+if [ -n "$wifi_info" ]; then
+    ssid=$(echo "$wifi_info" | cut -d: -f2)
+    signal=$(echo "$wifi_info" | cut -d: -f3)
+    echo $'\uf1eb' " ${ssid} (${signal}%)"
+    exit 0
+fi
+
+# Check for ethernet
+eth=$(nmcli -t -f type,state dev 2>/dev/null | grep "^ethernet:connected" | head -1)
+if [ -n "$eth" ]; then
+    echo $'\uf6ff' " Ethernet"
+    exit 0
+fi
+
+echo "OFFLINE"

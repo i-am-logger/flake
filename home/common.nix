@@ -18,6 +18,7 @@
     cli/cava
     # GUI
     gui/hyprland
+    gui/niri
     # gui/ghostty
     gui/wezterm
     gui/obs-studio.nix

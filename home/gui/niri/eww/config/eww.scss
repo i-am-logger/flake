@@ -1,0 +1,190 @@
+* {
+  all: unset;
+  font-size: 16px;
+  font-family: "FiraCode Nerd Font", monospace;
+}
+
+window {
+  background-color: transparent;
+}
+
+// ============================================================
+// Bar base
+// ============================================================
+
+.bar {
+  background-color: #000000;
+  color: #545862;
+  padding: 0 0;
+}
+
+// ============================================================
+// Workspaces
+// ============================================================
+
+.workspaces {
+  background-color: #000000;
+  padding: 0 2px;
+}
+
+.workspace-button {
+  padding: 0 2px;
+  margin: 0 1px;
+  color: #fdf6e3;
+  background-color: #000000;
+  border: none;
+  min-width: 16px;
+}
+
+.workspace-button.active {
+  color: #268bd2;
+}
+
+.workspace-button:hover {
+  background-color: #000000;
+}
+
+// ============================================================
+// Separator
+// ============================================================
+
+.separator {
+  color: #292b2e;
+  background-color: #000000;
+  padding: 0 0;
+  margin: 0;
+}
+
+// ============================================================
+// Center group (clock + weather)
+// ============================================================
+
+.center-group {
+  background-color: #000000;
+  padding: 0;
+  margin: 0;
+}
+
+.datetime {
+  background-color: #000000;
+  padding: 0 10px;
+  margin: 0;
+  color: #fdf6e3;
+}
+
+.weather {
+  background-color: #000000;
+  padding: 0 10px;
+  margin: 0;
+  color: #545862;
+}
+
+// ============================================================
+// Right-side top bar modules
+// ============================================================
+
+.network,
+.battery-icon,
+.battery-time,
+.battery-time-standalone,
+.audio-sep {
+  background-color: #000000;
+  margin: 0;
+  color: #545862;
+}
+
+.audio-sep {
+  color: #545862;
+  padding: 0 2px;
+}
+
+.network {
+  color: #fdf6e3;
+  padding: 0 10px;
+}
+
+// Volume
+.volume {
+  color: #268bd2;
+  background-color: transparent;
+  padding: 0 10px;
+  margin: 0;
+}
+
+// Cava
+.cava {
+  color: #4CAF50;
+  font-family: monospace;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: #000000;
+  padding: 0 6px;
+}
+
+// Battery
+.battery {
+  padding: 0 10px;
+  color: #545862;
+}
+
+.battery-icon {
+  padding: 0;
+}
+
+.battery-time {
+  color: #545862;
+  font-size: 14px;
+  padding: 0 2px;
+}
+
+.battery-time-standalone {
+  padding: 0 10px;
+  font-size: 14px;
+  color: #545862;
+}
+
+// Privacy indicators
+.privacy {
+  color: #545862;
+  padding: 0 4px;
+}
+
+.privacy.active {
+  color: #dd532e;
+  font-weight: bold;
+}
+
+// ============================================================
+// Bottom bar modules
+// ============================================================
+
+.disk {
+  padding: 0 6px;
+  color: #545862;
+  background-color: #000000;
+}
+
+// CPU / Memory / Temperature
+.metric {
+  background-color: #000000;
+  padding: 0 6px;
+  margin: 0;
+  color: #545862;
+}
+
+// Network bandwidth
+.netbw {
+  color: #545862;
+  padding: 0 6px;
+}
+
+// Caps Lock
+.capslock {
+  color: #545862;
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.capslock.active {
+  color: #dd532e;
+}

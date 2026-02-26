@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Battery remaining time via upower
+
+info=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 2>/dev/null)
+
+if [ -z "$info" ]; then
+    echo ""
+    exit 0
+fi
+
+time_to=$(echo "$info" | grep -E "time to (empty|full)" | head -1 | sed 's/.*: *//')
+
+if [ -n "$time_to" ]; then
+    echo "$time_to"
+else
+    echo ""
+fi

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Temperature with bar icon - reads from thermal zone, outputs °F
+
+temp_c=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk '{print int($1/1000)}')
+if [ -z "$temp_c" ] || [ "$temp_c" -eq 0 ]; then
+    echo $'\uf2c9' " 0°F"
+    exit 0
+fi
+
+# Convert to Fahrenheit
+temp_f=$(( (temp_c * 9 / 5) + 32 ))
+
+# Bar icon based on temperature (Celsius thresholds)
+if [ "$temp_c" -lt 40 ]; then
+    bar="▁▁"
+elif [ "$temp_c" -lt 50 ]; then
+    bar="▂▂"
+elif [ "$temp_c" -lt 55 ]; then
+    bar="▃▃"
+elif [ "$temp_c" -lt 65 ]; then
+    bar="▄▄"
+elif [ "$temp_c" -lt 70 ]; then
+    bar="▅▅"
+elif [ "$temp_c" -lt 75 ]; then
+    bar="▆▆"
+elif [ "$temp_c" -lt 80 ]; then
+    bar="▇▇"
+else
+    bar="██"
+fi
+
+echo $'\uf2c9' " ${bar} ${temp_f}°F"

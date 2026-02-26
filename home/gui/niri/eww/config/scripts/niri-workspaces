@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Niri workspace listener - outputs JSON array of workspace indices on changes
+
+get_workspaces() {
+    niri msg -j workspaces 2>/dev/null | jq -c '[.[].idx] | sort' 2>/dev/null || echo "[]"
+}
+
+# Output initial state
+get_workspaces
+
+# Listen for workspace events via niri event stream
+niri msg event-stream 2>/dev/null | while IFS= read -r line; do
+    case "$line" in
+        "Workspaces changed:"*|"Workspace focused:"*|"Workspace activated:"*)
+            get_workspaces
+            ;;
+    esac
+done

@@ -1,0 +1,196 @@
+;; ============================================================
+;; Variables
+;; ============================================================
+
+;; Compositor-agnostic (reused scripts)
+(deflisten time :initial "Loading..." "scripts/time-deflisten")
+(deflisten volume :initial "50" "scripts/volume-deflisten")
+(deflisten cava :initial "▁▁▁▁▁▁▁▁▁▁▁▁▁▁" "scripts/cava-deflisten")
+
+;; Niri-specific
+(deflisten workspaces :initial "[]" "scripts/niri-workspaces")
+(deflisten current_workspace :initial "1" "scripts/niri-active-workspace")
+
+;; Polled system data — top bar
+(defpoll weather :interval "300s" "scripts/weather")
+(defpoll network_name :interval "5s" "scripts/network-name")
+(defpoll battery :interval "5s" "scripts/battery")
+(defpoll battery_time :interval "30s" "scripts/battery-time")
+(defpoll privacy :interval "2s" "scripts/privacy")
+
+;; Polled system data — bottom bar
+(defpoll cpu :interval "1s" "scripts/cpu")
+(defpoll memory :interval "5s" "free | grep Mem | awk '{print int($3/$2*100)}'")
+(defpoll temp :interval "5s" "scripts/temperature")
+(defpoll disk_boot :interval "5s" "df /boot --output=pcent | tail -1 | tr -d ' %'")
+(defpoll disk_nix :interval "5s" "df /nix --output=pcent | tail -1 | tr -d ' %'")
+(defpoll disk_tmp :interval "5s" "df /tmp --output=pcent | tail -1 | tr -d ' %'")
+(defpoll disk_root :interval "5s" "df / --output=pcent | tail -1 | tr -d ' %'")
+(defpoll network_bw :interval "5s" "scripts/network-bandwidth")
+(defpoll capslock :interval "1s" "scripts/capslock")
+(defpoll cpu_icon :interval "1s" "scripts/bar-icon $(scripts/cpu) $'\\uf2db'")
+(defpoll mem_icon :interval "5s" "scripts/bar-icon $(free | grep Mem | awk '{print int($3/$2*100)}') $'\\uf538'")
+
+;; ============================================================
+;; Widgets
+;; ============================================================
+
+(defwidget sep []
+  (label :class "separator" :text "|"))
+
+;; --- Workspaces ---
+(defwidget workspaces_widget []
+  (box :class "workspaces" :spacing 2
+    (for ws in workspaces
+      (button
+        :class {ws == current_workspace ? "workspace-button active" : "workspace-button"}
+        :onclick "niri msg action focus-workspace ${ws}"
+        ws))))
+
+;; --- Clock ---
+(defwidget clock []
+  (label :class "datetime" :text time))
+
+;; --- Weather ---
+(defwidget weather_widget []
+  (label :class "weather" :text weather))
+
+;; --- Privacy ---
+(defwidget privacy_widget []
+  (label :class "privacy ${privacy != '' ? 'active' : ''}" :text privacy :visible {privacy != ""}))
+
+;; --- Network ---
+(defwidget network_widget []
+  (label :class "network" :text network_name))
+
+;; --- Volume ---
+(defwidget volume_widget []
+  (button :class "volume" :onclick "pamixer -t" :onrightclick "pavucontrol &"
+    "${volume}%"))
+
+;; --- Cava ---
+(defwidget cava_widget []
+  (label :class "cava" :text cava))
+
+;; --- Battery ---
+(defwidget battery_widget []
+  (box :class "battery" :spacing 0
+    (label :class "battery-icon" :text battery)
+    (label :class "battery-time" :text {battery_time != "" ? " ${battery_time}" : ""} :visible {battery_time != ""})))
+
+;; --- Disk ---
+(defwidget disk [path value]
+  (label :class "disk" :text "${path} ${value}%"))
+
+;; --- CPU ---
+(defwidget cpu_widget []
+  (label :class "metric" :text "${cpu_icon} ${cpu}%"))
+
+;; --- Memory ---
+(defwidget mem_widget []
+  (label :class "metric" :text "${mem_icon} ${memory}%"))
+
+;; --- Temperature ---
+(defwidget temp_widget []
+  (label :class "metric" :text temp))
+
+;; --- Network bandwidth ---
+(defwidget netbw_widget []
+  (label :class "netbw" :text network_bw))
+
+;; --- Caps Lock ---
+(defwidget capslock_widget []
+  (label :class "capslock ${capslock != '' ? 'active' : ''}" :text capslock :visible {capslock != ""}))
+
+;; ============================================================
+;; Bar layouts
+;; ============================================================
+
+(defwidget top_bar_layout []
+  (box :class "bar" :spacing 0 :space-evenly false
+    (workspaces_widget)
+    (sep)
+    (clock)
+    (sep)
+    (weather_widget)
+    (sep)
+    (privacy_widget)
+    (sep)
+    (network_widget)
+    (sep)
+    (volume_widget)
+    (sep)
+    (cava_widget)
+    (sep)
+    (battery_widget)
+    (sep)
+    (label :class "battery-time-standalone" :text battery_time :visible {battery_time != ""})))
+
+;; Bottom bar 1 — disks, memory, cpu, temp, network bandwidth
+(defwidget bottom_bar1_layout []
+  (box :class "bar bottom" :spacing 0 :space-evenly false
+    (sep)
+    (disk :path "/boot" :value disk_boot)
+    (sep)
+    (disk :path "/nix" :value disk_nix)
+    (sep)
+    (disk :path "/tmp" :value disk_tmp)
+    (disk :path "/" :value disk_root)
+    (sep)
+    (mem_widget)
+    (sep)
+    (cpu_widget)
+    (sep)
+    (temp_widget)
+    (sep)
+    (netbw_widget)))
+
+;; Bottom bar 2 — capslock (matches waybar bar 3)
+(defwidget bottom_bar2_layout []
+  (centerbox :class "bar bottom"
+    (box :halign "start" :spacing 0
+      (label :text ""))
+    (box :halign "center" :spacing 0
+      (label :text ""))
+    (box :halign "end" :spacing 0
+      (capslock_widget))))
+
+;; ============================================================
+;; Windows
+;; ============================================================
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (top_bar_layout))
+
+(defwindow bottom_bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "bottom center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (bottom_bar1_layout))
+
+(defwindow bottom_bar2
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "28px"
+                      :width "100%"
+                      :height "28px"
+                      :anchor "bottom center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (bottom_bar2_layout))
