@@ -30,6 +30,10 @@
     allowUnfree = true;
   };
 
+  nixpkgs.overlays = [
+    (import ../overlays/claude-code.nix)
+  ];
+
   home.packages = with pkgs; [
     # file manager
     yazi
@@ -59,7 +63,7 @@
     #playerctl
     #UI Apps
     mypaint
-    marktext
+    #marktext # broken: node-gyp not found during build
     #gimp
     #pfetch # Minimal fetch
     claude-code

@@ -84,7 +84,11 @@
       "Bash(/home/logger/.config/eww/scripts/network-name:*)",
       "Bash(/home/logger/.config/eww/scripts/temperature:*)",
       "Bash(xxd:*)",
-      "Bash(/home/logger/.config/eww/scripts/cpu:*)"
+      "Bash(/home/logger/.config/eww/scripts/cpu:*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(claude:*)"
     ],
     "deny": [],
     "ask": []
