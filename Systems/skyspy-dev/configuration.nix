@@ -203,12 +203,22 @@
     wireplumber.enable = true;
   };
 
-  # Audio configuration - ensure speaker is unmuted on boot (from /etc/nixos)
+  # Audio fix: TAS2781 speaker amp needs unbind/rebind to work after boot
+  # The UEFI calibration data has a V1 CRC error, but the amp works fine
+  # with default calibration after a device reset
   systemd.services.fix-audio-speaker = {
-    description = "Unmute Speaker on Boot";
+    description = "Fix TAS2781 Speaker Amp";
     wantedBy = [ "multi-user.target" ];
-    after = [ "sound.target" ];
+    after = [ "sound.target" "pipewire.service" "wireplumber.service" ];
+    wants = [ "pipewire.service" ];
     script = ''
+      # Unbind and rebind the TAS2781 I2C device to reinitialize the amp
+      echo "i2c-TIAS2781:00" > /sys/bus/i2c/drivers/tas2781-hda/unbind || true
+      sleep 1
+      echo "i2c-TIAS2781:00" > /sys/bus/i2c/drivers/tas2781-hda/bind || true
+      sleep 1
+      # Force firmware load and unmute speaker
+      ${pkgs.alsa-utils}/bin/amixer -c 0 cset iface=CARD,name='Speaker Force Firmware Load' on || true
       ${pkgs.alsa-utils}/bin/amixer -c 0 sset "Speaker" unmute || true
     '';
     serviceConfig = {
