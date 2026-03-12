@@ -1,12 +1,12 @@
-# Override claude-code to v2.1.59
+# Override claude-code to v2.1.74
 # Auto-updated by scripts/update-claude-code.sh
 final: prev:
 let
-  version = "2.1.59";
+  version = "2.1.74";
   lockfile = ./claude-code-package-lock.json;
   src = prev.fetchzip {
     url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${version}.tgz";
-    hash = "sha256-Dam9aJ0qBdqU40ACfzGQHuytW6ur0fMLm8D5fIKd1TE=";
+    hash = "sha256-74xAW5sc3l5SH7UUFsUVpK6A6gTPn4fGg+c51MsXXhE=";
   };
 in
 {
@@ -23,7 +23,7 @@ in
       postPatch = ''
         cp ${lockfile} package-lock.json
       '';
-      outputHash = "sha256-K+8xoBc3apvxQ9hCpYywqgBcfLxMWSxacgJcMH8mK7E=";
+      outputHash = "sha256-FQEQQK8UIvPw8WMYGW+X7TPAWi+SVJEhUV0MqO2gQz0=";
     };
   });
 }
