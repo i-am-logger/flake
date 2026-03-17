@@ -163,7 +163,12 @@
   '';
 
   # Allow empty root password for live ISO convenience
-  users.users.root.password = "";
+  # Override initialHashedPassword from installation-cd-minimal.nix to avoid
+  # conflicting password options warning
+  users.users.root = {
+    password = lib.mkForce "";
+    initialHashedPassword = lib.mkForce null;
+  };
 
   # Compression for smaller ISO
   isoImage.squashfsCompression = "zstd -Xcompression-level 15";
