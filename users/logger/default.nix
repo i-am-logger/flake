@@ -81,10 +81,6 @@
     # Others disabled unless explicitly enabled
   };
 
-  # Theme configuration via vogix
-  themes.vogix = {
-    scheme = "base16";
-    theme = "catppuccin";
-    variant = "mocha";
-  };
+  # Theme configuration via vogix (disabled due to btop.conf clobber bug)
+  themes.vogix.enable = false;
 }

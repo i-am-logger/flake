@@ -1,4 +1,4 @@
-# Secure Boot Setup Guide for skyspy-dev
+# Secure Boot Setup Guide
 
 ## ⚠️ CRITICAL SAFETY WARNINGS ⚠️
 
@@ -34,10 +34,10 @@ If these aren't met, DO NOT PROCEED.
 
 ## Step 1: Build the System with Secure Boot Support
 
-The secure boot configuration has been added to skyspy-dev. Build the system:
+Build the system with secure boot enabled (`my.security.secureBoot.enable = true`):
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#skyspy-dev
+sudo nixos-rebuild switch --flake /etc/nixos#<hostname>
 ```
 
 **IMPORTANT**: This step should complete successfully without errors. If there are build errors, fix them before proceeding.
@@ -64,7 +64,7 @@ You should see:
 Now rebuild the system again so lanzaboote can sign the boot files:
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#skyspy-dev
+sudo nixos-rebuild switch --flake /etc/nixos#<hostname>
 ```
 
 ## Step 4: Critical Validation - DO NOT SKIP
@@ -185,7 +185,7 @@ dmesg | grep -i "secure boot"
    
    # Chroot and rebuild
    sudo nixos-enter
-   nixos-rebuild switch --flake /etc/nixos#skyspy-dev
+   nixos-rebuild switch --flake /etc/nixos#<hostname>
    ```
 
 ### If Keys Are Corrupted or Lost
@@ -236,7 +236,7 @@ sudo sbctl verify
 ## Additional Notes
 
 - Secure boot keys are persisted in `/persist/var/lib/sbctl`
-- The common secure-boot.nix configuration is shared between yoga and skyspy-dev
+- mynixos handles lanzaboote config via `my.security.secureBoot.enable = true`
 - sbctl is available system-wide for debugging
 
 ## Success Criteria
