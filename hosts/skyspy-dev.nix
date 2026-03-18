@@ -30,9 +30,19 @@
     common/pam-fixes.nix
     common/plymouth.nix # Boot splash screen with NixOS logo
     common/systemd-boot.nix # Enhanced boot menu styling
-    # common/ollama.nix  # Disabled on skyspy-dev
+    common/ollama.nix
+    common/openclaw.nix
     users/logger.nix
   ];
+
+  # Ollama: GPU auto-detected from nvidia.nix, just set models
+  local.ollama.models = [ "qwen2.5:14b" ];
+
+  # OpenClaw: gateway with Ollama as LLM provider
+  local.openclaw = {
+    enable = true;
+    ollamaModel = "qwen2.5:14b";
+  };
 
   services.usbmuxd.enable = true;
 

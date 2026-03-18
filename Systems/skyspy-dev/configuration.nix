@@ -15,7 +15,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./persistence.nix
-    # ../common/secure-boot.nix  # Disabled temporarily - rust prebuilt issues
+    ../common/secure-boot.nix
     ../common/yubikey.nix
     # ../common/warp-terminal.nix  # Disabled temporarily
     # ../common/warp-terminal-preview.nix  # Disabled temporarily
@@ -25,8 +25,6 @@
 
   services.hardware.bolt.enable = true;
 
-  # Bootloader - re-enable systemd-boot (secure boot disabled temporarily)
-  boot.loader.systemd-boot.enable = lib.mkForce true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.timeout = 2; # Fast boot - press key to access menu

@@ -16,6 +16,7 @@
     cli/helix
     cli/zellij.nix
     cli/cava
+    cli/fastfetch.nix
     # GUI
     gui/hyprland
     gui/niri
@@ -123,5 +124,8 @@
     # cursor
     # bazecor
     cointop
+
+    # file manager (DOS Navigator inspired)
+    (import packages/rdn.nix { inherit pkgs; })
   ];
 }

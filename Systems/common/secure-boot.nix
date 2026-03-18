@@ -3,17 +3,9 @@
   imports = [
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
-  boot = {
-    bootspec.enable = true;
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-      settings = {
-        kernelSigningKeyPath = "/var/lib/sbctl/keys/db/db.key";
-        kernelSigningCertPath = "/var/lib/sbctl/keys/db/db.pem";
-        signByDefault = true;
-      };
-    };
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
   };
 
   # Add persistence for secure boot keys
