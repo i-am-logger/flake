@@ -117,7 +117,14 @@ mynixos.lib.mkSystem {
     # AI configuration
     ai = {
       enable = true;
-      # mcpServers is now configured per-user in my.users.<name>.ai.mcpServers
+      ollama = {
+        acceleration = "cpu"; # iGPU has only 2GB VRAM
+        models = [ "qwen2.5:3b" ];
+      };
+      openclaw = {
+        enable = true;
+        ollamaModel = "qwen2.5:3b";
+      };
     };
 
     # Performance configuration
