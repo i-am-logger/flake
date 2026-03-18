@@ -61,6 +61,8 @@
     };
 
     security.passwords.onePassword.enable = true; # 1Password password manager
+
+    ai.tools.claude-code.cloneConfigRepo = "git@github.com:i-am-logger/claude-config.git";
   };
 
   dev = {
