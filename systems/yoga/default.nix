@@ -138,6 +138,9 @@ mynixos.lib.mkSystem {
         enable = true;
         exitNode = true;
         useRoutingFeatures = "server";
+        allowedTCPPorts = [
+          3000 # openclaw
+        ];
       };
       tor = {
         enable = true;
