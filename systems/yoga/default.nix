@@ -142,17 +142,14 @@ mynixos.lib.mkSystem {
           18789 # openclaw gateway
         ];
       };
-      tor = {
-        enable = true;
-        onionServices.headscale.enable = true;
-      };
+      tor.enable = true;
     };
 
     # AI configuration
     ai = {
       enable = true;
       ollama.enable = false; # No dGPU — using claude-proxy instead
-      claudeProxy = {
+      claudeCodeProxy = {
         enable = true;
         model = "opus";
       };

@@ -36,7 +36,7 @@ mynixos.lib.mkSystem {
       tailscale = { enable = true; exitNode = true; };
       tor = { enable = true; onionServices.headscale.enable = true; };
     };
-    ai = { claudeProxy.enable = true; openclaw.enable = true; };
+    ai = { claudeCodeProxy.enable = true; openclaw.enable = true; };
     # ...
   };
 }
