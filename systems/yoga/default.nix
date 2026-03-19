@@ -117,13 +117,13 @@ mynixos.lib.mkSystem {
     # AI configuration
     ai = {
       enable = true;
-      ollama = {
-        acceleration = "cpu"; # iGPU has only 2GB VRAM
-        models = [ "qwen2.5:3b" ];
+      ollama.enable = false; # No dGPU — using claude-proxy instead
+      claudeProxy = {
+        enable = true;
+        model = "opus";
       };
       openclaw = {
         enable = true;
-        ollamaModel = "qwen2.5:3b";
       };
     };
 
