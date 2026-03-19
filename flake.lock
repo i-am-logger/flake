@@ -622,8 +622,8 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1773902637,
-        "narHash": "sha256-5a92N1jCU1+zMgn2GAkFsOPqFDQZ0bMOTjPjUyW5Vx0=",
+        "lastModified": 1773903320,
+        "narHash": "sha256-hrJ89vvTVwvBEZmym7b9ej4ubWckypv0FS+FHNggIR8=",
         "path": "/home/logger/Code/github/logger/mynixos",
         "type": "path"
       },
