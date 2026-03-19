@@ -114,6 +114,37 @@ mynixos.lib.mkSystem {
       virtual.enable = false; # Auto-enabled by user streaming flag, but disabled due to kernel 6.18 incompatibility
     };
 
+    # Network: Headscale mesh VPN + Tor hidden service
+    network = {
+      headscale = {
+        enable = true;
+        port = 8090;
+        users = [ "logger" "logger-mobile" ];
+        acl = {
+          groups = {
+            "group:admin" = [ "logger@" ];
+            "group:mobile" = [ "logger-mobile@" ];
+          };
+          tagOwners = {
+            "tag:server" = [ "group:admin" ];
+          };
+          rules = [
+            { action = "accept"; src = [ "group:admin" ]; dst = [ "*:*" ]; }
+            { action = "accept"; src = [ "group:mobile" ]; dst = [ "tag:server:3000" ]; }
+          ];
+        };
+      };
+      tailscale = {
+        enable = true;
+        exitNode = true;
+        useRoutingFeatures = "server";
+      };
+      tor = {
+        enable = true;
+        onionServices.headscale.enable = true;
+      };
+    };
+
     # AI configuration
     ai = {
       enable = true;

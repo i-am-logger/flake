@@ -83,6 +83,19 @@ mynixos.lib.mkSystem {
       # virtual.enable = false;  # Auto-enabled by user streaming flag
     };
 
+    # Network: Tailscale client + Tor for .onion discovery
+    network = {
+      tailscale = {
+        enable = true;
+        loginServer = ""; # set after yoga bootstrap: "http://<onion>.onion:8080"
+        useRoutingFeatures = "client";
+      };
+      tor = {
+        enable = true;
+        client.enable = true;
+      };
+    };
+
     # AI configuration
     ai = {
       enable = false; # Ollama disabled on skyspy-dev
