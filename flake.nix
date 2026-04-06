@@ -9,12 +9,18 @@
       url = "/home/logger/.secrets/";
       flake = false;
     };
+    # Claude Desktop for Linux (unofficial community port)
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "mynixos/nixpkgs";
+    };
   };
 
   outputs =
     { self
     , mynixos
     , secrets
+    , claude-desktop
     , ...
     }:
     let
@@ -28,7 +34,8 @@
       formatter.x86_64-linux = pkgs.nixpkgs-fmt;
 
       nixosConfigurations = {
-        yoga = import ./systems/yoga { inherit mynixos secrets; };
+        yoga = import ./systems/yoga { inherit mynixos secrets; claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
+        };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos secrets; };
 
         # TODO: move to mynixos Installer ISO

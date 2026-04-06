@@ -1,4 +1,9 @@
-{ mynixos, secrets, ... }:
+{
+  mynixos,
+  secrets,
+  claude-desktop ? null,
+  ...
+}:
 
 mynixos.lib.mkSystem {
 
@@ -48,6 +53,7 @@ mynixos.lib.mkSystem {
 
       # Peripherals
       peripherals.elgato.streamdeck.enable = true;
+      peripherals.keychron.k2-he.enable = true;
     };
 
     # Filesystem configuration
@@ -80,6 +86,7 @@ mynixos.lib.mkSystem {
       secureBoot.enable = true;
       yubikey.enable = true;
       auditRules.enable = true;
+      nopasswdRebuild = true;
     };
 
     # Secrets management via sops-nix
@@ -119,7 +126,10 @@ mynixos.lib.mkSystem {
       headscale = {
         enable = true;
         port = 8090;
-        users = [ "logger" "logger-mobile" ];
+        users = [
+          "logger"
+          "logger-mobile"
+        ];
         acl = {
           groups = {
             "group:admin" = [ "logger@" ];
@@ -129,13 +139,21 @@ mynixos.lib.mkSystem {
             "tag:server" = [ "group:admin" ];
           };
           rules = [
-            { action = "accept"; src = [ "group:admin" ]; dst = [ "*:*" ]; }
-            { action = "accept"; src = [ "group:mobile" ]; dst = [ "tag:server:3000" ]; }
+            {
+              action = "accept";
+              src = [ "group:admin" ];
+              dst = [ "*:*" ];
+            }
+            {
+              action = "accept";
+              src = [ "group:mobile" ];
+              dst = [ "tag:server:3000" ];
+            }
           ];
         };
       };
       tailscale = {
-        enable = true;
+        enable = false;
         exitNode = true;
         useRoutingFeatures = "server";
         allowedTCPPorts = [
@@ -154,7 +172,7 @@ mynixos.lib.mkSystem {
         model = "opus";
       };
       openclaw = {
-        enable = true;
+        enable = false;
       };
     };
 
@@ -208,9 +226,17 @@ mynixos.lib.mkSystem {
       {
         # Add fonts that were previously provided by stylix
         fonts.packages = [ pkgs.nerd-fonts.fira-code ];
-        environment.systemPackages = with pkgs; [
-          # warp-terminal
-        ];
+        environment.systemPackages =
+          with pkgs;
+          [
+            # warp-terminal
+          ]
+          ++ (
+            if claude-desktop != null then
+              [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
+            else
+              [ ]
+          );
         home-manager.users.logger = {
           home.stateVersion = "25.05";
         };
@@ -219,6 +245,7 @@ mynixos.lib.mkSystem {
         nixpkgs.overlays = [
           (import ../../overlays/opencode.nix)
           (import ../../overlays/claude-code.nix)
+          (import ../../overlays/liquidctl.nix)
         ];
       }
     )
