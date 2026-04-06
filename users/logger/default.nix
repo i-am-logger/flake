@@ -83,6 +83,6 @@
     # Others disabled unless explicitly enabled
   };
 
-  # Theme configuration via vogix (disabled due to btop.conf clobber bug)
-  themes.vogix.enable = false;
+  # Theme configuration via vogix
+  themes.vogix.enable = true;
 }
