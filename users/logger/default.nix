@@ -83,6 +83,6 @@
     # Others disabled unless explicitly enabled
   };
 
-  # Theme configuration via vogix
-  themes.vogix.enable = true;
+  # Theming via vogix
+  theming.vogix.enable = true;
 }

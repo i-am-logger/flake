@@ -32,7 +32,7 @@ This is a NixOS configuration repository that uses a custom typed functional DSL
 ├── users/
 │   └── logger/        # User account definition + avatar
 ├── lib/               # Personal user definitions (myLib)
-├── themes/            # Stylix theming configurations
+├── themes/            # Legacy stylix theming configurations
 ├── home/              # Home-manager packages
 ├── scripts/           # Helper scripts
 ├── docs/              # Documentation

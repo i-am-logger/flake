@@ -63,7 +63,7 @@ mynixos.lib.mkSystem {
     };
 
     # Theme configuration
-    # themes.enable defaults to true with vogix as the default theme system
+    # theming.enable defaults to true with vogix as the default theme system
     # Stylix is disabled due to compatibility issues with newer nixpkgs/home-manager
 
     # Environment configuration
