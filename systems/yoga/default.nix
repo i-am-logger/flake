@@ -1,8 +1,7 @@
-{
-  mynixos,
-  secrets,
-  claude-desktop ? null,
-  ...
+{ mynixos
+, secrets
+, claude-desktop ? null
+, ...
 }:
 
 mynixos.lib.mkSystem {
@@ -241,11 +240,10 @@ mynixos.lib.mkSystem {
           home.stateVersion = "25.05";
         };
 
-        # Package overlays
+        # Package overlays (liquidctl is now managed by vogix)
         nixpkgs.overlays = [
           (import ../../overlays/opencode.nix)
           (import ../../overlays/claude-code.nix)
-          (import ../../overlays/liquidctl.nix)
         ];
       }
     )

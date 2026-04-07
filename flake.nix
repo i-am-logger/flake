@@ -3,7 +3,10 @@
 
   inputs = {
     # mynixos - Typed functional DSL providing all dependencies
-    mynixos.url = "path:/home/logger/Code/github/logger/mynixos";
+    mynixos = {
+      url = "path:/home/logger/Code/github/logger/mynixos";
+      inputs.vogix.url = "path:/home/logger/Code/github/logger/vogix";
+    };
     # Personal secrets (not managed by mynixos)
     secrets = {
       url = "/home/logger/.secrets/";
@@ -34,7 +37,8 @@
       formatter.x86_64-linux = pkgs.nixpkgs-fmt;
 
       nixosConfigurations = {
-        yoga = import ./systems/yoga { inherit mynixos secrets; claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
+        yoga = import ./systems/yoga {
+          inherit mynixos secrets; claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
         };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos secrets; };
 

@@ -649,6 +649,23 @@
         "type": "github"
       }
     },
+    "liquidctl-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775534004,
+        "narHash": "sha256-ycIPIVhFBtSyw6BSifj3sHkiYdPuzf8+xQj8bNPL838=",
+        "owner": "i-am-logger",
+        "repo": "liquidctl",
+        "rev": "c51969dc9b6b2d01404eadfbfc5a72171efec357",
+        "type": "github"
+      },
+      "original": {
+        "owner": "i-am-logger",
+        "ref": "feat/kraken-2024-elite-rgb",
+        "repo": "liquidctl",
+        "type": "github"
+      }
+    },
     "mynixos": {
       "inputs": {
         "disko": "disko",
@@ -665,8 +682,8 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1775519357,
-        "narHash": "sha256-APx0xQ+2BOoaNjGGz2rBJXhcYmCN1jowlqzLIny2aUo=",
+        "lastModified": 1775529907,
+        "narHash": "sha256-LFVm4sagrdrlJ066tVzwAlNUwXmxK1uCi2tuUutcTlg=",
         "path": "/home/logger/Code/github/logger/mynixos",
         "type": "path"
       },
@@ -1156,6 +1173,7 @@
           "home-manager"
         ],
         "iterm2-schemes": "iterm2-schemes",
+        "liquidctl-src": "liquidctl-src",
         "nixpkgs": [
           "mynixos",
           "nixpkgs"
@@ -1169,8 +1187,8 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1775519341,
-        "narHash": "sha256-5XQSEds/LJilaGgPSJL4ye9WWNwPVDZNO8O62nSbpy8=",
+        "lastModified": 1775534754,
+        "narHash": "sha256-qB4dmx6Ri0a9w08FplXCcgQUi682uOFyBZB+kUEMGao=",
         "path": "/home/logger/Code/github/logger/vogix",
         "type": "path"
       },
