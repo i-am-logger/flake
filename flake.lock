@@ -652,11 +652,11 @@
     "liquidctl-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1775534004,
-        "narHash": "sha256-ycIPIVhFBtSyw6BSifj3sHkiYdPuzf8+xQj8bNPL838=",
+        "lastModified": 1775539741,
+        "narHash": "sha256-tOKjBnrpMZSz4SEbnJhelfH+X9F3fSpZ62CiGDoSFZs=",
         "owner": "i-am-logger",
         "repo": "liquidctl",
-        "rev": "c51969dc9b6b2d01404eadfbfc5a72171efec357",
+        "rev": "708a375c7ef284a05577f956ec24673d03e2b409",
         "type": "github"
       },
       "original": {
@@ -682,8 +682,8 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1775529907,
-        "narHash": "sha256-LFVm4sagrdrlJ066tVzwAlNUwXmxK1uCi2tuUutcTlg=",
+        "lastModified": 1775541997,
+        "narHash": "sha256-hFFky3/86ZKlASVHsbYFbUTegJrV4NpVZ3M3qxQxgSU=",
         "path": "/home/logger/Code/github/logger/mynixos",
         "type": "path"
       },
@@ -1187,8 +1187,8 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1775534754,
-        "narHash": "sha256-qB4dmx6Ri0a9w08FplXCcgQUi682uOFyBZB+kUEMGao=",
+        "lastModified": 1775544005,
+        "narHash": "sha256-Mxj0qrP4xvN0PQPUPBPeW3V/niMovb0lxtV1Z9qAXbQ=",
         "path": "/home/logger/Code/github/logger/vogix",
         "type": "path"
       },
@@ -1200,11 +1200,11 @@
     "vogix16-themes": {
       "flake": false,
       "locked": {
-        "lastModified": 1775472987,
-        "narHash": "sha256-eRlZTiQeTGQRzhj1GzolAQemQ7n0Drd0t/oUiCWioc0=",
+        "lastModified": 1775536832,
+        "narHash": "sha256-j4x1JuSnqfaEcu85bbaZoC6yriylSvsyFdq/OMqYbjo=",
         "owner": "i-am-logger",
         "repo": "vogix16-themes",
-        "rev": "f5b11e43be3273c621e8e91d5b9514e1882c8a49",
+        "rev": "a3a4671c5b7b9e877cdd5e384281651d9a17eb6e",
         "type": "github"
       },
       "original": {
