@@ -242,7 +242,6 @@ mynixos.lib.mkSystem {
 
         # Package overlays (liquidctl is now managed by vogix)
         nixpkgs.overlays = [
-          (import ../../overlays/opencode.nix)
           (import ../../overlays/claude-code.nix)
         ];
       }
