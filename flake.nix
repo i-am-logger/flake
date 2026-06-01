@@ -4,8 +4,8 @@
   inputs = {
     # mynixos - Typed functional DSL providing all dependencies
     mynixos = {
-      url = "path:/home/logger/Code/github/logger/mynixos";
-      inputs.vogix.url = "path:/home/logger/Code/github/logger/vogix";
+      url = "git+file:///home/logger/Code/github/logger/mynixos";
+      inputs.vogix.url = "git+file:///home/logger/Code/github/logger/vogix";
     };
     # Personal secrets (not managed by mynixos)
     secrets = {
