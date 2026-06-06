@@ -694,11 +694,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1780289071,
-        "narHash": "sha256-3lFyc7riU5FA9rFjtRKxzlktW+bb2hpedNEefcoYvdc=",
+        "lastModified": 1780713352,
+        "narHash": "sha256-Zqn7vjhfEuKYSZy9FFmhFv5bllp24sn4GoziEebyJB0=",
         "ref": "refs/heads/master",
-        "rev": "ce2199bafc9451ed5da6d715385e9a37dd91e073",
-        "revCount": 246,
+        "rev": "46940506496b9545e6aa5600d5f32753aa05fa7e",
+        "revCount": 250,
         "type": "git",
         "url": "file:///home/logger/Code/github/logger/mynixos"
       },
@@ -1201,11 +1201,11 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1780289084,
-        "narHash": "sha256-ylPSLH9IBBSLS+ByUZrbhRIcQZ3uMMcTT6pjxgEEeNg=",
+        "lastModified": 1780711489,
+        "narHash": "sha256-WR2wwIkbmMbczMTsdAUPBEs+NnZ/wTXFMhvmLciAeOA=",
         "ref": "refs/heads/wip/praxis-0.19-input-engine",
-        "rev": "94aca34b2b887a45660e3c73afe3a2c163f2a87b",
-        "revCount": 106,
+        "rev": "58f4161a0eca1ed73d317d7c63ad2ce5c417c8df",
+        "revCount": 109,
         "type": "git",
         "url": "file:///home/logger/Code/github/logger/vogix"
       },

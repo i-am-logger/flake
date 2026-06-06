@@ -94,6 +94,14 @@ mynixos.lib.mkSystem {
         enable = true;
         client.enable = true;
       };
+
+      # Aggressive IPv6 privacy: rotate temp addresses every ~90s–2min,
+      # 10 min valid window for in-flight connections.
+      ipv6.privacy = {
+        preferredLifetime = 120;
+        validLifetime = 600;
+        maxDesyncFactor = 30;
+      };
     };
 
     # AI configuration

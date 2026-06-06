@@ -70,6 +70,15 @@ mynixos.lib.mkSystem {
       enable = true;
       xdg.enable = true;
 
+      # Login via greetd + tuigreet instead of GDM. GDM is gnome-shell and
+      # couples this Hyprland host to the whole GNOME stack — the GNOME 50 bump
+      # broke its greeter ("Session never registered") and removed gdm.wayland.
+      # greetd is the Hyprland-recommended, GNOME-free, fast, low-flash login;
+      # tuigreet is text (no greeter-compositor → least screen flashing) and
+      # launches Hyprland directly. A graphical, vogix-themed greeter (ReGreet
+      # as a vogix surface) can layer on later if we want the looks.
+      displayManager.type = "greetd";
+
       motd = {
         enable = true;
         content = builtins.readFile ../motd.txt;
@@ -159,7 +168,15 @@ mynixos.lib.mkSystem {
           18789 # openclaw gateway
         ];
       };
-      tor.enable = true;
+      tor.enable = false;
+
+      # Aggressive IPv6 privacy: rotate temp addresses every ~90s–2min,
+      # 10 min valid window for in-flight connections.
+      ipv6.privacy = {
+        preferredLifetime = 120;
+        validLifetime = 600;
+        maxDesyncFactor = 30;
+      };
     };
 
     # AI configuration
@@ -236,9 +253,37 @@ mynixos.lib.mkSystem {
             else
               [ ]
           );
+
+        # Opt this host into the vogix ontology-driven input engine (the
+        # default stays "kanata" so other hosts aren't affected until the
+        # engine is proven end-to-end in the VM test). The engine now opens
+        # uinput BEFORE grabbing the keyboard, so a failure can never leave
+        # the keyboard grabbed — boot/console input stays usable even if the
+        # daemon can't start. The two settings must agree (system gates
+        # kanata + uinput/groups; home-manager drives the user service +
+        # schema file).
+        vogix.input.engine = "vogix";
         home-manager.users.logger = {
           home.stateVersion = "25.05";
+          programs.vogix.behavior.inputEngine = "vogix";
+          # Debug logging for the vogix input engine + daemon, persisted to
+          # journald (RUST_LOG=vogix=debug on both units). Makes every keybinding
+          # decision and the daemon's startup env visible:
+          #   journalctl --user -u vogix-input -u vogix-daemon -f
+          programs.vogix.logLevel = "debug";
+          # Don't re-spawn the saved session on boot. The daemon kept restoring a
+          # stale 2-month-old 'last' snapshot (14 windows) on every boot, which
+          # surprised the desktop and re-launched ~14 apps at once (fed an OOM).
+          # Auto-SAVE is unaffected; `vogix session restore` stays manual.
+          programs.vogix.autoRestoreSession = false;
         };
+
+        # NOTE: /etc/machine-id persistence (for cross-boot `journalctl -b -1`)
+        # is DEFERRED. The canonical fix (environment.etc."machine-id".source =
+        # "/persist/etc/machine-id") needs /persist/etc/machine-id seeded once
+        # first, otherwise /etc/machine-id dangles mid-session. Revisit with the
+        # seed step; cross-boot logs stay reachable via
+        # `journalctl --directory=/var/log/journal/<machine-id>`.
 
         # Package overlays (liquidctl is now managed by vogix)
         nixpkgs.overlays = [
