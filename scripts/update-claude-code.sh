@@ -2,20 +2,24 @@
 # Update claude-code overlay to the latest version
 # Usage: ./scripts/update-claude-code.sh [version]
 # If no version is provided, fetches the latest version from npm
+#
+# Upstream switched from a Node.js cli.js bundle to per-platform native binaries
+# distributed via @anthropic-ai/claude-code-{platform}-{arch}. We track the
+# linux-x64 binary directly — no package-lock.json or npm deps to manage.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OVERLAY_FILE="${SCRIPT_DIR}/../overlays/claude-code.nix"
-LOCKFILE="${SCRIPT_DIR}/../overlays/claude-code-package-lock.json"
-NPM_PACKAGE="@anthropic-ai/claude-code"
+WRAPPER_PACKAGE="@anthropic-ai/claude-code"
+BINARY_PACKAGE="@anthropic-ai/claude-code-linux-x64"
 
-# Get version (from argument or latest release)
+# Get version (from argument or latest release of the wrapper package)
 if [[ $# -ge 1 ]]; then
     VERSION="$1"
 else
     echo "Fetching latest version from npm..."
-    VERSION=$(curl -s "https://registry.npmjs.org/${NPM_PACKAGE}/latest" | jq -r '.version')
+    VERSION=$(curl -s "https://registry.npmjs.org/${WRAPPER_PACKAGE}/latest" | jq -r '.version')
 fi
 
 echo "Updating claude-code to v${VERSION}"
@@ -29,75 +33,88 @@ if [[ "$VERSION" == "$CURRENT_VERSION" ]]; then
     exit 0
 fi
 
-WORKDIR=$(mktemp -d)
-trap 'rm -rf "$WORKDIR"' EXIT
-
-# Fetch source hash
-echo "Fetching source hash..."
-SRC_HASH=$(nix-prefetch-url --unpack "https://registry.npmjs.org/${NPM_PACKAGE}/-/claude-code-${VERSION}.tgz" 2>/dev/null)
+# Fetch source hash for the linux-x64 native binary tarball
+echo "Fetching source hash for ${BINARY_PACKAGE}@${VERSION}..."
+SRC_HASH=$(nix-prefetch-url --unpack "https://registry.npmjs.org/${BINARY_PACKAGE}/-/claude-code-linux-x64-${VERSION}.tgz" 2>/dev/null)
 SRC_HASH_SRI=$(nix hash convert --hash-algo sha256 "$SRC_HASH")
 echo "Source hash: ${SRC_HASH_SRI}"
-
-# Download and extract tarball to generate package-lock.json
-echo "Generating package-lock.json..."
-curl -sL "https://registry.npmjs.org/${NPM_PACKAGE}/-/claude-code-${VERSION}.tgz" | tar xz -C "$WORKDIR" --strip-components=1
-
-# Generate package-lock.json using npm from nix
-nix-shell -p nodejs --run "cd '$WORKDIR' && npm install --package-lock-only --ignore-scripts" 2>/dev/null
-
-if [[ ! -f "${WORKDIR}/package-lock.json" ]]; then
-    echo "Error: Failed to generate package-lock.json"
-    exit 1
-fi
-
-# Copy the lock file to overlays (ensure writable in case previous copy came from nix store)
-[[ -f "$LOCKFILE" ]] && chmod u+w "$LOCKFILE"
-cp "${WORKDIR}/package-lock.json" "$LOCKFILE"
-echo "Updated package-lock.json"
-
-# Compute npmDepsHash using prefetch-npm-deps
-echo "Computing npmDepsHash (this may take a minute)..."
-NPM_DEPS_HASH=$(nix-shell -p prefetch-npm-deps --run "prefetch-npm-deps '$LOCKFILE'" 2>/dev/null)
-
-if [[ -z "$NPM_DEPS_HASH" ]]; then
-    echo "Error: Could not determine npmDepsHash"
-    exit 1
-fi
-echo "npmDepsHash: ${NPM_DEPS_HASH}"
 
 # Update the overlay file
 echo "Updating ${OVERLAY_FILE}..."
 cat > "$OVERLAY_FILE" << EOF
-# Override claude-code to v${VERSION}
+# Override claude-code to v${VERSION} (native binary release)
 # Auto-updated by scripts/update-claude-code.sh
+#
+# Upstream switched from a Node.js cli.js bundle to a per-platform native binary
+# distributed via @anthropic-ai/claude-code-{platform}-{arch}. We pull the
+# linux-x64 binary directly and wrap it with the same env vars as the previous
+# nixpkgs derivation.
+#
+# The native binary is a Bun-compiled standalone executable. autoPatchelfHook
+# (or any patchelf invocation that grows the file) shifts Bun's embedded-bundle
+# trailer offset, causing Bun to fall back to plain runtime mode — \`claude
+# --version\` then prints Bun's version and \`--help\` shows Bun's help. To keep
+# the binary byte-identical, we invoke it via an explicit ld-linux loader
+# instead of patching its interpreter.
 final: prev:
 let
   version = "${VERSION}";
-  lockfile = ./claude-code-package-lock.json;
   src = prev.fetchzip {
-    url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-\${version}.tgz";
+    url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-\${version}.tgz";
     hash = "${SRC_HASH_SRI}";
   };
+  loader = "\${prev.glibc}/lib/ld-linux-x86-64.so.2";
+  libPath = prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ];
 in
 {
-  claude-code = prev.claude-code.overrideAttrs (old: {
+  claude-code = prev.stdenvNoCC.mkDerivation {
+    pname = "claude-code";
     inherit version src;
-    postPatch = ''
-      cp \${lockfile} package-lock.json
 
-      substituteInPlace cli.js \\
-            --replace-fail '#!/bin/sh' '#!/usr/bin/env sh'
+    nativeBuildInputs = [ prev.makeWrapper ];
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+      install -Dm755 claude \$out/libexec/claude-code/claude
+      makeWrapper \${loader} \$out/bin/claude \\
+        --argv0 claude \\
+        --add-flags "--library-path \${libPath}" \\
+        --add-flags "\$out/libexec/claude-code/claude" \\
+        --set DISABLE_AUTOUPDATER 1 \\
+        --set-default FORCE_AUTOUPDATE_PLUGINS 1 \\
+        --set DISABLE_INSTALLATION_CHECKS 1 \\
+        --unset DEV \\
+        --prefix PATH : \${
+          prev.lib.makeBinPath [
+            prev.procps
+            prev.bubblewrap
+            prev.socat
+          ]
+        }
+      runHook postInstall
     '';
-    npmDeps = old.npmDeps.overrideAttrs {
-      inherit src;
-      postPatch = ''
-        cp \${lockfile} package-lock.json
-      '';
-      outputHash = "${NPM_DEPS_HASH}";
+
+    meta = {
+      description = "Agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster";
+      homepage = "https://github.com/anthropics/claude-code";
+      downloadPage = "https://www.npmjs.com/package/@anthropic-ai/claude-code";
+      license = prev.lib.licenses.unfree;
+      mainProgram = "claude";
+      sourceProvenance = with prev.lib.sourceTypes; [ binaryNativeCode ];
+      platforms = [ "x86_64-linux" ];
     };
-  });
+  };
 }
 EOF
 
+# Remove the now-unused package-lock.json if present
+LEGACY_LOCKFILE="${SCRIPT_DIR}/../overlays/claude-code-package-lock.json"
+if [[ -f "$LEGACY_LOCKFILE" ]]; then
+    rm -f "$LEGACY_LOCKFILE"
+    echo "Removed legacy ${LEGACY_LOCKFILE}"
+fi
+
 echo "Done! Updated claude-code overlay to v${VERSION}"
-echo "Run 'nixos-rebuild test --flake /etc/nixos#' to test the changes"
+echo "Run 'rebuild-system' to apply"
