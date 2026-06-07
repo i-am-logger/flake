@@ -254,18 +254,11 @@ mynixos.lib.mkSystem {
               [ ]
           );
 
-        # Opt this host into the vogix ontology-driven input engine (the
-        # default stays "kanata" so other hosts aren't affected until the
-        # engine is proven end-to-end in the VM test). The engine now opens
-        # uinput BEFORE grabbing the keyboard, so a failure can never leave
-        # the keyboard grabbed — boot/console input stays usable even if the
-        # daemon can't start. The two settings must agree (system gates
-        # kanata + uinput/groups; home-manager drives the user service +
-        # schema file).
-        vogix.input.engine = "vogix";
+        # vogix is the sole input engine (kanata removed): uinput + the
+        # input/uinput group wiring and the vogix-input user service are
+        # unconditional now, so this host needs no engine toggle.
         home-manager.users.logger = {
           home.stateVersion = "25.05";
-          programs.vogix.behavior.inputEngine = "vogix";
           # Debug logging for the vogix input engine + daemon, persisted to
           # journald (RUST_LOG=vogix=debug on both units). Makes every keybinding
           # decision and the daemon's startup env visible:
