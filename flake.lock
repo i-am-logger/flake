@@ -1201,11 +1201,11 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1780721919,
-        "narHash": "sha256-nD4lnWd8oGHAEsyGSq4MDksDFYnCIFlUPfK4TOxBW9M=",
+        "lastModified": 1780818886,
+        "narHash": "sha256-DSt733gkWKyaEB2ZL5mRq68GDU5vdk5Y0mk4pYfdasU=",
         "ref": "refs/heads/wip/praxis-0.19-input-engine",
-        "rev": "9cf6fb9cc26f3fa471bff0304dd1f70b50c078ca",
-        "revCount": 112,
+        "rev": "face547cd81ea7365a90e90872c96f47f0c01cbb",
+        "revCount": 113,
         "type": "git",
         "url": "file:///home/logger/Code/github/logger/vogix"
       },
