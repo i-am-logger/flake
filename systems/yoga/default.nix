@@ -258,7 +258,7 @@ mynixos.lib.mkSystem {
         # input/uinput group wiring and the vogix-input user service are
         # unconditional now, so this host needs no engine toggle.
         home-manager.users.logger = {
-          home.stateVersion = "25.05";
+          home.stateVersion = "26.11";
           # Debug logging for the vogix input engine + daemon, persisted to
           # journald (RUST_LOG=vogix=debug on both units). Makes every keybinding
           # decision and the daemon's startup env visible:

@@ -1,4 +1,4 @@
-# Override claude-code to v2.1.165 (native binary release)
+# Override claude-code to v2.1.170 (native binary release)
 # Auto-updated by scripts/update-claude-code.sh
 #
 # Upstream switched from a Node.js cli.js bundle to a per-platform native binary
@@ -14,10 +14,10 @@
 # instead of patching its interpreter.
 final: prev:
 let
-  version = "2.1.165";
+  version = "2.1.170";
   src = prev.fetchzip {
     url = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-${version}.tgz";
-    hash = "sha256-FX1apPJpMQDdePetk9k0sivWGIVoA4J6wA9dj+oq7Yg=";
+    hash = "sha256-boRtO4oV/PP30bB0wWKYyuR2woZV3joAvqyxpiL6txs=";
   };
   loader = "${prev.glibc}/lib/ld-linux-x86-64.so.2";
   libPath = prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ];
