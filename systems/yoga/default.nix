@@ -92,6 +92,11 @@ mynixos.lib.mkSystem {
     security = {
       enable = true;
       secureBoot.enable = true;
+      # No TPM-bound FDE here, so suppress systemd's SRK/NvPCR (measured-boot)
+      # setup and sweep the stale nvpcr-anchor creds it leaves on the ESP — those
+      # are what PID1 reports as "untrusted credentials" each boot. Flip to true
+      # if this box ever adopts TPM-sealed disk unlock.
+      tpm.enable = false;
       yubikey.enable = true;
       auditRules.enable = true;
       nopasswdRebuild = true;
@@ -284,5 +289,12 @@ mynixos.lib.mkSystem {
         ];
       }
     )
+
+    # DDR5 modules on this build carry addressable RGB (ENE controllers). DRAM RGB
+    # is its own hardware -- it travels with the sticks, independent of the board
+    # and the keyboard -- and is driven by OpenRGB, which lives in vogix. So flip
+    # vogix's dram-rgb hardware module on directly (it pulls in OpenRGB + the
+    # chipset SMBus stack on its own).
+    { vogix.hardware.dram-rgb.enable = true; }
   ];
 }

@@ -5,7 +5,9 @@
     # mynixos - Typed functional DSL providing all dependencies
     mynixos = {
       url = "git+file:///home/logger/Code/github/logger/mynixos";
-      inputs.vogix.url = "git+file:///home/logger/Code/github/logger/vogix";
+      # vogix now flows from the released v0.7.0 (via mynixos) — the wip-branch
+      # override is retired since that work landed. vogix16-themes v0.2.0 comes
+      # through mynixos's direct themes override.
     };
     # Personal secrets (not managed by mynixos)
     secrets = {
