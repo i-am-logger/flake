@@ -1,13 +1,13 @@
 {
-  description = "Personal NixOS Configuration";
+  description = "Personal NixOS + nix-darwin Configuration";
 
   inputs = {
-    # mynixos - Typed functional DSL providing all dependencies
+    # mynixos - Typed functional DSL providing all dependencies.
+    # Tracked from GitHub rather than a local path so the same lock resolves on
+    # every host (the Linux boxes and the Mac). To iterate on the DSL locally:
+    #   nixos-rebuild/darwin-rebuild ... --override-input mynixos ~/Code/mynixos
     mynixos = {
-      url = "git+file:///home/logger/Code/github/logger/mynixos";
-      # vogix now flows from the released v0.7.0 (via mynixos) — the wip-branch
-      # override is retired since that work landed. vogix16-themes v0.2.0 comes
-      # through mynixos's direct themes override.
+      url = "github:i-am-logger/mynixos";
     };
     # Personal secrets (not managed by mynixos)
     secrets = {
@@ -33,10 +33,14 @@
       nixpkgs = mynixos.inputs.nixpkgs;
       lib = nixpkgs.lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
+      darwinPkgs = import nixpkgs { system = "aarch64-darwin"; };
     in
     {
       # TODO: move to mynixos
-      formatter.x86_64-linux = pkgs.nixpkgs-fmt;
+      formatter = {
+        x86_64-linux = pkgs.nixpkgs-fmt;
+        aarch64-darwin = darwinPkgs.nixpkgs-fmt;
+      };
 
       nixosConfigurations = {
         yoga = import ./systems/yoga {
@@ -50,6 +54,12 @@
           modules = [ ./installer ];
           specialArgs = { inherit (mynixos) inputs; };
         };
+      };
+
+      # macOS hosts. Note `secrets` is deliberately not threaded in here — that
+      # input points at a Linux-only path and is never forced by this config.
+      darwinConfigurations = {
+        "aether5d-dev" = import ./systems/aether5d-dev { inherit mynixos; };
       };
 
       # TODO: move to mynixos
