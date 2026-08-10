@@ -47,6 +47,8 @@
   apps = {
     security.passwords.onePassword.enable = true;
 
+    graphical.network.rustdesk.enable = true; # RustDesk remote desktop client
+
     # Written https:// rather than git@ on purpose: apps.dev.tools.git.protocol
     # is what decides the transport, and an ssh:// literal would bypass it and
     # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite

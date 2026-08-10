@@ -1,6 +1,8 @@
 { mynixos
 , secrets
 , claude-desktop ? null
+, yoga-kernel
+, openrgb-src
 , ...
 }:
 
@@ -13,6 +15,14 @@ mynixos.lib.mkSystem {
       system = {
         enable = true;
         hostname = "yoga";
+
+        # Local checkouts the rebuild scripts prefer over the lock, when the
+        # path is actually on this machine. vogix is reached through mynixos,
+        # so it needs the nested input path rather than a bare name.
+        localInputs = {
+          mynixos = "/home/logger/Code/github/logger/mynixos";
+          "mynixos/vogix" = "/home/logger/Code/github/logger/vogix";
+        };
         # kernel defaults to mynixos system module (linuxPackages_latest)
         # Override with: kernel = pkgs.linuxPackages_6_12; (or any other kernel package)
       };
@@ -56,8 +66,10 @@ mynixos.lib.mkSystem {
         };
 
         # Peripherals
+        peripherals.apple.dfu.enable = true;
         peripherals.elgato.streamdeck.enable = true;
         peripherals.keychron.k2-he.enable = true;
+        peripherals.sipeed.tangPrimer25k.enable = true;
       };
 
       # Filesystem configuration
@@ -225,6 +237,12 @@ mynixos.lib.mkSystem {
         "logger"
         "pds"
       ];
+
+      # qobine needs a paid Qobuz subscription, so it is enabled per host rather
+      # than in the shared user profile. `qobine-tui login` authenticates through
+      # the browser; the resulting token, queue and settings live in
+      # ~/.local/share/qobine, which the app option registers with impermanence.
+      users.logger.apps.media.players.qobine.enable = true;
     }
   ];
 
@@ -262,6 +280,10 @@ mynixos.lib.mkSystem {
         # Package overlays (liquidctl is now managed by vogix)
         nixpkgs.overlays = [
           (import ../../overlays/claude-code.nix)
+          # Build OpenRGB from the local perf/cli-latency branch (overlays/openrgb.nix
+          # + the openrgb-src flake input) so vogix's server and the openrgb CLI resolve
+          # to our build instead of nixpkgs' 1.0rc2.
+          (import ../../overlays/openrgb.nix openrgb-src.outPath)
         ];
       }
     )
@@ -272,5 +294,49 @@ mynixos.lib.mkSystem {
     # vogix's dram-rgb hardware module on directly (it pulls in OpenRGB + the
     # chipset SMBus stack on its own).
     { vogix.hardware.dram-rgb.enable = true; }
+
+    # TEST (amdgpu event-driven branch): a non-default boot entry carrying four
+    # amdgpu patches on the stock 7.1 kernel:
+    #   1. hold page tables until their TLB flush completes -- GPUVM
+    #      free-after-flush ordering tied to the flush-completion event rather
+    #      than a timeout-prone KIQ flush;
+    #   2. handle non-retry VM faults from the soft IH ring -- moves non-retry
+    #      fault processing off the non-threaded hard IRQ so a sustained fault
+    #      storm can no longer livelock the CPU and halt the machine;
+    #   3. attribute a contained ring reset to the faulting context -- a
+    #      bystander starved into a timeout by another context's fault storm is
+    #      no longer branded guilty and torn down;
+    #   4. recover a storm-wedged bystander without a full-device reset, falling
+    #      back to a direct-MMIO (KIQ-bypass) queue reset when the per-queue
+    #      path would stall through a jammed KIQ and force a fence-killing
+    #      MODE2. A live culprit is reset by vmid at its source; full reset
+    #      stays the last resort.
+    # The unpatched kernel stays the default; select the "amdgpu-vm-tlb-test"
+    # entry at the bootloader to run the patched kernel. Remove once validated.
+    ({ pkgs, ... }: {
+      specialisation.amdgpu-vm-tlb-test.configuration = {
+        # Build the kernel from the local amdgpu branch via the git+file
+        # `yoga-kernel` input, instead of exported .patch files. Iterate: commit
+        # on the branch, `nix flake update yoga-kernel`, then rebuild.
+        my.system.kernel.localSource = {
+          src = yoga-kernel.outPath;
+          base = pkgs.linux_7_1;
+          version = "7.1.0";
+        };
+        # Run the amdgpu KUnit suite at boot (KTAP results in dmesg) so the
+        # event-driven fault-recovery unit tests are validated on this test
+        # kernel. Config-only entry, no patch.
+        boot.kernelPatches = [
+          {
+            name = "amdgpu-kunit-tests";
+            patch = null;
+            extraConfig = ''
+              KUNIT y
+              DRM_AMDGPU_KUNIT_TEST y
+            '';
+          }
+        ];
+      };
+    })
   ];
 }

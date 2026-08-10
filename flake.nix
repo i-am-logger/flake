@@ -19,12 +19,30 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "mynixos/nixpkgs";
     };
+    # yoga's amdgpu test kernel - built from a local git branch instead of
+    # per-host .patch files (see systems/yoga; flake=false => tracked files only).
+    # Linux-only: the Mac never forces this input.
+    yoga-kernel = {
+      url = "git+file:///home/logger/Code/github/logger/linux?ref=amdgpu-vm-tlb-event-driven";
+      flake = false;
+    };
+    # Local OpenRGB checkout, for building/testing OpenRGB changes (CLI apply
+    # latency, Keychron K2 HE native-vs-QMK RGB driver) from a local branch
+    # instead of the pinned nixpkgs release. flake=false => tracked files only;
+    # tracks the `perf/cli-latency` branch. Iterate: commit on that branch, then
+    # `nix flake update openrgb-src`, then rebuild.
+    openrgb-src = {
+      url = "git+file:///home/logger/Code/github/logger/openrgb?ref=perf/cli-latency";
+      flake = false;
+    };
   };
 
   outputs =
     { self
     , mynixos
     , secrets
+    , yoga-kernel
+    , openrgb-src
     , ...
     }:
     let
@@ -43,7 +61,8 @@
 
       nixosConfigurations = {
         yoga = import ./systems/yoga {
-          inherit mynixos secrets; claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
+          inherit mynixos secrets yoga-kernel openrgb-src;
+          claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
         };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos secrets; };
 

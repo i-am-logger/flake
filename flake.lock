@@ -635,6 +635,23 @@
         "type": "github"
       }
     },
+    "openrgb-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783140482,
+        "narHash": "sha256-nk2H7DvjMeW3uYO857OS08RJW+CvTchE0Td8nj9Yg9s=",
+        "ref": "perf/cli-latency",
+        "rev": "31ad3a5e84e2ea1aa8122e81da0ada3891ce5091",
+        "revCount": 5279,
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/openrgb"
+      },
+      "original": {
+        "ref": "perf/cli-latency",
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/openrgb"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -662,7 +679,9 @@
       "inputs": {
         "claude-desktop": "claude-desktop",
         "mynixos": "mynixos",
-        "secrets": "secrets"
+        "openrgb-src": "openrgb-src",
+        "secrets": "secrets",
+        "yoga-kernel": "yoga-kernel"
       }
     },
     "rust-overlay": {
@@ -846,6 +865,23 @@
         "owner": "i-am-logger",
         "repo": "vogix16-themes",
         "type": "github"
+      }
+    },
+    "yoga-kernel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784435501,
+        "narHash": "sha256-WdH4YKiQOhTgOfSlbhbMM/D9yqUMtzw6UmvqYTpSk1k=",
+        "ref": "amdgpu-vm-tlb-event-driven",
+        "rev": "53ccf7b436f19be34242931da6580f70d80404b5",
+        "revCount": 1447339,
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/linux"
+      },
+      "original": {
+        "ref": "amdgpu-vm-tlb-event-driven",
+        "type": "git",
+        "url": "file:///home/logger/Code/github/logger/linux"
       }
     }
   },
