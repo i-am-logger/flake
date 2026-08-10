@@ -485,11 +485,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1786396427,
-        "narHash": "sha256-QYoVVoblDA/JHB57xIyNt4Exjfwlm64cgUM6AVZYRkw=",
+        "lastModified": 1786405799,
+        "narHash": "sha256-ec+NJTUlqzQbn7qnez+LU6gfr/WbkN0JudfZf1Jh0ek=",
         "owner": "i-am-logger",
         "repo": "mynixos",
-        "rev": "c1f3bb29012badb0391a5886bdcb00c3f1938546",
+        "rev": "6b2cd52ac1c2b8165b77c8b846646c038341a45f",
         "type": "github"
       },
       "original": {
@@ -838,11 +838,11 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1782867631,
-        "narHash": "sha256-2KFYsNve+D3sm6V9uZx/XLTU/t6J+Xb/E7BslP+O2SE=",
+        "lastModified": 1786403769,
+        "narHash": "sha256-rw8lPEGE/DkB8i0g2EcnhekrnyyWrUB3TIFFNGrYptM=",
         "owner": "i-am-logger",
         "repo": "vogix",
-        "rev": "9135993fdeb3b0771d091b49e3a5b8f7c41a754f",
+        "rev": "8e238a1fa7c74f046536119fdd03884261ca686f",
         "type": "github"
       },
       "original": {
