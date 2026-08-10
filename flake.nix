@@ -25,13 +25,12 @@
     { self
     , mynixos
     , secrets
-    , claude-desktop
     , ...
     }:
     let
       # Re-export nixpkgs from mynixos for convenience
-      nixpkgs = mynixos.inputs.nixpkgs;
-      lib = nixpkgs.lib;
+      inherit (mynixos.inputs) nixpkgs;
+      inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       darwinPkgs = import nixpkgs { system = "aarch64-darwin"; };
     in

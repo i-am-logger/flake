@@ -1,3 +1,10 @@
+[![NixOS](https://img.shields.io/badge/NixOS-5277C3?logo=nixos&logoColor=white)](https://nixos.org)
+[![nix-darwin](https://img.shields.io/badge/nix--darwin-5277C3?logo=apple&logoColor=white)](https://github.com/nix-darwin/nix-darwin)
+[![CI](https://github.com/i-am-logger/flake/actions/workflows/ci.yml/badge.svg)](https://github.com/i-am-logger/flake/actions/workflows/ci.yml)
+[![mynixos](https://img.shields.io/github/v/release/i-am-logger/mynixos?label=mynixos&logo=nixos&logoColor=white)](https://github.com/i-am-logger/mynixos)
+
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 # NixOS + nix-darwin Configuration
 
 Personal system configurations built on [mynixos](https://github.com/i-am-logger/mynixos), a typed functional DSL for declarative system management.

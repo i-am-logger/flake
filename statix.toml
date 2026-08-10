@@ -1,0 +1,9 @@
+# `repeated_keys` objects to writing `system.stateVersion` and
+# `system.primaryUser` as separate lines. That is how NixOS configuration reads
+# everywhere -- each line is one decision with its own comment -- and collapsing
+# them into a single `system = { ... }` block would move those comments away
+# from what they explain. Every other lint stays on.
+disabled = ["repeated_keys"]
+
+# .devenv is devenv's own generated state (forensic/), result is a build symlink.
+ignore = [".devenv", "result"]

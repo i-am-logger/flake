@@ -23,8 +23,9 @@
 
   # cava, cava-peaks and git all come from mynixos now — the tuned cava settings
   # and the cava-peaks package moved upstream into
-  # my/users/apps/visualizers/cava, which picks portaudio + Background Music on
-  # darwin and pipewire on Linux. Nothing to override here.
+  # my/users/apps/visualizers/cava, which takes CoreAudio's own process tap on
+  # darwin (method = "coreaudio", source = "tap") and pipewire on Linux. Nothing
+  # to override here.
 
   # ---------------------------------------------------------------------------
   # SSH — Touch ID via Secretive's Secure Enclave agent.

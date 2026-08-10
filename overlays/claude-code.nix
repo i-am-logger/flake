@@ -12,7 +12,7 @@
 # --version` then prints Bun's version and `--help` shows Bun's help. To keep
 # the binary byte-identical, we invoke it via an explicit ld-linux loader
 # instead of patching its interpreter.
-final: prev:
+_final: prev:
 let
   version = "2.1.183";
   src = prev.fetchzip {

@@ -17,16 +17,21 @@
 
   github.username = "i-am-logger";
 
-  # Read for its length by apps/ssh: a non-empty list sets IdentitiesOnly=no, so
-  # ssh offers agent-held keys to github.com. That is why it stays shared even
-  # though the Mac signs with a Secure Enclave key via Secretive rather than a
-  # YubiKey.
+  # Read for its length by apps/ssh: a non-empty list sets IdentitiesOnly=no so
+  # ssh offers agent-held keys to the forges, and suppresses ControlMaster
+  # multiplexing, whose sockets fight with an external agent. The Mac reaches
+  # github over https now (see the darwin tier), so the first half is inert
+  # there — the second is not, and Secretive is an external agent too, so the
+  # list stays shared.
   yubikeys = import ./yubikeys.nix;
 
   graphical.enable = true;
   terminal = {
     enable = true;
-    multiplexer = "zellij";
+    # Same value mynixos now defaults to, said out loud anyway: this file's
+    # header calls everything here a hard definition, and which multiplexer the
+    # day happens in is worth reading off the page rather than inferring.
+    multiplexer = "herdr";
   };
   dev = {
     enable = true;
@@ -41,7 +46,12 @@
 
   apps = {
     security.passwords.onePassword.enable = true;
-    ai.tools.claude-code.cloneConfigRepo = "git@github.com:i-am-logger/claude-config.git";
+
+    # Written https:// rather than git@ on purpose: apps.dev.tools.git.protocol
+    # is what decides the transport, and an ssh:// literal would bypass it and
+    # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite
+    # it back through insteadOf.
+    ai.tools.claude-code.cloneConfigRepo = "https://github.com/i-am-logger/claude-config.git";
   };
 
   # Folders that are mine rather than any program's, kept across a wipe on the
@@ -76,5 +86,18 @@
     # Homebrew cask. `caffeinate -di` does the same job from the CLI; this one is
     # visible at a glance.
     apps.graphical.utils.keepingyouawake.enable = true;
+
+    # A credential fact, not a platform one — it sits here because THIS Mac has
+    # no SSH identity github accepts (Secretive is installed but its Secure
+    # Enclave key was never created), while `gh` holds a token in the keyring.
+    # Provision that key and this line comes back out.
+    apps.dev.tools.git.protocol = "https";
+
+    # In the darwin tier only because that is where Discord is actually wanted,
+    # not because the app is one-sided: mynixos declares the option on both
+    # platforms and implements it per-platform (nixpkgs derivation on Linux, a
+    # Homebrew cask here). Move this line up a level to get it on yoga and
+    # skyspy-dev too.
+    apps.communication.messaging.discord.enable = true;
   };
 }

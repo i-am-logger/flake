@@ -10,7 +10,7 @@
 #   * the ONLY process nix-darwin restarts is Dock, and only when a dock.* option
 #     is set. Finder / menu clock / Control Center / trackpad changes do not take
 #     effect until those processes restart or you log out.
-{ ... }:
+_:
 
 {
   system.defaults = {
@@ -50,13 +50,15 @@
       # group Mission Control windows by application
       expose-group-apps = true;
 
-      # Pinned by stable path, never by store path — Discord goes through the
-      # /Applications/Nix Apps alias so its tile survives every rebuild.
+      # Pinned by stable path, never by store path. Discord sits in
+      # /Applications because it is a Homebrew cask now, not a Nix derivation —
+      # nixpkgs breaks its code signature, so it was never launchable from
+      # "/Applications/Nix Apps" (see mynixos's discord/darwin.nix).
       persistent-apps = [
         { app = "/System/Applications/Notes.app"; }
         { app = "/System/Applications/Utilities/Terminal.app"; }
         { app = "/Applications/Safari.app"; }
-        { app = "/Applications/Nix Apps/Discord.app"; }
+        { app = "/Applications/Discord.app"; }
         # Was live on the machine but missing here — the real-artifact diff
         # caught it; switching would have silently dropped the tile.
         { app = "/System/Library/CoreServices/Applications/Feedback Assistant.app"; }

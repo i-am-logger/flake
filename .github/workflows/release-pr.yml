@@ -11,7 +11,7 @@ permissions:
 jobs:
   check-installer-changes:
     name: Check Installer Changes
-    runs-on: flake
+    runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.filter.outputs.installer }}
     steps:
@@ -31,7 +31,7 @@ jobs:
 
   validate:
     name: Validate Release
-    runs-on: flake
+    runs-on: ubuntu-latest
     needs: check-installer-changes
     
     steps:

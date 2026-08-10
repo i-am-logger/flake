@@ -46,11 +46,6 @@ mynixos.lib.mkSystem {
       };
     };
 
-    # Routed through mynixos's own unfree mechanism rather than nixpkgs.config
-    # directly, so my/system/unfree propagates the predicate to both the system
-    # pkgs and home-manager's separate instance.
-    system.allowedUnfreePackages = [ "discord" ];
-
     # nix-darwin ASSERTS `nix.gc.automatic requires nix.enable`, and nix.enable
     # is false here (see extraModules), so its GC is unavailable. my/system/nix-gc
     # does the same job with plain launchd daemons, which have no such gating.
@@ -68,8 +63,11 @@ mynixos.lib.mkSystem {
       tailnetPorts = null;
     };
 
-    # Homebrew earns its keep for exactly one thing: Mac App Store apps, which
-    # Nix cannot fetch (Apple-ID-bound, DRM'd), plus the one cask below.
+    # Homebrew earns its keep for Mac App Store apps, which Nix cannot fetch
+    # (Apple-ID-bound, DRM'd). No cask is named here any more: Discord's comes
+    # from mynixos's own app module, which declares the cask on darwin and the
+    # nixpkgs derivation on Linux, so the choice travels with the app rather
+    # than with this host.
     #
     # See the homebrew activation override in extraModules: `brew bundle` reports
     # these masApps as failed even when they are installed and a direct
@@ -79,14 +77,13 @@ mynixos.lib.mkSystem {
     homebrew = {
       enable = true;
       user = "logger";
-      # Background Music: a cask, not a derivation, because its installer must
-      # place a HAL plugin in /Library/Audio/Plug-Ins/HAL, create a _BGMXPCHelper
-      # service account and restart coreaudiod — none of which Nix can do.
+      # Background Music was here as a cava audio source. It is gone because
+      # nothing needs it: mynixos's cava takes CoreAudio's own process tap
+      # (`method = "coreaudio"; source = "tap"`), which is why cava's module
+      # documents BGM only as a fallback for macOS < 14.2.
       #
-      # Only the INSTALL is managed. Its runtime state (PreferredDeviceUIDs, the
-      # passthrough device it follows, and hence its sample rate) is owned and
-      # continuously rewritten by BGM itself as hardware comes and goes.
-      casks = [ "background-music" ];
+      # homebrew.onActivation.cleanup is "uninstall", so the next switch removes
+      # the cask, the HAL plugin and the _BGMXPCHelper service account.
 
       masApps = {
         # The App Store build, kept deliberately: it uses Apple's
@@ -117,7 +114,7 @@ mynixos.lib.mkSystem {
   extraModules = [
     ./macos-defaults.nix
 
-    ({ config, pkgs, lib, ... }: {
+    ({ config, lib, ... }: {
       # Asserted, not defaulted. 7 is system.maxStateVersion at the pinned
       # nix-darwin rev. Set once, never changed without reading the changelog.
       system.stateVersion = 7;
@@ -212,13 +209,6 @@ mynixos.lib.mkSystem {
       # come from my.fonts (mynixos), which nix-darwin rsyncs into
       # "/Library/Fonts/Nix Fonts".
 
-
-      # GUI apps go in systemPackages, not home.packages: system.build.applications
-      # is assembled from environment.systemPackages, and nix-darwin rsyncs real
-      # .app bundles into "/Applications/Nix Apps" (--copy-unsafe-links), which
-      # Spotlight and LaunchServices index normally. home.packages would only get
-      # symlinks under ~/Applications/Home Manager Apps.
-      environment.systemPackages = [ pkgs.discord ];
 
       # System timezone — was unmanaged; captured from /etc/localtime.
       time.timeZone = "America/Denver";

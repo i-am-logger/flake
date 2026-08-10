@@ -230,19 +230,16 @@ mynixos.lib.mkSystem {
 
   extraModules = [
     (
-      { pkgs, ... }:
+      _:
       {
+        # claude-desktop is passed as null by flake.nix until upstream stops
+        # depending on the removed nodePackages.asar, so this list is empty in
+        # practice -- the conditional is what survives the day it is non-null.
         environment.systemPackages =
-          with pkgs;
-          [
-            # warp-terminal
-          ]
-          ++ (
-            if claude-desktop != null then
-              [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
-            else
-              [ ]
-          );
+          if claude-desktop != null then
+            [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
+          else
+            [ ];
 
         # vogix is the sole input engine (kanata removed): uinput + the
         # input/uinput group wiring and the vogix-input user service are
