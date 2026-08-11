@@ -80,16 +80,17 @@ mynixos.lib.mkSystem {
       # graphical.streaming flag.
       video.virtual.enable = true;
 
-      # Network: Tailscale client + Tor for .onion discovery
+      # Network: Tailscale SaaS (controlPlane defaults to "tailscale"). The
+      # .onion login-server this block used to wait for was retired with the
+      # headscale design -- the Tor client below existed only to reach it and
+      # went with it.
       network = {
         tailscale = {
           enable = true;
-          loginServer = ""; # set after yoga bootstrap: "http://<onion>.onion:8080"
+          # Tailnet-identity ssh in, same as yoga; classic sshd + YubiKey
+          # pubkeys stays live on tailscale0 as the fallback path.
+          ssh = true;
           useRoutingFeatures = "client";
-        };
-        tor = {
-          enable = true;
-          client.enable = true;
         };
 
         # IPv6 privacy (temp addresses rotating every ~90s–2min, 10 min valid

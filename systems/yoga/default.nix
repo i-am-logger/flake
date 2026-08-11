@@ -148,44 +148,20 @@ mynixos.lib.mkSystem {
       # graphical.streaming flag; stated here so the host owns the decision.
       video.virtual.enable = true;
 
-      # Network: Headscale mesh VPN + Tor hidden service
+      # Network: Tailscale SaaS. The self-hosted headscale + Tor onion design
+      # that used to live here was retired without ever being bootstrapped
+      # (zero nodes registered): the iPhone and iPad joined the tailscale.com
+      # tailnet trivially, and the computers now follow them instead of making
+      # every client as hard as the hardest one. The mynixos headscale/onion
+      # modules remain for a future self-hosted migration.
       network = {
-        headscale = {
-          enable = true;
-          port = 8090;
-          users = [
-            "logger"
-            "logger-mobile"
-          ];
-          acl = {
-            groups = {
-              "group:admin" = [ "logger@" ];
-              "group:mobile" = [ "logger-mobile@" ];
-            };
-            tagOwners = {
-              "tag:server" = [ "group:admin" ];
-            };
-            rules = [
-              {
-                action = "accept";
-                src = [ "group:admin" ];
-                dst = [ "*:*" ];
-              }
-              {
-                action = "accept";
-                src = [ "group:mobile" ];
-                dst = [ "tag:server:3000" ];
-              }
-            ];
-          };
-        };
         tailscale = {
-          enable = false;
-          exitNode = true;
-          useRoutingFeatures = "server";
-          allowedTCPPorts = [
-            18789 # openclaw gateway
-          ];
+          enable = true; # controlPlane defaults to "tailscale" (SaaS)
+          # Inbound ssh over the tailnet is authenticated by tailnet identity
+          # (tailnet policy `ssh` rules), so the iPad and the Mac need no key
+          # material to reach this host. Classic sshd + YubiKey pubkeys stays
+          # live on tailscale0 as the fallback path.
+          ssh = true;
         };
         tor.enable = false;
 
