@@ -26,6 +26,19 @@ env:
   # activation, not eval.
   SECRETS_OVERRIDE: --override-input secrets /tmp/ci-empty-secrets
 
+  # yoga carries two more inputs of the same shape: `yoga-kernel`, an amdgpu
+  # branch checked out at ~/Code/github/logger/linux, and `openrgb-src`, an
+  # OpenRGB branch beside it. Both are git+file paths that exist on that one
+  # machine, so a runner cannot fetch them either -- without a stand-in the
+  # check dies with `Git repository "..." does not exist`.
+  #
+  # Empty directories are enough for the same reason as secrets: evaluation
+  # only threads these through as source paths (a kernel `src` and an overlay
+  # `src`), and --no-build never realises what is built from them.
+  LOCAL_SRC_OVERRIDES: >-
+    --override-input yoga-kernel /tmp/ci-empty-yoga-kernel
+    --override-input openrgb-src /tmp/ci-empty-openrgb-src
+
 jobs:
   # Cheapest first: a lint failure should not cost a Nix evaluation.
   lint:
@@ -93,8 +106,11 @@ jobs:
           purge-primary-key: never
           gc-max-store-size-linux: 8G
 
-      - name: Stand in for the secrets input
-        run: mkdir -p /tmp/ci-empty-secrets
+      - name: Stand in for the machine-local inputs
+        run: |
+          mkdir -p /tmp/ci-empty-secrets
+          mkdir -p /tmp/ci-empty-yoga-kernel
+          mkdir -p /tmp/ci-empty-openrgb-src
 
       # --no-build: this evaluates every configuration but does not realise the
       # system closures. Building yoga's and skyspy-dev's toplevels is what the
@@ -102,11 +118,13 @@ jobs:
       # closures do not fit. Evaluation is what catches a broken module, which is
       # what changes here.
       #
-      # vogix uses import-from-derivation, so even --no-build builds its template
-      # derivation at EVAL time. That needs an x86_64-linux builder, which is why
-      # this cannot be checked from the darwin host.
+      # This used to need an x86_64-linux builder even with --no-build, because
+      # vogix computed its templates hash by reading a derivation and so built
+      # one during evaluation. vogix 0.8.3 removed that import-from-derivation
+      # (i-am-logger/vogix#186), which is what lets this job pass on a cold
+      # runner store at all.
       - name: nix flake check
-        run: nix flake check --no-build --print-build-logs $SECRETS_OVERRIDE
+        run: nix flake check --no-build --print-build-logs $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES
 
       # darwinConfigurations are a known-but-unchecked flake attribute, so
       # `nix flake check` never evaluates them. Named explicitly, or the Mac's
@@ -116,9 +134,9 @@ jobs:
           set -euo pipefail
           for h in yoga skyspy-dev; do
             echo "== $h =="
-            nix eval $SECRETS_OVERRIDE --raw ".#nixosConfigurations.$h.config.networking.hostName"
+            nix eval $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES --raw ".#nixosConfigurations.$h.config.networking.hostName"
             echo
           done
           echo "== aether5d-dev =="
-          nix eval $SECRETS_OVERRIDE --raw '.#darwinConfigurations."aether5d-dev".config.networking.hostName'
+          nix eval $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES --raw '.#darwinConfigurations."aether5d-dev".config.networking.hostName'
           echo
