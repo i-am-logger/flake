@@ -7,7 +7,7 @@ on:
 jobs:
   build-runner-image:
     name: Build GitHub Runner Image
-    runs-on: flake
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -61,7 +61,7 @@ jobs:
 
   check-installer-changes:
     name: Check Installer Changes
-    runs-on: flake
+    runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.filter.outputs.installer }}
     steps:
@@ -81,7 +81,7 @@ jobs:
 
   build-installer:
     name: Build Installer ISO
-    runs-on: flake
+    runs-on: ubuntu-latest
     needs: check-installer-changes
     if: needs.check-installer-changes.outputs.changed == 'true'
     permissions:
@@ -112,7 +112,7 @@ jobs:
 
   release:
     needs: [build-runner-image, check-installer-changes]
-    runs-on: flake
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write

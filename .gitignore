@@ -3,3 +3,7 @@ result
 # AI
 .claude
 AGENTS.md
+
+# devenv generated state (shell hashes, eval caches, task DBs)
+.devenv/
+.devenv.flake.nix

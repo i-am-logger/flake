@@ -1,149 +1,142 @@
-name: CI/CD Pipeline
+name: CI
 
+# Rewritten from a self-hosted pipeline that had never executed once: no runner
+# was ever registered, so every run queued for GitHub's 48-hour limit and was
+# cancelled. Nothing here is a port of that file — it is modelled on mynixos's
+# ci-and-release.yml, which is green.
 on:
-  push:
-    branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [master]
+  push:
+    branches: [master]
   workflow_dispatch:
 
-jobs:
-  format-check:
-    name: Format Check
-    runs-on: [self-hosted ]
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        
-      - name: Check Nix version
-        run: nix --version
-        
-      - name: Check Nix formatting
-        run: |
-          echo "Checking Nix file formatting..."
-          if command -v alejandra &> /dev/null; then
-            alejandra --check .
-          elif command -v nixpkgs-fmt &> /dev/null; then
-            find . -name "*.nix" -not -path "*/.*" -exec nixpkgs-fmt --check {} +
-          else
-            echo "Installing alejandra..."
-            nix run nixpkgs#alejandra -- --check .
-          fi
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-  flake-validate:
-    name: Flake Validation
-    runs-on: self-hosted
-    needs: format-check
-    
+permissions:
+  contents: read
+
+env:
+  # `secrets` is a PATH input pointing at /home/logger/.secrets, which exists on
+  # the two NixOS hosts and nowhere else — no runner can fetch it. Every nix
+  # command below overrides it with an empty directory, which is enough because
+  # nothing CI evaluates reads a secret's CONTENT: sops decryption happens at
+  # activation, not eval.
+  SECRETS_OVERRIDE: --override-input secrets /tmp/ci-empty-secrets
+
+  # yoga carries two more inputs of the same shape: `yoga-kernel`, an amdgpu
+  # branch checked out at ~/Code/github/logger/linux, and `openrgb-src`, an
+  # OpenRGB branch beside it. Both are git+file paths that exist on that one
+  # machine, so a runner cannot fetch them either -- without a stand-in the
+  # check dies with `Git repository "..." does not exist`.
+  #
+  # Empty directories are enough for the same reason as secrets: evaluation
+  # only threads these through as source paths (a kernel `src` and an overlay
+  # `src`), and --no-build never realises what is built from them.
+  LOCAL_SRC_OVERRIDES: >-
+    --override-input yoga-kernel /tmp/ci-empty-yoga-kernel
+    --override-input openrgb-src /tmp/ci-empty-openrgb-src
+
+jobs:
+  # Cheapest first: a lint failure should not cost a Nix evaluation.
+  lint:
+    name: Lint (statix + deadnix)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        
-      - name: Validate flake structure
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      - name: statix
+        run: nix run nixpkgs#statix -- check .
+      - name: deadnix
+        run: nix run nixpkgs#deadnix -- --fail $(git ls-files '*.nix')
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v22
+      # `nix fmt` is the repo's own formatter (nixpkgs-fmt). The workflow this
+      # replaced ran `alejandra --check`, a DIFFERENT formatter that disagrees
+      # with it on nearly every file — it had simply never run, so nobody found
+      # out.
+      - name: nix fmt --check
         run: |
-          echo "Validating flake.nix syntax..."
-          nix flake show --json > /dev/null
-          
-      - name: Check flake metadata
-        run: |
-          echo "Checking flake metadata..."
-          nix flake metadata
-          
-      - name: List all outputs
-        run: |
-          echo "Listing all flake outputs..."
-          nix flake show
+          nix fmt . -- --fail-on-change 2>/dev/null || nix fmt .
+          git diff --exit-code
 
   flake-check:
     name: Flake Check
-    runs-on: self-hosted
-    needs: flake-validate
-    
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Skip on release-please's own PR and the release commit it merges: both
+    # touch only version files, and the checks already passed underneath.
+    if: |
+      !(
+        (github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'chore(master): release')) ||
+        (github.event_name == 'push' && contains(github.event.head_commit.message, 'release-please--branches--master'))
+      )
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        
-      - name: Run flake check (dry-run)
-        run: |
-          echo "Running flake check in dry-run mode..."
-          nix flake check --dry-run
-          
-      - name: Run full flake check
-        run: |
-          echo "Running full flake check..."
-          nix flake check --all-systems
+      - uses: actions/checkout@v7
 
-  build-systems:
-    name: Build Systems
-    runs-on: self-hosted
-    needs: flake-check
-    strategy:
-      matrix:
-        system: [yoga, skyspy-dev]
-      fail-fast: false
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        
-      - name: Build ${{ matrix.system }} configuration
-        run: |
-          echo "Building ${{ matrix.system }} system..."
-          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L
-          
-      - name: Show system info
-        run: |
-          echo "System build complete. Path info:"
-          nix path-info .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel
+      - uses: DeterminateSystems/nix-installer-action@v22
+        with:
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org https://cache.nixos.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 
-  evaluate-systems:
-    name: Evaluate Configurations
-    runs-on: self-hosted
-    needs: build-systems
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        
-      - name: Evaluate yoga configuration
-        run: |
-          echo "Evaluating yoga configuration..."
-          nix eval .#nixosConfigurations.yoga.config.system.name
-          nix eval .#nixosConfigurations.yoga.config.networking.hostName
-          
-      - name: Evaluate skyspy-dev configuration
-        run: |
-          echo "Evaluating skyspy-dev configuration..."
-          nix eval .#nixosConfigurations.skyspy-dev.config.system.name
-          nix eval .#nixosConfigurations.skyspy-dev.config.networking.hostName
+      - name: Restore and save the Nix store
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          # No lock hash in the prefix, so a lockfile bump still restores the
+          # previous store and evaluates only the delta.
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          # Restore everywhere, save only on master. GitHub caches are
+          # ref-scoped: a PR reads master's entry but writes its own, so an
+          # ungated save spends the repo's cache budget per open PR.
+          save: ${{ github.ref == 'refs/heads/master' }}
+          purge: ${{ github.ref == 'refs/heads/master' }}
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-created: 0
+          purge-primary-key: never
+          gc-max-store-size-linux: 8G
 
-  summary:
-    name: Pipeline Summary
-    runs-on: self-hosted
-    needs: [format-check, flake-validate, flake-check, build-systems, evaluate-systems]
-    if: always()
-    
-    steps:
-      - name: Display results
+      - name: Stand in for the machine-local inputs
         run: |
-          echo "=== CI/CD Pipeline Summary ==="
-          echo "Format Check: ${{ needs.format-check.result }}"
-          echo "Flake Validation: ${{ needs.flake-validate.result }}"
-          echo "Flake Check: ${{ needs.flake-check.result }}"
-          echo "Build Systems: ${{ needs.build-systems.result }}"
-          echo "Evaluate Systems: ${{ needs.evaluate-systems.result }}"
-          
-          if [ "${{ needs.format-check.result }}" = "success" ] && \
-             [ "${{ needs.flake-validate.result }}" = "success" ] && \
-             [ "${{ needs.flake-check.result }}" = "success" ] && \
-             [ "${{ needs.build-systems.result }}" = "success" ] && \
-             [ "${{ needs.evaluate-systems.result }}" = "success" ]; then
-            echo ""
-            echo "✓ All checks passed!"
-            exit 0
-          else
-            echo ""
-            echo "✗ Some checks failed"
-            exit 1
-          fi
+          mkdir -p /tmp/ci-empty-secrets
+          mkdir -p /tmp/ci-empty-yoga-kernel
+          mkdir -p /tmp/ci-empty-openrgb-src
+
+      # --no-build: this evaluates every configuration but does not realise the
+      # system closures. Building yoga's and skyspy-dev's toplevels is what the
+      # self-hosted runners were for; a hosted runner has 14 GB of disk and the
+      # closures do not fit. Evaluation is what catches a broken module, which is
+      # what changes here.
+      #
+      # This used to need an x86_64-linux builder even with --no-build, because
+      # vogix computed its templates hash by reading a derivation and so built
+      # one during evaluation. vogix 0.8.3 removed that import-from-derivation
+      # (i-am-logger/vogix#186), which is what lets this job pass on a cold
+      # runner store at all.
+      - name: nix flake check
+        run: nix flake check --no-build --print-build-logs $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES
+
+      # darwinConfigurations are a known-but-unchecked flake attribute, so
+      # `nix flake check` never evaluates them. Named explicitly, or the Mac's
+      # configuration is the one thing CI does not look at.
+      - name: Evaluate every host
+        run: |
+          set -euo pipefail
+          for h in yoga skyspy-dev; do
+            echo "== $h =="
+            nix eval $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES --raw ".#nixosConfigurations.$h.config.networking.hostName"
+            echo
+          done
+          echo "== aether5d-dev =="
+          nix eval $SECRETS_OVERRIDE $LOCAL_SRC_OVERRIDES --raw '.#darwinConfigurations."aether5d-dev".config.networking.hostName'
+          echo

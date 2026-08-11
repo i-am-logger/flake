@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+_:
 
 {
   # Filesystem configuration for skyspy-dev
