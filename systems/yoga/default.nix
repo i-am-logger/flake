@@ -162,6 +162,12 @@ mynixos.lib.mkSystem {
           # material to reach this host. Classic sshd + YubiKey pubkeys stays
           # live on tailscale0 as the fallback path.
           ssh = true;
+          # `tailscale serve` ports. serve binds a real kernel listener on the
+          # tailnet IP, so peer traffic traverses the tailscale0 interface
+          # firewall like anything else -- a serve config alone is not enough.
+          allowedTCPPorts = [
+            1989 # trunk dev server (praxis WASM surface), proxied via serve
+          ];
         };
         tor.enable = false;
 
