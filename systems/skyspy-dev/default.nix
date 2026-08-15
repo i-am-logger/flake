@@ -147,6 +147,21 @@ mynixos.lib.mkSystem {
 
   # System-specific configuration (personal, not opinionated)
   extraModules = [
+    # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
+    # `dispatch` IPC (hyprwm/Hyprland#15539). Same rationale as on yoga: fail
+    # the build until the Lua migration lands (thread_hyprland_lua_migration).
+    ({ config, lib, ... }: {
+      assertions = [{
+        assertion = lib.versionOlder config.programs.hyprland.package.version "0.57";
+        message = ''
+          Hyprland ${config.programs.hyprland.package.version} drops hyprlang configs and
+          the legacy hyprctl IPC that vogix depends on. Do not switch until the
+          Lua migration is done (thread_hyprland_lua_migration), or pin
+          hyprland to 0.56.x via an overlay for this update.
+        '';
+      }];
+    })
+
     # Kernel pinned to 6.12 for the NVIDIA open driver: later kernels changed the
     # get_dev_pagemap API and the open modules fail to compile against them.
     # Can be removed once NVIDIA driver is updated to support kernel 6.18

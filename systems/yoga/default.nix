@@ -278,6 +278,24 @@ mynixos.lib.mkSystem {
     # chipset SMBus stack on its own).
     { vogix.hardware.dram-rgb.enable = true; }
 
+    # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
+    # `dispatch` IPC (hyprwm/Hyprland#15539, merged 2026-07-22). Our config is
+    # still generated as hyprlang and vogix drives borders/binds/shader through
+    # the legacy IPC, so a routine nixpkgs bump to 0.57 would kill the whole
+    # desktop in one switch. Fail the build instead, until the Lua migration
+    # lands (thread_hyprland_lua_migration). Remove this block when it does.
+    ({ config, lib, ... }: {
+      assertions = [{
+        assertion = lib.versionOlder config.programs.hyprland.package.version "0.57";
+        message = ''
+          Hyprland ${config.programs.hyprland.package.version} drops hyprlang configs and
+          the legacy hyprctl IPC that vogix depends on. Do not switch until the
+          Lua migration is done (thread_hyprland_lua_migration), or pin
+          hyprland to 0.56.x via an overlay for this update.
+        '';
+      }];
+    })
+
     # TEST (amdgpu event-driven branch): a non-default boot entry carrying four
     # amdgpu patches on the stock 7.1 kernel:
     #   1. hold page tables until their TLB flush completes -- GPUVM
