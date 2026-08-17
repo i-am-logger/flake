@@ -26,6 +26,12 @@
   yubikeys = import ./yubikeys.nix;
 
   graphical.enable = true;
+
+  # zsh everywhere, not just where macOS forces it. mynixos defaults the login
+  # shell per platform (bash on Linux, zsh on darwin); stating it here makes
+  # every host agree, so shell config and muscle memory travel between them.
+  shell = "zsh";
+
   terminal = {
     enable = true;
     # Same value mynixos now defaults to, said out loud anyway: this file's
@@ -45,6 +51,11 @@
   input.leftHanded = true;
 
   apps = {
+    # The zsh home-manager config (history, integrations) — mynixos defaults
+    # this on only where zsh is the platform's login shell; with zsh as the
+    # login shell everywhere (above), the config follows everywhere too.
+    terminal.shells.zsh.enable = true;
+
     security.passwords.onePassword.enable = true;
 
     graphical.network.rustdesk.enable = true; # RustDesk remote desktop client
