@@ -186,6 +186,7 @@ mynixos.lib.mkSystem {
       # Package overlays
       nixpkgs.overlays = [
         (import ../../overlays/claude-code.nix)
+        (import ../../overlays/herdr.nix)
       ];
     }
   ];

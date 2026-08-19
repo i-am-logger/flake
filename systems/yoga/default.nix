@@ -263,6 +263,7 @@ mynixos.lib.mkSystem {
         # Package overlays (liquidctl is now managed by vogix)
         nixpkgs.overlays = [
           (import ../../overlays/claude-code.nix)
+          (import ../../overlays/herdr.nix)
           # Build OpenRGB from the local perf/cli-latency branch (overlays/openrgb.nix
           # + the openrgb-src flake input) so vogix's server and the openrgb CLI resolve
           # to our build instead of nixpkgs' 1.0rc2.

@@ -144,6 +144,7 @@ mynixos.lib.mkSystem {
       # It replaces src and re-vendors cargoDeps, nothing else.
       nixpkgs.overlays = [
         (import ../../overlays/claude-code.nix)
+        (import ../../overlays/herdr.nix)
         (import ../../overlays/wezterm-kitty-pr.nix)
       ];
 
