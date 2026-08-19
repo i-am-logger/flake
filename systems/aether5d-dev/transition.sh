@@ -153,11 +153,14 @@ cleanup() {
         say "nix profile already empty"
     fi
 
-    # Native claude-code installer. The config provides claude-code 2.1.220 from
-    # nixpkgs — the same version — so this is a straight swap. ~/.claude (your
+    # Native claude-code installer. The config provides claude-code through
+    # overlays/claude-code.nix, which tracks upstream's own release manifest
+    # and so sits at or ahead of whatever the native installer ran — so this
+    # swaps one claude on PATH for another. No version transcribed here,
+    # because the number is what went stale last time. ~/.claude (your
     # history, projects, plugins) is deliberately NOT touched.
     if [[ -L $HOME/.local/bin/claude ]]; then
-        say "removing native claude launcher (config provides the same 2.1.220)"
+        say "removing native claude launcher (the config puts claude on PATH)"
         run "rm -f '$HOME/.local/bin/claude'"
     fi
     if [[ -d $HOME/.local/share/claude/versions ]]; then

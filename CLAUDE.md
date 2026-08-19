@@ -48,7 +48,7 @@ flake/
 │   └── logger/        # Personal user data + YubiKey data + avatar
 ├── themes/            # Colour palettes, base16-schemes and Wallpapers (data).
 │                      # NOTE: nothing in this repo imports them.
-├── overlays/          # claude-code.nix, applied by the two NixOS hosts
+├── overlays/          # claude-code.nix, applied by all three hosts
 ├── installer/         # Custom installer ISO
 ├── forensic/          # devenv shell for mobile forensics (mvt)
 ├── scripts/           # Helper scripts
