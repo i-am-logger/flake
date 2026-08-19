@@ -152,6 +152,22 @@ if [[ -n "$CURRENT_VERSION" && $FORCE -eq 0 ]]; then
     fi
 fi
 
+# The recipe is inherited rather than vendored -- that is the point of
+# overriding, but it also means nixpkgs' recipe has to still fit the source
+# being pinned. Between 0.7.5 and 0.8.0 herdr stopped shipping SKILL.md and
+# began generating it, and postInstall changed to match; the older recipe
+# applied to the newer source dies in installPhase after a full compile. A
+# differing minor series is the only warning available short of building.
+series() { printf '%s' "$1" | awk -F. '{ print $1 "." $2 }'; }
+if [[ "$(series "$VERSION")" != "$(series "$NIXPKGS_VERSION")" ]]; then
+    echo >&2
+    echo "warning: nixpkgs' recipe is ${NIXPKGS_VERSION} but this pins ${VERSION}." >&2
+    echo "         The build inherits that recipe, and across a minor bump its" >&2
+    echo "         install steps may no longer fit the source. If the build fails" >&2
+    echo "         in installPhase, that is why -- the fix is a newer nixpkgs, not" >&2
+    echo "         a different hash." >&2
+fi
+
 PROBE="$(mktemp -d)"
 trap 'rm -rf "$PROBE"' EXIT
 
