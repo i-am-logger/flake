@@ -30,7 +30,7 @@ systems/
 users/
   logger/              # User data: YubiKey public keys, avatar, per-platform tiers
 overlays/
-  claude-code.nix      # claude-code pinned to its linux-x64 native binary release
+  claude-code.nix      # claude-code ahead of the nixpkgs pin; all three hosts
 installer/             # Installer ISO — packages.x86_64-linux.installer-iso
 docs/                  # Secure boot setup, reliability playbooks
 ```

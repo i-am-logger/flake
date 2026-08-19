@@ -8,8 +8,11 @@
 {
   home.stateVersion = "26.11";
 
-  # The native claude-code installer lives here and is not managed by Nix
-  # (see ./default.nix for why). Host-specific, so it stays out of mynixos.
+  # Where the native claude-code installer puts things, and not managed by Nix
+  # (see ./default.nix for where claude-code itself comes from). home-manager
+  # prepends this, so it sits ahead of every Nix profile in PATH — a leftover
+  # ~/.local/bin/claude shadows the packaged one. Host-specific, so it stays
+  # out of mynixos.
   home.sessionPath = [ "$HOME/.local/bin" ];
 
   home.packages = [

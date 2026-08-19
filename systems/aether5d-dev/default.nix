@@ -104,10 +104,6 @@ mynixos.lib.mkSystem {
     # NOT set here: graphical.enable, which my/users/graphical/mynixos-darwin.nix forces
     # true because macOS cannot not be graphical. Hyprland, walker and waybar do
     # not follow from it — those modules are absent from platforms/darwin.nix.
-    #
-    # claude-code comes from nixpkgs at 2.1.220 on aarch64-darwin, the same
-    # version the native installer runs. The flake's overlays/claude-code.nix is
-    # deliberately NOT applied here: it is x86_64-linux-only and pins 2.1.183.
     users = import ../../users;
   };
 
@@ -123,6 +119,33 @@ mynixos.lib.mkSystem {
       # that used to apply to whoever ran darwin-rebuild now apply to this user.
       # Required by every user-scoped system.defaults.* write.
       system.primaryUser = "logger";
+
+      # -----------------------------------------------------------------------
+      # Two overlays, both temporary, both here because the nixpkgs pin trails
+      # upstream on something this machine runs all day.
+      #
+      # claude-code: overlays/claude-code.nix hands the same nixpkgs derivation
+      # a newer release manifest. Upstream publishes a checksum per platform,
+      # so the one overlay covers this host and the two NixOS ones, and all
+      # three land on the same version. Regenerate with
+      # scripts/update-claude-code.sh; that file says how to wind it down.
+      #
+      # wezterm comes from the kitty image branch, not the pin.
+      #
+      # Two things the pin gets wrong on this machine. The kitty `t=s` shared
+      # memory transport never draws: a POSIX shared memory object can only be
+      # mapped on Darwin, and the arm reads it with seek/read_exact, so every
+      # `t=s` image is dropped with ENXIO and no reply to the application. And
+      # every image is hashed three times in software, which is most of a frame
+      # budget for anything streaming pixels.
+      #
+      # Sent upstream as wezterm/wezterm#8061. Drop that import and
+      # overlays/wezterm-kitty-pr.nix once it lands and the pin moves past it.
+      # It replaces src and re-vendors cargoDeps, nothing else.
+      nixpkgs.overlays = [
+        (import ../../overlays/claude-code.nix)
+        (import ../../overlays/wezterm-kitty-pr.nix)
+      ];
 
       # -----------------------------------------------------------------------
       # Homebrew must not be able to abort activation.
