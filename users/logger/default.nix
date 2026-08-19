@@ -47,8 +47,6 @@
   apps = {
     security.passwords.onePassword.enable = true;
 
-    graphical.network.rustdesk.enable = true; # RustDesk remote desktop client
-
     # Written https:// rather than git@ on purpose: apps.dev.tools.git.protocol
     # is what decides the transport, and an ssh:// literal would bypass it and
     # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite
@@ -75,6 +73,10 @@
     avatar = ./avatar.png;
 
     input.accelSpeed = -0.3; # libinput scale: 0.0 is the device default, not "off"
+
+    # Upstream marks rustdesk badPlatforms = [ "aarch64-darwin" ], so it cannot
+    # sit in the shared profile: aether5d-dev refuses to evaluate at all.
+    apps.graphical.network.rustdesk.enable = true;
 
     graphical = {
       streaming.enable = true; # OBS
