@@ -13,6 +13,14 @@ mynixos.lib.mkSystem {
     {
       # System configuration
       system = {
+        # What `rebuild-system update` re-pins before it builds. Named one by
+        # one on purpose -- scripts/ also holds update-all-git-repos.sh and
+        # update-master-from-old-commit.sh, which are not overlay updaters.
+        update.scripts = [
+          "scripts/update-claude-code.sh"
+          "scripts/update-herdr.sh"
+        ];
+
         enable = true;
         hostname = "yoga";
 

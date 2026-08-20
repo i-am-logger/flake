@@ -31,6 +31,15 @@ mynixos.lib.mkSystem {
       # test-system / build-system need to be told where to look.
       flakeDir = "/Users/logger/Code/flake";
 
+      # What `rebuild-system update` re-pins before it builds, in order. Named
+      # one by one on purpose -- scripts/ also holds update-all-git-repos.sh
+      # and update-master-from-old-commit.sh, which are not overlay updaters
+      # and must never be swept up by a glob.
+      update.scripts = [
+        "scripts/update-claude-code.sh"
+        "scripts/update-herdr.sh"
+      ];
+
       # This machine is where the DSL is developed, so the rebuild scripts build
       # from the working tree when one is present rather than from flake.lock.
       # Each path is tested when the script runs, so nothing here breaks a host

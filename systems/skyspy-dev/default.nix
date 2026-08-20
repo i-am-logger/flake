@@ -10,6 +10,14 @@ mynixos.lib.mkSystem {
       system.dualBoot.windows = true;
 
       system = {
+        # What `rebuild-system update` re-pins before it builds. Named one by
+        # one on purpose -- scripts/ also holds update-all-git-repos.sh and
+        # update-master-from-old-commit.sh, which are not overlay updaters.
+        update.scripts = [
+          "scripts/update-claude-code.sh"
+          "scripts/update-herdr.sh"
+        ];
+
         enable = true;
         hostname = "skyspy-dev";
         # kernel defaults to mynixos system module (linuxPackages_latest)
