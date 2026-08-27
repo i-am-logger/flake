@@ -51,7 +51,22 @@
     # is what decides the transport, and an ssh:// literal would bypass it and
     # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite
     # it back through insteadOf.
-    ai.tools.claude-code.cloneConfigRepo = "https://github.com/i-am-logger/claude-config.git";
+    ai.tools.claude-code = {
+      cloneConfigRepo = "https://github.com/i-am-logger/claude-config.git";
+
+      # One Claude.ai login per account; ~/Code/cosmic is Cosmic Clarity
+      # Connection work and runs on its own subscription. Everything else
+      # falls through to the default.
+      defaultAccount = "gmail";
+      accounts = {
+        gmail = { email = "ido.samuelson@gmail.com"; };
+        hotmail = { email = "ido.samuelson@hotmail.com"; };
+        bootstrapper = {
+          email = "ibootstrapper@gmail.com";
+          directories = [ "~/Code/cosmic" ];
+        };
+      };
+    };
   };
 
   # Folders that are mine rather than any program's, kept across a wipe on the

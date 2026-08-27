@@ -328,6 +328,9 @@ system sees anything, so `my.users.<name>.darwin` never becomes an option path.
   from mynixos's app modules. Hosts set `home.stateVersion` and their own host-specific
   additions (`systems/aether5d-dev/home.nix`)
 - User "logger" corresponds to "Ido Samuelson"
+- `~/Code` layout: `logger/` holds my own repositories (flat), `cosmic/` holds Cosmic Clarity
+  Connection work (its own Claude account, alias `bootstrapper`), and `github/<owner>/<repo>`
+  holds clones and forks of other people's repositories
 - when you need you work with an open source project, integrate, etc, best to clone it to ~/Code/github/tmp and learn it for the work purpose
 - mynixos is unstable api that means documentations are not important right now. also backwards compatibility isn't important as api is unstable
 - do not use sudo

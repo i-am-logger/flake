@@ -23,7 +23,7 @@
     # per-host .patch files (see systems/yoga; flake=false => tracked files only).
     # Linux-only: the Mac never forces this input.
     yoga-kernel = {
-      url = "git+file:///home/logger/Code/github/logger/linux?ref=amdgpu-vm-tlb-event-driven";
+      url = "git+file:///home/logger/Code/github/torvalds/linux?ref=amdgpu-vm-tlb-event-driven";
       flake = false;
     };
     # Local OpenRGB checkout, for building/testing OpenRGB changes (CLI apply
@@ -32,7 +32,7 @@
     # tracks the `perf/cli-latency` branch. Iterate: commit on that branch, then
     # `nix flake update openrgb-src`, then rebuild.
     openrgb-src = {
-      url = "git+file:///home/logger/Code/github/logger/openrgb?ref=perf/cli-latency";
+      url = "git+file:///home/logger/Code/github/CalcProgrammer1/OpenRGB?ref=perf/cli-latency";
       flake = false;
     };
   };

@@ -28,8 +28,8 @@ mynixos.lib.mkSystem {
         # path is actually on this machine. vogix is reached through mynixos,
         # so it needs the nested input path rather than a bare name.
         localInputs = {
-          mynixos = "/home/logger/Code/github/logger/mynixos";
-          "mynixos/vogix" = "/home/logger/Code/github/logger/vogix";
+          mynixos = "/home/logger/Code/logger/mynixos";
+          "mynixos/vogix" = "/home/logger/Code/logger/vogix";
         };
         # kernel defaults to mynixos system module (linuxPackages_latest)
         # Override with: kernel = pkgs.linuxPackages_6_12; (or any other kernel package)

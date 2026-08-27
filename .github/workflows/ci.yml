@@ -27,7 +27,7 @@ env:
   SECRETS_OVERRIDE: --override-input secrets /tmp/ci-empty-secrets
 
   # yoga carries two more inputs of the same shape: `yoga-kernel`, an amdgpu
-  # branch checked out at ~/Code/github/logger/linux, and `openrgb-src`, an
+  # branch checked out at ~/Code/github/torvalds/linux, and `openrgb-src`, an
   # OpenRGB branch beside it. Both are git+file paths that exist on that one
   # machine, so a runner cannot fetch them either -- without a stand-in the
   # check dies with `Git repository "..." does not exist`.

@@ -598,12 +598,12 @@
         "rev": "31ad3a5e84e2ea1aa8122e81da0ada3891ce5091",
         "revCount": 5279,
         "type": "git",
-        "url": "file:///home/logger/Code/github/logger/openrgb"
+        "url": "file:///home/logger/Code/github/CalcProgrammer1/OpenRGB"
       },
       "original": {
         "ref": "perf/cli-latency",
         "type": "git",
-        "url": "file:///home/logger/Code/github/logger/openrgb"
+        "url": "file:///home/logger/Code/github/CalcProgrammer1/OpenRGB"
       }
     },
     "pre-commit": {
@@ -829,12 +829,12 @@
         "rev": "53ccf7b436f19be34242931da6580f70d80404b5",
         "revCount": 1447339,
         "type": "git",
-        "url": "file:///home/logger/Code/github/logger/linux"
+        "url": "file:///home/logger/Code/github/torvalds/linux"
       },
       "original": {
         "ref": "amdgpu-vm-tlb-event-driven",
         "type": "git",
-        "url": "file:///home/logger/Code/github/logger/linux"
+        "url": "file:///home/logger/Code/github/torvalds/linux"
       }
     }
   },
