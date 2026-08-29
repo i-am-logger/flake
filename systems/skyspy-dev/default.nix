@@ -47,17 +47,25 @@ mynixos.lib.mkSystem {
         enable = true;
         xdg.enable = true;
 
+        # Login via greetd + tuigreet, same as yoga. GDM is gnome-shell and
+        # couples this Hyprland host to the whole GNOME stack; greetd is the
+        # Hyprland-recommended, GNOME-free, fast, low-flash login and tuigreet
+        # launches Hyprland directly.
+        displayManager.type = "greetd";
+
         motd = {
           enable = true;
           content = builtins.readFile ../motd.txt;
         };
       };
 
-      # Security configuration
+      # Security configuration — same policy as yoga; secureBoot stays off
+      # until this machine's lanzaboote keys are enrolled.
       security = {
         enable = true;
         secureBoot.enable = false; # skyspy-dev doesn't have secure boot yet
-        auditRules.enable = false;
+        auditRules.enable = true;
+        nopasswdRebuild = true;
       };
 
       # Infrastructure configuration
@@ -106,10 +114,15 @@ mynixos.lib.mkSystem {
         # -- my.network.ipv6.privacy is 120/600/30 -- so this host sets nothing.
       };
 
-      # AI configuration
+      # AI configuration — same as yoga: no local ollama, Claude through the
+      # proxy. mcpServers is per-user in my.users.<name>.ai.mcpServers.
       ai = {
-        enable = false; # Ollama disabled on skyspy-dev
-        # mcpServers is now configured per-user in my.users.<name>.ai.mcpServers
+        enable = true;
+        ollama.enable = false;
+        claudeCodeProxy = {
+          enable = true;
+          model = "opus";
+        };
       };
 
       # Performance configuration
@@ -132,8 +145,8 @@ mynixos.lib.mkSystem {
       # Hardware specs (cpu, gpu, bluetooth, audio) are defined in the laptop module
     }
 
-    # Second layer — see the note in systems/yoga/default.nix. `mounts` is a
-    # listOf, so this appends rather than replaces.
+    # Second layer — see the note in systems/yoga/default.nix. `mounts` and
+    # `repositories` are listOf, so these append rather than replace.
     {
       users.logger.mounts = [
         {
@@ -150,6 +163,21 @@ mynixos.lib.mkSystem {
           noCheck = true;
         }
       ];
+
+      users.logger.github.repositories = [
+        "loial"
+        "logger"
+        "pds"
+      ];
+
+      # qobine needs a paid Qobuz subscription, so it is enabled per host rather
+      # than in the shared user profile — same as yoga.
+      users.logger.apps.media.players.qobine.enable = true;
+
+      # Hyprland Lua migration P3: same flip as yoga — this host runs the Lua
+      # config engine (Hyprland ≥0.55 accepts it; 0.57 removes hyprlang).
+      # Rollback is deleting this line (hyprlang is still the mynixos default).
+      users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
     }
   ];
 
@@ -189,6 +217,10 @@ mynixos.lib.mkSystem {
         # was created under 25.05 and home-manager keys migration behaviour off
         # this value, so raising it would re-run migrations against existing state.
         home.stateVersion = "25.05";
+
+        # Debug logging for the vogix input engine + daemon, same as yoga:
+        #   journalctl --user -u vogix-input -u vogix-daemon -f
+        programs.vogix.logLevel = "debug";
       };
 
       # Package overlays

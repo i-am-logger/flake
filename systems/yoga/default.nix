@@ -234,6 +234,12 @@ mynixos.lib.mkSystem {
       # the browser; the resulting token, queue and settings live in
       # ~/.local/share/qobine, which the app option registers with impermanence.
       users.logger.apps.media.players.qobine.enable = true;
+
+      # Hyprland Lua migration P3: this host runs the Lua config engine
+      # (Hyprland ≥0.55 accepts it; 0.57 removes hyprlang). Per-host on purpose
+      # — yoga flips first, skyspy follows once this has held. Rollback is
+      # deleting this line (hyprlang is still the mynixos default).
+      users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
     }
   ];
 
