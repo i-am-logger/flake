@@ -1,4 +1,4 @@
-# claude-code pinned to 2.1.248, overriding whatever the nixpkgs pin ships.
+# claude-code pinned to 2.1.251, overriding whatever the nixpkgs pin ships.
 # Auto-updated by scripts/update-claude-code.sh; edit that, not this file.
 #
 # Upstream ships one native binary per platform plus a release manifest
@@ -33,16 +33,16 @@ _final: prev:
 {
   claude-code = prev.claude-code.override {
     manifest = {
-      version = "2.1.248";
+      version = "2.1.251";
       platforms = {
-        "darwin-arm64".checksum = "a3f276daa51919f378bcd797d44f8e3d09653c2858123157d272de38952efeef";
-        "darwin-x64".checksum = "35c21b09d049a4d040c511cd9f73de01df83aa1d4b35a43ae1353bde413b42bc";
-        "linux-arm64".checksum = "76655a3731274f36236632b9acbcb9bef7055de20041c411b761856043fbc0df";
-        "linux-arm64-musl".checksum = "ca9cabd7c636889de73c399d31be4f115fd2737c64482ada7bf4b1c0d51448f3";
-        "linux-x64".checksum = "3edee3cb054bd6823674fd60d5c0e442825b28ee8fbf815af2d16bf0de072e16";
-        "linux-x64-musl".checksum = "155e1aa56d0c7e2aaae92788c414e7c43315220289bbd38f7a89ba33d07ff48f";
-        "win32-arm64".checksum = "d3ee9756700a4e7642216e04f1a57baba9633732de9d85a4b7918c4731e4b572";
-        "win32-x64".checksum = "c322169422b45ec4bbfeae3aae6cfd6367a622b0d12f06ba9766e18bb8eca2af";
+        "darwin-arm64".checksum = "625869b01e0050f260b2980fac248fd9cef9e462612bded4ec9d3d49ff8969a5";
+        "darwin-x64".checksum = "44221d72a3f35772faa85ad9a36a678084a516f720e64b45e26eb9015315500b";
+        "linux-arm64".checksum = "65445bd4dd042079cc3fa43791b561370a05c8599e8ec47580e25a81050abbdd";
+        "linux-arm64-musl".checksum = "165f6236abf5b0c42892b164c2299c82023421805e0c3eaddf925a3195513f84";
+        "linux-x64".checksum = "fd5f10ff0eb58daec04900466b143ea98aab50abf208a422bc008eaec13f61f7";
+        "linux-x64-musl".checksum = "5056970c13f46dd2bff2c44dd2a7f766553a63392615412d5711278264730e07";
+        "win32-arm64".checksum = "89e91fed2dc6f6278fa1e179e6401c0a1c252fe80c57ee47f17f10f7f7b4e99c";
+        "win32-x64".checksum = "8d1229a281281b98fd2dee72b3253a704be4fce4d45207200cd32a9bb5a6c909";
       };
     };
   };
