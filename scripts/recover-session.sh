@@ -41,11 +41,11 @@ launch() { # pretty-name  pgrep-f-pattern  command...
 
 echo "recover-session: instance=$HYPRLAND_INSTANCE_SIGNATURE"
 # --- input + visual surfaces (need NO dbus; talk to Hyprland over its socket) ---
+# hyprpaper/hypridle/waybar are gone: the vogix shell owns wallpaper, idle
+# and the bar (vogix-desktop.service — restarted below with the units).
 launch vogix-input   'bin/vogix input'  vogix input run
 launch vogix-daemon  'bin/vogix daemon' vogix daemon
-launch hyprpaper     'bin/hyprpaper'    hyprpaper
-launch hypridle      'bin/hypridle'     hypridle
-launch waybar        'bin/waybar'       waybar
+launch vogix-desktop 'bin/qs'           systemctl --user restart vogix-desktop.service
 # --- audio (best-effort: works over its own sockets; wireplumber wants dbus) ---
 launch pipewire      'bin/pipewire$'        pipewire
 launch wireplumber   'bin/wireplumber'      wireplumber

@@ -47,11 +47,9 @@ mynixos.lib.mkSystem {
         enable = true;
         xdg.enable = true;
 
-        # Login via greetd + tuigreet, same as yoga. GDM is gnome-shell and
-        # couples this Hyprland host to the whole GNOME stack; greetd is the
-        # Hyprland-recommended, GNOME-free, fast, low-flash login and tuigreet
-        # launches Hyprland directly.
-        displayManager.type = "greetd";
+        # Login: the vogix theming default — SDDM with the vogix QML greeter
+        # under a Hyprland Lua compositor (my.environment.login = sddm/vogix);
+        # greetd+tuigreet stays one line away (login.backend = "greetd").
 
         motd = {
           enable = true;

@@ -94,14 +94,10 @@ mynixos.lib.mkSystem {
         enable = true;
         xdg.enable = true;
 
-        # Login via greetd + tuigreet instead of GDM. GDM is gnome-shell and
-        # couples this Hyprland host to the whole GNOME stack — the GNOME 50 bump
-        # broke its greeter ("Session never registered") and removed gdm.wayland.
-        # greetd is the Hyprland-recommended, GNOME-free, fast, low-flash login;
-        # tuigreet is text (no greeter-compositor → least screen flashing) and
-        # launches Hyprland directly. A graphical, vogix-themed greeter (ReGreet
-        # as a vogix surface) can layer on later if we want the looks.
-        displayManager.type = "greetd";
+        # Login: the vogix theming default — SDDM with the vogix QML greeter
+        # under a Hyprland Lua compositor (my.environment.login = sddm/vogix).
+        # greetd+tuigreet stays one line away (login.backend = "greetd") and
+        # as the login-minimal boot entry below for the first week.
 
         motd = {
           enable = true;
@@ -327,6 +323,19 @@ mynixos.lib.mkSystem {
     #      path would stall through a jammed KIQ and force a fence-killing
     #      MODE2. A live culprit is reset by vmid at its source; full reset
     #      stays the last resort.
+    # Login must never brick: a boot entry with the text greeter
+    # (greetd+tuigreet) while the vogix SDDM greeter proves itself on this
+    # host. Select "login-minimal" at the bootloader; remove after a week
+    # of clean SDDM logins.
+    {
+      specialisation.login-minimal.configuration = {
+        my.environment.login = {
+          backend = "greetd";
+          look = "stock";
+        };
+      };
+    }
+
     # The unpatched kernel stays the default; select the "amdgpu-vm-tlb-test"
     # entry at the bootloader to run the patched kernel. Remove once validated.
     ({ pkgs, ... }: {
