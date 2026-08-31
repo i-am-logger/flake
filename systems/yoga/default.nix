@@ -250,6 +250,21 @@ mynixos.lib.mkSystem {
   ];
 
   extraModules = [
+    # The radicle node key lives in its OWN sops file rather than in
+    # secrets.yaml: it was minted offline and encrypted to the same three
+    # recipients (both YubiKeys + the yoga host age key) without needing the
+    # private half, so the seed could come up before secrets.yaml was edited.
+    # `format = "binary"` because the file IS the key -- there is no document
+    # structure to address a value inside. Fold it into secrets.yaml later and
+    # this block goes away.
+    ({ ... }: {
+      sops.secrets."radicle/node-key" = {
+        sopsFile = "${secrets}/radicle.json";
+        format = "binary";
+        key = "";
+      };
+    })
+
     (
       _:
       {

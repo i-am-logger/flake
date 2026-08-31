@@ -104,12 +104,15 @@
     # sit in the shared profile: aether5d-dev refuses to evaluate at all.
     apps.graphical.network.rustdesk.enable = true;
 
-    # Radicle user node: outbound-only daemon dialing the yoga seed, dormant
-    # until `rad auth` has run on the machine. Uncomment once the seed is up
-    # (systems/yoga/radicle.nix carries the runbook) and its NID is known:
+    # Radicle user node: outbound-only daemon dialing the yoga seed. Dormant
+    # until `rad auth` has run on the machine (ConditionPathExists on the
+    # key), so this is safe on a host that has not been bootstrapped yet.
+    # Enabling it also pins ~/.radicle/config.json to the private-net shape --
+    # `rad auth` writes the PUBLIC iris/rosa seeds into preferredSeeds, which
+    # is exactly what must not survive here. Turn on with GATE A.
     # apps.dev.tools.radicle.node = {
     #   enable = true;
-    #   connect = [ "<seedNID>@yoga.tail46cce1.ts.net:8776" ];
+    #   connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
     # };
 
     graphical = {

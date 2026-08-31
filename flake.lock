@@ -685,8 +685,8 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1765144506,
-        "narHash": "sha256-HPGl9ovd7lhqXLmfj2b95oYQBTwq29OXkD+yjYHZchQ=",
+        "lastModified": 1788212073,
+        "narHash": "sha256-mXBuzaiVRYqbiiu2qD3A+/xDi6EnG2SYtR4tx1JuGaQ=",
         "path": "/home/logger/.secrets/",
         "type": "path"
       },

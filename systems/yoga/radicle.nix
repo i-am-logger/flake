@@ -38,9 +38,11 @@
 # Step 4 (the darwin builder) is independent and can land any time after A.
 {
   infra.radicle = {
-    enable = false; # GATE A — node + httpd (needs runbook step 1)
+    enable = true; # GATE A OPEN — node + httpd (seed key minted 2026-08-31)
 
-    publicKey = ""; # TODO(runbook 1): seed key .pub content, comment stripped
+    # Minted 2026-08-31 (offline, temp RAD_HOME, shredded). Comment stripped,
+    # as services.radicle requires. NID: z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKNS4xxQKGXWZ78kgQchx4K1937BhcrevMBZv8BK2DKs";
 
     node = {
       # Advertised inside the tailnet only; workstations still dial by their
@@ -57,14 +59,19 @@
     ci = {
       enable = false; # GATE B — needs trustedNids below
       trustedNids = [
-        # TODO(runbook 2): personal machine NIDs — NEVER anything else; a
-        # listed NID's pushes execute repo-supplied shell on this host.
+        # Personal machine NIDs ONLY — a listed NID's pushes execute
+        # repo-supplied shell on this host. Add skyspy-dev's after `rad auth`
+        # there; the Mac has no node, so it never needs an entry.
+        "z6MkizPqxsNyqociVNMF4SnWCwDWFZ9udxkcejuagyR5CuZU" # logger@yoga
       ];
     };
 
     mirror = {
       enable = false; # GATE C — needs sourceNid + at least one repo below
-      sourceNid = ""; # TODO(runbook 2): whose signed view is truth (main NID)
+      # Whose signed view is mirrored: storage keeps only the canonical
+      # default branch at top level, so the delegate namespace is the only
+      # view carrying every branch and tag.
+      sourceNid = "z6MkizPqxsNyqociVNMF4SnWCwDWFZ9udxkcejuagyR5CuZU"; # logger@yoga
       repos = [
         # One entry per public projection, added as repos are rad-init'ed:
         # { rid = "rad:z…"; githubRepo = "i-am-logger/<repo>";
