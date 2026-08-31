@@ -52,6 +52,11 @@
     # per-user daemon is Linux-only and sits in the linux tier below.
     dev.tools.radicle.enable = true;
 
+    # Cross-repo tooling: the babysitter CLI is a Claude Code plugin
+    # dependency, so it belongs in the profile rather than in any one repo's
+    # dev shell -- that is what makes it work from every checkout.
+    ai.tools.babysitter.enable = true;
+
     # Written https:// rather than git@ on purpose: apps.dev.tools.git.protocol
     # is what decides the transport, and an ssh:// literal would bypass it and
     # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite
