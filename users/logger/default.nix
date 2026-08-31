@@ -47,6 +47,11 @@
   apps = {
     security.passwords.onePassword.enable = true;
 
+    # Radicle CLI (rad, git-remote-rad) on every machine, the Mac included —
+    # the identity lives in ~/.radicle (persisted by the app option). The
+    # per-user daemon is Linux-only and sits in the linux tier below.
+    dev.tools.radicle.enable = true;
+
     # Written https:// rather than git@ on purpose: apps.dev.tools.git.protocol
     # is what decides the transport, and an ssh:// literal would bypass it and
     # fail on any host without a forge-accepted SSH key. The ssh hosts rewrite
@@ -88,10 +93,19 @@
     avatar = ./avatar.png;
 
     input.accelSpeed = -0.3; # libinput scale: 0.0 is the device default, not "off"
+    input.keyboardLayouts = [ "us" "il" ]; # EN/HE — the HUD's kbd chip cycles these
 
     # Upstream marks rustdesk badPlatforms = [ "aarch64-darwin" ], so it cannot
     # sit in the shared profile: aether5d-dev refuses to evaluate at all.
     apps.graphical.network.rustdesk.enable = true;
+
+    # Radicle user node: outbound-only daemon dialing the yoga seed, dormant
+    # until `rad auth` has run on the machine. Uncomment once the seed is up
+    # (systems/yoga/radicle.nix carries the runbook) and its NID is known:
+    # apps.dev.tools.radicle.node = {
+    #   enable = true;
+    #   connect = [ "<seedNID>@yoga.tail46cce1.ts.net:8776" ];
+    # };
 
     graphical = {
       streaming.enable = true; # OBS

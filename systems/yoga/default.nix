@@ -94,10 +94,15 @@ mynixos.lib.mkSystem {
         enable = true;
         xdg.enable = true;
 
-        # Login: the vogix theming default — SDDM with the vogix QML greeter
-        # under a Hyprland Lua compositor (my.environment.login = sddm/vogix).
-        # greetd+tuigreet stays one line away (login.backend = "greetd") and
-        # as the login-minimal boot entry below for the first week.
+        # Login: greetd+tuigreet (text). The vogix SDDM greeter is parked: its
+        # teardown races the user session's modeset on this host's amdgpu
+        # CRTC-disable path (chronic optc31_disable_crtc timeout) and freezes
+        # the display most logins. Restore backend = "sddm" / look = "vogix"
+        # once that race is fixed.
+        login = {
+          backend = "greetd";
+          look = "stock";
+        };
 
         motd = {
           enable = true;
@@ -237,6 +242,11 @@ mynixos.lib.mkSystem {
       # deleting this line (hyprlang is still the mynixos default).
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
     }
+
+    # Third layer: the Radicle forge (seed + CI + GitHub mirror). Its own file
+    # because it ships behind a bootstrap gate with a key-minting runbook in
+    # its header — see mynixos docs/radicle.md for the full design.
+    (import ./radicle.nix)
   ];
 
   extraModules = [
@@ -323,18 +333,19 @@ mynixos.lib.mkSystem {
     #      path would stall through a jammed KIQ and force a fence-killing
     #      MODE2. A live culprit is reset by vmid at its source; full reset
     #      stays the last resort.
-    # Login must never brick: a boot entry with the text greeter
-    # (greetd+tuigreet) while the vogix SDDM greeter proves itself on this
-    # host. Select "login-minimal" at the bootloader; remove after a week
-    # of clean SDDM logins.
-    {
-      specialisation.login-minimal.configuration = {
+    # Login must never brick: greetd is the default; this boot entry brings
+    # the vogix SDDM greeter back for testing the amdgpu CRTC handoff race.
+    # Make it the default again once that race is fixed.
+    ({ lib, ... }: {
+      # mkForce: a specialisation merges with the base config, and the base
+      # now pins greetd/stock at normal priority.
+      specialisation.login-vogix.configuration = {
         my.environment.login = {
-          backend = "greetd";
-          look = "stock";
+          backend = lib.mkForce "sddm";
+          look = lib.mkForce "vogix";
         };
       };
-    }
+    })
 
     # The unpatched kernel stays the default; select the "amdgpu-vm-tlb-test"
     # entry at the bootloader to run the patched kernel. Remove once validated.

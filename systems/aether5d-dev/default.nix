@@ -60,6 +60,19 @@ mynixos.lib.mkSystem {
     # does the same job with plain launchd daemons, which have no such gating.
     nixGc.enable = true;
 
+    # Accept remote nix builds from the Linux hosts: this Mac is the fleet's
+    # aarch64-darwin builder for Radicle CI and releases (radicle CI itself
+    # cannot run on macOS — see mynixos docs/radicle.md). A locked-down
+    # `nixremote` account whose ssh key is forced to `nix-daemon --stdio`;
+    # sshd is already pf-scoped to the tailnet below. BOOTSTRAP GATE: flip
+    # after minting the builder key (runbook step 4 in systems/yoga/radicle.nix)
+    # and pasting its PUBLIC half here; then restart the daemon once:
+    #   sudo launchctl kickstart -k system/org.nixos.nix-daemon
+    dev.builderHost = {
+      enable = false; # BOOTSTRAP GATE
+      authorizedKey = ""; # TODO: public half of nix/remote-builder-key
+    };
+
     # Remote Login, reachable ONLY over Tailscale. sshd_config's ListenAddress
     # does nothing on macOS because launchd owns the socket, so pf is what
     # actually scopes it.

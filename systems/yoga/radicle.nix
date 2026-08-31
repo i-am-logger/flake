@@ -1,0 +1,85 @@
+# Radicle forge layer for yoga — the fleet's seed, CI and GitHub-mirror host.
+# Full design and runbook: mynixos docs/radicle.md.
+#
+# BOOTSTRAP GATE. Everything below is inert until `infra.radicle.enable` flips
+# to true, and flipping it needs the key material only a human can mint:
+#
+#   1. Seed machine key (offline, never against the real /var/lib/radicle):
+#        export RAD_HOME=$(mktemp -d) RAD_PASSPHRASE=
+#        rad auth --alias seed-yoga
+#        rad self --nid                 # -> seedNid below, and every connect list
+#        cat $RAD_HOME/keys/radicle.pub # -> publicKey below (STRIP the comment)
+#      Private key file content -> ~/.secrets/secrets.yaml under radicle/node-key,
+#      then rm -rf $RAD_HOME.
+#   2. Personal identity on each machine (passphrase-less; the disks are
+#      encrypted): rad auth, then `rad self --nid`. Your own machines' NIDs
+#      fill ci.trustedNids and mirror.sourceNid. The SEED's NID from step 1 --
+#      not these -- is what the per-user node.connect in users/logger (linux
+#      tier) points at.
+#   3. GitHub fine-grained PAT (Contents: RW on exactly the mirrored repos)
+#      -> secrets.yaml under radicle/github-token. Mirror repos are added
+#      per-RID after `rad init`.
+#   4. Darwin builder key: ssh-keygen -t ed25519 -N "" -f builder_ed25519;
+#      private half -> secrets.yaml under nix/remote-builder-key; public half
+#      -> my.dev.builderHost.authorizedKey on aether5d-dev. Then uncomment
+#      dev.remoteBuilders below (declaring it earlier would make sops fail
+#      activation on the missing secret).
+#
+# FLIP IN THREE STAGES, not one — the module asserts that each role has its
+# inputs, so turning everything on at once fails the build by design:
+#   A. after step 1: infra.radicle.enable = true (node + httpd only).
+#      Verify, then run the no-egress proof from docs/radicle.md.
+#   B. after step 2: fill ci.trustedNids, then ci.enable = true
+#      (asserted non-empty: an empty filter would let anyone's patch run
+#      shell on this host).
+#   C. after step 3 AND a first `rad init`: fill mirror.sourceNid and at
+#      least one mirror.repos entry, then mirror.enable = true
+#      (asserted non-empty — there are no RIDs to mirror before rad init).
+# Step 4 (the darwin builder) is independent and can land any time after A.
+{
+  infra.radicle = {
+    enable = false; # GATE A — node + httpd (needs runbook step 1)
+
+    publicKey = ""; # TODO(runbook 1): seed key .pub content, comment stripped
+
+    node = {
+      # Advertised inside the tailnet only; workstations still dial by their
+      # own static connect lists.
+      externalAddresses = [ "yoga.tail46cce1.ts.net:8776" ];
+      # The fleet seed carries everything ours; workstations keep the
+      # default "block".
+      defaultSeedingPolicy = "allow";
+    };
+
+    # Web view on http://yoga.tail46cce1.ts.net:8780 (tailscale0-only).
+    httpd.enable = true;
+
+    ci = {
+      enable = false; # GATE B — needs trustedNids below
+      trustedNids = [
+        # TODO(runbook 2): personal machine NIDs — NEVER anything else; a
+        # listed NID's pushes execute repo-supplied shell on this host.
+      ];
+    };
+
+    mirror = {
+      enable = false; # GATE C — needs sourceNid + at least one repo below
+      sourceNid = ""; # TODO(runbook 2): whose signed view is truth (main NID)
+      repos = [
+        # One entry per public projection, added as repos are rad-init'ed:
+        # { rid = "rad:z…"; githubRepo = "i-am-logger/<repo>";
+        #   releases = { enable = true;
+        #                systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]; }; }
+      ];
+    };
+  };
+
+  # TODO(runbook 4): uncomment once nix/remote-builder-key exists in sops —
+  # the aarch64-darwin leg of CI and releases. hostName and the pinned host
+  # key are real (captured 2026-08-31); only the secret is missing.
+  # dev.remoteBuilders = [{
+  #   hostName = "aether5d-dev.tail46cce1.ts.net";
+  #   systems = [ "aarch64-darwin" ];
+  #   publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUk3Szh2eGsreldlNnM3SitRV3FVTkFYUHFoRFFnTHBNTWhxQ0l3dkhtQ00=";
+  # }];
+}
