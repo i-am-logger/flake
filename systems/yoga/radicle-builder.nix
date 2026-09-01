@@ -53,6 +53,15 @@ let
   stateDir = "/var/lib/radicle-roles/${name}";
   forgeUser = "radicle-forge";
 
+  # The image tag, defined ONCE because it is named in two places that must
+  # agree: the role builds the image with it, and the container asks podman for
+  # it by name. `my.system.ociImage.tag` defaults to "reference" on purpose --
+  # that marks the flake.s reference fleet, built for keys whose private halves
+  # were destroyed, and its own description says a real deployment sets this.
+  # Naming the host is what distinguishes THIS deployment.s image from another
+  # host.s image of the same role, since the repository half is the role name.
+  imageTag = "yoga";
+
   # The role, instantiated with THIS fleet's identity. Not the flake's
   # `packages.*` reference images -- those are built for keys whose private
   # halves were destroyed and are tagged `reference` so they cannot be mistaken
@@ -76,6 +85,7 @@ let
     # advertises nothing and needs no inbound reachability at all.
     connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
 
+    my = [{ system.ociImage.tag = imageTag; }];
   };
 in
 {
@@ -143,7 +153,11 @@ in
         # The image is streamed straight from the role -- no registry, no
         # tarball in the store.
         imageStream = role.config.system.build.image;
-        image = "${name}:latest";
+        # `localhost/` is NOT decoration: podman refuses an unqualified short name
+        # ("did not resolve to an alias and no unqualified-search registries are
+        # defined"), and it would be wrong to define a search registry for an
+        # image that is loaded locally and must never be fetched.
+        image = "localhost/${name}:${imageTag}";
 
         podman.user = forgeUser;
 
