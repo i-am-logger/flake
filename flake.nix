@@ -9,11 +9,6 @@
     mynixos = {
       url = "github:i-am-logger/mynixos";
     };
-    # Personal secrets (not managed by mynixos)
-    secrets = {
-      url = "/home/logger/.secrets/";
-      flake = false;
-    };
     # Claude Desktop for Linux (unofficial community port)
     claude-desktop = {
       url = "github:k3d3/claude-desktop-linux-flake";
@@ -40,7 +35,6 @@
   outputs =
     { self
     , mynixos
-    , secrets
     , yoga-kernel
     , openrgb-src
     , ...
@@ -61,10 +55,10 @@
 
       nixosConfigurations = {
         yoga = import ./systems/yoga {
-          inherit mynixos secrets yoga-kernel openrgb-src;
+          inherit mynixos yoga-kernel openrgb-src;
           claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
         };
-        skyspy-dev = import ./systems/skyspy-dev { inherit mynixos secrets; };
+        skyspy-dev = import ./systems/skyspy-dev { inherit mynixos; };
 
         # TODO: move to mynixos Installer ISO
         installer-iso = lib.nixosSystem {
@@ -74,8 +68,7 @@
         };
       };
 
-      # macOS hosts. Note `secrets` is deliberately not threaded in here — that
-      # input points at a Linux-only path and is never forced by this config.
+      # macOS hosts.
       darwinConfigurations = {
         "aether5d-dev" = import ./systems/aether5d-dev { inherit mynixos; };
       };

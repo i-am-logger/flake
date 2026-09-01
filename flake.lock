@@ -656,7 +656,6 @@
         "claude-desktop": "claude-desktop",
         "mynixos": "mynixos",
         "openrgb-src": "openrgb-src",
-        "secrets": "secrets",
         "yoga-kernel": "yoga-kernel"
       }
     },
@@ -680,19 +679,6 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
-      }
-    },
-    "secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1788212073,
-        "narHash": "sha256-mXBuzaiVRYqbiiu2qD3A+/xDi6EnG2SYtR4tx1JuGaQ=",
-        "path": "/home/logger/.secrets/",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/logger/.secrets/",
-        "type": "path"
       }
     },
     "sops-nix": {

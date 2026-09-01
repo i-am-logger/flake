@@ -1,5 +1,4 @@
 { mynixos
-, secrets
 , claude-desktop ? null
 , yoga-kernel
 , openrgb-src
@@ -126,13 +125,26 @@ mynixos.lib.mkSystem {
         nopasswdRebuild = true;
       };
 
-      # Secrets management via sops-nix
-      # Encrypted secrets stored in ~/.secrets/secrets.yaml (private, not in public repo)
-      # Decrypted at activation using host-specific age key (GPG/YubiKey used for encryption only)
-      # Age key must be at runtime path (not nix store) - copy from ~/.secrets/hosts/yoga/age-key.txt
+      # Secrets management via sops-nix.
+      #
+      # NOTHING HERE MAY BE A STORE PATH -- not the age key, and not the
+      # encrypted files it decrypts. /nix/store is world-readable and
+      # permanent, so a secret placed there is published to every process on
+      # this host and cannot be withdrawn.
+      #
+      # This used to read `"${secrets}/secrets.yaml"`, interpolating the
+      # ~/.secrets flake input. That copies the whole DIRECTORY into the store,
+      # not the one file named -- which is how the seed's plaintext node key,
+      # an empty .enc and a stray root-owned `result` symlink all ended up
+      # world-readable in two store paths, with nothing in this file naming
+      # them. my.secrets.allowSecretsInStore now refuses that shape outright.
+      #
+      # These are runtime paths on /persist, populated out of band. Decryption
+      # happens at activation with the host age key; the YubiKeys are used for
+      # encryption only.
       secrets = {
         enable = true;
-        defaultSopsFile = "${secrets}/secrets.yaml";
+        defaultSopsFile = "/persist/etc/sops/secrets.yaml";
         ageKeyFile = "/persist/etc/sops-age-keys.txt";
       };
 
@@ -274,7 +286,7 @@ mynixos.lib.mkSystem {
     # this block goes away.
     ({ ... }: {
       sops.secrets."radicle/node-key" = {
-        sopsFile = "${secrets}/radicle.json";
+        sopsFile = "/persist/etc/sops/radicle.json";
         format = "binary";
         key = "";
       };
