@@ -88,7 +88,10 @@
       # build.gradle.kts, JDK 25). All the builder needs is devenv itself --
       # the toolchain is then realised into the nix store once and reused by
       # every later run, rather than installed per build.
-      adapters.native.extraRuntimePackages = [ pkgs.devenv ];
+      #
+      # devenv itself is added in default.nix's extraModules, not here: a `my`
+      # layer is a plain attribute set (mk-system-core.nix removeAttrs-es it),
+      # so it receives no module arguments and `pkgs` is not in scope.
 
       trustedNids = [
         # Personal machine NIDs ONLY — a listed NID's pushes execute

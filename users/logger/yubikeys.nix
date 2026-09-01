@@ -15,6 +15,7 @@
   {
     serial = "17027658";
     keyId = "9D92E6047DEB1589";
+    primary = true; # static gpg default-key; gpg-smart still picks by inserted card
     fingerprint = "3DAEA4C9D37037434CE604799D92E6047DEB1589";
     sshKeygrip = "90687F2920871E0132190BE0142A24C3D3A9090F";
     sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHdaxx47ETxaPhP/gqPKfkajPGBJcMNjbsfZ0URABBpY";

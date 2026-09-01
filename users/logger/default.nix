@@ -35,7 +35,7 @@
   };
   dev = {
     enable = true;
-    docker.enable = true;
+    containers.enable = true;
   };
   ai.enable = true;
 

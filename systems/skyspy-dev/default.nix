@@ -67,7 +67,7 @@ mynixos.lib.mkSystem {
       };
 
       # Infrastructure configuration
-      # - docker: Auto-enabled by user dev feature
+      # - containers: Rootless podman, auto-enabled by user dev feature
       # - k3s: Disabled on laptop
       # - github-runner: Disabled
       # Note: direnv and vscode are now per-user apps (my.users.<name>.apps.dev)

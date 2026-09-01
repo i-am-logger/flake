@@ -137,7 +137,7 @@ mynixos.lib.mkSystem {
       };
 
       # Infrastructure: System-level services and infrastructure
-      # - docker: Rootless containerization (auto-enabled by user dev feature)
+      # - containers: Rootless podman (auto-enabled by user dev feature)
       # - binfmt: Cross-platform emulation (ARM, AppImage)
       # - k3s: Kubernetes cluster infrastructure
       # - github-runner: Self-hosted Actions runners on k3s
@@ -250,6 +250,15 @@ mynixos.lib.mkSystem {
   ];
 
   extraModules = [
+    # devenv for the radicle CI adapter. It lives here rather than beside the
+    # rest of the forge config in radicle.nix because a `my` layer is a plain
+    # attribute set -- mk-system-core.nix does removeAttrs on it -- so a layer
+    # gets no module arguments and cannot name `pkgs`. extraModules entries are
+    # real modules and do.
+    ({ pkgs, ... }: {
+      my.infra.radicle.ci.adapters.native.extraRuntimePackages = [ pkgs.devenv ];
+    })
+
     # The radicle node key lives in its OWN sops file rather than in
     # secrets.yaml: it was minted offline and encrypted to the same three
     # recipients (both YubiKeys + the yoga host age key) without needing the
