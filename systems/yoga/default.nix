@@ -250,6 +250,12 @@ mynixos.lib.mkSystem {
   ];
 
   extraModules = [
+    # The radicle CI builder as a container role. A real module rather than a
+    # `my` layer because it writes virtualisation.oci-containers and needs
+    # `self` to instantiate the role with this fleet's own key. Inert behind its
+    # own gate until that key is minted -- see the file's header.
+    ./radicle-builder.nix
+
     # devenv for the radicle CI adapter. It lives here rather than beside the
     # rest of the forge config in radicle.nix because a `my` layer is a plain
     # attribute set -- mk-system-core.nix does removeAttrs on it -- so a layer
