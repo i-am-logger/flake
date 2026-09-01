@@ -43,7 +43,9 @@
 { config, lib, pkgs, self, ... }:
 
 let
-  enable = false; # GATE SHUT -- needs the two keys above
+  # GATE OPEN 2026-09-01. The identity is installed at /var/lib/radicle-identity
+  # (0400, uid/gid 989); the tailnet node authenticates once, interactively.
+  enable = true;
 
   lane = "x64";
   name = "radicle-${lane}-builder";
@@ -59,11 +61,11 @@ let
     system = "x86_64-linux";
     inherit lane identityDir;
 
-    # Minted 2026-09-01 for this host. NID z6Mkqfe9hRoi8VyyEZ2GMADdA7BBpxYg59zwVzeFRZ8x8kni.
+    # Minted 2026-09-01 for this host. NID z6MkmxuVjqGZx3pCC8NUmNMofbJMzEygpX8aZC2fs6SXQ6fb.
     # Disposable by design: if a CI recipe ever walks off with it, mint another
     # and the fleet is unaffected -- that property is the whole reason a builder
     # does not borrow the seed's key.
-    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKachTqXzoVtVH9Wxb/TWjJWdnxPZkKbtaitFTJbPNRP";
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
 
     # The delegates whose pushes may trigger CI. The builder runs their shell,
     # so this list is the only thing between a hostile patch and code execution
@@ -106,6 +108,14 @@ in
     # `podman rm -f` in its pre-start, so the container IS recreated on every
     # image change.
     systemd.tmpfiles.rules = [
+      # These run AFTER the impermanence bind mounts, which is the whole point.
+      # A persisted directory starts as an EMPTY root:root backing under /persist,
+      # and it is mounted OVER whatever activation created -- so `createHome` and
+      # anything else made at activation time is shadowed, not inherited. Without
+      # a rule per directory the forge gets a home it cannot write, and rootless
+      # podman fails with `stat .../.config: no such file or directory`, which
+      # names neither the mount nor the ownership that actually caused it.
+      "d /var/lib/${forgeUser} 0700 ${forgeUser} ${forgeUser} -"
       "d ${identityDir} 0700 ${forgeUser} ${forgeUser} -"
       "d /var/lib/radicle-roles 0755 root root -"
       "d ${stateDir} 0700 ${forgeUser} ${forgeUser} -"
