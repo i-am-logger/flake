@@ -56,9 +56,11 @@ let
     system = "x86_64-linux";
     inherit lane identityDir;
 
-    # FILL FROM STEP 1. `rad self --nid` gives the NID; keys/radicle.pub gives
-    # this, comment stripped.
-    publicKey = throw "systems/yoga/radicle-builder.nix: publicKey is unset -- mint the builder key (step 1 in this file's header) before flipping `enable`";
+    # Minted 2026-09-01 for this host. NID z6Mkqfe9hRoi8VyyEZ2GMADdA7BBpxYg59zwVzeFRZ8x8kni.
+    # Disposable by design: if a CI recipe ever walks off with it, mint another
+    # and the fleet is unaffected -- that property is the whole reason a builder
+    # does not borrow the seed's key.
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKachTqXzoVtVH9Wxb/TWjJWdnxPZkKbtaitFTJbPNRP";
 
     # The delegates whose pushes may trigger CI. The builder runs their shell,
     # so this list is the only thing between a hostile patch and code execution
@@ -90,7 +92,11 @@ in
       linger = true;
       autoSubUidGidRange = true; # rootless podman maps into a subordinate range
     };
-    users.groups.${forgeUser} = { };
+    # gid pinned for the same reason as uid, plus one more: the identity files
+    # must be owned by this account BEFORE it exists, because the container that
+    # creates it is the same container that needs them. A numeric chown works;
+    # a name-based one cannot.
+    users.groups.${forgeUser} = { gid = 989; };
 
     # Directories this host owns, created before the container starts. The
     # identity dir is 0700 and holds the key material; the state dirs are what
