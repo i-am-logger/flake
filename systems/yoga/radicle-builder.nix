@@ -147,6 +147,42 @@ in
       stateDir
     ];
 
+    # The host decrypts, because the container cannot. sops-install-secrets
+    # mounts a ramfs for its secrets directory and that needs CAP_SYS_ADMIN,
+    # which a role running repository-supplied shell must not have. This host
+    # does have it, so the key is decrypted here, once, into the directory that
+    # is bind-mounted read-only into the container.
+    #
+    # The plaintext lands beside the ciphertext at 0400 owned by the forge user.
+    # It is written to a temporary name and renamed, so a reader either sees the
+    # previous key or the new one, never a half-written file.
+    systemd.services."${name}-identity" = {
+      description = "Decrypt the ${name} radicle node key";
+      # requiredBy, not wantedBy: a container that starts without its identity
+      # does not fail usefully -- radicle-node exits 243/CREDENTIALS from inside
+      # a nested boot, where the reason is three logs deep.
+      requiredBy = [ "podman-${name}.service" ];
+      before = [ "podman-${name}.service" ];
+      # After the impermanence bind mount, or this writes to a directory that is
+      # about to be hidden underneath one.
+      after = [ "systemd-tmpfiles-setup.service" ];
+      path = [ pkgs.sops ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        set -euo pipefail
+        umask 077
+        SOPS_AGE_KEY_FILE=${identityDir}/age.key \
+          sops --decrypt --extract '["radicle"]["node-key"]' \
+          ${identityDir}/secrets.yaml > ${identityDir}/.node-key.new
+        chown 989:989 ${identityDir}/.node-key.new
+        chmod 0400 ${identityDir}/.node-key.new
+        mv -f ${identityDir}/.node-key.new ${identityDir}/node-key
+      '';
+    };
+
     virtualisation.oci-containers = {
       backend = "podman";
       containers.${name} = {
@@ -189,8 +225,27 @@ in
           # SYS_ADMIN is deliberately NOT granted. A builder runs
           # repository-supplied shell; that is the whole reason it is a separate
           # role with a disposable key.
+          # systemd as PID 1 needs /run, /run/lock and the cgroup hierarchy set up
+          # as tmpfs. podman does that in "systemd mode", which it auto-enables
+          # ONLY when the command is literally /sbin/init, /usr/sbin/init,
+          # /usr/local/sbin/init or systemd. A NixOS toplevel is a store path
+          # ending in /init, which matches none of them -- so it must be forced.
+          # Without it systemd execs and dies instantly, printing nothing, which
+          # reads as an image problem and is not one.
+          "--systemd=always"
+
           "--security-opt=no-new-privileges"
-          "--userns=auto" # a distinct range per container, so builders are isolated from each other too
+          # NO --userns=auto. It allocates a FRESH uid range per container, so the
+          # host uid that owns the identity files is not mapped inside -- the
+          # 0400 bind mount then reads as an unmapped owner and sops-install-secrets
+          # fails with `permission denied`, which looks like a mode problem and is
+          # not one. Plain rootless podman maps this host user to container root,
+          # which is what makes a read-only 0400 mount readable at all.
+          #
+          # The isolation it was reaching for belongs at a different seam: one
+          # forge USER per builder, which separates storage, subuid range and
+          # control surface by construction. With a single builder there is
+          # nothing yet to isolate from.
 
           # A CI recipe can fork-bomb or exhaust memory. Nothing else here
           # addresses denial of service against yoga itself.
