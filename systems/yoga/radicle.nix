@@ -53,11 +53,43 @@
       defaultSeedingPolicy = "allow";
     };
 
-    # Web view on http://yoga.tail46cce1.ts.net:8780 (tailscale0-only).
-    httpd.enable = true;
+    # The API (8780) plus the browsable explorer UI (8781), both tailnet-only.
+    # httpd alone answers JSON on every path -- the explorer is the actual
+    # forge you can read, served from this host so no third-party JavaScript
+    # ever touches the repositories.
+    httpd = {
+      enable = true;
+      explorer = {
+        enable = true;
+        # Baked into the SPA and fetched by the BROWSER, so it must be a name
+        # the browser resolves -- the MagicDNS name, not localhost.
+        seedHostname = "yoga.tail46cce1.ts.net";
+        # Served through `tailscale serve`, which terminates TLS with the
+        # tailnet's own certificate -- so https://yoga.tail46cce1.ts.net/ is a
+        # real secure context rather than a browser warning. Same mechanism
+        # already used for the praxis dev server on 1989.
+        scheme = "https";
+        externalPort = 443;
+        # The explorer builds gravatar.com URLs from committer emails; the
+        # module rewrites that to this host so the browser never calls out.
+        # Keyed on the address that appears in COMMITS.
+        avatars = {
+          default = ../../users/logger/avatar.png;
+          byEmail."i-am-logger@users.noreply.github.com" = ../../users/logger/avatar.png;
+        };
+      };
+    };
 
     ci = {
-      enable = false; # GATE B — needs trustedNids below
+      enable = true; # GATE B OPEN — trustedNids filled below
+      # The Android toolchain deliberately does NOT live in mynixos, and not
+      # in this host config either: it is defined by the repo being built
+      # (SecureSweep/devenv.nix pins SDK 35/36, NDK 26.1.10909125 to match
+      # build.gradle.kts, JDK 25). All the builder needs is devenv itself --
+      # the toolchain is then realised into the nix store once and reused by
+      # every later run, rather than installed per build.
+      adapters.native.extraRuntimePackages = [ pkgs.devenv ];
+
       trustedNids = [
         # Personal machine NIDs ONLY — a listed NID's pushes execute
         # repo-supplied shell on this host. Add skyspy-dev's after `rad auth`

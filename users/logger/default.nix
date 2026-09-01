@@ -50,7 +50,15 @@
     # Radicle CLI (rad, git-remote-rad) on every machine, the Mac included —
     # the identity lives in ~/.radicle (persisted by the app option). The
     # per-user daemon is Linux-only and sits in the linux tier below.
-    dev.tools.radicle.enable = true;
+    dev.tools.radicle = {
+      enable = true;
+      # The web explorer is a PUBLIC gateway -- it 404s private repos, and
+      # most of ours are private. These read the local node directly, so they
+      # are what actually browses a private repo.
+      tui = true;
+      desktop = true;
+      job = true; # rad-job: the only way to read CI results
+    };
 
     # Cross-repo tooling: the babysitter CLI is a Claude Code plugin
     # dependency, so it belongs in the profile rather than in any one repo's
@@ -110,10 +118,10 @@
     # Enabling it also pins ~/.radicle/config.json to the private-net shape --
     # `rad auth` writes the PUBLIC iris/rosa seeds into preferredSeeds, which
     # is exactly what must not survive here. Turn on with GATE A.
-    # apps.dev.tools.radicle.node = {
-    #   enable = true;
-    #   connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
-    # };
+    apps.dev.tools.radicle.node = {
+      enable = true;
+      connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
+    };
 
     graphical = {
       streaming.enable = true; # OBS
