@@ -15,9 +15,12 @@
 #        # private half -> /var/lib/radicle-identity/ (see below), then
 #        rm -rf $RAD_HOME
 #
-#   2. A tailscale auth key -- ephemeral, pre-authorised, and TAGGED
-#      (tag:radicle-builder). my.network.tailscale asserts that an untagged key
-#      fails registration, so this is not optional.
+#   2. NOTHING. The tailnet node is authenticated the way every other machine
+#      on this fleet is -- interactively, once. yoga and aether5d-dev carry no
+#      auth key either. `tailscaleAuthKeyFile` is left null, which the role
+#      documents as "leaves the node to a manual `tailscale up`", and the
+#      registration then PERSISTS (see the tailscale volume below), so this is
+#      a one-time step rather than a per-rebuild one.
 #
 # WHERE THE KEYS GO, AND WHY NOT ~/.secrets.
 #
@@ -71,7 +74,6 @@ let
     # advertises nothing and needs no inbound reachability at all.
     connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
 
-    tailscaleAuthKeyFile = "${identityDir}/tailscale.key";
   };
 in
 {
@@ -109,6 +111,7 @@ in
       "d ${stateDir} 0700 ${forgeUser} ${forgeUser} -"
       "d ${stateDir}/radicle 0700 ${forgeUser} ${forgeUser} -"
       "d ${stateDir}/radicle-ci 0700 ${forgeUser} ${forgeUser} -"
+      "d ${stateDir}/tailscale 0700 ${forgeUser} ${forgeUser} -"
     ];
 
     # Persistence is stated HERE, not inherited from my/dev/development. That
@@ -138,6 +141,13 @@ in
           "${identityDir}:${identityDir}:ro"
           "${stateDir}/radicle:/var/lib/radicle"
           "${stateDir}/radicle-ci:/var/lib/radicle-ci"
+
+          # The tailnet identity. NOT optional: oci-containers runs `podman rm -f`
+          # in its pre-start, so the container is destroyed on every image change
+          # -- and on nixos-unstable the image moves whenever the closure does.
+          # Unpersisted, the node would have to be re-authenticated by hand after
+          # every rebuild, and would leave a trail of dead nodes in the tailnet.
+          "${stateDir}/tailscale:/var/lib/tailscale"
         ];
 
         extraOptions = [
