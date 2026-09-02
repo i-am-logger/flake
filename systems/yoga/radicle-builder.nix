@@ -109,6 +109,7 @@ let
       # only what this node follows.
       infra.radicle.seedRepositories = [
         { rid = "rad:z2WxYCuLx8F8r2bPLPNjjboGM7qPU"; scope = "all"; } # secure-sweep-mobile
+        { rid = "rad:z4KpNmJDpSD4xYHcsASaWa9y3AKTd"; scope = "all"; } # radicle-ci-smoke
       ];
     }];
   };
@@ -154,11 +155,29 @@ in
       # podman fails with `stat .../.config: no such file or directory`, which
       # names neither the mount nor the ownership that actually caused it.
       "d /var/lib/${forgeUser} 0700 ${forgeUser} ${forgeUser} -"
-      "d ${identityDir} 0700 ${forgeUser} ${forgeUser} -"
+      # 0711, not 0700: TRAVERSABLE but not listable. radicle-node reads the
+      # key as User=radicle inside the container, and this host's forge uid
+      # maps to container root -- so a 0700 directory blocks it at the PATH
+      # even when the file itself is readable. That failure is indistinguishable
+      # from a bad file mode: both are `Permission denied` on the same open().
+      #
+      # 0711 lets a process that already knows the filename reach it and
+      # nothing else: age.key and secrets.yaml stay 0400, so they remain
+      # unreadable to everyone but the owner. Only node-key is 0444, and only
+      # deliberately.
+      "d ${identityDir} 0711 ${forgeUser} ${forgeUser} -"
       "d /var/lib/radicle-roles 0755 root root -"
       "d ${stateDir} 0700 ${forgeUser} ${forgeUser} -"
-      "d ${stateDir}/radicle 0700 ${forgeUser} ${forgeUser} -"
-      "d ${stateDir}/radicle-ci 0700 ${forgeUser} ${forgeUser} -"
+      # These two exist only so podman has something to bind. Ownership is
+      # deliberately left alone (`-`): the CONTAINER manages them through
+      # systemd StateDirectory, which chowns them to its own radicle user.
+      # Forcing them to the forge user here would set them to container ROOT,
+      # and radicle-node -- which runs as User=radicle after dropping
+      # privileges -- would lose access to its own state. That is precisely
+      # how it failed: `Unlocking node keystore.. Permission denied`, which
+      # names the key rather than the state directory the error came from.
+      "d ${stateDir}/radicle 0700 - - -"
+      "d ${stateDir}/radicle-ci 0700 - - -"
       "d ${stateDir}/tailscale 0700 ${forgeUser} ${forgeUser} -"
 
       # `d` creates a directory and owns THE DIRECTORY. It does not touch what
@@ -169,10 +188,25 @@ in
       #
       # `Z` adjusts ownership RECURSIVELY. Mode is `-` deliberately: these trees
       # hold podman's storage and a mode applied recursively would make every
-      # regular file 0700. Ownership follows the account by NAME on every boot,
-      # so a future uid change heals itself instead of needing a chown by hand.
+      # ONLY the forge user's own tree. This is podman's storage, which really
+      # does belong to that account on this host, so owning it recursively is
+      # right and heals a uid change.
       "Z /var/lib/${forgeUser} - ${forgeUser} ${forgeUser} -"
-      "Z ${stateDir} - ${forgeUser} ${forgeUser} -"
+
+      # NOT the state volume. Its contents belong to the CONTAINER's users, which
+      # rootless podman maps into a subordinate uid range -- they are not this
+      # host's account wearing a different hat. Chowning them to the forge user
+      # makes them appear as root INSIDE the container, and radicle-node reads
+      # its keystore after dropping to User=radicle, so it loses access to its
+      # own key:
+      #
+      #     Unlocking node keystore.. Permission denied (os error 13)
+      #
+      # It fails in the least helpful way possible: the container starts, the
+      # node crash-loops, `systemctl --failed` stays empty because a unit in
+      # auto-restart is `activating`, and the visible symptom is a closed port.
+      # A rule here also re-breaks it on every rebuild, so it reads as "the last
+      # change did this" no matter which change it was.
     ];
 
     # Persistence is stated HERE, not inherited from my/dev/development. That
@@ -228,7 +262,7 @@ in
             sops --decrypt --extract '["radicle"]["node-key"]' \
             ${identityDir}/secrets.yaml > ${identityDir}/.node-key.new
           chown ${forgeUser}:${forgeUser} ${identityDir}/.node-key.new
-          chmod 0400 ${identityDir}/.node-key.new
+          chmod 0444 ${identityDir}/.node-key.new
           mv -f ${identityDir}/.node-key.new ${identityDir}/node-key
   
           # Own the whole directory by NAME on every start. The uid is allocated by
@@ -236,7 +270,26 @@ in
           # role unable to read its own identity, and the symptom would be podman
           # complaining about .config rather than anything naming the key.
           chown -R ${forgeUser}:${forgeUser} ${identityDir}
-          chmod 0400 ${identityDir}/age.key ${identityDir}/secrets.yaml ${identityDir}/node-key
+          chmod 0400 ${identityDir}/age.key ${identityDir}/secrets.yaml
+
+          # The node key is 0444, and that is deliberate rather than sloppy.
+          #
+          # radicle-node reads its keystore AFTER dropping to User=radicle
+          # inside the container. This host's forge uid maps to container
+          # ROOT, so a 0400 file owned by it is unreadable to the very process
+          # that needs it -- `Unlocking node keystore.. Permission denied`.
+          # Upstream avoids this with LoadCredential, which cannot work here:
+          # systemd builds the credentials directory by mounting a ramfs.
+          #
+          # What 0444 widens, precisely: any process INSIDE this container can
+          # read the key. On the host nothing changes -- the directory above is
+          # 0700 and owned by the forge user, so no other host account can
+          # traverse to it. And inside the container the CI adapter could
+          # already reach this key: that is the accepted risk this role is
+          # designed around, and the reason the key is a BUILDER's and
+          # disposable rather than the seed's.
+          chmod 0444 ${identityDir}/node-key
+          chmod 0711 ${identityDir}
         '';
       };
     };
