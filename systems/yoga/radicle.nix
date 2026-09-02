@@ -81,7 +81,16 @@
     };
 
     ci = {
-      enable = true; # GATE B OPEN — trustedNids filled below
+      # RETIRED 2026-09-02: CI moved to the radicle-yoga-x64-builder container
+      # (./radicle-builder.nix). This host no longer runs repository-supplied
+      # shell beside the SEED's key, which was the whole point of the move -- a
+      # recipe that reached the key here reached the identity the whole fleet
+      # dials, not a disposable builder's.
+      #
+      # Everything below is kept rather than deleted: trustedNids and the
+      # adapter config are what a rollback needs, and `enable` is the whole of
+      # it. The builder carries its own copy of both.
+      enable = false;
       # The Android toolchain deliberately does NOT live in mynixos, and not
       # in this host config either: it is defined by the repo being built
       # (SecureSweep/devenv.nix pins SDK 35/36, NDK 26.1.10909125 to match
@@ -89,9 +98,10 @@
       # the toolchain is then realised into the nix store once and reused by
       # every later run, rather than installed per build.
       #
-      # devenv itself is added in default.nix's extraModules, not here: a `my`
-      # layer is a plain attribute set (mk-system-core.nix removeAttrs-es it),
-      # so it receives no module arguments and `pkgs` is not in scope.
+      # devenv now lives IN THE ROLE (mynixos roles/radicle/builder.nix), not in
+      # any host config. A builder's toolchain is part of what a builder is; a
+      # host supplying it would make the same role build differently depending on
+      # where it happened to run.
 
       trustedNids = [
         # Personal machine NIDs ONLY — a listed NID's pushes execute

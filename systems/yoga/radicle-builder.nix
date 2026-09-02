@@ -90,7 +90,27 @@ let
     # advertises nothing and needs no inbound reachability at all.
     connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
 
-    my = [{ system.ociImage.tag = imageTag; }];
+    my = [{
+      system.ociImage.tag = imageTag;
+
+      # The repositories this builder runs CI for, named ONE BY ONE.
+      #
+      # The broker watches its OWN node's event stream, so a repository the node
+      # does not seed produces no events and never triggers a build -- the
+      # builder would sit there looking healthy and do nothing. Seeding is what
+      # subscribes it.
+      #
+      # Explicit rather than `defaultSeedingPolicy = "allow"`: a builder has no
+      # reason to hold the fleet's refs, and every repository it seeds is one
+      # whose CI recipe it will execute. That list should be a decision, not a
+      # side effect of what happens to be announced.
+      #
+      # scope = "all" because the point is to build what OTHER peers push, not
+      # only what this node follows.
+      infra.radicle.seedRepositories = [
+        { rid = "rad:z2WxYCuLx8F8r2bPLPNjjboGM7qPU"; scope = "all"; } # secure-sweep-mobile
+      ];
+    }];
   };
 in
 {

@@ -264,18 +264,13 @@ mynixos.lib.mkSystem {
   extraModules = [
     # The radicle CI builder as a container role. A real module rather than a
     # `my` layer because it writes virtualisation.oci-containers and needs
-    # `self` to instantiate the role with this fleet's own key. Inert behind its
-    # own gate until that key is minted -- see the file's header.
+    # `self` to instantiate the role with this fleet's own key.
+    #
+    # LIVE since 2026-09-02: the builder runs, and this host's own CI broker is
+    # retired in favour of it (see radicle.nix). devenv used to be added here
+    # for the host adapter; a builder now carries its own toolchain, so the
+    # role brings it and this host needs no build tooling for the forge at all.
     ./radicle-builder.nix
-
-    # devenv for the radicle CI adapter. It lives here rather than beside the
-    # rest of the forge config in radicle.nix because a `my` layer is a plain
-    # attribute set -- mk-system-core.nix does removeAttrs on it -- so a layer
-    # gets no module arguments and cannot name `pkgs`. extraModules entries are
-    # real modules and do.
-    ({ pkgs, ... }: {
-      my.infra.radicle.ci.adapters.native.extraRuntimePackages = [ pkgs.devenv ];
-    })
 
     # The radicle node key lives in its OWN sops file rather than in
     # secrets.yaml: it was minted offline and encrypted to the same three
