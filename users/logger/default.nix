@@ -47,6 +47,11 @@
   apps = {
     security.passwords.onePassword.enable = true;
 
+    # yoga alone, because forwarding hands the far end a socket that signs with
+    # this machine's key. yoga sets my.security.sshAgentSudo, so sudo there is
+    # answered by the YubiKey at THIS end and the server needs no key of its own.
+    terminal.network.ssh.forwardAgentHosts = [ "yoga" ];
+
     # Radicle CLI (rad, git-remote-rad) on every machine, the Mac included —
     # the identity lives in ~/.radicle (persisted by the app option). The
     # per-user daemon is Linux-only and sits in the linux tier below.

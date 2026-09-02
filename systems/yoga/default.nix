@@ -123,6 +123,11 @@ mynixos.lib.mkSystem {
         tpm.enable = false;
         auditRules.enable = true;
         nopasswdRebuild = true;
+
+        # Headless sudo: authenticate against the operator's forwarded SSH
+        # agent, so the YubiKey answering for sudo is the one in the laptop at
+        # the other end of the connection. pam_u2f stays for the local console.
+        sshAgentSudo = true;
       };
 
       # Secrets management via sops-nix.
