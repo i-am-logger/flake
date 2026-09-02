@@ -44,11 +44,16 @@
 
 let
   # GATE OPEN 2026-09-01. The identity is installed at /var/lib/radicle-identity
-  # (0400, uid/gid 989); the tailnet node authenticates once, interactively.
+  # (0400, owned by the forge user); the tailnet node authenticates once,
+  # interactively.
   enable = true;
 
   lane = "x64";
-  name = "radicle-${lane}-builder";
+  # The host is in the name because a tailnet name must be unique FLEET-wide and
+  # tailscale does not reject a collision -- it silently appends -1, so two
+  # hosts. builders become indistinguishable in the one place you would look to
+  # tell them apart.
+  name = "radicle-yoga-${lane}-builder";
   identityDir = "/var/lib/radicle-identity";
   stateDir = "/var/lib/radicle-roles/${name}";
   forgeUser = "radicle-forge";
@@ -68,7 +73,7 @@ let
   # for a deployment.
   role = self.lib.roles.radicle.builder {
     system = "x86_64-linux";
-    inherit lane identityDir;
+    inherit lane identityDir name;
 
     # Minted 2026-09-01 for this host. NID z6MkmxuVjqGZx3pCC8NUmNMofbJMzEygpX8aZC2fs6SXQ6fb.
     # Disposable by design: if a CI recipe ever walks off with it, mint another
@@ -100,17 +105,20 @@ in
     users.users.${forgeUser} = {
       isSystemUser = true;
       group = forgeUser;
-      uid = 989; # static: sdnotify=healthy needs a known uid
+      # NO STATIC uid. Let NixOS allocate one -- it knows what is already
+      # taken, and a hand-picked number does not. A pin of 989 here was
+      # silently shared with usbmux, which had been allocated it dynamically
+      # first; NixOS does not reject a duplicate, so the two accounts simply
+      # became one principal. Nothing needs the number to be predictable:
+      # every directory is owned through systemd-tmpfiles BY NAME, and the
+      # identity files are re-owned by name on every start of the identity
+      # unit below.
       home = "/var/lib/${forgeUser}";
       createHome = true;
       linger = true;
       autoSubUidGidRange = true; # rootless podman maps into a subordinate range
     };
-    # gid pinned for the same reason as uid, plus one more: the identity files
-    # must be owned by this account BEFORE it exists, because the container that
-    # creates it is the same container that needs them. A numeric chown works;
-    # a name-based one cannot.
-    users.groups.${forgeUser} = { gid = 989; };
+    users.groups.${forgeUser} = { };
 
     # Directories this host owns, created before the container starts. The
     # identity dir is 0700 and holds the key material; the state dirs are what
@@ -132,6 +140,19 @@ in
       "d ${stateDir}/radicle 0700 ${forgeUser} ${forgeUser} -"
       "d ${stateDir}/radicle-ci 0700 ${forgeUser} ${forgeUser} -"
       "d ${stateDir}/tailscale 0700 ${forgeUser} ${forgeUser} -"
+
+      # `d` creates a directory and owns THE DIRECTORY. It does not touch what
+      # is inside, so after the account's uid changed, every file underneath
+      # still belonged to the old number and rootless podman failed with
+      # `path ".../.config" exists and it is not owned by the current user` --
+      # which names neither the uid nor the change that caused it.
+      #
+      # `Z` adjusts ownership RECURSIVELY. Mode is `-` deliberately: these trees
+      # hold podman's storage and a mode applied recursively would make every
+      # regular file 0700. Ownership follows the account by NAME on every boot,
+      # so a future uid change heals itself instead of needing a chown by hand.
+      "Z /var/lib/${forgeUser} - ${forgeUser} ${forgeUser} -"
+      "Z ${stateDir} - ${forgeUser} ${forgeUser} -"
     ];
 
     # Persistence is stated HERE, not inherited from my/dev/development. That
@@ -156,31 +177,48 @@ in
     # The plaintext lands beside the ciphertext at 0400 owned by the forge user.
     # It is written to a temporary name and renamed, so a reader either sees the
     # previous key or the new one, never a half-written file.
-    systemd.services."${name}-identity" = {
-      description = "Decrypt the ${name} radicle node key";
-      # requiredBy, not wantedBy: a container that starts without its identity
-      # does not fail usefully -- radicle-node exits 243/CREDENTIALS from inside
-      # a nested boot, where the reason is three logs deep.
-      requiredBy = [ "podman-${name}.service" ];
-      before = [ "podman-${name}.service" ];
-      # After the impermanence bind mount, or this writes to a directory that is
-      # about to be hidden underneath one.
-      after = [ "systemd-tmpfiles-setup.service" ];
-      path = [ pkgs.sops ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
+    systemd.services = {
+      # oci-containers gives a `podman.user` unit a PATH of podman's own bin
+      # and nothing else. podman locates its OCI runtime through a helper-binary
+      # wrapper that normally sits on the SYSTEM profile PATH, which this unit
+      # does not have -- so it fails with
+      #     default OCI runtime "crun" not found: invalid argument
+      # which reads as a missing package and is a missing PATH entry.
+      "podman-${name}".path = [ pkgs.crun ];
+
+      "${name}-identity" = {
+        description = "Decrypt the ${name} radicle node key";
+        # requiredBy, not wantedBy: a container that starts without its identity
+        # does not fail usefully -- radicle-node exits 243/CREDENTIALS from inside
+        # a nested boot, where the reason is three logs deep.
+        requiredBy = [ "podman-${name}.service" ];
+        before = [ "podman-${name}.service" ];
+        # After the impermanence bind mount, or this writes to a directory that is
+        # about to be hidden underneath one.
+        after = [ "systemd-tmpfiles-setup.service" ];
+        path = [ pkgs.sops ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        script = ''
+          set -euo pipefail
+          umask 077
+          SOPS_AGE_KEY_FILE=${identityDir}/age.key \
+            sops --decrypt --extract '["radicle"]["node-key"]' \
+            ${identityDir}/secrets.yaml > ${identityDir}/.node-key.new
+          chown ${forgeUser}:${forgeUser} ${identityDir}/.node-key.new
+          chmod 0400 ${identityDir}/.node-key.new
+          mv -f ${identityDir}/.node-key.new ${identityDir}/node-key
+  
+          # Own the whole directory by NAME on every start. The uid is allocated by
+          # NixOS and can change; files chowned to a stale number would leave the
+          # role unable to read its own identity, and the symptom would be podman
+          # complaining about .config rather than anything naming the key.
+          chown -R ${forgeUser}:${forgeUser} ${identityDir}
+          chmod 0400 ${identityDir}/age.key ${identityDir}/secrets.yaml ${identityDir}/node-key
+        '';
       };
-      script = ''
-        set -euo pipefail
-        umask 077
-        SOPS_AGE_KEY_FILE=${identityDir}/age.key \
-          sops --decrypt --extract '["radicle"]["node-key"]' \
-          ${identityDir}/secrets.yaml > ${identityDir}/.node-key.new
-        chown 989:989 ${identityDir}/.node-key.new
-        chmod 0400 ${identityDir}/.node-key.new
-        mv -f ${identityDir}/.node-key.new ${identityDir}/node-key
-      '';
     };
 
     virtualisation.oci-containers = {
