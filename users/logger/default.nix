@@ -117,15 +117,30 @@
     # sit in the shared profile: aether5d-dev refuses to evaluate at all.
     apps.graphical.network.rustdesk.enable = true;
 
-    # Radicle user node: outbound-only daemon dialing the yoga seed. Dormant
-    # until `rad auth` has run on the machine (ConditionPathExists on the
-    # key), so this is safe on a host that has not been bootstrapped yet.
+    # Radicle user node: outbound-only daemon dialing the fleet's seeds.
+    # Dormant until `rad auth` has run on the machine (ConditionPathExists on
+    # the key), so this is safe on a host that has not been bootstrapped yet.
     # Enabling it also pins ~/.radicle/config.json to the private-net shape --
     # `rad auth` writes the PUBLIC iris/rosa seeds into preferredSeeds, which
     # is exactly what must not survive here. Turn on with GATE A.
     apps.dev.tools.radicle.node = {
       enable = true;
-      connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
+      # TWO seeds, both dialed, and that is what P2P redundancy means here: an
+      # entry per seed, never one address in front of a pair. Each seed's
+      # identity is its NID, which lives in the KEY rather than the host, so
+      # they cannot be collapsed behind a shared name -- a client that dialed
+      # one NID and reached the other would fail the Noise XK handshake, since
+      # it pins the responder key.
+      #
+      # First the original host seed, then the container seed standing beside
+      # it. Both are live and neither is a fallback for the other. Deleting
+      # the first belongs to retiring it, which is a separate decision from
+      # adding the second -- that separation is the whole reason there is no
+      # destructive step in standing this one up.
+      connect = [
+        "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776"
+        "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776"
+      ];
     };
 
     graphical = {
