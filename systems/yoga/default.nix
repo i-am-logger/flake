@@ -127,7 +127,13 @@ mynixos.lib.mkSystem {
         # Headless sudo: authenticate against the operator's forwarded SSH
         # agent, so the YubiKey answering for sudo is the one in the laptop at
         # the other end of the connection. pam_u2f stays for the local console.
-        sshAgentSudo = true;
+        sshAgentSudo = {
+          enable = true;
+          # 17027658 lives in this machine for unattended commit signing, so it
+          # cannot also be what authorizes sudo here — the local gpg-agent would
+          # sign for any process running as logger. 15147050 travels.
+          residentSerials = [ "17027658" ];
+        };
       };
 
       # Secrets management via sops-nix.
