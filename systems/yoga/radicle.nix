@@ -48,6 +48,14 @@
       # Advertised inside the tailnet only; workstations still dial by their
       # own static connect lists.
       externalAddresses = [ "yoga.tail46cce1.ts.net:8776" ];
+      # Dial the second seed, which dials back. Radicle sessions are
+      # bidirectional once established, so one entry would be enough to
+      # replicate -- both exist so the pair re-forms whichever node restarts,
+      # rather than only when the container happens to come up last.
+      #
+      # An ADDITION. The entry pinning this node stays everywhere it already
+      # is; nothing is removed until the host seed is actually retired.
+      connect = [ "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776" ];
       # The fleet seed carries everything ours; workstations keep the
       # default "block".
       defaultSeedingPolicy = "allow";

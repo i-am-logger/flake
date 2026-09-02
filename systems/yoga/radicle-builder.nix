@@ -40,7 +40,7 @@
 #
 # A role with no identity does not come up as nobody -- radicle-node exits
 # 243/CREDENTIALS and stays down. Verified.
-{ config, lib, pkgs, self, ... }:
+{ lib, pkgs, self, ... }:
 
 let
   # GATE OPEN 2026-09-01. The identity is installed at /var/lib/radicle-identity

@@ -283,6 +283,14 @@ mynixos.lib.mkSystem {
     # role brings it and this host needs no build tooling for the forge at all.
     ./radicle-builder.nix
 
+    # The SECOND radicle seed, as a container role. It stands up BESIDE the
+    # host seed in ./radicle.nix rather than replacing it: seeds are plural in
+    # radicle because the NID lives in the key, so the two serve at once and
+    # rollback is deleting this line. Its own forge user, so an escape from the
+    # builder -- which runs repository-supplied shell -- cannot reach a seed's
+    # non-disposable key.
+    ./radicle-seed-container.nix
+
     # The radicle node key lives in its OWN sops file rather than in
     # secrets.yaml: it was minted offline and encrypted to the same three
     # recipients (both YubiKeys + the yoga host age key) without needing the
@@ -290,7 +298,7 @@ mynixos.lib.mkSystem {
     # `format = "binary"` because the file IS the key -- there is no document
     # structure to address a value inside. Fold it into secrets.yaml later and
     # this block goes away.
-    ({ ... }: {
+    (_: {
       sops.secrets."radicle/node-key" = {
         sopsFile = "/persist/etc/sops/radicle.json";
         format = "binary";
