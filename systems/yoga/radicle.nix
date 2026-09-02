@@ -64,6 +64,16 @@
         # Baked into the SPA and fetched by the BROWSER, so it must be a name
         # the browser resolves -- the MagicDNS name, not localhost.
         seedHostname = "yoga.tail46cce1.ts.net";
+
+        # CI results are read off DISK, not from job COBs -- the explorer
+        # aliases the broker's report_dir. So when CI moved to the builder
+        # container the reports moved with it, and this page went blank rather
+        # than wrong: an empty directory listing, CI working invisibly.
+        #
+        # Point it at the builder, which serves its own reports over the tailnet.
+        # Reading that container's filesystem from here instead would mean
+        # matching subuid mappings by hand across a userns boundary.
+        ciReports.proxyTo = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
         # Served through `tailscale serve`, which terminates TLS with the
         # tailnet's own certificate -- so https://yoga.tail46cce1.ts.net/ is a
         # real secure context rather than a browser warning. Same mechanism

@@ -168,16 +168,23 @@ in
       "d ${identityDir} 0711 ${forgeUser} ${forgeUser} -"
       "d /var/lib/radicle-roles 0755 root root -"
       "d ${stateDir} 0700 ${forgeUser} ${forgeUser} -"
-      # These two exist only so podman has something to bind. Ownership is
-      # deliberately left alone (`-`): the CONTAINER manages them through
-      # systemd StateDirectory, which chowns them to its own radicle user.
-      # Forcing them to the forge user here would set them to container ROOT,
-      # and radicle-node -- which runs as User=radicle after dropping
-      # privileges -- would lose access to its own state. That is precisely
-      # how it failed: `Unlocking node keystore.. Permission denied`, which
-      # names the key rather than the state directory the error came from.
-      "d ${stateDir}/radicle 0700 - - -"
-      "d ${stateDir}/radicle-ci 0700 - - -"
+      # Owned by the FORGE USER, and that is load-bearing in a way that is easy
+      # to get backwards -- I did, once in each direction.
+      #
+      # Rootless podman maps this host account to container ROOT and its
+      # subuids to 1..65536. Host root maps to NOTHING, so a root-owned
+      # directory here shows up inside as an unmapped owner and the container
+      # cannot chown it at all. Owned by the forge user it arrives as root
+      # inside, which is exactly what systemd needs to hand it to its own
+      # radicle user via StateDirectory.
+      #
+      # What must NOT happen is a RECURSIVE chown (`Z`) over these trees. The
+      # files underneath belong to the container's users, mapped into the
+      # subuid range; rewriting them to the forge user makes them root inside
+      # and radicle-node loses its own state after dropping privileges. Create
+      # the directory with an owner, never rewrite what is in it.
+      "d ${stateDir}/radicle 0700 ${forgeUser} ${forgeUser} -"
+      "d ${stateDir}/radicle-ci 0700 ${forgeUser} ${forgeUser} -"
       "d ${stateDir}/tailscale 0700 ${forgeUser} ${forgeUser} -"
 
       # `d` creates a directory and owns THE DIRECTORY. It does not touch what
