@@ -275,15 +275,12 @@ mynixos.lib.mkSystem {
   # directly on this host; the seed was the last of those to move, and the file
   # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # The radicle CI builder. A real module rather than a `my` layer because it
-    # writes virtualisation.oci-containers and needs `self` to instantiate the
-    # role with this fleet's own key.
-    ./radicle-builder.nix
-
-    # The radicle seed. Its own forge user, separate from the builder's: the
-    # builder runs repository-supplied shell by design, and an escape from it
-    # must not reach a seed's non-disposable key.
-    ./radicle-seed.nix
+    # The roles this host runs. The MACHINES are ../radicle/{seed,builder}.nix,
+    # host-parameterised so another host runs the same ones by instantiating
+    # them with its own key; everything here is yoga's arrangements for running
+    # them, and my.infra.ociRoles is what keeps those arrangements from being
+    # written twice.
+    ./radicle-roles.nix
 
     (
       _:
