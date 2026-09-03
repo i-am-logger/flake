@@ -45,9 +45,18 @@ let
   # "reference" marks the flake's reference fleet rather than a deployment.
   imageTag = "yoga";
 
-  # The seed that is already running on this host. This new node dials it, and
-  # ./radicle.nix dials back, so the session survives either one restarting.
-  liveSeed = "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776";
+  # NO PEERS TO DIAL. The host seed this node was stood up beside has been
+  # retired (see ./radicle.nix), so this is now the fleet's only seed and there
+  # is nothing for it to dial: a seed is DIALED, by workstations and by the
+  # builder.
+  #
+  # Emptied rather than left pointing at the retired node. A dead entry is not
+  # inert -- radicle retries it forever and fills the log with
+  # `Failed to establish connection ... Name or service not known`, which is
+  # indistinguishable from a real network fault the next time someone reads
+  # these logs looking for one.
+  #
+  # When a second seed is added back, it goes here.
 
   role = self.lib.roles.radicle.seed {
     system = "x86_64-linux";
@@ -63,10 +72,11 @@ let
     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
 
     # A seed is DIALED, so unlike a builder it must advertise where. This is
-    # the container's own tailnet name, not yoga's: the two seeds are separate
-    # nodes at separate addresses, and collapsing them onto one host name is
+    # the container's own tailnet name, not yoga's -- a NID lives in the key,
+    # so even when this was one of a pair the two were separate nodes at
+    # separate addresses, and collapsing them onto one host name is exactly
     # what a per-key NID exists to prevent.
-    connect = [ liveSeed ];
+    connect = [ ];
     externalAddresses = [ "${tailnetName}:8776" ];
 
     # Baked into the explorer SPA at build time and fetched by the BROWSER, so
@@ -91,6 +101,44 @@ let
       # No CI here. CI runs on the builder, which is the only machine its
       # reports exist on; a seed that also built would put repository-supplied
       # shell next to a non-disposable key.
+
+      # THE EXPLORER, restored to what the host seed used to serve. Retiring
+      # that seed took its nginx and its `tailscale serve` with it, so until
+      # this block existed the forge UI was reachable only over plain http on
+      # port 8781 and the CI reports were not reachable at all.
+      infra.radicle.httpd.explorer = {
+        # HTTPS without running a CA or an ACME client: tailscaled already
+        # holds a certificate for this container's own tailnet name, and
+        # `serve` terminates TLS with it and proxies to nginx on loopback.
+        # Under https the role's nginx binds LOOPBACK ONLY, so `serve` is the
+        # single front door rather than a second, unencrypted way in.
+        scheme = "https";
+        externalPort = 443;
+
+        # CI reports come from wherever CI actually RAN, which is the builder
+        # -- the only machine they exist on. Proxying is what avoids matching
+        # subuid mappings across a userns boundary by hand to read its files.
+        #
+        # This is also the failure the option was added for: CI moved to the
+        # builder, the host's own ci.enable went false, and the /ci/ location
+        # disappeared with it, so the page went blank rather than wrong. It
+        # went blank a second time when the host seed was retired, because the
+        # proxy lived on that host's nginx. It lives here now, beside the
+        # explorer that links to it.
+        ciReports.proxyTo = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
+
+        # NOT decoration, and not scope creep: without this the explorer bundle
+        # calls www.gravatar.com with an md5 of every committer's address. The
+        # module rewrites that host to a same-origin /avatars/ path only when
+        # avatars are enabled, so leaving it off would have this
+        # tailnet-private forge announce who commits to it to a third party on
+        # every page view. The host seed carried these for exactly that reason;
+        # they have to move with the explorer, not stay behind with it.
+        avatars = {
+          default = ../../users/logger/avatar.png;
+          byEmail."i-am-logger@users.noreply.github.com" = ../../users/logger/avatar.png;
+        };
+      };
     }];
   };
 in

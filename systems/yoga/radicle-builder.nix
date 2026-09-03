@@ -88,7 +88,15 @@ let
 
     # The seed this builder dials. It DIALS OUT and is never dialed, so it
     # advertises nothing and needs no inbound reachability at all.
-    connect = [ "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776" ];
+    #
+    # REPOINTED when the host seed was retired, and this line is expensive to
+    # miss: the broker watches its OWN node's event stream, so a builder whose
+    # seed has gone away fetches nothing, sees no announcements, and simply
+    # never triggers a build. It would sit there reporting `active`, with no
+    # failed unit and an empty CI history -- indistinguishable from "nobody
+    # pushed anything". Retiring a seed means repointing everything that dialled
+    # it; the builder is not exempt just because it is a different role.
+    connect = [ "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776" ];
 
     my = [{
       system.ociImage.tag = imageTag;

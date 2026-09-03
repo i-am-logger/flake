@@ -125,20 +125,22 @@
     # is exactly what must not survive here. Turn on with GATE A.
     apps.dev.tools.radicle.node = {
       enable = true;
-      # TWO seeds, both dialed, and that is what P2P redundancy means here: an
-      # entry per seed, never one address in front of a pair. Each seed's
-      # identity is its NID, which lives in the KEY rather than the host, so
-      # they cannot be collapsed behind a shared name -- a client that dialed
-      # one NID and reached the other would fail the Noise XK handshake, since
-      # it pins the responder key.
+      # ONE entry, because there is one seed: the container seed. The original
+      # host seed was retired on 2026-09-02 (see systems/yoga/radicle.nix) and
+      # its entry deleted HERE and only here.
       #
-      # First the original host seed, then the container seed standing beside
-      # it. Both are live and neither is a fallback for the other. Deleting
-      # the first belongs to retiring it, which is a separate decision from
-      # adding the second -- that separation is the whole reason there is no
-      # destructive step in standing this one up.
+      # That ordering was the point of standing the second seed up first. The
+      # new entry was added beside the old one while both were live, so this
+      # deletion removes something already redundant rather than swapping one
+      # single point of failure for another. A seed's identity is its NID, which
+      # lives in the KEY rather than the host, so seeds can never be collapsed
+      # behind a shared name -- a client that dialled one NID and reached
+      # another would fail the Noise XK handshake, since it pins the responder
+      # key. Redundancy here is a longer list, never a VIP.
+      #
+      # A second seed goes back in this list, beside this one, exactly the way
+      # this one arrived.
       connect = [
-        "z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1@yoga.tail46cce1.ts.net:8776"
         "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776"
       ];
     };

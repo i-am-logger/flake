@@ -38,7 +38,28 @@
 # Step 4 (the darwin builder) is independent and can land any time after A.
 {
   infra.radicle = {
-    enable = true; # GATE A OPEN — node + httpd (seed key minted 2026-08-31)
+    # RETIRED 2026-09-02, in favour of the container seed in
+    # ./radicle-seed-container.nix.
+    #
+    # DISABLED, NOT DELETED. Everything below stays, and so does
+    # /var/lib/radicle: rollback is flipping this one line, which is the same
+    # shape the CI retirement below already uses. Nothing about this step
+    # destroys a key or a repository.
+    #
+    # WHAT PROVED THE REPLACEMENT was not that the container seed started --
+    # it was that THIS node logged handing its repositories over:
+    #
+    #   Peer z6Mks9Ty… fetched rad:z2WxYCuLx8F8r2bPLPNjjboGM7qPU from us successfully
+    #   Peer z6Mks9Ty… fetched rad:z4KpNmJDpSD4xYHcsASaWa9y3AKTd from us successfully
+    #   Peer z6Mks9Ty… fetched rad:zfDtFXYCZjVrrJ2gbFUPZVAK1XzC from us successfully
+    #
+    # Three repositories, one more than seedRepositories names, because a seed's
+    # policy is `allow`. Unit state would have proved nothing: radicle-seed-repos
+    # reports ready while radicle-node crash-loops.
+    #
+    # The key is NOT destroyed and this NID is not reused. If this seed is ever
+    # brought back it comes back as itself.
+    enable = false;
 
     # Minted 2026-08-31 (offline, temp RAD_HOME, shredded). Comment stripped,
     # as services.radicle requires. NID: z6MkqSoohjxUYVfQRqFxCKeRGSJeE8D5dTxkBe8neHWt6Rb1
