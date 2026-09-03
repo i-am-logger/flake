@@ -189,6 +189,19 @@ mynixos.lib.mkSystem {
       network = {
         tailscale = {
           enable = true; # controlPlane defaults to "tailscale" (SaaS)
+
+          # Relay for the container roles this host runs. They are NATed
+          # through this machine by rootless podman with no reachable UDP
+          # endpoint, so they cannot form direct connections and were measured
+          # relaying to each other through a DERP server in Denver at ~25ms --
+          # two containers on this very box.
+          #
+          # INERT WITHOUT A TAILNET GRANT. Clients need
+          # `tailscale.com/cap/relay` naming this host, and that lives in the
+          # tailnet policy rather than in any Nix file while the fleet is on
+          # Tailscale SaaS. Until it is added the port binds and every peer
+          # stays on DERP.
+          relayServerPort = 41647;
           # Inbound ssh over the tailnet is authenticated by tailnet identity
           # (tailnet policy `ssh` rules), so the iPad and the Mac need no key
           # material to reach this host. Classic sshd + YubiKey pubkeys stays
