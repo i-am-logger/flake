@@ -54,9 +54,47 @@
       };
 
       nixosConfigurations = {
+        # The fleet's machines, each declared once. A radicle seed is a machine
+        # like yoga is a machine: it has a hostname, it enables some services,
+        # and nothing about it says how it will be run. yoga decides that below
+        # by putting them in `my.virtualisation.containers`; either could as
+        # easily be a VM, or installed on metal.
+        #
+        # `host = "yoga"` is what puts yoga's name in theirs, because a tailnet
+        # name must be unique fleet-wide. It is the ONLY literal: the guests
+        # derive `radicle-yoga-{seed,x64-builder}` from it, the containers take
+        # their names from the guests, and the host-side accounts from those.
+        radicle-yoga-seed = import ./systems/radicle-seed {
+          inherit mynixos;
+          host = "yoga";
+          # Minted 2026-09-02. NOT disposable: every workstation pins this NID
+          # in a `connect` entry, so rotating it means visiting each of them.
+          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
+          identityDir = "/var/lib/radicle-seed-identity";
+          # CI runs on the builder and the reports exist only there.
+          ciReportsFrom = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
+          avatarDefault = ./users/logger/avatar.png;
+          avatarsByEmail."i-am-logger@users.noreply.github.com" = ./users/logger/avatar.png;
+        };
+
+        radicle-yoga-x64-builder = import ./systems/radicle-builder {
+          inherit mynixos;
+          host = "yoga";
+          # Minted 2026-09-01. Disposable by design -- a CI recipe can read it,
+          # which is the accepted risk that makes a builder its own machine.
+          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
+          identityDir = "/var/lib/radicle-identity";
+          connect = [ "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776" ];
+          reportsPublicUrl = "https://radicle-yoga-seed.tail46cce1.ts.net/ci";
+        };
+
         yoga = import ./systems/yoga {
           inherit mynixos yoga-kernel openrgb-src;
           claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
+          radicleGuests = [
+            self.nixosConfigurations.radicle-yoga-seed
+            self.nixosConfigurations.radicle-yoga-x64-builder
+          ];
         };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos; };
 

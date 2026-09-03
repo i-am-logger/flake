@@ -1,4 +1,9 @@
 { mynixos
+
+  # The machines this host runs as containers, declared in flake.nix. Passed in
+  # rather than imported here: they are machines in their own right, and a host
+  # referring to one is not the same as a host defining it.
+, radicleGuests ? [ ]
 , claude-desktop ? null
 , yoga-kernel
 , openrgb-src
@@ -288,81 +293,68 @@ mynixos.lib.mkSystem {
   # directly on this host; the seed was the last of those to move, and the file
   # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # The radicle roles this host runs. The MACHINES are ../radicle/{seed,builder}.nix
-    # and the hosting is ../radicle/default.nix; both are shared, so another host
-    # runs the same forge by passing its own keys. What is genuinely yoga's is
-    # here and nowhere else: which roles, whose keys, and what this machine is
-    # willing to spend on them.
-    (import ../radicle { self = mynixos; } {
-      host = "yoga";
-
-      seed = {
-        # Minted 2026-09-02. NOT disposable: every workstation pins this NID in
-        # a `connect` entry, so rotating it means visiting each of them.
-        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
-        # Where this node's identity and state already live. Named because they
-        # predate the shared defaults, not because a seed needs these paths.
-        identityDir = "/var/lib/radicle-seed-identity";
-        user = "radicle-seed-forge";
-        # Reports exist only on the builder that produced them, and this host
-        # runs that builder.
-        ciReportsFrom = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
-        avatarDefault = ../../users/logger/avatar.png;
-        avatarsByEmail."i-am-logger@users.noreply.github.com" = ../../users/logger/avatar.png;
-      };
-
-      builder = {
-        # Minted 2026-09-01. Disposable by design -- a CI recipe can read it,
-        # which is the accepted risk that makes a builder a separate role.
-        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
-        identityDir = "/var/lib/radicle-identity";
-        user = "radicle-forge";
-      };
-
-      builderDialsSeed = "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776";
-    })
-
-    (
-      _:
+    # The machines this host runs. They are declared in flake.nix beside yoga
+    # itself, because they ARE machines -- their keys, their names and what they
+    # enable are theirs, not yoga's. What is genuinely yoga's is only this: the
+    # decision to run them, and what this machine is willing to spend.
+    #
+    # Nothing here names a container. Each guest is named by its own
+    # my.system.hostname, its host-side account by "<that>-user", and its state
+    # directory from the same, so no guest is named in this file at all: rename
+    # the host and every derived name follows.
+    ({ lib, ... }:
+      let
+        # Decrypt a guest's key into the directory that guest reads it from.
+        # Written to a temporary name and renamed, so a reader sees either the
+        # old file or the new one and never a half-written key.
+        #
+        # 0444 is deliberate rather than sloppy: a service inside reads its
+        # keystore AFTER dropping privileges, and this host's guest account maps
+        # to container ROOT, so a 0400 file owned by it is unreadable to the one
+        # process that needs it. The directory above is 0711 and owned by an
+        # account nothing else uses, so nothing on the host gains access.
+        decryptKey = ''
+          SOPS_AGE_KEY_FILE="$IDENTITY_DIR/age.key" \
+            sops --decrypt --extract '["radicle"]["node-key"]' \
+            "$IDENTITY_DIR/secrets.yaml" > "$IDENTITY_DIR/.node-key.new"
+          chmod 0444 "$IDENTITY_DIR/.node-key.new"
+          mv -f "$IDENTITY_DIR/.node-key.new" "$IDENTITY_DIR/node-key"
+          chmod 0400 "$IDENTITY_DIR/age.key" "$IDENTITY_DIR/secrets.yaml"
+        '';
+      in
       {
-        # claude-desktop is passed as null by flake.nix until upstream stops
-        # depending on the removed nodePackages.asar, so this list is empty in
-        # practice -- the conditional is what survives the day it is non-null.
-        environment.systemPackages =
-          if claude-desktop != null then
-            [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
-          else
-            [ ];
+        my.virtualisation.containers = map
+          (guest: {
+            system = guest;
 
-        # vogix is the sole input engine (kanata removed): uinput + the
-        # input/uinput group wiring and the vogix-input user service are
-        # unconditional now, so this host needs no engine toggle.
-        home-manager.users.logger = {
-          # Debug logging for the vogix input engine + daemon, persisted to
-          # journald (RUST_LOG=vogix=debug on both units). Makes every keybinding
-          # decision and the daemon's startup env visible:
-          #   journalctl --user -u vogix-input -u vogix-daemon -f
-          programs.vogix.logLevel = "debug";
-        };
+            # THE ONE THING THE GUEST CANNOT DO FOR ITSELF. sops-install-secrets
+            # mounts a ramfs, needing a CAP_SYS_ADMIN a rootless container has
+            # not got, so the key is decrypted HERE, by root, and bind-mounted in
+            # already plaintext. Any ciphertext this host keeps beside it is its
+            # own business, not the guest's.
+            identityScript = decryptKey;
+            identityDir = builtins.dirOf guest.config.my.infra.radicle.privateKeyFile;
 
-        # /etc/machine-id is deliberately NOT persisted. A fresh id each boot is
-        # the point: machine-id is a stable, unsalted identifier that anything
-        # local can read, so persisting it would hand every reboot the same
-        # fingerprint. The cost is that `journalctl -b -1` cannot find the
-        # previous boot by default -- earlier boots are still readable with
-        # `journalctl --directory=/var/log/journal/<machine-id>`.
+            stateVolumes = {
+              radicle = "/var/lib/radicle";
+              tailscale = "/var/lib/tailscale";
+            } // lib.optionalAttrs guest.config.my.infra.radicle.ci.enable {
+              radicle-ci = "/var/lib/radicle-ci";
+            };
 
-        # Package overlays (liquidctl is now managed by vogix)
-        nixpkgs.overlays = [
-          (import ../../overlays/claude-code.nix)
-          (import ../../overlays/herdr.nix)
-          # Build OpenRGB from the local perf/cli-latency branch (overlays/openrgb.nix
-          # + the openrgb-src flake input) so vogix's server and the openrgb CLI resolve
-          # to our build instead of nixpkgs' 1.0rc2.
-          (import ../../overlays/openrgb.nix openrgb-src.outPath)
-        ];
-      }
-    )
+            # A CI recipe can fork-bomb or exhaust memory, and nothing else
+            # addresses denial of service against this machine. A seed runs no
+            # untrusted code and needs far less.
+            memory = if guest.config.my.infra.radicle.ci.enable then "16g" else "4g";
+            pidsLimit = if guest.config.my.infra.radicle.ci.enable then 4096 else 2048;
+
+            # A builder BUILDS, and nix builds in a sandbox -- which needs /proc
+            # fully visible, not a capability. See the option for why the error it
+            # fixes reads as a missing capability and is not one.
+            nixSandbox = guest.config.my.infra.radicle.ci.enable;
+          })
+          radicleGuests;
+      })
 
     # DDR5 modules on this build carry addressable RGB (ENE controllers). DRAM RGB
     # is its own hardware -- it travels with the sticks, independent of the board
