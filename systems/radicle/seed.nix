@@ -36,15 +36,21 @@
   # lists the other here so the pair re-forms whichever restarts.
 , connect ? [ ]
 
-  # Repositories the fleet's seeds carry. `defaultSeedingPolicy = "allow"` (set
-  # by the role) accepts what is ANNOUNCED, and an announcement happens on push
-  # -- so repositories that already existed when a seed was created would never
-  # be re-announced, and the seed would look healthy while holding nothing.
-  # Naming them is what makes a new node fetch them.
-, seedRepositories ? [
-    { rid = "rad:z2WxYCuLx8F8r2bPLPNjjboGM7qPU"; scope = "all"; } # secure-sweep-mobile
-    { rid = "rad:z4KpNmJDpSD4xYHcsASaWa9y3AKTd"; scope = "all"; } # radicle-ci-smoke
-  ]
+  # NO REPOSITORY LIST, deliberately. A seed runs `defaultSeedingPolicy =
+  # "allow"` with scope "all" (set by the role), so it takes whatever a peer
+  # announces. Enumerating repositories here says nothing the policy does not
+  # already say -- and says it wrongly: this seed named two while holding
+  # three, which is what made a third arrive unnoticed and sent an afternoon
+  # chasing a replication problem that did not exist.
+  #
+  # Which repositories exist is fleet DATA, not part of what a seed IS. It
+  # lives in ./repositories.nix, and only builders consume it, because only
+  # builders execute recipes and therefore have to decide.
+  #
+  # The list was originally added for a bootstrap: repositories that predate a
+  # node are never re-announced, so a new seed would hold nothing. That is a
+  # one-time migration concern and does not belong frozen into a machine
+  # definition -- `rad sync --fetch` covers it when it is actually needed.
 
   # Where CI reports are proxied from. They exist only on the builder that
   # produced them, so whatever fronts the forge UI proxies to it rather than
@@ -113,7 +119,6 @@ self.lib.roles.radicle.seed {
       system.ociImage.tag = host;
 
       infra.radicle = {
-        inherit seedRepositories;
 
         # No CI here. CI runs on a builder, which is the only machine its
         # reports exist on; a seed that also built would put

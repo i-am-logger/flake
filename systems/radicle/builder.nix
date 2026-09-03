@@ -54,18 +54,25 @@
   # a seeded repository executes arbitrary code here.
 , trustedNids ? [ "z6MkizPqxsNyqociVNMF4SnWCwDWFZ9udxkcejuagyR5CuZU" ] # logger@yoga
 
-  # The repositories this builder runs CI for, named ONE BY ONE rather than
-  # seeded by policy: every repository it seeds is one whose CI recipe it will
-  # execute, and that should be a decision rather than a side effect of what
-  # happens to be announced.
-, seedRepositories ? [
-    { rid = "rad:z2WxYCuLx8F8r2bPLPNjjboGM7qPU"; scope = "all"; } # secure-sweep-mobile
-    { rid = "rad:z4KpNmJDpSD4xYHcsASaWa9y3AKTd"; scope = "all"; } # radicle-ci-smoke
-  ]
+  # The fleet's repositories, from ./repositories.nix. A builder seeds the ones
+  # marked `ci`, and ONLY those: every repository it seeds is one whose CI
+  # recipe it will execute, so that has to be a decision rather than a side
+  # effect of what happens to be announced. That is also why a builder runs
+  # `defaultSeedingPolicy = "block"` while a seed runs "allow".
+  #
+  # Passed in rather than read here, so this file names no repository at all --
+  # which repositories exist is fleet data, not part of what a builder IS.
+, repositories ? import ./repositories.nix
 }:
 
 let
   name = "radicle-${host}-${lane}-builder";
+
+  # scope = "all" because the point is to build what OTHER peers push, not only
+  # what this node follows.
+  ciRepositories = builtins.map
+    (r: { inherit (r) rid; scope = "all"; })
+    (builtins.filter (r: r.ci) (builtins.attrValues repositories));
 in
 self.lib.roles.radicle.builder {
   system = "x86_64-linux";
@@ -73,6 +80,6 @@ self.lib.roles.radicle.builder {
 
   my = [{
     system.ociImage.tag = host;
-    infra.radicle.seedRepositories = seedRepositories;
+    infra.radicle.seedRepositories = ciRepositories;
   }];
 }
