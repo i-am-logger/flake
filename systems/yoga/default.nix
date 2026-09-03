@@ -275,12 +275,39 @@ mynixos.lib.mkSystem {
   # directly on this host; the seed was the last of those to move, and the file
   # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # The roles this host runs. The MACHINES are ../radicle/{seed,builder}.nix,
-    # host-parameterised so another host runs the same ones by instantiating
-    # them with its own key; everything here is yoga's arrangements for running
-    # them, and my.infra.ociRoles is what keeps those arrangements from being
-    # written twice.
-    ./radicle-roles.nix
+    # The radicle roles this host runs. The MACHINES are ../radicle/{seed,builder}.nix
+    # and the hosting is ../radicle/default.nix; both are shared, so another host
+    # runs the same forge by passing its own keys. What is genuinely yoga's is
+    # here and nowhere else: which roles, whose keys, and what this machine is
+    # willing to spend on them.
+    (import ../radicle { self = mynixos; } {
+      host = "yoga";
+
+      seed = {
+        # Minted 2026-09-02. NOT disposable: every workstation pins this NID in
+        # a `connect` entry, so rotating it means visiting each of them.
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
+        # Where this node's identity and state already live. Named because they
+        # predate the shared defaults, not because a seed needs these paths.
+        identityDir = "/var/lib/radicle-seed-identity";
+        user = "radicle-seed-forge";
+        # Reports exist only on the builder that produced them, and this host
+        # runs that builder.
+        ciReportsFrom = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
+        avatarDefault = ../../users/logger/avatar.png;
+        avatarsByEmail."i-am-logger@users.noreply.github.com" = ../../users/logger/avatar.png;
+      };
+
+      builder = {
+        # Minted 2026-09-01. Disposable by design -- a CI recipe can read it,
+        # which is the accepted risk that makes a builder a separate role.
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
+        identityDir = "/var/lib/radicle-identity";
+        user = "radicle-forge";
+      };
+
+      builderDialsSeed = "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776";
+    })
 
     (
       _:
