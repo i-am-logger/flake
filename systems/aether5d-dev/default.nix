@@ -65,7 +65,7 @@ mynixos.lib.mkSystem {
     # cannot run on macOS — see mynixos docs/radicle.md). A locked-down
     # `nixremote` account whose ssh key is forced to `nix-daemon --stdio`;
     # sshd is already pf-scoped to the tailnet below. BOOTSTRAP GATE: flip
-    # after minting the builder key (runbook step 4 in systems/yoga/radicle.nix)
+    # after minting the builder key (see systems/yoga/radicle-builder.nix)
     # and pasting its PUBLIC half here; then restart the daemon once:
     #   sudo launchctl kickstart -k system/org.nixos.nix-daemon
     dev.builderHost = {

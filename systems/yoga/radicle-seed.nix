@@ -1,18 +1,27 @@
-# The SECOND radicle seed, as a container role on yoga.
+# The radicle seed, as a container role HOSTED on yoga.
 #
-# This does not migrate the seed in ./radicle.nix. Radicle's replication model
-# makes seeds PLURAL -- the NID lives in the key, not the address -- so this is
-# a normal fleet member standing up beside a running one. Both keep serving;
-# retiring the host seed is a separate, later step, and rollback at every point
-# here is "do nothing".
+# Hosted, not part of it. This is a machine: its own NID, its own tailnet node,
+# its own storage. yoga runs the container and knows nothing else about it,
+# which is why this host's configuration no longer contains a radicle service
+# of its own.
 #
-# WHY THERE IS NO PORT COLLISION, which is the thing that looks wrong at first
-# glance: this container runs its own tailscaled, so it is its own tailnet node
-# with its own MagicDNS name. Ports live in that network namespace. The node
-# listens on 8776, httpd on 8780 and the explorer on 8781 -- the same numbers
-# the host seed uses -- and nothing is published to the host at all. Publishing
-# them would be the mistake: it would put two seeds behind one address, which
-# is exactly what a per-key NID makes meaningless.
+# It arrived as a SECOND seed, beside one that ran on the host directly.
+# Radicle's replication model makes seeds PLURAL -- the NID lives in the key,
+# not the address -- so adding one was a normal fleet join with nothing
+# destructive in it, and retiring the old one was a separate decision taken
+# later, once this node had been observed fetching the repositories from it.
+#
+# NOTHING IS PUBLISHED TO THE HOST, and that is deliberate rather than an
+# omission. This container runs its own tailscaled, so it is its own tailnet
+# node with its own MagicDNS name, and its ports live in that network
+# namespace: the node on 8776, httpd on 8780, the explorer on 8781. While a
+# host seed was still running it used those same numbers with no collision, for
+# exactly this reason.
+#
+# Publishing them to the host would be the mistake. It would put a seed behind
+# yoga's address, and an address is not an identity here -- a NID is, and it
+# lives in the key. Two seeds behind one name is precisely what that makes
+# meaningless.
 #
 # WHY ITS OWN FORGE USER rather than the builder's. Rootless podman gives an
 # account one storage tree, one subuid range and one control surface. The
@@ -46,9 +55,8 @@ let
   imageTag = "yoga";
 
   # NO PEERS TO DIAL. The host seed this node was stood up beside has been
-  # retired (see ./radicle.nix), so this is now the fleet's only seed and there
-  # is nothing for it to dial: a seed is DIALED, by workstations and by the
-  # builder.
+  # retired, so this is now the fleet's only seed and there is nothing for it
+  # to dial: a seed is DIALED, by workstations and by the builder.
   #
   # Emptied rather than left pointing at the retired node. A dead entry is not
   # inert -- radicle retries it forever and fills the log with

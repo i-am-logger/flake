@@ -1,8 +1,7 @@
 # The radicle CI builder, as a container role on yoga.
 #
-# BOOTSTRAP GATE, the same shape as ./radicle.nix. Everything below is inert
-# until `enable` flips, and flipping it needs key material only a human can
-# mint:
+# BOOTSTRAP GATE. Everything below is inert until `enable` flips, and flipping
+# it needs key material only a human can mint:
 #
 #   1. A radicle node key for the builder. DISPOSABLE by design -- that is the
 #      property that makes a compromised CI recipe survivable, and it is why a
@@ -83,7 +82,7 @@ let
 
     # The delegates whose pushes may trigger CI. The builder runs their shell,
     # so this list is the only thing between a hostile patch and code execution
-    # here. logger@yoga, as ./radicle.nix already trusts.
+    # here. logger@yoga.
     trustedNids = [ "z6MkizPqxsNyqociVNMF4SnWCwDWFZ9udxkcejuagyR5CuZU" ];
 
     # The seed this builder dials. It DIALS OUT and is never dialed, so it

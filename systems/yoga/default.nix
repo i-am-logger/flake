@@ -266,45 +266,24 @@ mynixos.lib.mkSystem {
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
     }
 
-    # Third layer: the Radicle forge (seed + CI + GitHub mirror). Its own file
-    # because it ships behind a bootstrap gate with a key-minting runbook in
-    # its header — see mynixos docs/radicle.md for the full design.
-    (import ./radicle.nix)
   ];
 
+  # THE FORGE IS NOT PART OF THIS HOST. yoga runs no radicle service of its own:
+  # it HOSTS two container roles, each its own machine with its own NID and its
+  # own tailnet node, and knows nothing about what they do. There used to be a
+  # ./radicle.nix here configuring a seed, httpd, explorer, CI and mirror
+  # directly on this host; the seed was the last of those to move, and the file
+  # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # The radicle CI builder as a container role. A real module rather than a
-    # `my` layer because it writes virtualisation.oci-containers and needs
-    # `self` to instantiate the role with this fleet's own key.
-    #
-    # LIVE since 2026-09-02: the builder runs, and this host's own CI broker is
-    # retired in favour of it (see radicle.nix). devenv used to be added here
-    # for the host adapter; a builder now carries its own toolchain, so the
-    # role brings it and this host needs no build tooling for the forge at all.
+    # The radicle CI builder. A real module rather than a `my` layer because it
+    # writes virtualisation.oci-containers and needs `self` to instantiate the
+    # role with this fleet's own key.
     ./radicle-builder.nix
 
-    # The SECOND radicle seed, as a container role. It stands up BESIDE the
-    # host seed in ./radicle.nix rather than replacing it: seeds are plural in
-    # radicle because the NID lives in the key, so the two serve at once and
-    # rollback is deleting this line. Its own forge user, so an escape from the
-    # builder -- which runs repository-supplied shell -- cannot reach a seed's
-    # non-disposable key.
-    ./radicle-seed-container.nix
-
-    # The radicle node key lives in its OWN sops file rather than in
-    # secrets.yaml: it was minted offline and encrypted to the same three
-    # recipients (both YubiKeys + the yoga host age key) without needing the
-    # private half, so the seed could come up before secrets.yaml was edited.
-    # `format = "binary"` because the file IS the key -- there is no document
-    # structure to address a value inside. Fold it into secrets.yaml later and
-    # this block goes away.
-    (_: {
-      sops.secrets."radicle/node-key" = {
-        sopsFile = "/persist/etc/sops/radicle.json";
-        format = "binary";
-        key = "";
-      };
-    })
+    # The radicle seed. Its own forge user, separate from the builder's: the
+    # builder runs repository-supplied shell by design, and an escape from it
+    # must not reach a seed's non-disposable key.
+    ./radicle-seed.nix
 
     (
       _:

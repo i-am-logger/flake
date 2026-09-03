@@ -126,7 +126,7 @@
     apps.dev.tools.radicle.node = {
       enable = true;
       # ONE entry, because there is one seed: the container seed. The original
-      # host seed was retired on 2026-09-02 (see systems/yoga/radicle.nix) and
+      # host seed was retired on 2026-09-02 (its config removed with it) and
       # its entry deleted HERE and only here.
       #
       # That ordering was the point of standing the second seed up first. The
