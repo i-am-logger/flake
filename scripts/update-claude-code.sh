@@ -100,8 +100,14 @@ if [[ "$VERSION" == "$CURRENT_VERSION" && $FORCE -eq 0 ]]; then
     exit 0
 fi
 
+# manifest.zst.json, NOT manifest.json. Upstream publishes both: the plain one
+# names the uncompressed `claude`, the zst one names `claude.zst`. The nixpkgs
+# derivation decompresses what it fetches, so feeding it the plain manifest
+# builds a derivation that dies in installPhase with
+# `zstd: ...-claude: unsupported format` -- an evaluation that succeeds and a
+# build that cannot. Match the manifest to what the consumer does with it.
 echo "Fetching the manifest for ${VERSION}..."
-if ! MANIFEST="$(curl -fsSL "${BASE_URL}/${VERSION}/manifest.json")"; then
+if ! MANIFEST="$(curl -fsSL "${BASE_URL}/${VERSION}/manifest.zst.json")"; then
     echo "error: no release manifest for ${VERSION} -- is that a real release?" >&2
     exit 1
 fi
@@ -130,8 +136,12 @@ if ! PLATFORMS="$(printf '%s' "$MANIFEST" | jq -er '
         if (.value.checksum // "") | test("^[0-9a-f]{64}$") then .
         else error("checksum for \(.key) is not a sha256") end
       )
+    | map(
+        if ((.value.binary // "") | length) > 0 then .
+        else error("no binary filename for \(.key)") end
+      )
     | sort_by(.key)
-    | map("        \"\(.key)\".checksum = \"\(.value.checksum)\";")
+    | map("        \"\(.key)\" = { binary = \"\(.value.binary)\"; checksum = \"\(.value.checksum)\"; };")
     | join("\n")
 ')"; then
     echo "error: the ${VERSION} manifest is not usable (see above)" >&2
@@ -155,9 +165,13 @@ cat >"$STAGED" <<EOF
 # one overlay that serves x86_64-linux and aarch64-darwin alike -- all three
 # hosts import it, and all three land on the same version.
 #
-# The derivation reads two things out of a manifest: \`version\`, which is also
-# half the download URL, and \`platforms.<key>.checksum\`. Both are mirrored
-# below; upstream's \`binary\` and \`size\` are dropped. <key> comes from
+# The derivation reads three things out of a manifest: \`version\`, which is
+# half the download URL, \`platforms.<key>.binary\`, which is the other half,
+# and \`platforms.<key>.checksum\`. All three are mirrored below; only
+# upstream's \`size\` is dropped. \`binary\` used to be dropped too, because the
+# derivation hardcoded the filename -- until it stopped, and every host that
+# imports this overlay failed to evaluate with "attribute 'binary' missing".
+# Mirror what upstream sends rather than assuming a filename. <key> comes from
 # hostPlatform.node, which encodes OS and CPU but not libc, so only
 # darwin-arm64, linux-arm64 and linux-x64 can ever be selected here -- the
 # musl and win32 rows are mirrored for fidelity and are unreachable.
