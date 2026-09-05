@@ -439,11 +439,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1788566041,
-        "narHash": "sha256-UI5Hk8N+t14CRMn0m/iVLhBiHqPNdr10kqTFmI2eZOU=",
+        "lastModified": 1788576473,
+        "narHash": "sha256-da/sWv3sj6ciP0IkoC/yHsc3C60qf1EzQEeWW4j35WE=",
         "owner": "i-am-logger",
         "repo": "mynixos",
-        "rev": "52d9d454600b64332a3684ea433fe21208c7b8d9",
+        "rev": "d55f38d1d8c5c2e55baf4dd761d4be06a0d92285",
         "type": "github"
       },
       "original": {
@@ -592,18 +592,17 @@
     "openrgb-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1783140482,
-        "narHash": "sha256-nk2H7DvjMeW3uYO857OS08RJW+CvTchE0Td8nj9Yg9s=",
-        "ref": "perf/cli-latency",
-        "rev": "31ad3a5e84e2ea1aa8122e81da0ada3891ce5091",
-        "revCount": 5279,
-        "type": "git",
-        "url": "file:///home/logger/Code/github/CalcProgrammer1/OpenRGB"
+        "lastModified": 1788574288,
+        "narHash": "sha256-dlyT/HBxZXT9zXZXxNze3OQaqOO8GZ2eXdCzNFENTNw=",
+        "owner": "CalcProgrammer1",
+        "repo": "OpenRGB",
+        "rev": "dc14dff6469f514e023e6e281d3eb4fabddb6a62",
+        "type": "github"
       },
       "original": {
-        "ref": "perf/cli-latency",
-        "type": "git",
-        "url": "file:///home/logger/Code/github/CalcProgrammer1/OpenRGB"
+        "owner": "CalcProgrammer1",
+        "repo": "OpenRGB",
+        "type": "github"
       }
     },
     "pre-commit": {
@@ -834,18 +833,17 @@
     "yoga-kernel": {
       "flake": false,
       "locked": {
-        "lastModified": 1784435501,
-        "narHash": "sha256-WdH4YKiQOhTgOfSlbhbMM/D9yqUMtzw6UmvqYTpSk1k=",
-        "ref": "amdgpu-vm-tlb-event-driven",
-        "rev": "53ccf7b436f19be34242931da6580f70d80404b5",
-        "revCount": 1447339,
-        "type": "git",
-        "url": "file:///home/logger/Code/github/torvalds/linux"
+        "lastModified": 1788554536,
+        "narHash": "sha256-xAX97V5850mbzFOpWtDH/vUy3IyZ00HdV2o7+4t5Cyw=",
+        "owner": "torvalds",
+        "repo": "linux",
+        "rev": "654ae5d73c05bd2943d65636ce6cd0aa46e62f18",
+        "type": "github"
       },
       "original": {
-        "ref": "amdgpu-vm-tlb-event-driven",
-        "type": "git",
-        "url": "file:///home/logger/Code/github/torvalds/linux"
+        "owner": "torvalds",
+        "repo": "linux",
+        "type": "github"
       }
     }
   },
