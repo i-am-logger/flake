@@ -335,6 +335,24 @@ mynixos.lib.mkSystem {
             identityScript = decryptKey;
             identityDir = builtins.dirOf guest.config.my.infra.radicle.privateKeyFile;
 
+            # PINNED TO WHAT IS ALREADY ON DISK, and transitional.
+            #
+            # Both defaults would be right for a new fleet: the account derives
+            # from the guest as "<hostname>-user" and the state directory from
+            # the same. Neither matches what is RUNNING -- these two came up
+            # under radicle-seed-forge and radicle-forge, with state in
+            # /var/lib/radicle-roles -- and changing either migrates nothing:
+            # podman would mount a new empty directory, so each node would come
+            # up holding no repositories and, worse, no tailscale registration,
+            # which cannot be repaired without an auth key and a hand-run
+            # `tailscale up`. The rename lands as its own change, with the state
+            # moved deliberately, rather than as a side effect of a refactor.
+            user =
+              if guest.config.my.infra.radicle.ci.enable
+              then "radicle-forge"
+              else "radicle-seed-forge";
+            stateDir = "/var/lib/radicle-roles/${guest.config.my.system.hostname}";
+
             stateVolumes = {
               radicle = "/var/lib/radicle";
               tailscale = "/var/lib/tailscale";
@@ -381,6 +399,32 @@ mynixos.lib.mkSystem {
       }];
     })
 
+    # Restored after d4e31c4 ("refactor(radicle): the seed and the builder are
+    # machines in this flake") deleted this module along with the radicle
+    # construction it sat beside. Nothing failed at the time: yoga silently fell
+    # back to nixpkgs' claude-code and openrgb, and claude-desktop left $PATH.
+    # The `claude-desktop` and `openrgb-src` arguments above outlived their only
+    # consumer, which is what makes the deletion legible as collateral.
+    (_: {
+      # claude-desktop is passed as null by flake.nix until upstream stops
+      # depending on the removed nodePackages.asar, so this list is empty in
+      # practice -- the conditional is what survives the day it is non-null.
+      environment.systemPackages =
+        if claude-desktop != null then
+          [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
+        else
+          [ ];
+
+      nixpkgs.overlays = [
+        (import ../../overlays/claude-code.nix)
+        (import ../../overlays/herdr.nix)
+        # Build OpenRGB from the local perf/cli-latency branch (overlays/openrgb.nix
+        # + the openrgb-src flake input) so vogix's server and the openrgb CLI resolve
+        # to our build instead of nixpkgs' 1.0rc2.
+        (import ../../overlays/openrgb.nix openrgb-src.outPath)
+      ];
+    })
+
     # TEST (amdgpu event-driven branch): a non-default boot entry carrying four
     # amdgpu patches on the stock 7.1 kernel:
     #   1. hold page tables until their TLB flush completes -- GPUVM
@@ -413,7 +457,11 @@ mynixos.lib.mkSystem {
 
     # The unpatched kernel stays the default; select the "amdgpu-vm-tlb-test"
     # entry at the bootloader to run the patched kernel. Remove once validated.
-    ({ pkgs, ... }: {
+    # TEMPORARILY DISABLED: building this specialisation builds linux-7.1.0 from
+    # the local yoga-kernel branch, which is a from-source kernel compile on every
+    # rebuild that touches it. Re-enable by deleting this comment and the /* */.
+    /*
+      ({ pkgs, ... }: {
       specialisation.amdgpu-vm-tlb-test.configuration = {
         # Build the kernel from the local amdgpu branch via the git+file
         # `yoga-kernel` input, instead of exported .patch files. Iterate: commit
@@ -437,6 +485,7 @@ mynixos.lib.mkSystem {
           }
         ];
       };
-    })
+      })
+    */
   ];
 }
