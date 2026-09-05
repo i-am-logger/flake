@@ -4,6 +4,11 @@
   {
     serial = "15147050";
     keyId = "42BF2C362C094388";
+    # The key that lives in this machine. `primary` is the STATIC default-key in
+    # gpg.conf, which gpg falls back to when nothing card-aware chose for it --
+    # so pointing it at a key that is not inserted makes every such fallback ask
+    # for a card that is in a drawer. gpg-smart still selects by inserted card.
+    primary = true;
     fingerprint = "F8BEF681E3EE87A5DE4A9E7F42BF2C362C094388";
     sshKeygrip = "504BF2F0CD516A5FD35A640B1719EA8CD73EF2DA";
     sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDNhgIbP2kvM3Y9fFLufk3kivDm6sW83vieSIqopXDbm";
@@ -15,7 +20,7 @@
   {
     serial = "17027658";
     keyId = "9D92E6047DEB1589";
-    primary = true; # static gpg default-key; gpg-smart still picks by inserted card
+    # The backup. Not primary: only one key may be, and gpg.nix asserts it.
     fingerprint = "3DAEA4C9D37037434CE604799D92E6047DEB1589";
     sshKeygrip = "90687F2920871E0132190BE0142A24C3D3A9090F";
     sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHdaxx47ETxaPhP/gqPKfkajPGBJcMNjbsfZ0URABBpY";
