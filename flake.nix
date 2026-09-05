@@ -14,11 +14,13 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "mynixos/nixpkgs";
     };
-    # yoga's amdgpu test kernel - built from a local git branch instead of
-    # per-host .patch files (see systems/yoga; flake=false => tracked files only).
-    # Linux-only: the Mac never forces this input.
+    # yoga's amdgpu test kernel - built from the amdgpu-vm-tlb-event-driven branch
+    # of the i-am-logger/linux fork instead of per-host .patch files (see
+    # systems/yoga; flake=false => tracked files only). On a github fork rather
+    # than a local checkout so it resolves on every host, not just where the
+    # branch is checked out. Linux-only: the Mac never forces this input.
     yoga-kernel = {
-      url = "git+file:///home/logger/Code/github/torvalds/linux?ref=amdgpu-vm-tlb-event-driven";
+      url = "github:i-am-logger/linux/amdgpu-vm-tlb-event-driven";
       flake = false;
     };
     # Local OpenRGB checkout, for building/testing OpenRGB changes (CLI apply
@@ -27,17 +29,18 @@
     # tracks the `perf/cli-latency` branch. Iterate: commit on that branch, then
     # `nix flake update openrgb-src`, then rebuild.
     openrgb-src = {
-      url = "git+file:///home/logger/Code/github/CalcProgrammer1/OpenRGB?ref=perf/cli-latency";
+      url = "github:CalcProgrammer1/OpenRGB";
       flake = false;
     };
   };
 
   outputs =
-    { self
-    , mynixos
-    , yoga-kernel
-    , openrgb-src
-    , ...
+    {
+      self,
+      mynixos,
+      yoga-kernel,
+      openrgb-src,
+      ...
     }:
     let
       # Re-export nixpkgs from mynixos for convenience
@@ -84,7 +87,9 @@
           # which is the accepted risk that makes a builder its own machine.
           publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
           identityDir = "/var/lib/radicle-identity";
-          connect = [ "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776" ];
+          connect = [
+            "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776"
+          ];
           reportsPublicUrl = "https://radicle-yoga-seed.tail46cce1.ts.net/ci";
         };
 

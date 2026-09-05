@@ -592,11 +592,11 @@
     "openrgb-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1788574288,
-        "narHash": "sha256-dlyT/HBxZXT9zXZXxNze3OQaqOO8GZ2eXdCzNFENTNw=",
+        "lastModified": 1788576519,
+        "narHash": "sha256-uHt5pVStuPQWRxMQC+seBKC55bVfAiIVcb00d5itNjo=",
         "owner": "CalcProgrammer1",
         "repo": "OpenRGB",
-        "rev": "dc14dff6469f514e023e6e281d3eb4fabddb6a62",
+        "rev": "ed3d7894c80fbfd396c1a662478bb2cc0a5bf844",
         "type": "github"
       },
       "original": {
@@ -833,15 +833,16 @@
     "yoga-kernel": {
       "flake": false,
       "locked": {
-        "lastModified": 1788554536,
-        "narHash": "sha256-xAX97V5850mbzFOpWtDH/vUy3IyZ00HdV2o7+4t5Cyw=",
-        "owner": "torvalds",
+        "lastModified": 1782409971,
+        "narHash": "sha256-oKbawZtpqgKgPbpi2HSJkJ1Ltqm8Ew+KhQ7QQqoiRAk=",
+        "owner": "i-am-logger",
         "repo": "linux",
-        "rev": "654ae5d73c05bd2943d65636ce6cd0aa46e62f18",
+        "rev": "503831f20aac20ff6abde6933a2259f026ced82d",
         "type": "github"
       },
       "original": {
-        "owner": "torvalds",
+        "owner": "i-am-logger",
+        "ref": "amdgpu-vm-tlb-event-driven",
         "repo": "linux",
         "type": "github"
       }
