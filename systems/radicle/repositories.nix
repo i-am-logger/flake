@@ -34,11 +34,6 @@
     ci = true;
   };
 
-  radicle-ci-smoke = {
-    rid = "rad:z4KpNmJDpSD4xYHcsASaWa9y3AKTd";
-    description = "Smoke test: proves the containerised builder runs CI end to end";
-    ci = true;
-  };
 
   # A third repository, rad:zfDtFXYCZjVrrJ2gbFUPZVAK1XzC, reached the seed
   # through the allow policy and was deleted as unwanted. Noted only so its
