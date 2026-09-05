@@ -70,6 +70,22 @@ mynixos.lib.mkSystem {
     network.tailscale = {
       enable = true;
       tags = [ "tag:radicle-builder" ];
+
+      # WHAT THIS BUILDER MUST BE ABLE TO REACH for its liveness probe to pass.
+      #
+      # The SEED is deliberately not named here. my/infra/radicle derives it
+      # from `connect`, so the peer whose reachability is the point cannot drift
+      # from the peer this builder actually dials -- and getting that wrong is
+      # the failure described at the top of this file.
+      #
+      # What is added is the fleet host, and it is what splits two questions a
+      # single peer conflates. Nothing answering means this node is off the
+      # tailnet: a restart is a plausible repair, so the container exits. The
+      # seed alone staying silent means the node is fine and someone else is
+      # down, which no restart of this machine can fix -- so it fails the probe
+      # unit and stays visible in `systemctl --failed` instead of rebooting a
+      # builder mid-job every few minutes for the duration of a seed outage.
+      liveness.peers = [ host ];
     };
 
     infra.radicle = {

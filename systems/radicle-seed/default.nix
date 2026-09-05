@@ -73,6 +73,20 @@ mynixos.lib.mkSystem {
     network.tailscale = {
       enable = true;
       tags = [ "tag:radicle-seed" ];
+
+      # WHAT THIS SEED MUST BE ABLE TO REACH for its liveness probe to pass.
+      #
+      # Nothing is derived for a seed: it is DIALED rather than dialing, so its
+      # `connect` list is empty and my/infra/radicle has no peer to infer. The
+      # fleet host it is named for is the one node it can always expect to be
+      # up, so it is the round trip that answers the only question worth asking
+      # -- a seed whose datapath has died still reports a running tailscaled, an
+      # active unit and nothing in `systemctl --failed`.
+      #
+      # This is the same `host` the name is built from, not knowledge of what
+      # runs this machine: naming a peer on the fleet is a fact about the
+      # tailnet, and the seed still knows nothing about its runner.
+      liveness.peers = [ host ];
     };
 
     infra.radicle = {
