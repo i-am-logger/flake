@@ -47,9 +47,14 @@ mynixos.lib.mkSystem {
         enable = true;
         xdg.enable = true;
 
-        # Login: the vogix theming default — SDDM with the vogix QML greeter
-        # under a Hyprland Lua compositor (my.environment.login = sddm/vogix);
-        # greetd+tuigreet stays one line away (login.backend = "greetd").
+        # Login: greetd+tuigreet (text). The vogix SDDM greeter is parked here
+        # too — its teardown races this NVIDIA host's modeset and freezes
+        # Hyprland right after login. Restore backend = "sddm" / look = "vogix"
+        # once that race is fixed.
+        login = {
+          backend = "greetd";
+          look = "stock";
+        };
 
         motd = {
           enable = true;
@@ -57,11 +62,14 @@ mynixos.lib.mkSystem {
         };
       };
 
-      # Security configuration — same policy as yoga; secureBoot stays off
-      # until this machine's lanzaboote keys are enrolled.
+      # Security configuration — same policy as yoga. Secure Boot runs through
+      # lanzaboote, signed with the keys already enrolled in this machine's
+      # firmware and persisted at /var/lib/sbctl. The Legion hardware profile
+      # defaults boot.loader.grub.enable on, which ties with lanzaboote's off;
+      # the raw boot module below forces grub off so lanzaboote owns the ESP.
       security = {
         enable = true;
-        secureBoot.enable = false; # skyspy-dev doesn't have secure boot yet
+        secureBoot.enable = true;
         auditRules.enable = true;
         nopasswdRebuild = true;
       };
@@ -206,6 +214,13 @@ mynixos.lib.mkSystem {
 
         # Use NVIDIA open source kernel modules (required for driver >= 560)
         hardware.nvidia.open = true;
+
+        # my.security.secureBoot enables lanzaboote, which requires
+        # boot.loader.grub.enable = false. The Legion hardware profile
+        # (drivers/uefi-boot.nix) defaults grub on at the same priority
+        # lanzaboote sets it off, so force it off here and let lanzaboote
+        # own the signed ESP.
+        boot.loader.grub.enable = lib.mkForce false;
       }
     )
 
