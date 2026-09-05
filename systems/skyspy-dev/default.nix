@@ -64,9 +64,7 @@ mynixos.lib.mkSystem {
 
       # Security configuration — same policy as yoga. Secure Boot runs through
       # lanzaboote, signed with the keys already enrolled in this machine's
-      # firmware and persisted at /var/lib/sbctl. The Legion hardware profile
-      # defaults boot.loader.grub.enable on, which ties with lanzaboote's off;
-      # the raw boot module below forces grub off so lanzaboote owns the ESP.
+      # firmware and persisted at /var/lib/sbctl.
       security = {
         enable = true;
         secureBoot.enable = true;
@@ -214,13 +212,6 @@ mynixos.lib.mkSystem {
 
         # Use NVIDIA open source kernel modules (required for driver >= 560)
         hardware.nvidia.open = true;
-
-        # my.security.secureBoot enables lanzaboote, which requires
-        # boot.loader.grub.enable = false. The Legion hardware profile
-        # (drivers/uefi-boot.nix) defaults grub on at the same priority
-        # lanzaboote sets it off, so force it off here and let lanzaboote
-        # own the signed ESP.
-        boot.loader.grub.enable = lib.mkForce false;
       }
     )
 
