@@ -35,12 +35,11 @@
   };
 
   outputs =
-    {
-      self,
-      mynixos,
-      yoga-kernel,
-      openrgb-src,
-      ...
+    { self
+    , mynixos
+    , yoga-kernel
+    , openrgb-src
+    , ...
     }:
     let
       # Re-export nixpkgs from mynixos for convenience
