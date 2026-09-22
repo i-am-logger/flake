@@ -9,6 +9,14 @@
 # first -- otherwise a wrong src hash surfaces as the *cargo* mismatch and
 # gets written into the overlay as one, where it parses, formats and
 # evaluates cleanly and fails only at build time.
+#
+# The Zig toolchain is chosen per release, not inherited: the vendored
+# libghostty-vt names its minimum Zig in build.zig.zon, upstream's build.rs
+# refuses anything older, and nixpkgs' recipe hardcodes whichever Zig its
+# own herdr needed. 0.9.1 moved from 0.15 to 0.16 while nixpkgs stayed on
+# 0.15, and the build died after a full cargo vendor with "Building Herdr
+# requires Zig 0.16.0". So the requirement is read out of the fetched
+# source and both zigDeps and the build hook are expressed against that Zig.
 
 set -euo pipefail
 
@@ -209,7 +217,7 @@ in
     inherit src;
     hash = "$1";
   };
-  zigDeps = prev.zig_0_15.fetchDeps {
+  zigDeps = prev.${ZIG_ATTR}.fetchDeps {
     pname = "herdr";
     inherit version;
     src = "\${src}/vendor/libghostty-vt";
@@ -223,13 +231,33 @@ EOF
 # Prove the src hash on its own before anything else is built against it. A
 # src mismatch discovered here is reported as a src mismatch; discovered
 # later it would be misread as whichever dependent FOD failed first.
+# ZIG_ATTR is not known yet; the src does not depend on it.
+ZIG_ATTR="zig"
 write_probe "$FAKE" "$FAKE"
 echo "Verifying the source hash..."
-if ! nix build --impure --no-link --expr "(import ${PROBE}/probe.nix).src" >/dev/null 2>"${PROBE}/src.log"; then
+if ! SRC_PATH="$(nix build --impure --no-link --print-out-paths --expr "(import ${PROBE}/probe.nix).src" 2>"${PROBE}/src.log")"; then
     echo "error: the prefetched source hash does not build" >&2
     sed -n 's/^ *//p' "${PROBE}/src.log" | head -20 >&2
     exit 1
 fi
+
+# The Zig this release needs, from the vendored library's own manifest. Only
+# the minor matters: nixpkgs exposes one zig_0_<minor> per series, and Zig
+# 0.x series are mutually incompatible. Anything the manifest does not state
+# in that shape is a reason to stop, not to guess.
+ZON="${SRC_PATH}/vendor/libghostty-vt/build.zig.zon"
+ZIG_MIN="$(sed -n 's/^ *\.minimum_zig_version *= *"\([^"]*\)".*/\1/p' "$ZON" | head -1)"
+if [[ ! "$ZIG_MIN" =~ ^0\.([0-9]+)\.[0-9]+$ ]]; then
+    echo "error: no usable .minimum_zig_version in ${ZON#"$SRC_PATH"/} (got '${ZIG_MIN:-nothing}')" >&2
+    exit 1
+fi
+ZIG_ATTR="zig_0_${BASH_REMATCH[1]}"
+ZIG_HAVE="$(nix_eval "${NIXPKGS_EXPR}.legacyPackages.${SYSTEM}.${ZIG_ATTR}.version")"
+if [[ -z "$ZIG_HAVE" ]]; then
+    echo "error: v${VERSION} needs Zig ${ZIG_MIN}, and ${NIXPKGS_SOURCE} has no ${ZIG_ATTR}" >&2
+    exit 1
+fi
+echo "zig:       ${ZIG_MIN} required, ${ZIG_ATTR} = ${ZIG_HAVE} (via ${NIXPKGS_SOURCE})"
 
 # Harvest one hash per build, each with every *other* hash already correct, so
 # the single mismatch in the log can only be the one being asked for.
@@ -259,6 +287,7 @@ echo
 echo "  src       ${SRC_HASH}"
 echo "  cargoDeps ${CARGO_HASH}"
 echo "  zigDeps   ${ZIG_HASH}"
+echo "  zig       ${ZIG_ATTR}"
 
 # Written aside and moved into place only once it parses, so a botched
 # template cannot leave the flake unevaluable.
@@ -281,11 +310,16 @@ cat >"$STAGED" <<EOF
 #              alone leaves the vendor directory built from the old lockfile.
 #   zigDeps    re-expressed for the same reason: it is a fixed-output fetch of
 #              vendor/libghostty-vt whose hash is a literal in the recipe.
+#   zig        the toolchain this release's vendored libghostty-vt names as
+#              its minimum (build.zig.zon), which upstream's build.rs enforces.
+#              nixpkgs' recipe hardcodes the Zig *its* herdr needed, so the
+#              hook in nativeBuildInputs is swapped for ${ZIG_ATTR}'s, and
+#              zigDeps is fetched with the same Zig.
 #
-# Everything else -- the zig hook wiring, the darwin cctools/xcbuild inputs,
-# the shell completions and SKILL.md generated in postInstall -- is inherited
-# from nixpkgs, which is the point of overriding rather than vendoring the
-# recipe: nixpkgs' fixes keep arriving.
+# Everything else -- the darwin cctools/xcbuild inputs, the shell completions
+# and SKILL.md generated in postInstall -- is inherited from nixpkgs, which
+# is the point of overriding rather than vendoring the recipe: nixpkgs' fixes
+# keep arriving.
 #
 # Delete this file and its import in systems/*/default.nix once nixpkgs ships
 # ${VERSION} or newer. Running scripts/update-herdr.sh will say so when that day
@@ -300,9 +334,11 @@ let
     tag = "v\${version}";
     hash = "${SRC_HASH}";
   };
+
+  zig = prev.${ZIG_ATTR};
 in
 {
-  herdr = prev.herdr.overrideAttrs (_old: {
+  herdr = prev.herdr.overrideAttrs (old: {
     inherit version src;
 
     cargoDeps = prev.rustPlatform.fetchCargoVendor {
@@ -310,13 +346,18 @@ in
       hash = "${CARGO_HASH}";
     };
 
-    zigDeps = prev.zig_0_15.fetchDeps {
+    zigDeps = zig.fetchDeps {
       pname = "herdr";
       inherit version;
       src = "\${src}/vendor/libghostty-vt";
       fetchAll = true;
       hash = "${ZIG_HASH}";
     };
+
+    # Every nixpkgs Zig hook is named zig-<version>, so this drops whichever
+    # one the recipe brought and leads with the one this release needs.
+    nativeBuildInputs = [ zig.hook ]
+      ++ builtins.filter (p: prev.lib.getName p != "zig") old.nativeBuildInputs;
   });
 }
 EOF

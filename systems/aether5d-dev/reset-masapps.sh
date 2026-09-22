@@ -22,7 +22,7 @@
 # ORDER
 #
 # Default is Fidelia only: it is an audio player, so a failed reinstall costs
-# nothing. Confirm the switch reinstalls it before doing the other two -- pass
+# nothing. Confirm the switch reinstalls it before doing Tailscale -- pass
 # `--all`, or name apps explicitly.
 
 set -euo pipefail
@@ -32,10 +32,10 @@ WHICH=(fidelia)
 
 usage() {
     cat <<'EOF'
-usage: reset-masapps.sh [--dry-run] [--all | fidelia | 1password | tailscale ...]
+usage: reset-masapps.sh [--dry-run] [--all | fidelia | tailscale ...]
 
   --dry-run   Print what would happen, change nothing.
-  --all       All three. Do this only after a single app has proven the round trip.
+  --all       Both. Do this only after Fidelia alone has proven the round trip.
 
   With no app named, acts on fidelia alone -- the safe probe.
 
@@ -46,8 +46,8 @@ EOF
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --dry-run) DRY=1 ;;
-        --all) WHICH=(fidelia 1password tailscale) ;;
-        fidelia | 1password | tailscale) [[ ${WHICH[0]} == fidelia && ${#WHICH[@]} -eq 1 ]] && WHICH=(); WHICH+=("$1") ;;
+        --all) WHICH=(fidelia tailscale) ;;
+        fidelia | tailscale) [[ ${WHICH[0]} == fidelia && ${#WHICH[@]} -eq 1 ]] && WHICH=(); WHICH+=("$1") ;;
         -h | --help) usage; exit 0 ;;
         *) echo "unknown argument: $1" >&2; usage >&2; exit 2 ;;
     esac
@@ -61,7 +61,6 @@ sudorun() { if [[ $DRY == 1 ]]; then printf '  [dry] sudo %s\n' "$*"; else sudo 
 bundle_for() {
     case "$1" in
         fidelia) echo "/Applications/Fidelia.app.app" ;;   # doubled extension is upstream's
-        1password) echo "/Applications/1Password for Safari.app" ;;
         tailscale) echo "/Applications/Tailscale.app" ;;
     esac
 }
@@ -96,6 +95,6 @@ say "Next:  sudo darwin-rebuild switch --flake .#aether5d-dev \\"
 say "         --override-input mynixos ~/Code/mynixos"
 say ""
 say "Then check they came back:"
-say "  ls -d /Applications/Fidelia.app.app '/Applications/1Password for Safari.app' /Applications/Tailscale.app"
+say "  ls -d /Applications/Fidelia.app.app /Applications/Tailscale.app"
 say ""
 say "If the switch does NOT reinstall them, the App Store's Purchased list will."
