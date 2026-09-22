@@ -74,12 +74,16 @@ mynixos.lib.mkSystem {
 
       # Infrastructure configuration
       # - containers: Rootless podman, auto-enabled by user dev feature
-      # - k3s: Disabled on laptop
       # - github-runner: Disabled
       # Note: direnv and vscode are now per-user apps (my.users.<name>.apps.dev)
+      #
+      # `k3s.enable = false` stood here and went with the option: mynixos
+      # replaced my.infra.k3s with my.infra.rke2. Setting an option to false
+      # still requires it to exist, so that line broke THIS host's evaluation
+      # while yoga -- which mentioned k3s only in a comment -- kept building.
+      # The cluster is not configured here yet; that lands with the rest of the
+      # fleet's RKE2 wiring.
       infra = {
-        k3s.enable = false; # Disable k3s on laptop
-
         github-runner = {
           enable = false;
           enableGpu = true;
