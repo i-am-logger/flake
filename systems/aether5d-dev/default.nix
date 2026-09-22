@@ -111,7 +111,6 @@ mynixos.lib.mkSystem {
         # The App Store build, kept deliberately: it uses Apple's
         # NetworkExtension, which the open-source tailscaled does not.
         "Tailscale" = 1475387142;
-        "1Password for Safari" = 1569813296;
         # The App Store record really is named "Fidelia.app", hence the doubled
         # extension on disk — upstream's doing, not a botched install.
         "Fidelia.app" = 416135376;
@@ -186,7 +185,7 @@ mynixos.lib.mkSystem {
       # line. A cosmetic App Store complaint therefore silently costs the entire
       # per-user configuration -- no ~/.zshrc, no home-manager profile.
       #
-      # So the bundle step reports and continues. Homebrew here manages three
+      # So the bundle step reports and continues. Homebrew here manages two
       # App Store apps and one cask; none of them is load-bearing enough to be
       # worth failing a system switch over, and a real failure is still printed.
       system.activationScripts.homebrew.text = lib.mkForce ''
