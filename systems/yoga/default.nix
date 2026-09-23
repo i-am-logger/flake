@@ -5,7 +5,6 @@
   # referring to one is not the same as a host defining it.
 , radicleGuests ? [ ]
 , claude-desktop ? null
-, yoga-kernel
 , ...
 }:
 
@@ -452,7 +451,9 @@ mynixos.lib.mkSystem {
     # entry at the bootloader to run the patched kernel. Remove once validated.
     # TEMPORARILY DISABLED: building this specialisation builds linux-7.1.0 from
     # the local yoga-kernel branch, which is a from-source kernel compile on every
-    # rebuild that touches it. Re-enable by deleting this comment and the /* */.
+    # rebuild that touches it. Re-enable by deleting this comment and the /* */,
+    # and adding `yoga-kernel` back to this file's arguments: flake.nix passes it,
+    # and `...` accepts it while nothing here reads it.
     /*
       ({ pkgs, ... }: {
       specialisation.amdgpu-vm-tlb-test.configuration = {
