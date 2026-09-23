@@ -32,7 +32,8 @@ The commands below run from inside the checkout and address it as `.#`.
 
 2. **This repository** - Personal system configurations
    - Hosts in `systems/`, personal data in `users/`
-   - Secrets stay outside git and arrive through the `secrets` flake input
+   - Secrets stay outside git and the Nix store: sops-nix decrypts them at activation from
+     `/persist/etc/sops/secrets.yaml`, with the age key at `/persist/etc/sops-age-keys.txt`
 
 ### Directory Structure
 
@@ -299,8 +300,9 @@ system sees anything, so `my.users.<name>.darwin` never becomes an option path.
 
 ## Personal Data Locations
 
-- **Secrets**: the `secrets` flake input, `/home/logger/.secrets/` — not in git, and
-  deliberately not threaded into the darwin host
+- **Secrets**: sops-nix, decrypted at activation from `/persist/etc/sops/secrets.yaml` with the
+  age key `/persist/etc/sops-age-keys.txt` — never in git or the Nix store (`my.secrets`
+  refuses store paths), and not configured on the darwin host
 - **Account password**: the sops secret `users/logger/password`, decrypted at activation on
   hosts that set `my.secrets.enable` (yoga). No password hash lives in this repo
 - **YubiKey data**: `users/logger/yubikeys.nix` — serials, GPG key IDs, fingerprints, SSH
