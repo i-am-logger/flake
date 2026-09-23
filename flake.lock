@@ -589,22 +589,6 @@
         "type": "github"
       }
     },
-    "openrgb-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1788576519,
-        "narHash": "sha256-uHt5pVStuPQWRxMQC+seBKC55bVfAiIVcb00d5itNjo=",
-        "owner": "CalcProgrammer1",
-        "repo": "OpenRGB",
-        "rev": "ed3d7894c80fbfd396c1a662478bb2cc0a5bf844",
-        "type": "github"
-      },
-      "original": {
-        "owner": "CalcProgrammer1",
-        "repo": "OpenRGB",
-        "type": "github"
-      }
-    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -654,7 +638,6 @@
       "inputs": {
         "claude-desktop": "claude-desktop",
         "mynixos": "mynixos",
-        "openrgb-src": "openrgb-src",
         "yoga-kernel": "yoga-kernel"
       }
     },

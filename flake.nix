@@ -23,22 +23,12 @@
       url = "github:i-am-logger/linux/amdgpu-vm-tlb-event-driven";
       flake = false;
     };
-    # Local OpenRGB checkout, for building/testing OpenRGB changes (CLI apply
-    # latency, Keychron K2 HE native-vs-QMK RGB driver) from a local branch
-    # instead of the pinned nixpkgs release. flake=false => tracked files only;
-    # tracks the `perf/cli-latency` branch. Iterate: commit on that branch, then
-    # `nix flake update openrgb-src`, then rebuild.
-    openrgb-src = {
-      url = "github:CalcProgrammer1/OpenRGB";
-      flake = false;
-    };
   };
 
   outputs =
     { self
     , mynixos
     , yoga-kernel
-    , openrgb-src
     , ...
     }:
     let
@@ -93,7 +83,7 @@
         };
 
         yoga = import ./systems/yoga {
-          inherit mynixos yoga-kernel openrgb-src;
+          inherit mynixos yoga-kernel;
           claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
           radicleGuests = [
             self.nixosConfigurations.radicle-yoga-seed

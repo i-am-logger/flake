@@ -6,7 +6,6 @@
 , radicleGuests ? [ ]
 , claude-desktop ? null
 , yoga-kernel
-, openrgb-src
 , ...
 }:
 
@@ -378,7 +377,8 @@ mynixos.lib.mkSystem {
     # is its own hardware -- it travels with the sticks, independent of the board
     # and the keyboard -- and is driven by OpenRGB, which lives in vogix. So flip
     # vogix's dram-rgb hardware module on directly (it pulls in OpenRGB + the
-    # chipset SMBus stack on its own).
+    # chipset SMBus stack on its own). The OpenRGB build is vogix's too: vogix
+    # pins it and asserts the readiness openrgb.service relies on.
     { vogix.hardware.dram-rgb.enable = true; }
 
     # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
@@ -399,12 +399,9 @@ mynixos.lib.mkSystem {
       }];
     })
 
-    # Restored after d4e31c4 ("refactor(radicle): the seed and the builder are
-    # machines in this flake") deleted this module along with the radicle
-    # construction it sat beside. Nothing failed at the time: yoga silently fell
-    # back to nixpkgs' claude-code and openrgb, and claude-desktop left $PATH.
-    # The `claude-desktop` and `openrgb-src` arguments above outlived their only
-    # consumer, which is what makes the deletion legible as collateral.
+    # yoga's own packages: claude-desktop, and this flake's claude-code and
+    # herdr in place of nixpkgs'. Nothing fails without this module; yoga
+    # silently falls back to nixpkgs' builds.
     (_: {
       # claude-desktop is passed as null by flake.nix until upstream stops
       # depending on the removed nodePackages.asar, so this list is empty in
@@ -418,10 +415,6 @@ mynixos.lib.mkSystem {
       nixpkgs.overlays = [
         (import ../../overlays/claude-code.nix)
         (import ../../overlays/herdr.nix)
-        # Build OpenRGB from the local perf/cli-latency branch (overlays/openrgb.nix
-        # + the openrgb-src flake input) so vogix's server and the openrgb CLI resolve
-        # to our build instead of nixpkgs' 1.0rc2.
-        (import ../../overlays/openrgb.nix openrgb-src.outPath)
       ];
     })
 

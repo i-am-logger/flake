@@ -26,18 +26,12 @@ env:
   # activation, not eval.
   SECRETS_OVERRIDE: --override-input secrets /tmp/ci-empty-secrets
 
-  # yoga carries two more inputs of the same shape: `yoga-kernel`, an amdgpu
-  # branch checked out at ~/Code/github/torvalds/linux, and `openrgb-src`, an
-  # OpenRGB branch beside it. Both are git+file paths that exist on that one
-  # machine, so a runner cannot fetch them either -- without a stand-in the
-  # check dies with `Git repository "..." does not exist`.
-  #
-  # Empty directories are enough for the same reason as secrets: evaluation
-  # only threads these through as source paths (a kernel `src` and an overlay
-  # `src`), and --no-build never realises what is built from them.
+  # `yoga-kernel` is yoga's amdgpu branch of the i-am-logger/linux fork: a whole
+  # Linux source tree. An empty directory stands in for it: evaluation only
+  # threads it through as a kernel `src`, and --no-build never realises what is
+  # built from it.
   LOCAL_SRC_OVERRIDES: >-
     --override-input yoga-kernel /tmp/ci-empty-yoga-kernel
-    --override-input openrgb-src /tmp/ci-empty-openrgb-src
 
 jobs:
   # Cheapest first: a lint failure should not cost a Nix evaluation.
@@ -110,7 +104,6 @@ jobs:
         run: |
           mkdir -p /tmp/ci-empty-secrets
           mkdir -p /tmp/ci-empty-yoga-kernel
-          mkdir -p /tmp/ci-empty-openrgb-src
 
       # --no-build: this evaluates every configuration but does not realise the
       # system closures. Building yoga's and skyspy-dev's toplevels is what the
