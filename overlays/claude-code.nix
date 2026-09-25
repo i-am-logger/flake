@@ -1,4 +1,4 @@
-# claude-code pinned to 2.1.280, overriding whatever the nixpkgs pin ships.
+# claude-code pinned to 2.1.281, overriding whatever the nixpkgs pin ships.
 # Auto-updated by scripts/update-claude-code.sh; edit that, not this file.
 #
 # Upstream ships one native binary per platform plus a release manifest
@@ -37,16 +37,16 @@ _final: prev:
 {
   claude-code = prev.claude-code.override {
     manifest = {
-      version = "2.1.280";
+      version = "2.1.281";
       platforms = {
-        "darwin-arm64" = { binary = "claude.zst"; checksum = "214fafd9d60bc0397cb68747b765ab752be4b53303c176ad885c4cafbe30826f"; };
-        "darwin-x64" = { binary = "claude.zst"; checksum = "2b5ca074d02ea5dd507db0a90ba55847e297061ca3e987ddc49ea89ae0ff2e7e"; };
-        "linux-arm64" = { binary = "claude.zst"; checksum = "6a01f30418f35122a672ccf74bed64aba5119ad47c71548a3b447cc9fec48c81"; };
-        "linux-arm64-musl" = { binary = "claude.zst"; checksum = "32dbe8a94da9689791688e0febfb88c39897ad67f055853e7ae1b6d11c4b4e39"; };
-        "linux-x64" = { binary = "claude.zst"; checksum = "27910e2ae704d8f2e8024897d8fdf1e7710807baf4f6982c0e3797c058315384"; };
-        "linux-x64-musl" = { binary = "claude.zst"; checksum = "2b2e206987e357997bf5c06baf697379b5980a7cc6f1462ca70a6757ece58890"; };
-        "win32-arm64" = { binary = "claude.exe.zst"; checksum = "705dccf9d924d471e32efa19157283da2cdd0b8cfc71d7e0a9e3ec4d13ac381b"; };
-        "win32-x64" = { binary = "claude.exe.zst"; checksum = "cb50dbe5b595b52925d753b10d5907748a4137e7f0bff84d03ea60cd9a28eaf9"; };
+        "darwin-arm64" = { binary = "claude.zst"; checksum = "056662a4e3a5ca37770730a59345d1b5796ef65444c32b97d236651ab68f3fa1"; };
+        "darwin-x64" = { binary = "claude.zst"; checksum = "085dd9952999c742cf262d0fed571c3bcd749d5127eb7dd455bc5be0948c7b9d"; };
+        "linux-arm64" = { binary = "claude.zst"; checksum = "7583b65585561c714e18caca45e0e0fb9bdba6d7ed6ee5d5171834d5c657aea6"; };
+        "linux-arm64-musl" = { binary = "claude.zst"; checksum = "b5400b7f787e78f6c206c1adf70c65b5b6835f2899b61edfa83a117be92111d5"; };
+        "linux-x64" = { binary = "claude.zst"; checksum = "4ffb9f6baada4d88bbd8c586773efd0605c524c7a31cc3833eeda229717a7b25"; };
+        "linux-x64-musl" = { binary = "claude.zst"; checksum = "3921fd07a12e93f858c8b706eca0e4d7b12af14f4af5378d3b87254b4231def5"; };
+        "win32-arm64" = { binary = "claude.exe.zst"; checksum = "41b632497a440de03904c03483d000b4004b908a5f3eb71f139de6dbd40cd685"; };
+        "win32-x64" = { binary = "claude.exe.zst"; checksum = "62f544612ca7e31cdc197bdf8651abcc529bd716964d2517e101177c6b94c70a"; };
       };
     };
   };
