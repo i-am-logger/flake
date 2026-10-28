@@ -439,11 +439,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1793146157,
-        "narHash": "sha256-c+we4eNB9P+eiibOw2RhMElv2lRutGd24ZF09eR/ndg=",
+        "lastModified": 1793160584,
+        "narHash": "sha256-HSFuG2cjR5eBJTTKKe5/n/mtaB1ReZkpaqwK8BV8jUU=",
         "owner": "i-am-logger",
         "repo": "mynixos",
-        "rev": "b1ca93ed531088763581d386582be311e588cefb",
+        "rev": "6cccbc9154a3b5d1158a4c326596cbc86a15a4d0",
         "type": "github"
       },
       "original": {
@@ -783,16 +783,16 @@
         "vogix16-themes": "vogix16-themes"
       },
       "locked": {
-        "lastModified": 1790393718,
-        "narHash": "sha256-371eMntIJqpqpM36GGRCU9aqH15Smik3Uj8foB8+LqM=",
+        "lastModified": 1793160514,
+        "narHash": "sha256-F9KjA4goj+sK3gnuavJJTHW/b70Do3RqZ1Pgkv+kNnA=",
         "owner": "i-am-logger",
         "repo": "vogix",
-        "rev": "7322558b46c2dae59022b3cb79bee6dbbcdb6353",
+        "rev": "5e017d30f6c5491205ca159b4e3cdf6929b85bd9",
         "type": "github"
       },
       "original": {
         "owner": "i-am-logger",
-        "ref": "vogix-v0.12.2",
+        "ref": "vogix-v0.12.3",
         "repo": "vogix",
         "type": "github"
       }
