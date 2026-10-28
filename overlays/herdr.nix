@@ -1,4 +1,4 @@
-# herdr pinned to 0.9.1, ahead of the 0.9.0 nixpkgs ships.
+# herdr pinned to 0.9.5, ahead of the 0.9.0 nixpkgs ships.
 # Auto-updated by scripts/update-herdr.sh; edit that, not this file.
 #
 # herdr is built from source, so unlike overlays/claude-code.nix this cannot
@@ -23,17 +23,17 @@
 # keep arriving.
 #
 # Delete this file and its import in systems/*/default.nix once nixpkgs ships
-# 0.9.1 or newer. Running scripts/update-herdr.sh will say so when that day
+# 0.9.5 or newer. Running scripts/update-herdr.sh will say so when that day
 # comes, and will refuse to write an overlay that is not ahead.
 _final: prev:
 let
-  version = "0.9.1";
+  version = "0.9.5";
 
   src = prev.fetchFromGitHub {
     owner = "herdrdev";
     repo = "herdr";
     tag = "v${version}";
-    hash = "sha256-N6+kprfWRyh0AkAiopkGsNXUGGORyPVFHEaDHCpGQs8=";
+    hash = "sha256-N7e7oCKxeCoxek6UT8Lweq16rSsQQi34QMb7C2iNpm8=";
   };
 
   zig = prev.zig_0_16;
@@ -44,7 +44,7 @@ in
 
     cargoDeps = prev.rustPlatform.fetchCargoVendor {
       inherit src;
-      hash = "sha256-1VAmsDE3zeU0wMVQKleQcd/zq8/k/oor8tasrsRQfeY=";
+      hash = "sha256-a6DgQodo+qa5yg/d+yMfsM9EUv2LQRFrqZgmwgVxggE=";
     };
 
     zigDeps = zig.fetchDeps {
