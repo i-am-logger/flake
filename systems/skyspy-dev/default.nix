@@ -186,6 +186,37 @@ mynixos.lib.mkSystem {
       # config engine (Hyprland ≥0.55 accepts it; 0.57 removes hyprlang).
       # Rollback is deleting this line (hyprlang is still the mynixos default).
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
+
+      # External display over HDMI. The port is wired to the NVIDIA dGPU, and
+      # the attached Alienware AW3225QF advertises 4K120 over FRL — but the
+      # cable in use is a High Speed (HDMI 1.4 class, ~340 MHz) one, so the
+      # link only trains at low TMDS rates. mynixos' wildcard rule asks for
+      # `highres`, which picks 3840x2160@60 (594 MHz); that never trains, so
+      # the monitor sits at "No Signal" while the compositor renders into it
+      # regardless. 2560x1440@60 is 241.5 MHz, trains reliably, and is the
+      # panel's own 16:9 aspect so it fills the screen edge to edge.
+      #
+      # The external is the mirror SOURCE and the laptop follows it: mirroring
+      # the other way puts the panel's 16:10 2560x1600 inside a 16:9 frame and
+      # pillarboxes the external. This way the external is pixel-exact and the
+      # 16:10 laptop is the one that letterboxes.
+      #
+      # The explicit rules win over the wildcard, which stays first so every
+      # other output keeps the mynixos default. Swap in an Ultra High Speed
+      # (48 Gbps) cable and HDMI-A-1 can go back to `highres` for 4K120.
+      users.logger.apps.graphical.windowManagers.hyprland.extraSettings = {
+        monitor = [
+          { output = ""; mode = "highres"; position = "auto"; scale = "1"; }
+          { output = "HDMI-A-1"; mode = "2560x1440@59.95"; position = "0x0"; scale = "1"; }
+          {
+            output = "eDP-1";
+            mode = "2560x1600@240";
+            position = "auto";
+            scale = "1";
+            mirror = "HDMI-A-1";
+          }
+        ];
+      };
     }
   ];
 
