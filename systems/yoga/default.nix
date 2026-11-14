@@ -1,12 +1,81 @@
 { mynixos
-
-  # The machines this host runs as containers, declared in flake.nix. Passed in
-  # rather than imported here: they are machines in their own right, and a host
-  # referring to one is not the same as a host defining it.
-, radicleGuests ? [ ]
 , claude-desktop ? null
 , ...
 }:
+
+let
+  # Decrypt a guest's key into the directory that guest reads it from. Written
+  # to a temporary name and renamed, so a reader sees either the old file or the
+  # new one and never a half-written key.
+  #
+  # THE ONE THING A GUEST CANNOT DO FOR ITSELF, which is why it is written on
+  # this side: sops-install-secrets mounts a ramfs, needing a CAP_SYS_ADMIN a
+  # rootless container has not got. So the key is decrypted HERE, by root, and
+  # bind-mounted in already plaintext. Any ciphertext this host keeps beside it
+  # is its own business, not the guest's.
+  #
+  # 0444 is deliberate rather than sloppy: a service inside reads its keystore
+  # AFTER dropping privileges, and this host's guest account maps to container
+  # ROOT, so a 0400 file owned by it is unreadable to the one process that needs
+  # it. The directory above is 0711 and owned by an account nothing else uses,
+  # so nothing on the host gains access.
+  decryptKey = ''
+    SOPS_AGE_KEY_FILE="$IDENTITY_DIR/age.key" \
+      sops --decrypt --extract '["radicle"]["node-key"]' \
+      "$IDENTITY_DIR/secrets.yaml" > "$IDENTITY_DIR/.node-key.new"
+    chmod 0444 "$IDENTITY_DIR/.node-key.new"
+    mv -f "$IDENTITY_DIR/.node-key.new" "$IDENTITY_DIR/node-key"
+    chmod 0400 "$IDENTITY_DIR/age.key" "$IDENTITY_DIR/secrets.yaml"
+  '';
+
+  # THE MACHINES THIS HOST RUNS, BUILT WHERE THEY ARE RUN.
+  #
+  # These are machines in their own right -- each has a hostname, its own NID,
+  # its own tailnet node, and knows nothing about what hosts it. What is yoga's
+  # is only the decision to run them and what this machine will spend on them,
+  # and that is stated in my.virtualisation.containers below.
+  #
+  # They used to be `nixosConfigurations.radicle-yoga-*` in flake.nix, threaded
+  # back in through a `radicleGuests` argument. That cost three things and
+  # bought none: it forced a `self` reference for a value this file could import
+  # directly; it put the guests in the one output that means "a host you can
+  # install", where `nix flake check` dutifully tried to build a bootable
+  # toplevel for a machine with no disk and failed; and it left this file
+  # re-deriving every per-guest field with a `map` over the injected list --
+  # reading each guest to decide what that guest gets. Written here, each value
+  # is simply stated.
+  #
+  # `host = "yoga"` is the only literal: a tailnet name must be unique
+  # FLEET-wide and tailscale does not reject a collision, it silently appends
+  # -1. The guests derive radicle-yoga-{seed,x64-builder} from it, the
+  # containers take their names from the guests, and the host-side accounts from
+  # those.
+  radicleSeed = import ../radicle-seed {
+    inherit mynixos;
+    host = "yoga";
+    # Minted 2026-09-02. NOT disposable: every workstation pins this NID in a
+    # `connect` entry, so rotating it means visiting each of them.
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
+    identityDir = "/var/lib/radicle-seed-identity";
+    # CI runs on the builder and the reports exist only there.
+    ciReportsFrom = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
+    avatarDefault = ../../users/logger/avatar.png;
+    avatarsByEmail."i-am-logger@users.noreply.github.com" = ../../users/logger/avatar.png;
+  };
+
+  radicleBuilder = import ../radicle-builder {
+    inherit mynixos;
+    host = "yoga";
+    # Minted 2026-09-01. Disposable by design -- a CI recipe can read it, which
+    # is the accepted risk that makes a builder its own machine.
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
+    identityDir = "/var/lib/radicle-identity";
+    connect = [
+      "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776"
+    ];
+    reportsPublicUrl = "https://radicle-yoga-seed.tail46cce1.ts.net/ci";
+  };
+in
 
 mynixos.lib.mkSystem {
 
@@ -251,6 +320,69 @@ mynixos.lib.mkSystem {
 
       # Personal user data, shared verbatim with every host. Facts that are true
       # only here go in the second `my` layer at the bottom of this file.
+      # WHAT THIS HOST RUNS INSIDE ITSELF, and what it will spend on each.
+      #
+      # The guests are built above; this is the only part that is genuinely
+      # yoga's. Nothing here names a container: each is named by its own
+      # my.system.hostname, so renaming a guest renames its container, its
+      # host-side account and its state directory together.
+      #
+      # RESOURCE LIMITS ARE THE HOST'S, deliberately -- unlike a VM's
+      # virtualisation.memorySize, which is virtual hardware the guest genuinely
+      # has and wants wherever it runs. A container's limit is a cgroup ceiling
+      # this machine imposes to defend itself, so a guest cannot raise it.
+      virtualisation.containers = [
+        {
+          system = radicleSeed;
+          identityScript = decryptKey;
+          identityDir = "/var/lib/radicle-seed-identity";
+
+          # PINNED TO WHAT IS ALREADY ON DISK, and transitional. The defaults
+          # would both be right for a new fleet -- the account derives from the
+          # guest as "<hostname>-user" and the state directory from the same --
+          # but neither matches what is RUNNING, and changing either migrates
+          # nothing: podman would mount a new empty directory, so the node would
+          # come up holding no repositories and, worse, no tailscale
+          # registration, which cannot be repaired without an auth key and a
+          # hand-run `tailscale up`. The rename lands as its own change, with
+          # the state moved deliberately, rather than as a refactor's side
+          # effect.
+          user = "radicle-seed-forge";
+          stateDir = "/var/lib/radicle-roles/radicle-yoga-seed";
+
+          stateVolumes = {
+            radicle = "/var/lib/radicle";
+            tailscale = "/var/lib/tailscale";
+          };
+          # memory and pidsLimit left at their defaults (4g / 2048): a seed
+          # runs no untrusted code.
+        }
+
+        {
+          system = radicleBuilder;
+          identityScript = decryptKey;
+          identityDir = "/var/lib/radicle-identity";
+          user = "radicle-forge"; # as above: pinned to what is on disk
+          stateDir = "/var/lib/radicle-roles/radicle-yoga-x64-builder";
+
+          stateVolumes = {
+            radicle = "/var/lib/radicle";
+            tailscale = "/var/lib/tailscale";
+            radicle-ci = "/var/lib/radicle-ci";
+          };
+
+          # A CI recipe can fork-bomb or exhaust memory, and nothing else
+          # addresses denial of service against this machine.
+          memory = "16g";
+          pidsLimit = 4096;
+
+          # A builder BUILDS, and nix builds in a sandbox -- which needs /proc
+          # fully visible, not a capability. See the option for why the error it
+          # fixes reads as a missing capability and is not one.
+          nixSandbox = true;
+        }
+      ];
+
       users = import ../../users;
 
       # Hardware specs (cpu, gpu, bluetooth, audio) are defined in the motherboard module
@@ -291,87 +423,6 @@ mynixos.lib.mkSystem {
   # directly on this host; the seed was the last of those to move, and the file
   # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # The machines this host runs. They are declared in flake.nix beside yoga
-    # itself, because they ARE machines -- their keys, their names and what they
-    # enable are theirs, not yoga's. What is genuinely yoga's is only this: the
-    # decision to run them, and what this machine is willing to spend.
-    #
-    # Nothing here names a container. Each guest is named by its own
-    # my.system.hostname, its host-side account by "<that>-user", and its state
-    # directory from the same, so no guest is named in this file at all: rename
-    # the host and every derived name follows.
-    ({ lib, ... }:
-      let
-        # Decrypt a guest's key into the directory that guest reads it from.
-        # Written to a temporary name and renamed, so a reader sees either the
-        # old file or the new one and never a half-written key.
-        #
-        # 0444 is deliberate rather than sloppy: a service inside reads its
-        # keystore AFTER dropping privileges, and this host's guest account maps
-        # to container ROOT, so a 0400 file owned by it is unreadable to the one
-        # process that needs it. The directory above is 0711 and owned by an
-        # account nothing else uses, so nothing on the host gains access.
-        decryptKey = ''
-          SOPS_AGE_KEY_FILE="$IDENTITY_DIR/age.key" \
-            sops --decrypt --extract '["radicle"]["node-key"]' \
-            "$IDENTITY_DIR/secrets.yaml" > "$IDENTITY_DIR/.node-key.new"
-          chmod 0444 "$IDENTITY_DIR/.node-key.new"
-          mv -f "$IDENTITY_DIR/.node-key.new" "$IDENTITY_DIR/node-key"
-          chmod 0400 "$IDENTITY_DIR/age.key" "$IDENTITY_DIR/secrets.yaml"
-        '';
-      in
-      {
-        my.virtualisation.containers = map
-          (guest: {
-            system = guest;
-
-            # THE ONE THING THE GUEST CANNOT DO FOR ITSELF. sops-install-secrets
-            # mounts a ramfs, needing a CAP_SYS_ADMIN a rootless container has
-            # not got, so the key is decrypted HERE, by root, and bind-mounted in
-            # already plaintext. Any ciphertext this host keeps beside it is its
-            # own business, not the guest's.
-            identityScript = decryptKey;
-            identityDir = builtins.dirOf guest.config.my.infra.radicle.privateKeyFile;
-
-            # PINNED TO WHAT IS ALREADY ON DISK, and transitional.
-            #
-            # Both defaults would be right for a new fleet: the account derives
-            # from the guest as "<hostname>-user" and the state directory from
-            # the same. Neither matches what is RUNNING -- these two came up
-            # under radicle-seed-forge and radicle-forge, with state in
-            # /var/lib/radicle-roles -- and changing either migrates nothing:
-            # podman would mount a new empty directory, so each node would come
-            # up holding no repositories and, worse, no tailscale registration,
-            # which cannot be repaired without an auth key and a hand-run
-            # `tailscale up`. The rename lands as its own change, with the state
-            # moved deliberately, rather than as a side effect of a refactor.
-            user =
-              if guest.config.my.infra.radicle.ci.enable
-              then "radicle-forge"
-              else "radicle-seed-forge";
-            stateDir = "/var/lib/radicle-roles/${guest.config.my.system.hostname}";
-
-            stateVolumes = {
-              radicle = "/var/lib/radicle";
-              tailscale = "/var/lib/tailscale";
-            } // lib.optionalAttrs guest.config.my.infra.radicle.ci.enable {
-              radicle-ci = "/var/lib/radicle-ci";
-            };
-
-            # A CI recipe can fork-bomb or exhaust memory, and nothing else
-            # addresses denial of service against this machine. A seed runs no
-            # untrusted code and needs far less.
-            memory = if guest.config.my.infra.radicle.ci.enable then "16g" else "4g";
-            pidsLimit = if guest.config.my.infra.radicle.ci.enable then 4096 else 2048;
-
-            # A builder BUILDS, and nix builds in a sandbox -- which needs /proc
-            # fully visible, not a capability. See the option for why the error it
-            # fixes reads as a missing capability and is not one.
-            nixSandbox = guest.config.my.infra.radicle.ci.enable;
-          })
-          radicleGuests;
-      })
-
     # DDR5 modules on this build carry addressable RGB (ENE controllers). DRAM RGB
     # is its own hardware -- it travels with the sticks, independent of the board
     # and the keyboard -- and is driven by OpenRGB, which lives in vogix. So flip
@@ -379,6 +430,19 @@ mynixos.lib.mkSystem {
     # chipset SMBus stack on its own). The OpenRGB build is vogix's too: vogix
     # pins it and asserts the readiness openrgb.service relies on.
     { vogix.hardware.dram-rgb.enable = true; }
+
+    # btrfs checksums every extent but only VERIFIES a checksum when the extent
+    # is read or scrubbed. Without a scrub, rot is discovered the day you open
+    # the file -- which is the day it is already too late. Both btrfs
+    # filesystems are named: they are separate partitions on this host, so
+    # scrubbing one does not touch the other.
+    {
+      services.btrfs.autoScrub = {
+        enable = true;
+        interval = "monthly";
+        fileSystems = [ "/nix" "/persist" ];
+      };
+    }
 
     # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
     # `dispatch` IPC (hyprwm/Hyprland#15539, merged 2026-07-22). Our config is

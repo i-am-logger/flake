@@ -189,7 +189,7 @@ cat >"$STAGED" <<EOF
 #
 # To wind this down once the nixpkgs pin catches up, delete this file and
 # every \`(import ../../overlays/claude-code.nix)\` line under systems/ --
-# yoga, skyspy-dev and aether5d-dev today.
+# yoga, skyspy-dev, ads-dev1 and aether5d-dev today.
 _final: prev:
 {
   claude-code = prev.claude-code.override {

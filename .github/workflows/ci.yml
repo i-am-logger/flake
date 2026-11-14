@@ -117,7 +117,7 @@ jobs:
       - name: Evaluate every host
         run: |
           set -euo pipefail
-          for h in yoga skyspy-dev; do
+          for h in yoga skyspy-dev ads-dev1; do
             echo "== $h =="
             nix eval $LOCAL_SRC_OVERRIDES --raw ".#nixosConfigurations.$h.config.networking.hostName"
             echo

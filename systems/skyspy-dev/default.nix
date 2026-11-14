@@ -222,6 +222,27 @@ mynixos.lib.mkSystem {
 
   # System-specific configuration (personal, not opinionated)
   extraModules = [
+    # THIS HOST KEEPS A MUTABLE ACCOUNT DATABASE, and must say so.
+    #
+    # mynixos defaults users.mutableUsers = false (my/users/users), which is
+    # right for every host whose password is declarative. This one's is not:
+    # my.secrets is off here, users/logger states no hashedPassword, and the
+    # password was set with `passwd` and has simply survived -- legitimately,
+    # because unlike yoga and ads-dev1 this root is REAL EXT4 (see
+    # ./filesystem.nix) and nothing wipes it.
+    #
+    # Taking the default here would NOT fail the build: logger is in wheel and
+    # carries YubiKey authorized_keys, so nixpkgs' lockout assertion is
+    # satisfied by the KEYS. It would instead let update-users-groups.pl
+    # rewrite the password field to `!` on the next activation -- locking the
+    # console while ssh kept working, which is the hardest version of this
+    # failure to diagnose.
+    #
+    # Remove this once the password has a declarative source: give this host
+    # my.secrets as yoga has, and users/logger's
+    # linux.secrets.hashedPassword = true starts applying on its own.
+    { users.mutableUsers = true; }
+
     # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
     # `dispatch` IPC (hyprwm/Hyprland#15539). Same rationale as on yoga: fail
     # the build until the Lua migration lands (thread_hyprland_lua_migration).

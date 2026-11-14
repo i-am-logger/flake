@@ -46,50 +46,22 @@
       };
 
       nixosConfigurations = {
-        # The fleet's machines, each declared once. A radicle seed is a machine
-        # like yoga is a machine: it has a hostname, it enables some services,
-        # and nothing about it says how it will be run. yoga decides that below
-        # by putting them in `my.virtualisation.containers`; either could as
-        # easily be a VM, or installed on metal.
+        # HOSTS YOU CAN INSTALL, and only those.
         #
-        # `host = "yoga"` is what puts yoga's name in theirs, because a tailnet
-        # name must be unique fleet-wide. It is the ONLY literal: the guests
-        # derive `radicle-yoga-{seed,x64-builder}` from it, the containers take
-        # their names from the guests, and the host-side accounts from those.
-        radicle-yoga-seed = import ./systems/radicle-seed {
-          inherit mynixos;
-          host = "yoga";
-          # Minted 2026-09-02. NOT disposable: every workstation pins this NID
-          # in a `connect` entry, so rotating it means visiting each of them.
-          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILyY9GfELIEcnfz8bAlbPWp68FYgNGADDEPk9J29+3h5";
-          identityDir = "/var/lib/radicle-seed-identity";
-          # CI runs on the builder and the reports exist only there.
-          ciReportsFrom = "http://radicle-yoga-x64-builder.tail46cce1.ts.net:8782/";
-          avatarDefault = ./users/logger/avatar.png;
-          avatarsByEmail."i-am-logger@users.noreply.github.com" = ./users/logger/avatar.png;
-        };
-
-        radicle-yoga-x64-builder = import ./systems/radicle-builder {
-          inherit mynixos;
-          host = "yoga";
-          # Minted 2026-09-01. Disposable by design -- a CI recipe can read it,
-          # which is the accepted risk that makes a builder its own machine.
-          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+Z/2uDBYlhSj6dsI4s7KqOcs0/HBxZX8rIBe/ROzDK";
-          identityDir = "/var/lib/radicle-identity";
-          connect = [
-            "z6Mks9Ty1pdeM6LWsivN674EL3s3qCf8aVo8hw9KN3gmSPwW@radicle-yoga-seed.tail46cce1.ts.net:8776"
-          ];
-          reportsPublicUrl = "https://radicle-yoga-seed.tail46cce1.ts.net/ci";
-        };
-
+        # The radicle seed and CI builder are machines too, but they are not
+        # hosts: they have no disk, so no bootable toplevel, and they are run as
+        # containers by whichever host declares them in
+        # my.virtualisation.containers -- yoga, today, which builds them in its
+        # own file. Listing them here made `nix flake check` try to build a
+        # bootable system for a machine with no root filesystem and fail, and
+        # forced a `self` reference to thread them back into yoga.
+        #
+        # Their images are reachable as packages.<system>.role-image-<name>.
         yoga = import ./systems/yoga {
           inherit mynixos yoga-kernel;
           claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
-          radicleGuests = [
-            self.nixosConfigurations.radicle-yoga-seed
-            self.nixosConfigurations.radicle-yoga-x64-builder
-          ];
         };
+        ads-dev1 = import ./systems/ads-dev1 { inherit mynixos; };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos; };
 
         # TODO: move to mynixos Installer ISO
@@ -110,6 +82,24 @@
       packages.x86_64-linux = {
         # Installer ISO package
         installer-iso = self.nixosConfigurations.installer-iso.config.system.build.isoImage;
-      };
+      }
+      // (
+        # The container roles, as images. They are not nixosConfigurations (see
+        # the comment there), so this is what keeps `nix build` able to reach
+        # one -- which is how a role is inspected without running it. Derived
+        # from what yoga actually declares, so a role cannot be exposed here
+        # and not run, or run and not exposed.
+        let
+          roles = self.nixosConfigurations.yoga.config.my.virtualisation.containers;
+        in
+        lib.listToAttrs (
+          map
+            (role: {
+              name = "role-image-${role.name}";
+              value = role.system.config.system.build.image;
+            })
+            roles
+        )
+      );
     };
 }

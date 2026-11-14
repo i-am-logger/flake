@@ -72,6 +72,7 @@ jobs:
           echo "Validating system configurations..."
           nix build .#nixosConfigurations.yoga.config.system.build.toplevel --dry-run
           nix build .#nixosConfigurations.skyspy-dev.config.system.build.toplevel --dry-run
+          nix build .#nixosConfigurations.ads-dev1.config.system.build.toplevel --dry-run
           echo "✓ All system configurations are valid"
       
       - name: Build installer ISO (if changed)

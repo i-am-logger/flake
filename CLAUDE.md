@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Personal system configurations for three hosts — two NixOS, one nix-darwin. Everything is
+Personal system configurations for four hosts — three NixOS, one nix-darwin. Everything is
 stated through a custom typed functional DSL called `mynixos`, consumed as the flake input
 `github:i-am-logger/mynixos` and exposed as the `my.*` namespace. Local mynixos checkouts
 differ per machine (e.g. `/Users/logger/Code/mynixos` on the Mac); iterate against one with
@@ -12,7 +12,7 @@ differ per machine (e.g. `/Users/logger/Code/mynixos` on the Mac); iterate again
 
 ### Where this checkout lives
 
-- **yoga, skyspy-dev**: `/etc/nixos`. `my.storage.impermanence` clones the repo there when
+- **yoga, skyspy-dev, ads-dev1**: `/etc/nixos`. `my.storage.impermanence` clones the repo there when
   that directory is empty, and points `~/.flake` at it.
 - **aether5d-dev**: `/Users/logger/Code/flake`, declared as `my.system.flakeDir`.
 
@@ -42,14 +42,15 @@ flake/
 ├── systems/           # Per-host configurations
 │   ├── yoga/          # Desktop workstation (Gigabyte X870E)
 │   ├── skyspy-dev/    # Laptop (Lenovo Legion 16IRX8H)
+│   ├── ads-dev1/      # Threadripper workstation (Gigabyte TRX50 AERO D)
 │   ├── aether5d-dev/  # MacBook Pro M5 Max (nix-darwin)
-│   └── motd.txt       # Login banner, read by both NixOS hosts
+│   └── motd.txt       # Login banner, read by every NixOS host
 ├── users/
 │   ├── default.nix    # The `my.users` attrset every host imports
 │   └── logger/        # Personal user data + YubiKey data + avatar
 ├── themes/            # Colour palettes, base16-schemes and Wallpapers (data).
 │                      # NOTE: nothing in this repo imports them.
-├── overlays/          # claude-code.nix, applied by all three hosts
+├── overlays/          # claude-code.nix, applied by every host
 ├── installer/         # Custom installer ISO
 ├── forensic/          # devenv shell for mobile forensics (mvt)
 ├── scripts/           # Helper scripts
@@ -133,11 +134,12 @@ cd /etc/nixos && nixos-rebuild build --flake .#
 # Name a host explicitly instead of auto-detecting
 sudo nixos-rebuild switch --flake /etc/nixos#yoga
 sudo nixos-rebuild switch --flake /etc/nixos#skyspy-dev
+sudo nixos-rebuild switch --flake /etc/nixos#ads-dev1
 ```
 
 **Important**: Always run `test` before `switch` to catch issues without committing to bootloader.
 
-Both NixOS hosts are `x86_64-linux` and cannot be built from the Mac. Pure evaluation of
+All three NixOS hosts are `x86_64-linux` and cannot be built from the Mac. Pure evaluation of
 their options and config works there; anything that needs a Linux builder (notably
 `config.system.build.toplevel`) does not.
 
@@ -219,7 +221,9 @@ nix build .#installer-iso
 - **Storage**: Disko-managed with a dedicated `/persist` partition; impermanence on top
 - **Security**: secure boot (lanzaboote), YubiKey via `my.hardware.securityKeys.yubico`,
   audit rules, `nopasswdRebuild`
-- **Notable**: greetd + tuigreet login into Hyprland; headscale control server;
+- **Notable**: greetd + tuigreet login into Hyprland; hosts two radicle container roles
+  (seed + x64 builder) on the Tailscale SaaS tailnet -- it runs NO headscale, despite what
+  older docs said; the self-hosted design was retired at zero registered nodes;
   `my.ai.claudeCodeProxy` on and Ollama off; vogix DRAM RGB
 
 ### skyspy-dev
@@ -230,6 +234,29 @@ nix build .#installer-iso
 - **Notable**: Windows dual-boot (`my.system.dualBoot.windows`) with a read-only NTFS mount
   at `/home/logger/mnt/windows`; Tailscale client + Tor; `my.ai`, secure boot and
   `my.secrets` all off
+
+### ads-dev1
+- **Hardware**: Gigabyte TRX50 AERO D (sTR5), AMD Threadripper 9980X 64C/128T,
+  187 GiB RAM, discrete Radeon RX 9070 XT (Navi 48, RDNA4, `gfx1201`), one 8 TB
+  WD_BLACK SN8100, Keychron K2 HE. Aquantia 10GbE + Realtek 2.5GbE + Qualcomm Wi-Fi 7.
+  TPM present (unlike yoga). No Kraken, no Stream Deck.
+- **Hardware profile**: `my.hardware.motherboards.gigabyte.trx50-aero-d`, added to
+  mynixos for this host. It carries NO `drivers/` directory on purpose -- the X870E
+  profile beside it has iGPU GFXOFF/deep-colour params and an Elgato EDID override,
+  all specific to that machine, and a `systemd-boot.enable = mkForce false` that
+  would leave a non-secure-boot host unbootable.
+- **Storage**: ONE btrfs pool, `/nix` and `/persist` as subvolumes, tmpfs root 32G
+  and `/tmp` 96G. Deliberately not yoga's two-partition split: 8 TB makes the
+  fixed-size question pointless. `discard=async`, `compress=zstd:1`/`zstd:3`, and
+  NO `autodefrag` (write amplification on NVMe). Monthly `services.btrfs.autoScrub`.
+- **Notable**: `my.ai.ollama` ON with `acceleration = "rocm"` and
+  `rocmGfxVersion = "12.0.1"` (Navi 48) -- the only host with a real dGPU for
+  inference -- alongside `claudeCodeProxy`. Display is a Dell AW3225QF; put it on
+  DisplayPort, since amdgpu cannot reach 4K@240 over HDMI (no HDMI 2.1 FRL in the
+  open driver).
+- **STAGED BRING-UP**: `security.secureBoot.enable = false` and no `my.secrets` yet,
+  with a declarative `hashedPassword` for the first boot. The gates to close are
+  listed at the bottom of `systems/ads-dev1/default.nix`.
 
 ### aether5d-dev (macOS, nix-darwin)
 - **Hardware**: Apple M5 Max MacBook Pro, `aarch64-darwin`, macOS 27.0

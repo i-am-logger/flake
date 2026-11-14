@@ -13,8 +13,9 @@ Personal system configurations built on [mynixos](https://github.com/i-am-logger
 
 | Host | Hardware | Role |
 |------|----------|------|
-| **yoga** | Gigabyte X870E AORUS Elite WiFi7 (AMD) | Primary workstation, Headscale coordination server |
+| **yoga** | Gigabyte X870E AORUS Elite WiFi7 (AMD) | Primary workstation, hosts the radicle seed + CI builder |
 | **skyspy-dev** | Lenovo Legion 16IRX8H (Intel/NVIDIA) | Development laptop, dual-boot Windows |
+| **ads-dev1** | Gigabyte TRX50 AERO D (Threadripper 9980X / RX 9070 XT) | Build & dev workstation, local inference on ROCm |
 | **aether5d-dev** | Apple M5 Max MacBook Pro (`aarch64-darwin`) | macOS laptop, via nix-darwin |
 
 ## Architecture
@@ -24,13 +25,14 @@ This repo contains **personal data and system-specific configuration**. The reus
 ```
 flake.nix              # Entry point — inputs, nixosConfigurations, darwinConfigurations
 systems/
-  yoga/                # AMD desktop: disko + /persist, secure boot, Headscale
+  yoga/                # AMD desktop: disko + /persist, secure boot, radicle containers
   skyspy-dev/          # Intel/NVIDIA laptop: dual-boot Windows, Tailscale, Tor
+  ads-dev1/            # Threadripper workstation: one btrfs pool, ollama on ROCm
   aether5d-dev/        # Apple Silicon: nix-darwin, Touch ID, macOS defaults, Homebrew
 users/
   logger/              # User data: YubiKey public keys, avatar, per-platform tiers
 overlays/
-  claude-code.nix      # claude-code ahead of the nixpkgs pin; all three hosts
+  claude-code.nix      # claude-code ahead of the nixpkgs pin; every host
 installer/             # Installer ISO — packages.x86_64-linux.installer-iso
 docs/                  # Secure boot setup, reliability playbooks
 ```
@@ -54,7 +56,7 @@ mynixos.lib.mkSystem {
       # `enable` gates the whole stack — every block inside my/security is
       # `mkIf (cfg.enable && …)`, so secureBoot alone is inert.
       security = { enable = true; secureBoot.enable = true; };
-      network.headscale = { enable = true; port = 8090; };
+      network.tailscale = { enable = true; ssh = true; };
       ai = {
         enable = true;
         claudeCodeProxy = { enable = true; model = "opus"; };
@@ -92,10 +94,11 @@ A user entry under `users/` may carry reserved `linux` and `darwin` keys holding
 
 ## Networking
 
-- **yoga** runs Headscale, the self-hosted coordination server, bound to `127.0.0.1:8090`, with ACL groups for the `logger` and `logger-mobile` users.
+- **yoga** joins the Tailscale SaaS tailnet and relays for the two radicle container roles it hosts. The self-hosted Headscale + Tor onion design that used to live here was retired without ever being bootstrapped — zero nodes registered — once the phones joined `tailscale.com` trivially. The `my.network.headscale` module remains in mynixos for a future migration; no host enables it.
+- **ads-dev1** joins the same tailnet as a client, with `ssh = true` and no relay (it hosts no container roles yet).
 - **skyspy-dev** runs a Tailscale client plus a Tor SOCKS proxy for reaching `.onion` addresses.
 - **aether5d-dev** joins the tailnet through the Mac App Store Tailscale build, which uses Apple's NetworkExtension. Inbound traffic is default-deny under pf, and the allows key on the **Tailscale address ranges** (`100.64.0.0/10`, `fd7a:115c:a1e0::/48`) rather than on an interface, because the tunnel's `utun*` device has no stable name. That is what scopes Remote Login to the tailnet: `sshd_config`'s `ListenAddress` is inert on macOS, where launchd owns the socket. The macOS application firewall is a complementary layer, on and in stealth mode — it filters per application, so it cannot express this itself.
-- **SSH on the Linux hosts** is pubkey-only: `PasswordAuthentication` off, `AuthenticationMethods publickey`, root login refused. mynixos enables `sshd` wherever Tailscale is and fills `authorized_keys` from each user's YubiKey SSH keys — so yoga, which hosts the control server without joining the tailnet itself, runs no `sshd` at all. Neither Linux host is reachable on a TCP port from the wider network: yoga's firewall admits none, and skyspy-dev admits only port 22, on `tailscale0` alone.
+- **SSH on the Linux hosts** is pubkey-only: `PasswordAuthentication` off, `AuthenticationMethods publickey`, root login refused. mynixos enables `sshd` wherever Tailscale is and fills `authorized_keys` from each user's YubiKey SSH keys. All three Linux hosts set `tailscale.ssh = true`, so inbound ssh over the tailnet is authenticated by tailnet identity, with classic sshd + YubiKey pubkeys as the fallback path on `tailscale0`. None is reachable on a TCP port from the wider network: yoga admits only `tailscale serve` ports, skyspy-dev only 22 on `tailscale0`, and ads-dev1 none.
 
 ## Quick Start
 
@@ -103,6 +106,7 @@ A user entry under `users/` may carry reserved `linux` and `darwin` keys holding
 # Linux — build, test, then apply. `build` needs no privileges; `test` and
 # `switch` activate, so they need root like any other activation.
 nixos-rebuild build --flake .#yoga
+nixos-rebuild build --flake .#ads-dev1
 sudo nixos-rebuild test --flake .#yoga
 sudo nixos-rebuild switch --flake .#yoga
 

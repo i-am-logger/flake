@@ -57,9 +57,18 @@ _:
                   mountpoint = "/nix";
                   mountOptions = [
                     "noatime"
-                    "compress=zstd"
-                    "autodefrag"
+                    # The store is very compressible; level 1 keeps most of the
+                    # ratio for a fraction of the CPU, and this is paid on every
+                    # build write.
+                    "compress=zstd:1"
+                    # Queued, rate-limited TRIM -- the modern replacement for
+                    # periodic fstrim. my.hardware.storage.ssd still schedules
+                    # weekly fstrim, which becomes a cheap no-op.
+                    "discard=async"
                     "space_cache=v2"
+                    # autodefrag REMOVED. It targets small random writes on
+                    # spinning rust; on NVMe it is pure write amplification,
+                    # rewriting extents that were never slow to read.
                   ];
                 };
               };
@@ -74,8 +83,23 @@ _:
                   mountpoint = "/persist";
                   mountOptions = [
                     "noatime"
-                    "autodefrag"
+                    # THIS LEVEL ACTUALLY APPLIES, unlike the same line would on
+                    # ads-dev1. compress= is a FILESYSTEM-wide btrfs option with
+                    # first-mount-wins semantics, so two subvolumes of one pool
+                    # cannot differ -- but here /nix and /persist are separate
+                    # PARTITIONS, hence separate filesystems, each with its own
+                    # first mount. See systems/ads-dev1/disko.nix, where the
+                    # single-pool layout was measured silently collapsing zstd:3
+                    # into zstd:1.
+                    #
+                    # zstd skips incompressible extents, so Media/
+                    # costs nothing while text, configs and repos win. Applies
+                    # to data written from here on; existing extents are left
+                    # as they are (a rewrite would need btrfs fi defrag -czstd).
+                    "compress=zstd:3"
+                    "discard=async"
                     "space_cache=v2"
+                    # autodefrag REMOVED -- see /nix above.
                   ];
                 };
               };
