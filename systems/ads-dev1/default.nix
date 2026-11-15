@@ -37,6 +37,9 @@ mynixos.lib.mkSystem {
 
       hardware = {
         securityKeys.yubico.enable = true;
+        # yubikey3 lives in this machine: only its key is offered to SSH, so an
+        # absent card is never asked for, and it is gpg's default-key.
+        securityKeys.residentSerials = [ "15147046" ];
 
         # Gigabyte TRX50 AERO D (sTR5, AMD TRX50). Sets cpu/gpu = "amd",
         # hostPlatform, and the storage/usb/memory component modules. Unlike

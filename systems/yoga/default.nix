@@ -111,6 +111,10 @@ mynixos.lib.mkSystem {
         # YubiKey device support (pcscd, udev, PAM, gnupg agent). Moved out of
         # my.security — it is device wiring, not policy.
         securityKeys.yubico.enable = true;
+        # The cards that live in this machine: only theirs are offered to SSH,
+        # so an absent card is never asked for, and the first is gpg's
+        # default-key.
+        securityKeys.residentSerials = [ "17027658" "15147050" ];
 
         # Motherboard (automatically sets cpu/gpu/bluetooth/audio)
         motherboards.gigabyte.x870e-aorus-elite-wifi7 = {
@@ -199,13 +203,9 @@ mynixos.lib.mkSystem {
         # Headless sudo: authenticate against the operator's forwarded SSH
         # agent, so the YubiKey answering for sudo is the one in the laptop at
         # the other end of the connection. pam_u2f stays for the local console.
-        sshAgentSudo = {
-          enable = true;
-          # 17027658 and 15147050 both live in this machine, so neither can
-          # also be what authorizes sudo here — the local gpg-agent would sign
-          # for any process running as logger. 15147046 (in ads-dev1) does.
-          residentSerials = [ "17027658" "15147050" ];
-        };
+        # Every key in yubikeys.nix authorizes sudo over SSH, the two that live
+        # in this machine included (owner, 2026-11-15).
+        sshAgentSudo.enable = true;
       };
 
       # Secrets management via sops-nix.
