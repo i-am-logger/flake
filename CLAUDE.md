@@ -12,8 +12,10 @@ differ per machine (e.g. `/Users/logger/Code/mynixos` on the Mac); iterate again
 
 ### Where this checkout lives
 
-- **yoga, skyspy-dev, ads-dev1**: `/etc/nixos`. `my.storage.impermanence` clones the repo there when
+- **yoga, skyspy-dev**: `/etc/nixos`. `my.storage.impermanence` clones the repo there when
   that directory is empty, and points `~/.flake` at it.
+- **ads-dev1**: `/home/logger/Code/logger/flake`. `/etc/nixos` is a symlink to it, declared as
+  `my.system.etcNixos.link`; `~/.flake` points at `/etc/nixos`.
 - **aether5d-dev**: `/Users/logger/Code/flake`, declared as `my.system.flakeDir`.
 
 The commands below run from inside the checkout and address it as `.#`.
@@ -335,8 +337,9 @@ system sees anything, so `my.users.<name>.darwin` never becomes an option path.
 - **YubiKey data**: `users/logger/yubikeys.nix` — serials, GPG key IDs, fingerprints, SSH
   keygrips and U2F handles — alongside `users/logger/yubikey{1,2}_pubkey.asc`
 - **User avatar**: `users/logger/avatar.png`, consumed by AccountsService on the Linux hosts
-- **Impermanence**: the Linux hosts clone `git@github.com:i-am-logger/flake.git` into
-  `/etc/nixos` and symlink `~/.flake` to it; the persisted copy is at `/persist/etc/nixos`
+- **Impermanence**: yoga and skyspy-dev clone `git@github.com:i-am-logger/flake.git` into
+  `/etc/nixos` and symlink `~/.flake` to it; the persisted copy is at `/persist/etc/nixos`.
+  ads-dev1 links `/etc/nixos` to `~/Code/logger/flake` instead (`my.system.etcNixos.link`)
 
 ## Development Workflow
 
@@ -360,7 +363,7 @@ system sees anything, so `my.users.<name>.darwin` never becomes an option path.
 - `~/Code` layout: `logger/` holds my own repositories (flat), `cosmic/` holds Cosmic Clarity
   Connection work (its own Claude account, alias `bootstrapper`), and `github/<owner>/<repo>`
   holds clones and forks of other people's repositories
-- when you need you work with an open source project, integrate, etc, best to clone it to ~/Code/github/tmp and learn it for the work purpose
+- when you need to work with an open source project, integrate, etc, clone it to ~/Code/github/{owner}/{repo} (never /tmp or a scratch dir) and learn it for the work purpose
 - mynixos is unstable api that means documentations are not important right now. also backwards compatibility isn't important as api is unstable
 - do not use sudo
   - **Exception, macOS only**: on darwin all system activation runs as root, and

@@ -27,6 +27,7 @@ mynixos.lib.mkSystem {
 
         enable = true;
         hostname = "ads-dev1";
+        etcNixos.link = "/home/logger/Code/logger/flake";
 
         localInputs = {
           mynixos = "/home/logger/Code/logger/mynixos";
@@ -175,7 +176,6 @@ mynixos.lib.mkSystem {
         # impermanence marks it neededForBoot rather than creating it with
         # tmpfiles.
         useDedicatedPartition = true;
-        cloneFlakeRepo = "git@github.com:i-am-logger/flake.git";
         symlinkFlakeToHome = true;
       };
 
@@ -192,6 +192,7 @@ mynixos.lib.mkSystem {
       ];
 
       users.logger.apps.media.players.qobine.enable = true;
+      users.logger.input.inputMethod.type = "fcitx5";
 
       # The Lua config engine. yoga flipped first and it has held, so this host
       # starts there rather than migrating later.
