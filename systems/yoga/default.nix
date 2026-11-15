@@ -201,10 +201,10 @@ mynixos.lib.mkSystem {
         # the other end of the connection. pam_u2f stays for the local console.
         sshAgentSudo = {
           enable = true;
-          # 17027658 lives in this machine for unattended commit signing, so it
-          # cannot also be what authorizes sudo here — the local gpg-agent would
-          # sign for any process running as logger. 15147050 travels.
-          residentSerials = [ "17027658" ];
+          # 17027658 and 15147050 both live in this machine, so neither can
+          # also be what authorizes sudo here — the local gpg-agent would sign
+          # for any process running as logger. 15147046 (in ads-dev1) does.
+          residentSerials = [ "17027658" "15147050" ];
         };
       };
 

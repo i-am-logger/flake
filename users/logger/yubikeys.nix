@@ -29,4 +29,16 @@
     u2fKeyHandle = "UtReVJlip06Qkkq857sMUU/fbJkCJrLTkfdNNEBmZcYofkRffsa684x5TZSLt7fCn3iPFnhxmP3INmU6EB2v0g==";
     u2fPublicKey = "06KPW/h74mFiv9uj+B1lIt9aa8H4uA7P7YaAp0zndpcrYZhRwdrSHyu2ZOVEIHCcw/etjsHUV9c/ik5fsxwqJQ==";
   }
+  {
+    serial = "15147046";
+    keyId = "90ED0B7E4B115A3F";
+    # yubikey3: lives in ads-dev1.
+    fingerprint = "BBDFA2D286BCE2065ADE0AB690ED0B7E4B115A3F";
+    sshKeygrip = "CC0EA1D2C1BBCB29703509AE9683F075B8936CBB";
+    sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKelDBmwxGTHTwasb4zu41ZSDqe3v86VtVGn/z9ZlLqk";
+    publicKeyPath = ./yubikey3_pubkey.asc;
+    # U2F authentication data (generated with pamu2fcfg -u logger -o pam:// -i pam://)
+    u2fKeyHandle = "ymVR+dm16xZkT7tZeFYkmLsay0eEWW2YME6EZ1s3kghTsN9YrJjLRYTK4wZHBB2uVg9NmA9m7jK1PJO+Qwnd2A==";
+    u2fPublicKey = "jRM3d9Y2Jy3qJGENBvUCHggn97ER9vAXSQ6THiiFQvy3b+b8cro1koLDgIZxBJSx4fKQCak+YaYXWi6jbt4O9w==";
+  }
 ]
