@@ -271,6 +271,15 @@ mynixos.lib.mkSystem {
       }
     )
 
+    # Stays on wezterm while mynixos defaults TERMINAL to baud: this host's
+    # switch is on hold. Here rather than in `my`, which has no pkgs in scope.
+    (
+      { pkgs, ... }:
+      {
+        my.users.logger.environment.TERMINAL = pkgs.wezterm;
+      }
+    )
+
     {
       home-manager.users.logger = {
         # Pinned below the mynixos default of 26.11: this host's home directory
