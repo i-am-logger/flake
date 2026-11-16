@@ -196,6 +196,8 @@ mynixos.lib.mkSystem {
 
       users.logger.apps.media.players.qobine.enable = true;
       users.logger.input.inputMethod.type = "fcitx5";
+      # fleetd wakes on new fleet mail at once instead of on its 300 s round.
+      users.logger.apps.ai.tools.claude-code.fleetWake.enable = true;
 
       # The Lua config engine. yoga flipped first and it has held, so this host
       # starts there rather than migrating later.
