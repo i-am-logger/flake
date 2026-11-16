@@ -420,11 +420,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1794804772,
-        "narHash": "sha256-tpoIs5BcIY8UzoXlqy0ORfaLuekYD51nFcgaplc8/04=",
+        "lastModified": 1794810274,
+        "narHash": "sha256-CG1LKPANbQ542tgMDlR0EAUoj9I5P1rIBGQbxO1NUu4=",
         "owner": "i-am-logger",
         "repo": "mynixos",
-        "rev": "7ea9a35bec1018c0a93fdf68abebbb42a9cec446",
+        "rev": "8714e398b297d0ebc61b8c1ba421b12b93d7241f",
         "type": "github"
       },
       "original": {
@@ -644,6 +644,10 @@
       "inputs": {
         "claude-desktop": "claude-desktop",
         "mynixos": "mynixos",
+        "nixpkgs": [
+          "mynixos",
+          "nixpkgs"
+        ],
         "yoga-kernel": "yoga-kernel"
       }
     },

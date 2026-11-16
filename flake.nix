@@ -9,6 +9,9 @@
     mynixos = {
       url = "github:i-am-logger/mynixos";
     };
+    # One nixpkgs for everything here: mynixos's. A follows adds no lock node,
+    # so the lock keeps a single nixpkgs (baud's own pins aside).
+    nixpkgs.follows = "mynixos/nixpkgs";
     # Claude Desktop for Linux (unofficial community port)
     claude-desktop = {
       url = "github:k3d3/claude-desktop-linux-flake";
@@ -28,12 +31,11 @@
   outputs =
     { self
     , mynixos
+    , nixpkgs
     , yoga-kernel
     , ...
     }:
     let
-      # Re-export nixpkgs from mynixos for convenience
-      inherit (mynixos.inputs) nixpkgs;
       inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       darwinPkgs = import nixpkgs { system = "aarch64-darwin"; };

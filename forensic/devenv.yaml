@@ -1,7 +1,11 @@
 # yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
+# devenv's nixpkgs is the flake's (itself mynixos's): one pin, held in
+# ../flake.lock, so this shell and the systems agree on every package.
 inputs:
+  flake:
+    url: path:..
   nixpkgs:
-    url: github:cachix/devenv-nixpkgs/rolling
+    follows: flake/nixpkgs
 
 # https://devenv.sh/reference/yaml-options/
 
