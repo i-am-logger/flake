@@ -267,23 +267,6 @@ mynixos.lib.mkSystem {
       };
     }
 
-    # Tripwire: Hyprland 0.57 removes hyprlang configs AND the legacy
-    # `keyword`/`dispatch` IPC that vogix drives borders/binds/shader through
-    # (hyprwm/Hyprland#15539). Fail the build rather than let a routine nixpkgs
-    # bump take the desktop out in one switch. Same block both other Linux hosts
-    # carry; remove it when the Lua migration is complete everywhere.
-    ({ config, lib, ... }: {
-      assertions = [{
-        assertion = lib.versionOlder config.programs.hyprland.package.version "0.57";
-        message = ''
-          Hyprland ${config.programs.hyprland.package.version} drops hyprlang configs and
-          the legacy hyprctl IPC that vogix depends on. Do not switch until the
-          Lua migration is done (thread_hyprland_lua_migration), or pin
-          hyprland to 0.56.x via an overlay for this update.
-        '';
-      }];
-    })
-
     # A non-default boot entry carrying the vogix SDDM greeter. Login must never
     # be the thing that bricks, so greetd stays the default and this is how the
     # vogix greeter gets tested on RDNA4 -- the CRTC handoff race that parked it

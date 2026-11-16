@@ -407,10 +407,8 @@ mynixos.lib.mkSystem {
       # ~/.local/share/qobine, which the app option registers with impermanence.
       users.logger.apps.media.players.qobine.enable = true;
 
-      # Hyprland Lua migration P3: this host runs the Lua config engine
-      # (Hyprland ≥0.55 accepts it; 0.57 removes hyprlang). Per-host on purpose
-      # — yoga flips first, skyspy follows once this has held. Rollback is
-      # deleting this line (hyprlang is still the mynixos default).
+      # The Lua config engine, mynixos's default since 0.28 and the only one
+      # Hyprland ≥0.57 accepts; stated here as the host's own fact.
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
     }
 
@@ -443,24 +441,6 @@ mynixos.lib.mkSystem {
         fileSystems = [ "/nix" "/persist" ];
       };
     }
-
-    # Tripwire: Hyprland 0.57 removes hyprlang configs AND the `keyword`/legacy
-    # `dispatch` IPC (hyprwm/Hyprland#15539, merged 2026-07-22). Our config is
-    # still generated as hyprlang and vogix drives borders/binds/shader through
-    # the legacy IPC, so a routine nixpkgs bump to 0.57 would kill the whole
-    # desktop in one switch. Fail the build instead, until the Lua migration
-    # lands (thread_hyprland_lua_migration). Remove this block when it does.
-    ({ config, lib, ... }: {
-      assertions = [{
-        assertion = lib.versionOlder config.programs.hyprland.package.version "0.57";
-        message = ''
-          Hyprland ${config.programs.hyprland.package.version} drops hyprlang configs and
-          the legacy hyprctl IPC that vogix depends on. Do not switch until the
-          Lua migration is done (thread_hyprland_lua_migration), or pin
-          hyprland to 0.56.x via an overlay for this update.
-        '';
-      }];
-    })
 
     # yoga's own packages: claude-desktop, and this flake's claude-code and
     # herdr in place of nixpkgs'. Nothing fails without this module; yoga
