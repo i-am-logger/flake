@@ -200,21 +200,27 @@ mynixos.lib.mkSystem {
       # pillarboxes the external. This way the external is pixel-exact and the
       # 16:10 laptop is the one that letterboxes.
       #
-      # The explicit rules win over the wildcard, which stays first so every
-      # other output keeps the mynixos default. Swap in an Ultra High Speed
-      # (48 Gbps) cable and HDMI-A-1 can go back to `highres` for 4K120.
-      users.logger.apps.graphical.windowManagers.hyprland.extraSettings = {
-        monitor = [
-          { output = ""; mode = "highres"; position = "auto"; scale = "1"; }
-          { output = "HDMI-A-1"; mode = "2560x1440@59.95"; position = "0x0"; scale = "1"; }
-          {
-            output = "eDP-1";
-            mode = "2560x1600@240";
-            position = "auto";
-            scale = "1";
-            mirror = "HDMI-A-1";
-          }
-        ];
+      # The mirror pair stays 8-bit SDR: the external link cannot carry more,
+      # and the laptop shows the same frame. Swap in an Ultra High Speed
+      # (48 Gbps) cable and `external` can drop its mode/bitDepth/hdr lines to
+      # get the model's defaults (highres, 10-bit HDR) back.
+      hardware.display = {
+        monitors.dell.aw3225qf.external = {
+          output = "HDMI-A-1";
+          mode = { width = 2560; height = 1440; refresh = 59.95; };
+          bitDepth = 8;
+          hdr.enable = false;
+        };
+        monitors.generic.laptop = {
+          output = "eDP-1";
+          mode = { width = 2560; height = 1600; refresh = 240; };
+          bitDepth = 8;
+          hdr.enable = false;
+        };
+        layout = {
+          external.position = { x = 0; y = 0; };
+          laptop.mirror = "external";
+        };
       };
     }
   ];

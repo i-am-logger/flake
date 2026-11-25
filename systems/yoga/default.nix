@@ -116,6 +116,12 @@ mynixos.lib.mkSystem {
         # default-key.
         securityKeys.residentSerials = [ "17027658" "15147050" ];
 
+        # Dell AW3225QF, on HDMI through the Elgato 4K X. Without HDMI 2.1 FRL
+        # the link tops out at 600 MHz TMDS, so `highres` lands on 4K@60 with
+        # HDR (8 bpc on the wire). The panel's single DP input belongs to
+        # ads-dev1. FRL (display.hdmiFrl.enable) is a separate, live-tested step.
+        display.monitors.dell.aw3225qf.main = { };
+
         # Motherboard (automatically sets cpu/gpu/bluetooth/audio)
         motherboards.gigabyte.x870e-aorus-elite-wifi7 = {
           enable = true;

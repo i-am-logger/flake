@@ -41,6 +41,9 @@ mynixos.lib.mkSystem {
         # absent card is never asked for, and it is gpg's default-key.
         securityKeys.residentSerials = [ "15147046" ];
 
+        # Dell AW3225QF on DisplayPort: 3840x2160@240, 10-bit HDR through DSC.
+        display.monitors.dell.aw3225qf.main = { };
+
         # Gigabyte TRX50 AERO D (sTR5, AMD TRX50). Sets cpu/gpu = "amd",
         # hostPlatform, and the storage/usb/memory component modules. Unlike
         # yoga's X870E this board carries no GPU quirks: Threadripper has no
@@ -202,16 +205,6 @@ mynixos.lib.mkSystem {
       # The Lua config engine. yoga flipped first and it has held, so this host
       # starts there rather than migrating later.
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
-
-      # NO monitor line, deliberately. The display is a Dell AW3225QF (32" 4K
-      # 240 Hz QD-OLED) and it is currently on HDMI-A-2, where amdgpu cannot
-      # reach its native mode at all: the HDMI Forum blocked HDMI 2.1 FRL in
-      # open-source drivers, so the open amdgpu stack tops out at HDMI 2.0 TMDS
-      # and this panel's 3840x2160@240 is unreachable over that cable no matter
-      # what is written here. MOVE IT TO DISPLAYPORT (DP-1 and DP-2 are both
-      # free) and 4K@240 works via DSC. Until the cable moves, letting Hyprland
-      # pick `preferred` is more honest than pinning a mode -- and pinning the
-      # wrong one is exactly what the skyspy-dev monitor block exists to fix.
 
       # GATE A: the first-boot password. /etc/shadow is NOT in impermanence's
       # persisted set, and with my.secrets off there is no hashedPasswordFile --
