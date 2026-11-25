@@ -51,6 +51,10 @@ mynixos.lib.mkSystem {
         # battery and button settings.
         peripherals.logitech.bolt.enable = true;
 
+        # Elgato Game Capture 4K X on USB (telly's source): vendor controls
+        # (HDR tone mapping, EDID mode) usable without sudo.
+        peripherals.elgato.game-capture-4k-x.enable = true;
+
         # Gigabyte TRX50 AERO D (sTR5, AMD TRX50). Sets cpu/gpu = "amd",
         # hostPlatform, and the storage/usb/memory component modules. Unlike
         # yoga's X870E this board carries no GPU quirks: Threadripper has no
