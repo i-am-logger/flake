@@ -154,12 +154,39 @@ mynixos.lib.mkSystem {
 
       video.virtual.enable = true;
 
-      # Windows VM in virt-manager, for vendor tools with no Linux build (the
-      # AW3225QF's firmware updater, with the monitor's USB passed through).
-      # libvirtd membership is root-equivalent, hence the explicit name.
-      virtualisation.libvirt = {
-        enable = true;
-        users = [ "logger" ];
+      # Engines and workloads. Rootless podman is on by default (logger wants
+      # containers), so it is not written here.
+      virtualisation = {
+        # System containers and VMs, with the web UI on localhost:8443 (reach
+        # it over SSH or tailscale serve). incus-admin and libvirtd are both
+        # root-equivalent, hence the explicit names. /persist is btrfs, so the
+        # pool gets snapshots and instant copies.
+        incus = {
+          enable = true;
+          users = [ "logger" ];
+          storage = "btrfs";
+          ui.enable = true;
+        };
+
+        vms = {
+          libvirt = {
+            enable = true;
+            users = [ "logger" ];
+          };
+
+          # For vendor tools with no Linux build: the AW3225QF's firmware
+          # updater, with the monitor's USB passed through once the cable is
+          # in (its id goes in `usb`). `vm-windows` starts it; the unattended
+          # setup needs no Microsoft account.
+          machines.windows = {
+            owner = "logger";
+            os = "windows";
+            install.iso = "/home/logger/Downloads/Windows11_Client_x64_en-us_26300_9457.iso";
+            cpus = 4;
+            memory = "8G";
+            disk.size = "64G";
+          };
+        };
       };
 
       network = {

@@ -2,7 +2,7 @@
 #
 # An ordinary mynixos system, written exactly like systems/skyspy-dev: a
 # hostname, and the services it enables. Nothing here knows it will be run as a
-# container -- yoga decides that by putting it in `my.virtualisation.containers`,
+# container -- yoga decides that by putting it in `my.virtualisation.containers.guests`,
 # and could equally build it as a VM or install it on metal.
 #
 # SEEDS ARE PLURAL BY DESIGN. Radicle gives every seed its own NID, which lives

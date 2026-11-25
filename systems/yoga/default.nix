@@ -33,7 +33,7 @@ let
   # These are machines in their own right -- each has a hostname, its own NID,
   # its own tailnet node, and knows nothing about what hosts it. What is yoga's
   # is only the decision to run them and what this machine will spend on them,
-  # and that is stated in my.virtualisation.containers below.
+  # and that is stated in my.virtualisation.containers.guests below.
   #
   # They used to be `nixosConfigurations.radicle-yoga-*` in flake.nix, threaded
   # back in through a `radicleGuests` argument. That cost three things and
@@ -345,7 +345,7 @@ mynixos.lib.mkSystem {
       # virtualisation.memorySize, which is virtual hardware the guest genuinely
       # has and wants wherever it runs. A container's limit is a cgroup ceiling
       # this machine imposes to defend itself, so a guest cannot raise it.
-      virtualisation.containers = [
+      virtualisation.containers.guests = [
         {
           system = radicleSeed;
           identityScript = decryptKey;

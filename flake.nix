@@ -53,7 +53,7 @@
         # The radicle seed and CI builder are machines too, but they are not
         # hosts: they have no disk, so no bootable toplevel, and they are run as
         # containers by whichever host declares them in
-        # my.virtualisation.containers -- yoga, today, which builds them in its
+        # my.virtualisation.containers.guests -- yoga, today, which builds them in its
         # own file. Listing them here made `nix flake check` try to build a
         # bootable system for a machine with no root filesystem and fail, and
         # forced a `self` reference to thread them back into yoga.
@@ -92,13 +92,14 @@
         # from what yoga actually declares, so a role cannot be exposed here
         # and not run, or run and not exposed.
         let
-          roles = self.nixosConfigurations.yoga.config.my.virtualisation.containers;
+          roles = self.nixosConfigurations.yoga.config.my.virtualisation.containers.guests;
         in
         lib.listToAttrs (
           map
             (role: {
               name = "role-image-${role.name}";
-              value = role.system.config.system.build.image;
+              # A system guest builds its image; an image guest IS one.
+              value = if role.system != null then role.system.config.system.build.image else role.image;
             })
             roles
         )
