@@ -44,6 +44,9 @@ mynixos.lib.mkSystem {
         # Dell AW3225QF on DisplayPort: 3840x2160@240, 10-bit HDR through DSC.
         display.monitors.dell.aw3225qf.main = { };
 
+        # Corsair HX1200i Series 2025: rails, power, fan and temps in `sensors`.
+        powerSupplies.corsair.hx1200i.enable = true;
+
         # Gigabyte TRX50 AERO D (sTR5, AMD TRX50). Sets cpu/gpu = "amd",
         # hostPlatform, and the storage/usb/memory component modules. Unlike
         # yoga's X870E this board carries no GPU quirks: Threadripper has no
