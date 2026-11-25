@@ -47,6 +47,10 @@ mynixos.lib.mkSystem {
         # Corsair HX1200i Series 2025: rails, power, fan and temps in `sensors`.
         powerSupplies.corsair.hx1200i.enable = true;
 
+        # Logi Bolt receiver (the mouse): Solaar in the tray for pairing,
+        # battery and button settings.
+        peripherals.logitech.bolt.enable = true;
+
         # Gigabyte TRX50 AERO D (sTR5, AMD TRX50). Sets cpu/gpu = "amd",
         # hostPlatform, and the storage/usb/memory component modules. Unlike
         # yoga's X870E this board carries no GPU quirks: Threadripper has no

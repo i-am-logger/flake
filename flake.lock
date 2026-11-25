@@ -420,11 +420,11 @@
         "vogix": "vogix"
       },
       "locked": {
-        "lastModified": 1795595208,
-        "narHash": "sha256-ZR3dnr+emIl4Pzr7/J1V9M5nWlcCynihexpOmjjzzec=",
+        "lastModified": 1795595708,
+        "narHash": "sha256-TUFgROzm6ILoD2wHlCYNSm2Y5B28qFGRkYW3HyRecho=",
         "owner": "i-am-logger",
         "repo": "mynixos",
-        "rev": "beb9c27655c09274397d5a91b759527e77dcd35b",
+        "rev": "7a3d9514ab3ed26d9733f6d9cdc1b4af06598911",
         "type": "github"
       },
       "original": {
