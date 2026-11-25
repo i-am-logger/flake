@@ -154,6 +154,14 @@ mynixos.lib.mkSystem {
 
       video.virtual.enable = true;
 
+      # Windows VM in virt-manager, for vendor tools with no Linux build (the
+      # AW3225QF's firmware updater, with the monitor's USB passed through).
+      # libvirtd membership is root-equivalent, hence the explicit name.
+      virtualisation.libvirt = {
+        enable = true;
+        users = [ "logger" ];
+      };
+
       network = {
         tailscale = {
           enable = true; # controlPlane defaults to "tailscale" (SaaS)
