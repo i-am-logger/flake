@@ -157,6 +157,14 @@ mynixos.lib.mkSystem {
         # Peripherals
         peripherals.apple.dfu.enable = true;
         peripherals.elgato.streamdeck.enable = true;
+
+        # Elgato Game Capture 4K X in this host's HDMI chain: it reports no
+        # ELD, so the monitor's EDID is forced onto HDMI-A-1 and HDMI audio
+        # pins stay up (moved here from the X870E board profile).
+        peripherals.elgato.game-capture-4k-x = {
+          enable = true;
+          passthrough.output = "HDMI-A-1";
+        };
         peripherals.keychron.k2-he.enable = true;
         peripherals.sipeed.tangPrimer25k.enable = true;
       };
