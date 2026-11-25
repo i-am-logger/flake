@@ -176,12 +176,15 @@ mynixos.lib.mkSystem {
 
           # For vendor tools with no Linux build: the AW3225QF's firmware
           # updater, with the monitor's USB passed through once the cable is
-          # in (its id goes in `usb`). `vm-windows` starts it; the unattended
-          # setup needs no Microsoft account.
+          # in (its id goes in `usb`). The ISO is pinned by hash and lives with
+          # the VM: `vm-windows fetch ~/Downloads/Windows11_Client_x64_en-us_26300_9457.iso`
+          # places it (reflinked, instant), then `vm-windows` starts the
+          # unattended setup, which needs no Microsoft account.
           machines.windows = {
             owner = "logger";
             os = "windows";
-            install.iso = "/home/logger/Downloads/Windows11_Client_x64_en-us_26300_9457.iso";
+            # Windows11_Client_x64_en-us_26300_9457.iso
+            install.iso.sha256 = "bd4307df32bc8af33b39ccecb1174aeb345386630f89a2b86c7a4e36b55ea650";
             cpus = 4;
             memory = "8G";
             disk.size = "64G";
