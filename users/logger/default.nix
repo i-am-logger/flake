@@ -70,6 +70,11 @@
         # persisted); a project opts in with its launcher, e.g.
         # CMAKE_C_COMPILER_LAUNCHER=ccache.
         "ccache"
+        # Container tooling, against the host's rootless podman/docker.
+        "lazydocker"
+        "podman-tui"
+        "podman-compose"
+        "docker-compose"
       ];
     };
 
