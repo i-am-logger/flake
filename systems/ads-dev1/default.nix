@@ -300,10 +300,11 @@ mynixos.lib.mkSystem {
       ];
     })
 
-    # perl on the system PATH: baud's scripts/vt-child.sh runs host perl, and
-    # mynixos no longer ships NixOS's default perl (defaultPackages = [ rsync ]).
+    # NixOS's default perl and strace, which mynixos no longer ships
+    # (defaultPackages = [ rsync ]): baud's scripts/vt-child.sh runs host perl,
+    # and measure traces read sizes with strace.
     ({ pkgs, ... }: {
-      environment.systemPackages = [ pkgs.perl ];
+      environment.systemPackages = [ pkgs.perl pkgs.strace ];
     })
 
     # btrfs checksums every extent but only VERIFIES a checksum when the extent
