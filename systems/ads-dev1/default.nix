@@ -300,6 +300,12 @@ mynixos.lib.mkSystem {
       ];
     })
 
+    # perl on the system PATH: baud's scripts/vt-child.sh runs host perl, and
+    # mynixos no longer ships NixOS's default perl (defaultPackages = [ rsync ]).
+    ({ pkgs, ... }: {
+      environment.systemPackages = [ pkgs.perl ];
+    })
+
     # btrfs checksums every extent but only VERIFIES a checksum when the extent
     # is read or scrubbed. Without a scrub, rot on a multi-terabyte /persist is
     # discovered the day you open the file -- which is the day it is already too
