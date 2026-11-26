@@ -189,6 +189,7 @@ mynixos.lib.mkSystem {
             cpus = 4;
             memory = "8G";
             disk.size = "64G";
+            usb = [ "046d:0944" ]; # MX Brio, for Logi Options+
           };
         };
       };
