@@ -48,6 +48,27 @@
     security.passwords.onePassword.enable = true;
     communication.messaging.signal.enable = true;
 
+    # Development tools live in ~/Code's devenv, never on the host: direnv
+    # loads it anywhere under ~/Code (repos with their own .envrc included).
+    # The language servers are the ones helix's config names for Nix,
+    # Markdown, TOML and YAML; project-specific ones come from each project.
+    dev.tools.devenv.workspace = {
+      directory = "Code";
+      packages = [
+        "gh"
+        "glab"
+        "lazygit"
+        "delta"
+        "git-lfs"
+        "jujutsu"
+        "nil"
+        "nixfmt"
+        "marksman"
+        "taplo"
+        "yaml-language-server"
+      ];
+    };
+
     # yoga alone, because forwarding hands the far end a socket that signs with
     # this machine's key. yoga sets my.security.sshAgentSudo, so sudo there is
     # answered by the YubiKey at THIS end and the server needs no key of its own.
