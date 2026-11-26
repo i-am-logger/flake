@@ -66,6 +66,10 @@
         "marksman"
         "taplo"
         "yaml-language-server"
+        # Compiler cache for builds under ~/Code (cache in ~/.cache/ccache,
+        # persisted); a project opts in with its launcher, e.g.
+        # CMAKE_C_COMPILER_LAUNCHER=ccache.
+        "ccache"
       ];
     };
 
