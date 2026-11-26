@@ -114,10 +114,6 @@
     input.accelSpeed = -0.3; # libinput scale: 0.0 is the device default, not "off"
     input.keyboardLayouts = [ "us" "il" ]; # EN/HE — the HUD's kbd chip cycles these
 
-    # Upstream marks rustdesk badPlatforms = [ "aarch64-darwin" ], so it cannot
-    # sit in the shared profile: aether5d-dev refuses to evaluate at all.
-    apps.graphical.network.rustdesk.enable = true;
-
     # Radicle user node: outbound-only daemon dialing the fleet's seeds.
     # Dormant until `rad auth` has run on the machine (ConditionPathExists on
     # the key), so this is safe on a host that has not been bootstrapped yet.
