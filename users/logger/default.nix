@@ -49,6 +49,11 @@
 
   apps = {
     security.passwords.onePassword.enable = true;
+    security.passwords.pass.enable = true;
+    security.passwords.gopass.enable = true;
+    # The editor for each host's /persist/etc/sops/secrets.yaml; activation
+    # itself decrypts without it.
+    security.secrets.sops.enable = true;
     communication.messaging.signal.enable = true;
 
     # Development tools live in ~/Code's devenv, never on the host: direnv
