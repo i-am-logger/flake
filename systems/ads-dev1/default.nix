@@ -308,6 +308,14 @@ mynixos.lib.mkSystem {
       environment.systemPackages = [ pkgs.perl pkgs.strace ];
     })
 
+    # nix-daemon's builders (every nix build's real work, as root, out of any
+    # session's taskset) stay off measure's timing cores 56-63,120-127, where
+    # load reads as noise, and off tier D's 0-15 and their SMT siblings 64-79.
+    # The CPU map is ~/Code/logger/CPU-SLICES.md.
+    {
+      systemd.services.nix-daemon.serviceConfig.CPUAffinity = "16-55 80-119";
+    }
+
     # btrfs checksums every extent but only VERIFIES a checksum when the extent
     # is read or scrubbed. Without a scrub, rot on a multi-terabyte /persist is
     # discovered the day you open the file -- which is the day it is already too
