@@ -212,7 +212,7 @@ mynixos.lib.mkSystem {
         # yoga disables ollama with "no dGPU". This box has one: an RX 9070 XT,
         # 16 GB, Navi 48.
         ollama = {
-          enable = true;
+          enable = false; # off for now; the settings below stay for when it returns
           acceleration = "rocm";
           # gfx1201 is Navi 48. The mynixos default (11.0.2) is RDNA3 and would
           # make ROCm claim the wrong ISA on this card. The value becomes

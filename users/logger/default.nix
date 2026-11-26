@@ -144,7 +144,11 @@
 
     graphical = {
       streaming.enable = true; # OBS
-      media.enable = true; # gimp, krita, inkscape, mypaint
+      media = {
+        enable = true; # krita, inkscape, mypaint
+        # Off: nixpkgs' gimp pins gfortran + gcc at runtime (gegl -> suitesparse).
+        gimp = false;
+      };
     };
   };
 
