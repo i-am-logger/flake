@@ -46,6 +46,7 @@
 
   apps = {
     security.passwords.onePassword.enable = true;
+    communication.messaging.signal.enable = true;
 
     # yoga alone, because forwarding hands the far end a socket that signs with
     # this machine's key. yoga sets my.security.sshAgentSudo, so sudo there is
