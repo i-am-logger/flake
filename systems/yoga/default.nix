@@ -167,7 +167,10 @@ mynixos.lib.mkSystem {
           passthrough.output = "HDMI-A-1";
         };
         peripherals.keychron.k2-he.enable = true;
-        peripherals.sipeed.tangPrimer25k.enable = true;
+        peripherals.sipeed.tangPrimer25k = {
+          enable = true;
+          users = [ "logger" ]; # dialout, for the board's UART
+        };
       };
 
       # Filesystem configuration

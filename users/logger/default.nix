@@ -17,6 +17,9 @@
 
   github.username = "i-am-logger";
 
+  # Administers every host it is on: wheel (sudo, nix trust, rebuilds).
+  admin = true;
+
   # Read for its length by apps/ssh: a non-empty list sets IdentitiesOnly=no so
   # ssh offers agent-held keys to the forges, and suppresses ControlMaster
   # multiplexing, whose sockets fight with an external agent. The Mac reaches

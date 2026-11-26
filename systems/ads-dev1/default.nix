@@ -85,7 +85,10 @@ mynixos.lib.mkSystem {
         # NO elgato.streamdeck: not in this machine.
         peripherals.keychron.k2-he.enable = true;
         peripherals.apple.dfu.enable = true;
-        peripherals.sipeed.tangPrimer25k.enable = true;
+        peripherals.sipeed.tangPrimer25k = {
+          enable = true;
+          users = [ "logger" ]; # dialout, for the board's UART
+        };
       };
 
       filesystem = {
