@@ -224,6 +224,9 @@ mynixos.lib.mkSystem {
       };
 
       performance.enable = true;
+      # MemoryMax of the user runs.slice releasable's runs share (no swap,
+      # outside systemd-oomd): 128G of this host's 187 GiB.
+      performance.runs.budget = "128G";
 
       storage.impermanence = {
         enable = true;
