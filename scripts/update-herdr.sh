@@ -27,28 +27,27 @@ SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" >/dev/null && pwd)"
 FLAKE_DIR="$(cd -P -- "${SCRIPT_DIR}/.." >/dev/null && pwd)"
 OVERLAY_FILE="${FLAKE_DIR}/overlays/herdr.nix"
 
-# my.system.localInputs makes the rebuild scripts prefer this checkout over
-# the locked input whenever it exists, so the version we must measure against
-# is the one that build will see -- not the one flake.lock names. --lock
-# forces the locked input, which is what CI should compare against.
+# A switch builds from flake.lock only, so that is the nixpkgs we measure
+# against by default. --local measures against this mynixos checkout instead,
+# matching `test-system --local` / `build-system --local`.
 LOCAL_MYNIXOS="${HOME}/Code/mynixos"
 
 usage() {
     cat <<'USAGE'
-Usage: update-herdr.sh [-f|--force] [--lock] [<version>]
+Usage: update-herdr.sh [-f|--force] [--local] [<version>]
 
   (no argument)   upstream's latest stable release
   <version>       an exact version, e.g. 0.8.2
 
   -f, --force     write the overlay even when nixpkgs already has that
                   version, and allow moving the pin backwards
-      --lock      measure nixpkgs through flake.lock, ignoring any local
-                  mynixos checkout
+      --local     measure nixpkgs through the local mynixos checkout
+                  (~/Code/mynixos) instead of flake.lock
 USAGE
 }
 
 FORCE=0
-USE_LOCK=0
+USE_LOCAL=0
 REQUESTED=""
 
 while [[ $# -gt 0 ]]; do
@@ -58,7 +57,7 @@ while [[ $# -gt 0 ]]; do
         exit 0
         ;;
     -f | --force) FORCE=1 ;;
-    --lock) USE_LOCK=1 ;;
+    --local) USE_LOCAL=1 ;;
     -*)
         echo "error: unknown option '$1'" >&2
         usage >&2
@@ -85,7 +84,11 @@ done
 
 # Which nixpkgs the comparison is against. Announced, because measuring the
 # wrong one is invisible in the result and changes the verdict.
-if [[ $USE_LOCK -eq 0 && -d "$LOCAL_MYNIXOS" ]]; then
+if [[ $USE_LOCAL -eq 1 ]]; then
+    if [[ ! -d "$LOCAL_MYNIXOS" ]]; then
+        echo "error: --local: no mynixos checkout at ${LOCAL_MYNIXOS}" >&2
+        exit 2
+    fi
     NIXPKGS_EXPR="(builtins.getFlake \"git+file://${LOCAL_MYNIXOS}\").inputs.nixpkgs"
     NIXPKGS_SOURCE="local mynixos checkout (${LOCAL_MYNIXOS})"
 else

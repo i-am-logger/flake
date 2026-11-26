@@ -40,11 +40,12 @@ mynixos.lib.mkSystem {
         "scripts/update-herdr.sh"
       ];
 
-      # This machine is where the DSL is developed, so the rebuild scripts build
-      # from the working tree when one is present rather than from flake.lock.
-      # Each path is tested when the script runs, so nothing here breaks a host
-      # that has no such checkout -- vogix is listed before it has been cloned
-      # for exactly that reason, and starts taking effect the day it is.
+      # This machine is where the DSL is developed, so `test-system --local` /
+      # `build-system --local` build from these working trees instead of
+      # flake.lock; a switch always builds from the lock. Each path is tested
+      # when the script runs, so nothing here breaks a host that has no such
+      # checkout -- vogix is listed before it has been cloned for exactly that
+      # reason, and starts taking effect the day it is.
       #
       # vogix is not a direct input of this flake, it is one of mynixos's, hence
       # the slash. Attribute order puts "mynixos" before "mynixos/vogix", which

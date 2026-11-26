@@ -95,9 +95,10 @@ mynixos.lib.mkSystem {
         enable = true;
         hostname = "yoga";
 
-        # Local checkouts the rebuild scripts prefer over the lock, when the
-        # path is actually on this machine. vogix is reached through mynixos,
-        # so it needs the nested input path rather than a bare name.
+        # Local checkouts `test-system --local` / `build-system --local` build
+        # from instead of the lock, when the path is on this machine; a switch
+        # always builds from flake.lock. vogix is reached through mynixos, so it
+        # needs the nested input path rather than a bare name.
         localInputs = {
           mynixos = "/home/logger/Code/logger/mynixos";
           "mynixos/vogix" = "/home/logger/Code/logger/vogix";
