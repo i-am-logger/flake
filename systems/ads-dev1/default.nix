@@ -152,8 +152,6 @@ mynixos.lib.mkSystem {
         };
       };
 
-      video.virtual.enable = true;
-
       # Engines and workloads. Rootless podman is on by default (logger wants
       # containers), so it is not written here.
       virtualisation = {

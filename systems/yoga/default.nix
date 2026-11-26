@@ -258,14 +258,6 @@ mynixos.lib.mkSystem {
         };
       };
 
-      # Video/Streaming: System-level video infrastructure
-      # - Virtual camera (v4l2loopback) - auto-enabled when user has graphical.streaming.enable = true
-      # Note: OBS is per-user in my.users.<name>.graphical.streaming
-      # Note: StreamDeck moved to my.hardware.peripherals.elgato.streamdeck
-      # Virtual camera (v4l2loopback) for OBS. Auto-enabled by the user's
-      # graphical.streaming flag; stated here so the host owns the decision.
-      video.virtual.enable = true;
-
       # Network: Tailscale SaaS. The self-hosted headscale + Tor onion design
       # that used to live here was retired without ever being bootstrapped
       # (zero nodes registered): the iPhone and iPad joined the tailscale.com
