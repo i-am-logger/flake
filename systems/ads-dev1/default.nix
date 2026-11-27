@@ -254,6 +254,23 @@ mynixos.lib.mkSystem {
       users.logger.input.inputMethod.type = "fcitx5";
       # fleetd wakes on new fleet mail at once instead of on its 300 s round.
       users.logger.apps.ai.tools.claude-code.fleetWake.enable = true;
+      # The Claude accounts this host runs sessions under, each with its own
+      # persisted ~/.claude-<name>. This host's list, not every host's.
+      users.logger.apps.ai.tools.claude-code.accounts = [
+        "cdev1"
+        "cdev2"
+        "cdev3"
+        "aether5d-cdev1"
+        "aether5d-cdev2"
+        "aether5d-cdev3"
+        "aether5d-cdev4"
+        "aether5d-cdev5"
+        "aether5d-cdev6"
+        "aether5d-cdev7"
+        "aether5d-cdev8"
+        "aether5d-cdev9"
+        "aether5d-cdev10"
+      ];
 
       # The Lua config engine. yoga flipped first and it has held, so this host
       # starts there rather than migrating later.
