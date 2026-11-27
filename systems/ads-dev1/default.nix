@@ -316,6 +316,14 @@ mynixos.lib.mkSystem {
       systemd.services.nix-daemon.serviceConfig.CPUAffinity = "16-55 80-119";
     }
 
+    # Kernel symbols for perf (owner, 2026-11-27): with kptr_restrict = 1
+    # (NixOS's default) /proc/kallsyms reads as zeros to the user, so kernel
+    # samples stay raw addresses. perf_event_paranoid keeps the kernel's 1,
+    # which already allows per-process kernel samples (cycles:k).
+    {
+      boot.kernel.sysctl."kernel.kptr_restrict" = 0;
+    }
+
     # btrfs checksums every extent but only VERIFIES a checksum when the extent
     # is read or scrubbed. Without a scrub, rot on a multi-terabyte /persist is
     # discovered the day you open the file -- which is the day it is already too
