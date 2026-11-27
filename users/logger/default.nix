@@ -111,20 +111,6 @@
     ai.tools.claude-code = {
       cloneConfigRepo = "https://github.com/i-am-logger/claude-config.git";
     };
-
-    # Account switching for the one global Claude Code login. clauth owns
-    # ~/.clauth/profiles.toml and rewrites it from its own TUI, so the accounts
-    # themselves are runtime state rather than Nix data: create each one with
-    # `clauth login <name>` (gmail, hotmail, bootstrapper -- the last being
-    # Cosmic Clarity Connection work on its own subscription, selected for
-    # ~/Code/cosmic), then set the auto-switch rules in the TUI.
-    #
-    # The daemon runs the decision loop with no TUI open, which is what keeps
-    # auto-switch and the fallback chain working from an ordinary shell.
-    ai.tools.clauth = {
-      enable = true;
-      daemon.enable = true;
-    };
   };
 
   # Folders that are mine rather than any program's, kept across a wipe on the
