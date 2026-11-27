@@ -318,6 +318,13 @@ mynixos.lib.mkSystem {
       ];
     })
 
+    # account-balance (pkgs/account-balance): moves idle Claude sessions in
+    # herdr panes between the accounts of a pool by usage. For logger, on this
+    # host only; its pools and held sessions are pkgs/account-balance/config.nix.
+    ({ pkgs, ... }: {
+      home-manager.users.logger.home.packages = [ (pkgs.callPackage ../../pkgs/account-balance { }) ];
+    })
+
     # NixOS's default perl and strace, which mynixos no longer ships
     # (defaultPackages = [ rsync ]): baud's scripts/vt-child.sh runs host perl,
     # and measure traces read sizes with strace.

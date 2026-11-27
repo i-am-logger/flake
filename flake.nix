@@ -84,6 +84,9 @@
       packages.x86_64-linux = {
         # Installer ISO package
         installer-iso = self.nixosConfigurations.installer-iso.config.system.build.isoImage;
+        # The account balancer as ads-dev1 installs it: ads-dev1's pkgs carry
+        # the herdr overlay, so this is the same derivation.
+        account-balance = self.nixosConfigurations.ads-dev1.pkgs.callPackage ./pkgs/account-balance { };
       }
       // (
         # The container roles, as images. They are not nixosConfigurations (see
@@ -104,5 +107,30 @@
             roles
         )
       );
+
+      checks.x86_64-linux = {
+        # account-balance against a stub herdr and fixture usage files: keying
+        # by <session>/<pane>, --session on every call, held sessions, pools,
+        # stale usage and the lock (pkgs/account-balance/test/check.sh).
+        account-balance = pkgs.callPackage ./pkgs/account-balance/check.nix { };
+
+        # account-balance keeps moves.log and the rest in
+        # ~/.local/state/account-balance, and /home is tmpfs: one of logger's
+        # persisted directories on ads-dev1 must cover it, or the log vanishes
+        # on reboot. Fails at evaluation, naming the path.
+        account-balance-persisted =
+          let
+            target = ".local/state/account-balance";
+            dirs = lib.concatMap
+              (p: map (d: d.directory) (p.users.logger.directories or [ ]))
+              (lib.attrValues self.nixosConfigurations.ads-dev1.config.environment.persistence);
+            covers = d: d == target || lib.hasPrefix "${lib.removeSuffix "/" d}/" target;
+          in
+          assert lib.assertMsg (lib.any covers dirs)
+            "ads-dev1 persists no directory of logger's covering ~/${target}";
+          pkgs.runCommand "account-balance-persisted" { } ''
+            echo "PASS  persisted: ~/${target} is under a persisted directory of logger on ads-dev1" | tee "$out"
+          '';
+      };
     };
 }
