@@ -18,6 +18,11 @@
   # herdr sessions whose panes are reported by `status` and never planned or moved.
   held_sessions = [ "aether5d" ];
 
+  # Panes named with these prefixes are pinned to their account, never moved:
+  # the Accounts consoles (account-cdevN; acct-cdevN on skyspy-dev), where
+  # bin/account-usage reads each account's /usage.
+  pinned_name_prefixes = [ "account-" "acct-" ];
+
   thresholds = {
     room = 70; # weekly % (and 5-hour %) at or above which an account is never a target
     hysteresis = 2; # a move S -> T needs rate(T) >= hysteresis x rate(S)

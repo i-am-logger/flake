@@ -88,6 +88,7 @@ pane s1 p1 alpha cdev1
 pane s2 p1 beta cdev1 '["/etc/profiles/per-user/logger/bin/claude","--effort","ultracode","--autocompact","100000","--name","beta","--resume","OLD"]'
 pane aether5d p1 gamma cdev1
 pane s3 p1 delta none
+pane s1 p9 account-cdev1 cdev1   # an Accounts console: bin/account-usage reads /usage there
 tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10  cdev4 10 20 10  cdev5 0 10 10  cdev6 0 10 10  cdev9 0 10 10
 status_out=$(bal status)
 plan_out=$(bal plan)
@@ -141,6 +142,10 @@ check "herdr: every call but 'session list' carries --session" every_call_has_se
 check "herdr: --session names only running sessions (never s3)" sessions_running_only
 check "held: aether5d pane never planned, moved or typed into" held_untouched
 check "held: status reports aether5d/p1 as held" held_reported
+console_untouched() { ! grep -q "account-cdev1" <<<"$plan_out" && ! grep -q "s1/p9" "$state/moves.log" 2>/dev/null; }
+console_reported() { grep -q "s1/p9 account-cdev1 .* account-pinned" <<<"$status_out"; }
+check "console: an account-* console pane is never planned or moved" console_untouched
+check "console: status reports s1/p9 account-cdev1 as account-pinned" console_reported
 check "lock: apply while balance.lock is held prints skipped and moves nothing" locked_skips
 check "pick: weekly-weighted target, cdev2 (50%, 10 h, rate 5) before cdev3 (20%, 80 h, rate 1)" is "$(head -1 <<<"$plan_out")" "s1/p1 alpha cdev1 cdev2"
 check "source: accounts.tsv is the source; cdev2 with no usage-latest.json is a target" row s1/p1 cdev2

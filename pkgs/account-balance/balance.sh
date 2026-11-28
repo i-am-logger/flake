@@ -63,6 +63,8 @@ members() { cfg '.pools[][]'; }
 pool_members() { jq -r --arg p "$1" '.pools[$p][]' "$config"; }
 pool_of() { jq -r --arg a "$1" '.pools | to_entries[] | select(.value | index($a) != null) | .key' "$config" | head -1; }
 held() { jq -e --arg s "$1" '.held_sessions | index($s) != null' "$config" >/dev/null; }
+# A pane pinned to its account by its name (config pinned_name_prefixes: the Accounts consoles).
+pinned() { jq -e --arg n "$1" 'any(.pinned_name_prefixes[]?; . as $p | $n | startswith($p))' "$config" >/dev/null; }
 
 # Running herdr sessions, the only source of session names (C4).
 sessions() { herdr session list --json </dev/null 2>/dev/null 9>&- | jq -r '.sessions[]? | select(.running == true) | .name'; }
@@ -192,7 +194,7 @@ verdict() {
   local key=$1 name=$2 st=$3 pid=$4 s id
   s=${key%%/*} id=${key#*/}
   held "$s" && { echo held; return; }
-  [[ $name == acct-* ]] && { echo account-pinned; return; }
+  pinned "$name" && { echo account-pinned; return; }
   [ "$name" = "?" ] && { echo no-title; return; }
   [[ $name == *%20* ]] && { echo name-has-spaces; return; }
   # ALLOW_SKIP=1 is for a manual `move` only, when the skip-listed session itself asked to be moved.
