@@ -317,7 +317,12 @@ mynixos.lib.mkSystem {
       };
 
       # Performance configuration
-      performance.enable = true;
+      performance = {
+        enable = true;
+        # zram swap: compressed, in RAM. 70% of 92 GiB is 64 GiB, which holds
+        # a full 28G /tmp alongside swapped process memory.
+        zramPercent = 70;
+      };
 
       # Storage configuration (impermanence + disko)
       # TODO: shouldn't this move to the user's? my.users.<user>.storage.impermanence ? it should enable system level storage .imperrmanence that the user can override if needed to
