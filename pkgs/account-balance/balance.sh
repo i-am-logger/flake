@@ -59,10 +59,13 @@ now_s() { echo "${ACCOUNT_BALANCE_NOW:-$(date +%s)}"; }
 mkdir -p "$state_dir"
 
 # every pool member, one per line; the members of one pool; the pool of an account (empty when none)
-# Teams come from head's registry (ACCOUNT_BALANCE_REGISTRY, team-roles.toml): [teams.<team>] with
-# herdr_session, an optional workspace (the pane id's w-part, e.g. wA) and accounts, its home accounts.
+# Teams come from head's registry (ACCOUNT_BALANCE_REGISTRY, team-roles.toml): [teams.<team>] gives
+# herdr_session and an optional workspace (the pane id's w-part, e.g. wA); [accounts.teams] gives each team's
+# home accounts (<team> = [...]; head's, written with bin/registry-add). A team with no accounts entry has no home.
 registry=${ACCOUNT_BALANCE_REGISTRY:-$HOME/Code/logger/team-roles.toml}
-teams_json=$(taplo get -f "$registry" -o json teams 2>/dev/null) || teams_json='{}'
+teams_json=$(taplo get -f "$registry" -o json 2>/dev/null |
+  jq -c '(.accounts.teams // {}) as $a | (.teams // {}) | with_entries(.value.accounts = $a[.key])') || teams_json='{}'
+[ -n "$teams_json" ] || teams_json='{}'
 # Two teams on one session (or one session/workspace) is refused: a pane must match exactly one team.
 overlap=$(jq -r '[to_entries[] | select(.value.accounts) | "\(.value.herdr_session)/\(.value.workspace // "*")"]
   | group_by(.) | map(select(length > 1)[0]) | join(" ")' <<<"$teams_json")

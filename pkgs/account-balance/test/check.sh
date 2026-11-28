@@ -36,10 +36,10 @@ world() { # <name> <session[:stopped]>...: a new HOME and stub; the first sessio
   export ACCOUNT_BALANCE_REGISTRY=$HOME/team-roles.toml
   mkdir -p "$HOME"
   if [ -n "${REGISTRY:-}" ]; then printf '%s\n' "$REGISTRY" >"$ACCOUNT_BALANCE_REGISTRY"
-  else local _s; for _s in "$@"; do _s=${_s%%:*}
-    printf '[teams.%s]\nherdr_session = "%s"\naccounts = [%s]\n' "$_s" "$_s" \
-      "$(for _a in ${TEAM_ACCOUNTS:-cdev1 cdev2 cdev3}; do printf '"%s", ' "$_a"; done | sed 's/, $//')"
-  done >"$ACCOUNT_BALANCE_REGISTRY"; fi
+  else local _s _l; _l=$(for _a in ${TEAM_ACCOUNTS:-cdev1 cdev2 cdev3}; do printf '"%s", ' "$_a"; done | sed 's/, $//')
+    { for _s in "$@"; do _s=${_s%%:*}; printf '[teams.%s]\nherdr_session = "%s"\n' "$_s" "$_s"; done
+      echo "[accounts.teams]"; for _s in "$@"; do _s=${_s%%:*}; printf '%s = [%s]\n' "$_s" "$_l"; done
+    } >"$ACCOUNT_BALANCE_REGISTRY"; fi
   state=$HOME/.local/state/account-balance
   mkdir -p "$HOME/.claude/sessions" "$HERDR_STUB_DIR" "$state" "$ACCOUNT_BALANCE_LEDGER_DIR" "$W/proj"
   local t a s first=true
@@ -221,10 +221,11 @@ check "drain: now < the latched epoch does not" is "$d_before" ""
 REGISTRY='[teams.vog]
 herdr_session = "m"
 workspace = "wA"
-accounts = ["cdev3"]
 [teams.rest]
 herdr_session = "m"
-accounts = ["cdev2"]' world T m u
+[accounts.teams]
+vog = ["cdev3"]
+rest = ["cdev2"]' world T m u
 pane m wA:p1 vone cdev1
 pane m w1:p1 rone cdev1
 pane u p1 lone cdev1
@@ -232,16 +233,18 @@ tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10
 t_plan=$(bal plan); t_status=$(bal status)
 REGISTRY='[teams.o]
 herdr_session = "o"
-accounts = ["cdev2"]' world O o
+[accounts.teams]
+o = ["cdev2"]' world O o
 pane o p1 oone cdev2
 tsv cdev1 95 100 10  cdev2 90 10 10  cdev3 20 80 10  cdev4 10 20 10  cdev5 0 10 10
 o_plan=$(bal plan)
 REGISTRY='[teams.x1]
 herdr_session = "x"
-accounts = ["cdev2"]
 [teams.x2]
 herdr_session = "x"
-accounts = ["cdev3"]' world X x
+[accounts.teams]
+x1 = ["cdev2"]
+x2 = ["cdev3"]' world X x
 pane x p1 xone cdev1
 tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10
 x_plan=$(bal plan 2>&1); x_rc=$?
