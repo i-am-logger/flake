@@ -105,12 +105,10 @@
         "nix": "nix",
         "nixd": "nixd",
         "nixpkgs": [
-          "mynixos",
           "vogix",
           "nixpkgs"
         ],
         "rust-overlay": [
-          "mynixos",
           "vogix",
           "rust-overlay"
         ]
@@ -201,7 +199,6 @@
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
-          "mynixos",
           "vogix",
           "devenv",
           "nixpkgs"
@@ -417,7 +414,9 @@
         "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix",
-        "vogix": "vogix"
+        "vogix": [
+          "vogix"
+        ]
       },
       "locked": {
         "lastModified": 1795824556,
@@ -436,36 +435,30 @@
     "nix": {
       "inputs": {
         "flake-compat": [
-          "mynixos",
           "vogix",
           "devenv",
           "flake-compat"
         ],
         "flake-parts": [
-          "mynixos",
           "vogix",
           "devenv",
           "flake-parts"
         ],
         "git-hooks-nix": [
-          "mynixos",
           "vogix",
           "devenv",
           "git-hooks"
         ],
         "nixpkgs": [
-          "mynixos",
           "vogix",
           "devenv",
           "nixpkgs"
         ],
         "nixpkgs-23-11": [
-          "mynixos",
           "vogix",
           "devenv"
         ],
         "nixpkgs-regression": [
-          "mynixos",
           "vogix",
           "devenv"
         ]
@@ -527,13 +520,11 @@
     "nixd": {
       "inputs": {
         "flake-parts": [
-          "mynixos",
           "vogix",
           "devenv",
           "flake-parts"
         ],
         "nixpkgs": [
-          "mynixos",
           "vogix",
           "devenv",
           "nixpkgs"
@@ -648,6 +639,7 @@
           "mynixos",
           "nixpkgs"
         ],
+        "vogix": "vogix",
         "yoga-kernel": "yoga-kernel"
       }
     },
@@ -771,7 +763,6 @@
     "treefmt-nix_2": {
       "inputs": {
         "nixpkgs": [
-          "mynixos",
           "vogix",
           "devenv",
           "nixd",
@@ -823,8 +814,8 @@
       },
       "original": {
         "owner": "i-am-logger",
-        "ref": "vogix-v0.16.1",
         "repo": "vogix",
+        "rev": "9fe5be6a2d320cea50fafc68248d9556945aa57a",
         "type": "github"
       }
     },

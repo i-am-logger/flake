@@ -8,6 +8,22 @@
     #   nixos-rebuild/darwin-rebuild ... --override-input mynixos ~/Code/mynixos
     mynixos = {
       url = "github:i-am-logger/mynixos";
+      # vogix comes from flake's own input below (owner, 2026-11-28).
+      inputs.vogix.follows = "vogix";
+    };
+    # vogix, ahead of mynixos's pin: the owner brings vogix v1 onto the hosts
+    # through this input (2026-11-28), with no mynixos edits. Pinned by commit
+    # on origin master until cops tags vogix; mynixos's own vogix input follows
+    # it, and vogix's inputs follow mynixos's as mynixos sets them, so the lock
+    # keeps one nixpkgs and one home-manager.
+    vogix = {
+      url = "github:i-am-logger/vogix/9fe5be6a2d320cea50fafc68248d9556945aa57a";
+      inputs = {
+        nixpkgs.follows = "mynixos/nixpkgs";
+        home-manager.follows = "mynixos/home-manager";
+        rust-overlay.follows = "mynixos/lanzaboote/rust-overlay";
+        devenv.inputs.git-hooks.follows = "mynixos/git-hooks";
+      };
     };
     # One nixpkgs for everything here: mynixos's. A follows adds no lock node,
     # so the lock keeps a single nixpkgs (baud's own pins aside).
@@ -140,6 +156,32 @@
           balancer = self.packages.x86_64-linux.account-balance;
           hmConfig = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger;
         };
+
+        # vogix reaches the hosts through flake's own `vogix` input: mynixos's
+        # vogix input follows it (owner, 2026-11-28: vogix v1 comes onto the host
+        # by this override, with no mynixos edits). Checks the lock's follows,
+        # that both names resolve to one source, and that ads-dev1 and yoga
+        # enable vogix and evaluate with it. Fails at evaluation, naming the gap.
+        vogix-v1-host =
+          let
+            lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+            own = self.inputs.vogix or null;
+            follows = lock.nodes.mynixos.inputs.vogix or null;
+            hosts = [ "ads-dev1" "yoga" ];
+            host = h:
+              let c = self.nixosConfigurations.${h}.config; in
+              assert lib.assertMsg c.home-manager.users.logger.programs.vogix.enable
+                "${h} does not enable vogix";
+              builtins.seq c.system.build.toplevel.drvPath h;
+          in
+          assert lib.assertMsg (own != null) "flake declares no vogix input";
+          assert lib.assertMsg (follows == [ "vogix" ])
+            "mynixos's vogix input does not follow flake's (lock: ${builtins.toJSON follows})";
+          assert lib.assertMsg (mynixos.inputs.vogix.outPath == own.outPath)
+            "mynixos's vogix (${mynixos.inputs.vogix.outPath}) is not flake's (${own.outPath})";
+          pkgs.runCommand "vogix-v1-host" { } ''
+            echo "PASS  vogix: mynixos's vogix follows flake's (${own.rev or "?"}); ${lib.concatStringsSep ", " (map host hosts)} enable it and evaluate" | tee "$out"
+          '';
       };
     };
 }
