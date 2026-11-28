@@ -322,6 +322,10 @@ mynixos.lib.mkSystem {
         # zram swap: compressed, in RAM. 70% of 92 GiB is 64 GiB, which holds
         # a full 28G /tmp alongside swapped process memory.
         zramPercent = 70;
+        # Every test, check, mutation and build run together: 92 GiB less the
+        # desktop session's anon and swap (32G), system.slice (7G) and 5G
+        # headroom.
+        runs.memoryMax = "48G";
       };
 
       # Storage configuration (impermanence + disko)
