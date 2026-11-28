@@ -67,8 +67,9 @@ runCommand "account-balance-statusline"
 
     row=$(${balancer}/bin/account-balance usage 2>&1 | awk '$1 == "default"')
     echo "      usage row: ''${row:-<none>}"
-    pct=$(echo "$row" | awk '{print $2}')
-    age=$(echo "$row" | awk '{print $3}')
+    # usage: "<acct> <week%> <rate> <age-min> <5h%|-1>"
+    pct=$(echo "$row" | awk '{print $5}')
+    age=$(echo "$row" | awk '{print $4}')
     check "balancer: reads a numeric 5h% for default" \
       '[[ "$pct" =~ ^[0-9]+(\.[0-9]+)?$ ]]'
     check "balancer: the fresh reading has age 0 minutes" '[ "$age" = 0 ]'

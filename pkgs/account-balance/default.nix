@@ -13,6 +13,7 @@
 , gawk
 , gnugrep
 , gnused
+, tzdata
 , balanceConfig ? import ./config.nix
 }:
 
@@ -21,13 +22,15 @@ let
 in
 writeShellApplication {
   name = "account-balance";
-  runtimeInputs = [ herdr jq util-linux procps coreutils gawk gnugrep gnused ];
+  runtimeInputs = [ herdr jq util-linux procps coreutils gawk gnugrep gnused tzdata ];
   # No errexit: the script tests with `&&`/`||` chains throughout, as the
   # reference it was adapted from does.
   bashOptions = [ "nounset" "pipefail" ];
   text = ''
     : "''${ACCOUNT_BALANCE_CONFIG:=${configFile}}"
     export ACCOUNT_BALANCE_CONFIG
+    : "''${TZDIR:=${tzdata}/share/zoneinfo}"
+    export TZDIR
   '' + builtins.readFile ./balance.sh;
   passthru = { inherit configFile; };
   meta = {

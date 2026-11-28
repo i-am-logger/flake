@@ -10,6 +10,7 @@
 , util-linux
 , gnugrep
 , gawk
+, tzdata
 }:
 
 let
@@ -22,11 +23,12 @@ let
 in
 runCommand "account-balance-check"
 {
-  nativeBuildInputs = [ herdrStub jq coreutils procps util-linux gnugrep gawk ];
+  nativeBuildInputs = [ herdrStub jq coreutils procps util-linux gnugrep gawk tzdata ];
   passthru = { inherit balancer herdrStub; };
 }
   ''
     rc=0
+    export TZDIR=${tzdata}/share/zoneinfo
     BALANCE=${balancer}/bin/account-balance WORK="$TMPDIR/work" \
       bash ${./test/check.sh} >"$TMPDIR/check.log" 2>&1 || rc=$?
     cat "$TMPDIR/check.log"

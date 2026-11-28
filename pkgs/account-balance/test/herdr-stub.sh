@@ -4,7 +4,10 @@
 #   calls.log                     one line per call: its argv, printf %q, space-separated
 #   sessions.json                 what `session list --json` prints (rows with name/running/default)
 #   shell.pid                     a pid with no children, reported as every pane's shell
-#   panes/<session>/<pane>/       title, status, cwd, pid (the pane's claude process, empty when none)
+#   panes/<session>/<pane>/       title, status, cwd, pid (the pane's claude process, empty when none), and
+#                                 optionally argv (a JSON array: the claude argv process-info reports)
+#   launched                      each typed claude launch line, one per line
+#   fail-dirs                     config dirs (or "-" for none) whose launched claude exits after 3 s
 #
 # A call without --session goes to the session marked default, as herdr's does. A call naming a session that is
 # not running fails (real herdr would create it): calls.log is what the check reads to catch that.
@@ -28,12 +31,12 @@ S=$D/panes/$session
 
 # spawn <pidfile> <cwd> <config-dir|->: a stand-in claude process (a sleep, child of a subshell that reaps it)
 spawn() {
-  local pf=$1 cwd=$2 dir=$3
+  local pf=$1 cwd=$2 dir=$3 life=${4:-600}
   : >"$pf"
   (
     cd "$cwd" || exit 1
     if [ "$dir" = - ]; then unset CLAUDE_CONFIG_DIR; else export CLAUDE_CONFIG_DIR=$dir; fi
-    sleep 600 &
+    sleep "$life" &
     echo $! >"$pf"
     wait
   ) </dev/null >/dev/null 2>&1 &
@@ -61,9 +64,10 @@ case "${1:-} ${2:-}" in
     sh=$(cat "$D/shell.pid")
     pid=$(alive_pid "$p")
     if [ -n "$pid" ]; then
-      jq -n --argjson pid "$pid" --argjson sh "$sh" --arg t "$(cat "$S/$p/title")" \
+      av=$(cat "$S/$p/argv" 2>/dev/null || jq -nc --arg t "$(cat "$S/$p/title")" '["claude", "-n", $t]')
+      jq -n --argjson pid "$pid" --argjson sh "$sh" --argjson av "$av" \
         '{result: {process_info: {shell_pid: $sh, foreground_process_group_id: $pid,
-          foreground_processes: [{pid: $pid, argv: ["claude", "-n", $t]}]}}}'
+          foreground_processes: [{pid: $pid, argv: $av}]}}}'
     else
       jq -n --argjson sh "$sh" \
         '{result: {process_info: {shell_pid: $sh, foreground_process_group_id: $sh, foreground_processes: []}}}'
@@ -87,7 +91,9 @@ case "${1:-} ${2:-}" in
           CLAUDE_CONFIG_DIR=*) dir=${cmd#CLAUDE_CONFIG_DIR=}; dir=${dir%% *} ;;
           *) dir=- ;;
         esac
-        spawn "$S/$p/pid" "$(cat "$S/$p/cwd")" "$dir"
+        echo "$cmd" >>"$D/launched"
+        life=600; if grep -qxF -- "$dir" "$D/fail-dirs" 2>/dev/null; then life=3; fi
+        spawn "$S/$p/pid" "$(cat "$S/$p/cwd")" "$dir" "$life"
         jq -n --arg s "$sid" '{sessionId: $s}' >"$HOME/.claude/sessions/$(cat "$S/$p/pid").json"
         cat "$S/$p/pid" >>"$D/spawned"
         ;;

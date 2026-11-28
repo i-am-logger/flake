@@ -6,13 +6,15 @@
 #   account-balance apply [--max N]                make those moves, one at a time
 #   account-balance move <session>/<pane> <acct>   move one pane (same safety checks)
 #   account-balance restart <session>/<pane>       restart one pane on its own account (reloads settings)
-#   account-balance usage | weekly                 the usage readings of the pool members
+#   account-balance usage                          the pool members' readings: week%, rate, age, 5-hour %
+#   account-balance reset-epoch "<text>" <epoch>   the epoch of a reset text read at <epoch>
 #   account-balance pause <set_by> <hours> <reason> | unpause
 #
 # Config is data written by the flake (ACCOUNT_BALANCE_CONFIG, JSON): pools of accounts, thresholds, and the
 # held herdr sessions. An account is `default` (~/.claude, CLAUDE_CONFIG_DIR unset) or a name N (~/.claude-N).
-# Usage is read from <folder>/usage-latest.json of each pool member BY NAME, never by a glob. Moves stay
-# inside one pool, and only pool members are sources or targets.
+# Usage is read from ledger/accounts.tsv (account, week%, reset text, read_at; cdev4 there is `default`), and
+# a pool member's <folder>/usage-latest.json overrides its row when its saved_at is newer. Moves stay inside
+# one pool, and only pool members are sources or targets.
 #
 # Panes are keyed <session>/<pane> everywhere (pane ids repeat across herdr sessions): plan rows, moves.log,
 # resume-ids.log, skip.txt (<session>/<name>) and the per-target counts. Session names come only from
@@ -26,10 +28,15 @@
 #     gates run as children of the session that started them, with no systemd scope of their own to detect);
 #   - <session>/<name> is not in the skip list (skip.txt in the state folder, one per line);
 #   - the target account has accepted the workspace-trust dialog for the session's folder.
-# Sources: members at >= high % of the 5-hour limit, or >= week_high % weekly. Targets: members below low %
-# with a fresh (<= stale_min minutes) reading and under week_low % weekly, lowest use first; at most
-# per_target moves land on one account per run. Any failed move stops the run (circuit breaker); a move whose
-# new session does not come up is resumed again on its original account.
+# rate = (100 - week%) / max(hours to the weekly reset, 1). Sources: lowest rate first, a fresh reading only.
+# Targets: highest rate first, fresh (<= stale_min minutes), under room % weekly and on the 5-hour reading (if
+# any), never source_only or temporary accounts; a move S -> T needs rate(T) >= hysteresis x rate(S). While
+# draining, the temporary accounts are sources ahead of all others (no hysteresis): when the history
+# (accounts-history.tsv) covers 24 h with every pool reading in the last 24 h under room %, or from the
+# latched drain-after.epoch (the later next reset of drain_after_resets_of, written once). At most
+# per_target moves land on one account per run; `breaker` failed moves stop the run; a move whose new
+# session does not come up is resumed again on its original account. One line per move attempt goes to
+# ledger/account-moves.tsv.
 #
 # One lock (balance.lock in the state folder) is held for the whole of apply, move and restart: apply skips
 # when it is taken, a manual move or restart waits up to 600 s for it.
@@ -37,14 +44,18 @@ set -uo pipefail
 
 config=${ACCOUNT_BALANCE_CONFIG:?ACCOUNT_BALANCE_CONFIG must name the JSON config}
 cfg() { jq -r "$1" "$config"; }
-HIGH=$(cfg .thresholds.high) LOW=$(cfg .thresholds.low) PER_TARGET=$(cfg .thresholds.per_target)
-WEEK_HIGH=$(cfg .thresholds.week_high) WEEK_LOW=$(cfg .thresholds.week_low)
-STALE_MIN=$(cfg .thresholds.stale_min) MAX=$(cfg .thresholds.max)
+ROOM=$(cfg .thresholds.room) HYST=$(cfg .thresholds.hysteresis) PER_TARGET=$(cfg .thresholds.per_target)
+STALE_MIN=$(cfg .thresholds.stale_min) MAX=$(cfg .thresholds.max) BREAKER=$(cfg .thresholds.breaker)
+NOT_TARGET=" $(cfg '(.source_only + .temporary)[]' | tr '\n' ' ')" TEMPORARY=" $(cfg '.temporary[]' | tr '\n' ' ')"
+ledger_dir=${ACCOUNT_BALANCE_LEDGER_DIR:-$HOME/Code/logger/ledger}
 
 state_dir=${ACCOUNT_BALANCE_STATE:-$HOME/.local/state/account-balance}
 log_file=$state_dir/moves.log
 skip_file=$state_dir/skip.txt
 lock_file=$state_dir/balance.lock
+hist_file=$state_dir/accounts-history.tsv
+latch_file=$state_dir/drain-after.epoch
+now_s() { echo "${ACCOUNT_BALANCE_NOW:-$(date +%s)}"; }
 mkdir -p "$state_dir"
 
 # every pool member, one per line; the members of one pool; the pool of an account (empty when none)
@@ -74,23 +85,86 @@ trusted() {
     "$(cfgjson "$2")" >/dev/null 2>&1
 }
 
-# usage: "<acct> <5h%> <age-min> <saved_at> <resets_at>" per pool member with a reading
-usage() {
-  local now a f; now=$(date +%s)
+# reset_epoch "<text>" <read_at epoch>: "Nov 28, 5pm (America/Denver)" in the zone it names (UTC when none),
+# in read_at's year, or the next one when that lands more than a day before read_at. A text with no date is
+# read_at's day in that zone, or the next day.
+reset_epoch() {
+  local t=$1 r=$2 z d e y; z=$(sed -nE 's/.*\(([^)]+)\).*/\1/p' <<<"$t"); z=${z:-UTC}
+  d=$(sed -E 's/\(.*//; s/,//g; s/^ +| +$//g' <<<"$t")
+  if [[ $d =~ ^[A-Za-z]+\ [0-9]+\  ]]; then
+    y=$(TZ=$z date -d "@$r" +%Y)
+    e=$(date -d "TZ=\"$z\" ${d% *} $y ${d##* }" +%s) || return 1
+    [ "$e" -ge $((r - 86400)) ] || e=$(date -d "TZ=\"$z\" ${d% *} $((y + 1)) ${d##* }" +%s) || return 1
+  else
+    e=$(date -d "TZ=\"$z\" $(TZ=$z date -d "@$r" +%F) $d" +%s) || return 1
+    [ "$e" -ge "$r" ] || e=$((e + 86400))
+  fi
+  echo "$e"
+}
+# accounts.tsv rows with a numeric week%, cdev4 as default: "acct<TAB>pct<TAB>reset text<TAB>read_at"
+tsv_rows() {
+  awk -F'\t' -v OFS='\t' '$2 ~ /^[0-9.]+%?$/ { sub(/%$/, "", $2); if ($1 == "cdev4") $1 = "default"; print $1, $2, $3, $4 }' \
+    "$ledger_dir/accounts.tsv" 2>/dev/null
+}
+# "<acct> <week%> <resets epoch> <read epoch> <5h%|-1>" per pool member with a reading: its latest accounts.tsv
+# row, or its usage-latest.json when that was saved later. The 5-hour % is usage-latest.json's, while its window
+# is open.
+readings() {
+  local rows a pct txt at r e f s w we fh now; rows=$(tsv_rows); now=$(now_s)
   while read -r a; do
-    f=$(cfgdir "$a")/usage-latest.json; [ -r "$f" ] || continue
-    jq -r --arg a "$a" --argjson now "$now" \
-      '"\($a) \(.rate_limits.five_hour.used_percentage // -1) \((($now - (.saved_at // 0)) / 60) | floor) \(.saved_at // 0 | floor) \(.rate_limits.five_hour.resets_at // 0 | floor)"' "$f"
+    pct="" r=0 e=0 fh=-1
+    IFS=$'\t' read -r _ pct txt at < <(awk -F'\t' -v a="$a" '$1 == a' <<<"$rows" | sort -t$'\t' -k4,4 | tail -1)
+    if [ -n "$pct" ]; then
+      { r=$(date -d "$at" +%s 2>/dev/null) && e=$(reset_epoch "$txt" "$r" 2>/dev/null); } || { pct="" r=0; }
+    fi
+    f=$(cfgdir "$a")/usage-latest.json
+    if [ -r "$f" ]; then
+      read -r s w we fh < <(jq -r --argjson now "$now" '"\(.saved_at // 0 | floor) \(.rate_limits.seven_day.used_percentage // -1)
+        \(.rate_limits.seven_day.resets_at // 0 | floor) \(if (.rate_limits.five_hour.resets_at // 0) > $now
+        then .rate_limits.five_hour.used_percentage // -1 else -1 end)"' "$f" | tr '\n' ' ')
+      [ "$s" -gt "$r" ] && [ "$w" != -1 ] && { pct=$w e=$we r=$s; }
+    fi
+    if [ -n "$pct" ]; then echo "$a $pct $e $r ${fh:--1}"; fi
   done < <(members)
 }
-
-# "<acct> <seven_day %>" per pool member; -1 when the file has no seven_day reading
-weekly() {
-  local a f
+# usage: "<acct> <week%> <rate> <age-min> <5h%|-1>" per pool member with a reading
+usage() {
+  readings | awk -v now="$(now_s)" '{ h = ($3 - now) / 3600; if (h < 1) h = 1
+    printf "%s %s %.4f %d %s\n", $1, $2, (100 - $2) / h, (now - $4) / 60, $5 }'
+}
+# The drain-after epoch: the latched one, else the later reset of drain_after_resets_of in accounts.tsv (empty
+# until all have a row). latch writes it once.
+drain_after() {
+  [ -s "$latch_file" ] && { cat "$latch_file"; return; }
+  local rows a row r e max=0
+  rows=$(tsv_rows)
   while read -r a; do
-    f=$(cfgdir "$a")/usage-latest.json; [ -r "$f" ] || continue
-    jq -r --arg a "$a" '"\($a) \(.rate_limits.seven_day.used_percentage // -1 | floor)"' "$f"
-  done < <(members)
+    row=$(awk -F'\t' -v a="$a" '$1 == a' <<<"$rows" | sort -t$'\t' -k4,4 | tail -1)
+    [ -n "$row" ] || return 0
+    r=$(date -d "$(cut -f4 <<<"$row")" +%s 2>/dev/null) && e=$(reset_epoch "$(cut -f3 <<<"$row")" "$r" 2>/dev/null) || return 0
+    [ "$e" -gt "$max" ] && max=$e
+  done < <(cfg '.drain_after_resets_of[]')
+  [ "$max" -gt 0 ] && echo "$max"
+}
+latch() { [ -s "$latch_file" ] && return 0; local e; e=$(drain_after); [ -z "$e" ] || echo "$e" >"$latch_file"; }
+# appends the accounts.tsv rows not yet in the history (keyed by account and read_at)
+hist_append() {
+  touch "$hist_file"
+  local new
+  new=$(tsv_rows | awk -F'\t' 'FILENAME == ARGV[1] { k[$1 FS $4]; next } !(($1 FS $4) in k) { k[$1 FS $4]; print }' "$hist_file" -)
+  [ -z "$new" ] || echo "$new" >>"$hist_file"
+}
+# true when the temporary accounts are drained: from the drain-after epoch, or once the history (with the current
+# accounts.tsv rows) covers 24 h and every pool reading of the last 24 h is under room %
+draining() {
+  local now da rows; now=$(now_s); da=$(drain_after)
+  [ -n "$da" ] && [ "$now" -ge "$da" ] && return 0
+  rows=$({ cat "$hist_file" 2>/dev/null; tsv_rows; } | awk -F'\t' 'NF >= 4 && !seen[$1 FS $4]++')
+  [ -n "$rows" ] || return 1
+  while IFS=$'\t' read -r a p _ at; do echo "$a $p $(date -d "$at" +%s 2>/dev/null || echo x)"; done <<<"$rows" |
+    awk -v now="$now" -v m=" $(members | tr '\n' ' ')" -v room="$ROOM" '$3 == "x" || !index(m, " " $1 " ") { next }
+      { if (min == "" || $3 < min) min = $3 } $3 >= now - 86400 && $2 >= room { hot = 1 }
+      END { exit !(min != "" && min <= now - 86400 && !hot) }'
 }
 
 pane_pid() { hs "$1" pane process-info --pane "$2" 2>/dev/null |
@@ -143,48 +217,48 @@ verdict() {
 
 status() {
   local u key name st pid a; u=$(usage)
-  echo "accounts (acct 5h% age-min saved_at resets_at):"; echo "$u" | sort -k2 -n | sed 's/^/  /'
+  echo "accounts (acct week% rate age-min 5h%), draining: $(draining && echo yes || echo no):"; echo "$u" | sort -k3 -g | sed 's/^/  /'
   echo "sessions (session/pane name status pid acct verdict):"
   panes | while read -r key name st pid a; do echo "  $key $name $st $pid $a $(verdict "$key" "$name" "$st" "$pid")"; done
 }
 
 # prints "<session>/<pane> <name> <from> <to>" lines
 plan() {
-  local u w p pool m hot targets n=0 key name st pid a t c pct
-  declare -A load=()
-  u=$(usage); w=$(weekly); p=$(panes)
+  local u p pool m targets dr="" n=0 key name st pid a t c rk acct
+  declare -A load=() rate=() age=()
+  u=$(usage); p=$(panes); draining && dr=1
+  while read -r acct _ rk c _; do [ -n "$acct" ] && rate[$acct]=$rk age[$acct]=$c; done <<<"$u"
   while read -r pool; do
     m=" $(pool_members "$pool" | tr '\n' ' ')"
     [ "$m" != " " ] || continue
-    hot=$( { awk -v m="$m" -v h="$HIGH" 'index(m, " " $1 " ") && $2 >= h { print $1 }' <<<"$u"
-             awk -v m="$m" -v h="$WEEK_HIGH" 'index(m, " " $1 " ") && $2 >= h { print $1 }' <<<"$w"; } | sort -u)
-    [ -n "$hot" ] || continue
-    # lowest 5h% first; stale usage (> stale_min minutes) is not trusted; never an account at >= week_low weekly
-    # or with no weekly reading. A 5h of -1 (no five_hour reading: no window open) counts as 0.
-    targets=$(awk -v m="$m" -v l="$LOW" -v wl="$WEEK_LOW" -v sm="$STALE_MIN" 'NR == FNR { wk[$1] = $2; next }
-        index(m, " " $1 " ") && $2 < l && $3 <= sm && ($1 in wk) && wk[$1] >= 0 && wk[$1] < wl {
-        print ($2 < 0 ? 0 : $2), $1 }' <(echo "$w") <(echo "$u") | sort -k1,1n -k2,2 | awk '{ print $2 }')
+    # highest rate first: fresh, under room % weekly and on the 5-hour reading, never source_only/temporary
+    targets=$(awk -v m="$m" -v x="$NOT_TARGET " -v room="$ROOM" -v sm="$STALE_MIN" 'index(m, " " $1 " ") &&
+        !index(x, " " $1 " ") && $4 <= sm && $2 < room && $5 < room { print $3, $1 }' <<<"$u" | sort -k1,1gr -k2,2 | awk '{ print $2 }')
     [ -n "$targets" ] || continue
-    # hottest source first; within an account, coordinators (*-lead, release) last
-    while read -r key name st pid a; do
-      [ -n "$key" ] || continue
-      grep -qx "$a" <<<"$hot" || continue
+    # draining temporaries first, then lowest rate (fresh readings only); within an account, coordinators last
+    while read -r rk key name st pid a; do
       [ "$(verdict "$key" "$name" "$st" "$pid")" = ok ] || continue
       for t in $targets; do
-        [ "${load[$t]:-0}" -lt "$PER_TARGET" ] || continue
+        [ "$t" != "$a" ] && [ "${load[$t]:-0}" -lt "$PER_TARGET" ] || continue
+        [ "$rk" = 0 ] || awk -v t="${rate[$t]}" -v s="${rate[$a]}" -v h="$HYST" 'BEGIN { exit !(t >= h * s) }' || continue
         trusted "$pid" "$t" || continue
         load[$t]=$(( ${load[$t]:-0} + 1 )); echo "$key $name $a $t"; n=$((n + 1)); break
       done
       [ "$n" -ge "$MAX" ] && break
     done < <(while read -r key name st pid a; do
-               [ -n "$key" ] || continue
+               [ -n "$key" ] && [[ $m == *" $a "* ]] || continue
                c=0; [[ $name == *-lead || $name == release ]] && c=1
-               pct=$(awk -v a="$a" '$1 == a { print $2 }' <<<"$u")
-               echo "${pct:--1} $c $key $name $st $pid $a"; done <<<"$p" |
-             sort -k1,1nr -k2,2n | cut -d' ' -f3-)
+               if [ -n "$dr" ] && [[ $TEMPORARY == *" $a "* ]]; then rk=0
+               elif [ -n "${rate[$a]:-}" ] && [ "${age[$a]}" -le "$STALE_MIN" ]; then rk=1
+               else continue; fi
+               echo "$rk ${rate[$a]:-0} $c $key $name $st $pid $a"; done <<<"$p" |
+             sort -k1,1n -k2,2g -k3,3n | cut -d' ' -f1,4-)
     [ "$n" -ge "$MAX" ] && break
   done < <(cfg '.pools | keys[]')
 }
+
+# ledger <session>/<pane> <name> <from> <to> <ok|failed|resumed-back>: one line per move attempt
+ledger() { mkdir -p "$ledger_dir" && printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(date -Is)" "$@" >>"$ledger_dir/account-moves.tsv"; }
 
 launch() { # key sid name acct argv-rest
   local key=$1 sid=$2 name=$3 acct=$4 rest=$5 s id
@@ -284,16 +358,17 @@ move() { # <session>/<pane> to -> one log line
       return 0
     fi
     echo "$key $name: FAIL the 'Background work is running' dialog did not close after Esc; sid $sid"
-    return 1
+    ledger "$key" "$name" "$from" "$to" failed; return 1
   done
   if kill -0 "$pid" 2>/dev/null; then
     echo "$key $name: FAIL /exit did not end pid $pid in 30 s (a dialog is open?); session still running, nothing else typed; sid $sid"
-    return 1
+    ledger "$key" "$name" "$from" "$to" failed; return 1
   fi
   if ! launch "$key" "$sid" "$name" "$to" "$rest"; then
     sleep 2; hs "$s" pane send-keys "$id" ctrl+c >/dev/null 2>&1; sleep 2
-    launch "$key" "$sid" "$name" "$from" "$rest" && echo "$key $name: FAIL on $to, resumed back on $from ($sid)" ||
-      echo "$key $name: FAIL on $to AND on $from — session $sid is stopped; resume it by hand"
+    if launch "$key" "$sid" "$name" "$from" "$rest"; then
+      echo "$key $name: FAIL on $to, resumed back on $from ($sid)"; ledger "$key" "$name" "$from" "$to" resumed-back
+    else echo "$key $name: FAIL on $to AND on $from — session $sid is stopped; resume it by hand"; ledger "$key" "$name" "$from" "$to" failed; fi
     return 1
   fi
   [ -n "$ultra" ] && { hs "$s" pane run "$id" "/effort ultracode" >/dev/null 2>&1; sleep 2; }
@@ -301,7 +376,7 @@ move() { # <session>/<pane> to -> one log line
   local why="account balancing moved this session from $from to $to"
   [ "$from" = "$to" ] && why="this session was restarted on $to to load new settings"
   hs "$s" agent prompt "$id" "Note: $why; your conversation is intact. Carry on exactly where you stopped. Check for any background work you had running before starting it again; never start a second copy." >/dev/null 2>&1
-  echo "$key $name: $from -> $to ($sid)"
+  echo "$key $name: $from -> $to ($sid)"; ledger "$key" "$name" "$from" "$to" ok
 }
 
 # lock <-n | seconds>: the one balancer lock, on fd 9, held until the process exits
@@ -316,7 +391,8 @@ help() { cat <<'EOF'
   account-balance apply [--max N]                make those moves, one at a time
   account-balance move <session>/<pane> <acct>   move one pane (same safety checks)
   account-balance restart <session>/<pane>       restart one pane on its own account (reloads settings)
-  account-balance usage | weekly                 the usage readings of the pool members
+  account-balance usage                          the pool members' readings: week%, rate, age, 5-hour %
+  account-balance reset-epoch "<text>" <epoch>   the epoch of a reset text read at <epoch>
   account-balance pause <set_by> <hours> <reason> | unpause
 EOF
 }
@@ -326,7 +402,7 @@ while [ $# -gt 0 ]; do case $1 in --max) MAX=$2; shift 2 ;; *) break ;; esac; do
 case $cmd in
   status) status ;;
   usage) usage ;;
-  weekly) weekly ;;
+  reset-epoch) [ $# -eq 2 ] || { help >&2; exit 2; }; reset_epoch "$1" "$2" ;;
   pause) # pause <set_by> <hours> <reason...>
     [ $# -ge 3 ] || { echo "usage: account-balance pause <set_by> <hours> <reason>" >&2; exit 2; }
     by=$1 h=$2; shift 2; now=$(date +%s)
@@ -345,22 +421,12 @@ case $cmd in
     rc=0
     # one balancer run at a time: an apply that finds the lock taken exits at once
     lock -n || { echo "another account-balance run holds $lock_file; skipped"; exit 0; }
-    # One row per pool member per run; the header line at the top of usage.tsv names the columns.
-    # five_hour_pct is rate_limits.five_hour.used_percentage, or "absent" (no usage-latest.json yet) or "none" (the
-    # file has no five_hour reading); neither is 0%. saved_at/resets_at are epoch seconds ("-" when absent, 0 when
-    # the field is missing). week_pct/week_resets_at come from rate_limits.seven_day the same way.
-    t=$state_dir/usage.tsv
-    [ -s "$t" ] || echo "run_time account five_hour_pct age_min saved_at resets_at week_pct week_resets_at" >"$t"
+    hist_append; latch
+    # One row per pool member per run (rates.tsv): its reading, or "absent" when it has none.
+    t=$state_dir/rates.tsv
+    [ -s "$t" ] || echo "run_time account week_pct rate age_min five_hour_pct" >"$t"
     { u=$(usage); ts=$(date -Is)
-      while read -r a; do
-        row=$(awk -v a="$a" '$1 == a' <<<"$u")
-        if [ -z "$row" ]; then echo "$ts $a absent - - - - -"
-        else read -r _ pct age saved resets <<<"$row"; [ "$pct" = -1 ] && pct=none
-          wk=$(jq -r '[(.rate_limits.seven_day.used_percentage // "none" | if type == "number" then floor else . end),
-                       (.rate_limits.seven_day.resets_at // 0)] | join(" ")' "$(cfgdir "$a")/usage-latest.json" 2>/dev/null)
-          [ -n "$wk" ] || wk="none 0"
-          echo "$ts $a $pct $age $saved $resets $wk"; fi
-      done < <(members); } >>"$t"
+      while read -r a; do row=$(awk -v a="$a" '$1 == a' <<<"$u"); echo "$ts ${row:-$a absent - - -}"; done < <(members); } >>"$t"
     # Moves paused: plan and report only. The pause is a typed record, moves-paused.json:
     #   {"v":1,"set_by":"<session>","set_at":<epoch s>,"reason":"…","review_by":<epoch s>}
     # Past review_by it is reported as OVERDUE every run. A malformed record still pauses (fail closed).
@@ -371,10 +437,13 @@ case $cmd in
         info="UNREADABLE pause record (still paused)"
       echo "MOVES PAUSED $info: would move: ${p:-nothing}"; exit 0
     fi
+    fails=0
     while read -r key name from to; do
       [ -n "$key" ] || continue
-      r=$(move "$key" "$to"); rc=$?; echo "$r"; echo "$(date -Is) $r" >>"$log_file"
-      [ $rc -eq 0 ] || { echo "circuit breaker: stopping after a failed move"; break; }
+      r=$(move "$key" "$to"); mrc=$?; echo "$r"; echo "$(date -Is) $r" >>"$log_file"
+      [ $mrc -eq 0 ] && continue
+      rc=1; fails=$((fails + 1))
+      [ "$fails" -ge "$BREAKER" ] && { echo "circuit breaker: stopping after $fails failed moves"; break; }
     done < <(plan)
     exit $rc ;;
   *) help; exit 2 ;;
