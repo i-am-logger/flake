@@ -325,7 +325,7 @@ mynixos.lib.mkSystem {
         # Every test, check, mutation and build run together: 92 GiB less the
         # desktop session's anon and swap (32G), system.slice (7G) and 5G
         # headroom.
-        runs.memoryMax = "48G";
+        runs.budget = "48G";
       };
 
       # Storage configuration (impermanence + disko)
