@@ -44,7 +44,7 @@ set -uo pipefail
 
 config=${ACCOUNT_BALANCE_CONFIG:?ACCOUNT_BALANCE_CONFIG must name the JSON config}
 cfg() { jq -r "$1" "$config"; }
-ROOM=$(cfg .thresholds.room) HYST=$(cfg .thresholds.hysteresis) PER_TARGET=$(cfg .thresholds.per_target)
+ROOM=$(cfg .thresholds.room) OVERFLOW=$(cfg .thresholds.overflow_home_over) HYST=$(cfg .thresholds.hysteresis) PER_TARGET=$(cfg .thresholds.per_target)
 STALE_MIN=$(cfg .thresholds.stale_min) MAX=$(cfg .thresholds.max) BREAKER=$(cfg .thresholds.breaker)
 NOT_TARGET=" $(cfg '(.source_only + .temporary)[]' | tr '\n' ' ')" TEMPORARY=" $(cfg '.temporary[]' | tr '\n' ' ')"
 ledger_dir=${ACCOUNT_BALANCE_LEDGER_DIR:-$HOME/Code/logger/ledger}
@@ -59,9 +59,29 @@ now_s() { echo "${ACCOUNT_BALANCE_NOW:-$(date +%s)}"; }
 mkdir -p "$state_dir"
 
 # every pool member, one per line; the members of one pool; the pool of an account (empty when none)
-members() { cfg '.pools[][]'; }
-pool_members() { jq -r --arg p "$1" '.pools[$p][]' "$config"; }
-pool_of() { jq -r --arg a "$1" '.pools | to_entries[] | select(.value | index($a) != null) | .key' "$config" | head -1; }
+# Teams come from head's registry (ACCOUNT_BALANCE_REGISTRY, team-roles.toml): [teams.<team>] with
+# herdr_session, an optional workspace (the pane id's w-part, e.g. wA) and accounts, its home accounts.
+registry=${ACCOUNT_BALANCE_REGISTRY:-$HOME/Code/logger/team-roles.toml}
+teams_json=$(taplo get -f "$registry" -o json teams 2>/dev/null) || teams_json='{}'
+# Two teams on one session (or one session/workspace) is refused: a pane must match exactly one team.
+overlap=$(jq -r '[to_entries[] | select(.value.accounts) | "\(.value.herdr_session)/\(.value.workspace // "*")"]
+  | group_by(.) | map(select(length > 1)[0]) | join(" ")' <<<"$teams_json")
+# every account any team, the config or accounts.tsv names, one per line (cdev4 is default): the drain's 24 h
+# rule counts them all, and overflow may borrow any of them that isn't temporary or source-only
+members() { { jq -r '.[] | .accounts[]?' <<<"$teams_json"; cfg '(.source_only + .temporary)[]'; tsv_rows | cut -f1; } | awk 'NF && !seen[$0]++'; }
+# team_of <session> <pane id>: <session>/<workspace> beats <session>; empty when no team matches
+team_of() {
+  jq -r --arg s "$1" --arg w "${2%%:*}" '[to_entries[] | select(.value.accounts and .value.herdr_session == $s)]
+    | (map(select(.value.workspace == $w)) + map(select(.value.workspace == null)))[0].key // empty' <<<"$teams_json"
+}
+# homes <team>: its temporaries until the 0188 drain, else its other accounts; never a source_only account
+homes() {
+  local a tmp=() own=()
+  while read -r a; do [ -n "$a" ] || continue; [[ $NOT_TARGET == *" $a "* && $TEMPORARY != *" $a "* ]] && continue
+    if [[ $TEMPORARY == *" $a "* ]]; then tmp+=("$a"); else own+=("$a"); fi
+  done < <(jq -r --arg t "$1" '.[$t].accounts[]?' <<<"$teams_json")
+  if [ ${#tmp[@]} -gt 0 ] && [ -z "${DRAINING:-}" ]; then printf '%s\n' "${tmp[@]}"; else printf '%s\n' "${own[@]}"; fi
+}
 held() { jq -e --arg s "$1" '.held_sessions | index($s) != null' "$config" >/dev/null; }
 # A pane pinned to its account by its name (config pinned_name_prefixes: the Accounts consoles).
 pinned() { jq -e --arg n "$1" 'any(.pinned_name_prefixes[]?; . as $p | $n | startswith($p))' "$config" >/dev/null; }
@@ -195,6 +215,7 @@ verdict() {
   s=${key%%/*} id=${key#*/}
   held "$s" && { echo held; return; }
   pinned "$name" && { echo account-pinned; return; }
+  [ -n "$(team_of "$s" "$id")" ] || { echo no-team; return; }
   [ "$name" = "?" ] && { echo no-title; return; }
   [[ $name == *%20* ]] && { echo name-has-spaces; return; }
   # ALLOW_SKIP=1 is for a manual `move` only, when the skip-listed session itself asked to be moved.
@@ -226,39 +247,46 @@ status() {
   panes | while read -r key name st pid a; do echo "  $key $name $st $pid $a $(verdict "$key" "$name" "$st" "$pid")"; done
 }
 
-# prints "<session>/<pane> <name> <from> <to>" lines
+# prints "<session>/<pane> <name> <from> <to>" lines. A pane's targets are its team's homes (homes()): a pane
+# off them moves to the best home; a pane on one moves to another home only past the hysteresis; when every
+# home is over overflow_home_over %, it borrows the coolest non-temporary, non-source-only account under room %.
 plan() {
-  local u p pool m targets dr="" n=0 key name st pid a t c rk acct
-  declare -A load=() rate=() age=()
-  u=$(usage); p=$(panes); draining && dr=1
-  while read -r acct _ rk c _; do [ -n "$acct" ] && rate[$acct]=$rk age[$acct]=$c; done <<<"$u"
-  while read -r pool; do
-    m=" $(pool_members "$pool" | tr '\n' ' ')"
-    [ "$m" != " " ] || continue
-    # highest rate first: fresh, under room % weekly and on the 5-hour reading, never source_only/temporary
-    targets=$(awk -v m="$m" -v x="$NOT_TARGET " -v room="$ROOM" -v sm="$STALE_MIN" 'index(m, " " $1 " ") &&
-        !index(x, " " $1 " ") && $4 <= sm && $2 < room && $5 < room { print $3, $1 }' <<<"$u" | sort -k1,1gr -k2,2 | awk '{ print $2 }')
-    [ -n "$targets" ] || continue
-    # draining temporaries first, then lowest rate (fresh readings only); within an account, coordinators last
-    while read -r rk key name st pid a; do
-      [ "$(verdict "$key" "$name" "$st" "$pid")" = ok ] || continue
-      for t in $targets; do
-        [ "$t" != "$a" ] && [ "${load[$t]:-0}" -lt "$PER_TARGET" ] || continue
-        [ "$rk" = 0 ] || awk -v t="${rate[$t]}" -v s="${rate[$a]}" -v h="$HYST" 'BEGIN { exit !(t >= h * s) }' || continue
-        trusted "$pid" "$t" || continue
-        load[$t]=$(( ${load[$t]:-0} + 1 )); echo "$key $name $a $t"; n=$((n + 1)); break
-      done
-      [ "$n" -ge "$MAX" ] && break
-    done < <(while read -r key name st pid a; do
-               [ -n "$key" ] && [[ $m == *" $a "* ]] || continue
-               c=0; [[ $name == *-lead || $name == release ]] && c=1
-               if [ -n "$dr" ] && [[ $TEMPORARY == *" $a "* ]]; then rk=0
-               elif [ -n "${rate[$a]:-}" ] && [ "${age[$a]}" -le "$STALE_MIN" ]; then rk=1
-               else continue; fi
-               echo "$rk ${rate[$a]:-0} $c $key $name $st $pid $a"; done <<<"$p" |
-             sort -k1,1n -k2,2g -k3,3n | cut -d' ' -f1,4-)
+  local u p n=0 key name st pid a t c rk acct team h hm best mem
+  declare -A load=() rate=() age=() week=() fh=()
+  [ -z "$overlap" ] || { echo "refused: teams overlap on $overlap (a pane must match one team)" >&2; return 2; }
+  u=$(usage); p=$(panes); draining && DRAINING=1
+  while read -r acct w rk c f; do [ -n "$acct" ] && rate[$acct]=$rk age[$acct]=$c week[$acct]=$w fh[$acct]=$f; done <<<"$u"
+  ok() { [ -n "${rate[$1]:-}" ] && [ "${age[$1]}" -le "$STALE_MIN" ] && awk -v w="${week[$1]}" -v f="${fh[$1]}" -v r="$ROOM" 'BEGIN { exit !(w < r && f < r) }'; }
+  by_rate() { local x; for x in "$@"; do echo "${rate[$x]:-0} $x"; done | sort -k1,1gr -k2,2 | awk '{ print $2 }'; }
+  while read -r rk _ c key name st pid a; do
+    [ "$(verdict "$key" "$name" "$st" "$pid")" = ok ] || continue
+    team=$(team_of "${key%%/*}" "${key#*/}"); mapfile -t hm < <(homes "$team"); [ ${#hm[@]} -gt 0 ] || continue
+    best=""
+    for t in $(by_rate "${hm[@]}"); do
+      if ! { [ "$t" != "$a" ] && [ "${load[$t]:-0}" -lt "$PER_TARGET" ] && ok "$t"; }; then continue; fi
+      if [[ " ${hm[*]} " == *" $a "* ]]; then  # on a home: only past the hysteresis
+        awk -v t="${rate[$t]}" -v s="${rate[$a]:-0}" -v h="$HYST" 'BEGIN { exit !(t >= h * s) }' || continue
+      fi
+      trusted "$pid" "$t" || continue; best=$t; break
+    done
+    if [ -z "$best" ] && [[ " ${hm[*]} " == *" $a "* ]]; then  # overflow: every home over overflow_home_over %
+      h=1; for t in "${hm[@]}"; do awk -v w="${week[$t]:-0}" -v o="$OVERFLOW" 'BEGIN { exit !(w > o) }' || h=0; done
+      if [ "$h" = 1 ]; then
+        mapfile -t mem < <(members)
+        for t in $(by_rate "${mem[@]}"); do
+          [[ " ${hm[*]} " != *" $t "* && $NOT_TARGET != *" $t "* ]] && [ "${load[$t]:-0}" -lt "$PER_TARGET" ] && ok "$t" && trusted "$pid" "$t" && { best=$t; break; }
+        done
+      fi
+    fi
+    [ -n "$best" ] || continue
+    load[$best]=$(( ${load[$best]:-0} + 1 )); echo "$key $name $a $best"; n=$((n + 1))
     [ "$n" -ge "$MAX" ] && break
-  done < <(cfg '.pools | keys[]')
+  done < <(while read -r key name st pid a; do
+             [ -n "$key" ] || continue
+             team=$(team_of "${key%%/*}" "${key#*/}"); [ -n "$team" ] || continue
+             c=0; [[ $name == *-lead || $name == release ]] && c=1
+             rk=1; [[ " $(homes "$team" | tr '\n' ' ') " == *" $a "* ]] || rk=0   # off its homes: first
+             echo "$rk ${rate[$a]:-0} $c $key $name $st $pid $a"; done <<<"$p" | sort -k1,1n -k2,2g -k3,3n)
 }
 
 # ledger <session>/<pane> <name> <from> <to> <ok|failed|resumed-back>: one line per move attempt
@@ -323,8 +351,8 @@ move() { # <session>/<pane> to -> one log line
   [ "$to" = same ] && to=$from                     # restart in place (reloads settings)
   [ "$from" != "$to" ] || [ "${RESTART:-0}" = 1 ] || { echo "$key $name: SKIP already on $to"; return 0; }
   if [ "$from" != "$to" ]; then
-    [ -n "$(pool_of "$to")" ] || { echo "$key $name: SKIP $to is not a pool member"; return 0; }
-    [ "$(pool_of "$from")" = "$(pool_of "$to")" ] || { echo "$key $name: SKIP $from and $to are not in one pool"; return 0; }
+    [[ $NOT_TARGET == *" $to "* ]] && ! jq -e --arg t "$(team_of "$s" "$id")" --arg a "$to" '.[$t].accounts | index($a) != null' <<<"$teams_json" >/dev/null &&
+      { echo "$key $name: SKIP $to is source-only, or another team's temporary"; return 0; }
   fi
   v=$(verdict "$key" "$name" "$st" "$pid"); [ "$v" = ok ] || { echo "$key $name: SKIP $v"; return 0; }
   trusted "$pid" "$to" || { echo "$key $name: SKIP $to has not trusted $(readlink "/proc/$pid/cwd")"; return 0; }

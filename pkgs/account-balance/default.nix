@@ -13,6 +13,7 @@
 , gawk
 , gnugrep
 , gnused
+, taplo
 , tzdata
 , balanceConfig ? import ./config.nix
 }:
@@ -22,7 +23,7 @@ let
 in
 writeShellApplication {
   name = "account-balance";
-  runtimeInputs = [ herdr jq util-linux procps coreutils gawk gnugrep gnused tzdata ];
+  runtimeInputs = [ herdr jq util-linux procps coreutils gawk gnugrep gnused tzdata taplo ];
   # No errexit: the script tests with `&&`/`||` chains throughout, as the
   # reference it was adapted from does.
   bashOptions = [ "nounset" "pipefail" ];

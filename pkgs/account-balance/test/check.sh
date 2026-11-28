@@ -32,6 +32,14 @@ dirof() { [ "$1" = default ] && echo - || echo "$HOME/.claude-$1"; }
 world() { # <name> <session[:stopped]>...: a new HOME and stub; the first session is herdr's default
   export HOME=$W/$1/home HERDR_STUB_DIR=$W/$1/stub; shift
   export ACCOUNT_BALANCE_LEDGER_DIR=$HOME/ledger
+  # the registry: REGISTRY as given, else one team per session with TEAM_ACCOUNTS (default cdev1-3)
+  export ACCOUNT_BALANCE_REGISTRY=$HOME/team-roles.toml
+  mkdir -p "$HOME"
+  if [ -n "${REGISTRY:-}" ]; then printf '%s\n' "$REGISTRY" >"$ACCOUNT_BALANCE_REGISTRY"
+  else local _s; for _s in "$@"; do _s=${_s%%:*}
+    printf '[teams.%s]\nherdr_session = "%s"\naccounts = [%s]\n' "$_s" "$_s" \
+      "$(for _a in ${TEAM_ACCOUNTS:-cdev1 cdev2 cdev3}; do printf '"%s", ' "$_a"; done | sed 's/, $//')"
+  done >"$ACCOUNT_BALANCE_REGISTRY"; fi
   state=$HOME/.local/state/account-balance
   mkdir -p "$HOME/.claude/sessions" "$HERDR_STUB_DIR" "$state" "$ACCOUNT_BALANCE_LEDGER_DIR" "$W/proj"
   local t a s first=true
@@ -107,7 +115,7 @@ ledger=$(cat "$ACCOUNT_BALANCE_LEDGER_DIR/account-moves.tsv" 2>/dev/null)
 hist=$(cat "$state/accounts-history.tsv" 2>/dev/null)
 show status_out plan_out locked_out apply_out moves resumes launched ledger hist
 
-row() { awk -v k="$1" -v t="$2" '$1 == k && $4 == t { f = 1 } END { exit !f }' <<<"$plan_out"; }
+row() { awk -v k="$1" -v t="$2" '$1 == k && $4 == t { f = 1 } END { exit !f }' <<<"${3:-$plan_out}"; }
 keys_separate() { grep -q '^s1/p1 ' <<<"$1" && grep -q '^s2/p1 ' <<<"$1"; }
 logs_keyed() { grep -q ' s1/p1 ' <<<"$moves" && grep -q ' s2/p1 ' <<<"$moves" && grep -q ' s1/p1 ' <<<"$resumes" && grep -q ' s2/p1 ' <<<"$resumes"; }
 every_call_has_session() { awk '/^session list / { next } { for (i = 1; i < NF; i++) if ($i == "--session") next; bad = 1 } END { exit bad }' <<<"$calls"; }
@@ -174,7 +182,7 @@ check "hysteresis: no move when the best target is within 2x (1.25 vs 0.7)" is "
 check "stale: cdev2 (3 h old) is never a target; a newer usage-latest.json overrides accounts.tsv (cdev3)" is "$p_stale" "q/p1 one cdev1 cdev3"
 
 # ---- D: draining and the drain-after latch
-world D d
+TEAM_ACCOUNTS="cdev5 cdev2" world D d   # a team homed on a temporary until the 0188 drain
 pane d p1 tmp cdev5
 tsv cdev1 50 100 10  cdev2 20 10 10  cdev3 60 100 10  cdev4 60 120 10  cdev5 0 10 10  cdev6 0 10 10
 d_none=$(bal plan)
@@ -208,6 +216,43 @@ check "latch: next week's resets in a later accounts.tsv do not move it" is "$la
 check "history: rows keyed by account and read_at are appended once" is "$rows2/$rows1" "6/6"
 check "drain: now >= the latched epoch drains cdev5 -> cdev2" is "$d_after" "d/p1 tmp cdev5 cdev2"
 check "drain: now < the latched epoch does not" is "$d_before" ""
+
+# ---- T: per-team homes from the registry (decision 0197, head's map)
+REGISTRY='[teams.vog]
+herdr_session = "m"
+workspace = "wA"
+accounts = ["cdev3"]
+[teams.rest]
+herdr_session = "m"
+accounts = ["cdev2"]' world T m u
+pane m wA:p1 vone cdev1
+pane m w1:p1 rone cdev1
+pane u p1 lone cdev1
+tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10
+t_plan=$(bal plan); t_status=$(bal status)
+REGISTRY='[teams.o]
+herdr_session = "o"
+accounts = ["cdev2"]' world O o
+pane o p1 oone cdev2
+tsv cdev1 95 100 10  cdev2 90 10 10  cdev3 20 80 10  cdev4 10 20 10  cdev5 0 10 10
+o_plan=$(bal plan)
+REGISTRY='[teams.x1]
+herdr_session = "x"
+accounts = ["cdev2"]
+[teams.x2]
+herdr_session = "x"
+accounts = ["cdev3"]' world X x
+pane x p1 xone cdev1
+tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10
+x_plan=$(bal plan 2>&1); x_rc=$?
+show t_plan t_status o_plan x_plan
+check "team: <session>/<workspace> beats <session>: m/wA:p1 goes to its team's cdev3" row m/wA:p1 cdev3 "$t_plan"
+check "team: a pane off its homes goes to its team's home: m/w1:p1 -> cdev2" row m/w1:p1 cdev2 "$t_plan"
+check "team: a pane matching no team is never planned, and status says no-team" \
+  eval '! grep -q "^u/p1 " <<<"$t_plan" && grep -qE "^ *u/p1 lone .* no-team$" <<<"$t_status"'
+check "overflow: every home over 85% borrows the coolest non-temporary, non-source-only account (cdev3)" row o/p1 cdev3 "$o_plan"
+check "registry: two teams on one session are refused, nothing planned" \
+  eval '[ "$x_rc" != 0 ] && grep -q "refused: teams overlap" <<<"$x_plan" && ! grep -q "^x/p1 " <<<"$x_plan"'
 
 # ---- B: the breaker
 NOW=$(date +%s)
