@@ -50,7 +50,7 @@
       inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       # The flake's own checks, each a function of its data (checks/*.nix).
-      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" "trusted-users" "claude-projects-binds" ]
+      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" "trusted-users" "claude-projects-binds" "monitor-one-writer" ]
         (n: pkgs.callPackage (./checks + "/${n}.nix") { });
       # A host's persisted directories for logger, as paths under ~.
       persistedDirs = c: lib.concatMap
@@ -201,6 +201,14 @@
             hmRequires = c.systemd.services.home-manager-logger.unitConfig.RequiresMountsFor or [ ];
           };
 
+        # One writer per monitor rule on ads-dev1 (D1a): mynixos's hl.monitor for
+        # the AW3225QF, once, with bitdepth 10, cm hdr and vrr; vogix emits none.
+        monitor-one-writer-ads-dev1 = check.monitor-one-writer {
+          host = "ads-dev1";
+          lua = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger.xdg.configFile."hypr/hyprland.lua".text;
+          output = "desc:Dell Inc. AW3225QF";
+        };
+
         # Every check above fails in its own build, never at evaluation, which
         # would stop `nix flake check` before the rest report. Each case gives a
         # check data that must fail it (checks/fail-in-build.nix).
@@ -223,6 +231,7 @@
             hosts = { };
           };
           trusted-users = check.trusted-users { host = "fixture"; trusted = [ "root" "@wheel" ]; };
+          monitor-one-writer = check.monitor-one-writer { host = "fixture"; lua = ""; output = "x"; };
           claude-projects-binds = check.claude-projects-binds { home = "/home/x"; accounts = [ "a1" ]; mounts = [ ]; services = { }; hmRequires = [ ]; };
           instructions-size = import ./checks/instructions-size.nix { inherit (pkgs) runCommand; } {
             claudeMd = builtins.toFile "CLAUDE.md" "over a ten-byte budget";
