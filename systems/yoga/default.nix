@@ -429,6 +429,13 @@ mynixos.lib.mkSystem {
       # The Lua config engine, mynixos's default since 0.28 and the only one
       # Hyprland ≥0.57 accepts; stated here as the host's own fact.
       users.logger.apps.graphical.windowManagers.hyprland.configType = "lua";
+      # The Claude accounts yoga runs sessions under, each projects folder a bind
+      # mount of ~/.claude/projects (owner via lead-yoga, 2026-11-28; the list is
+      # head's, shared with ads-dev1 by intent: decision 0211).
+      users.logger.apps.ai.tools.claude-code = {
+        accounts = [ "cdev1" "cdev2" "cdev3" "cdev4" "cdev5" "cdev6" ];
+        accountProjects = "bind-mount";
+      };
     }
 
   ];
