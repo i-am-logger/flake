@@ -219,7 +219,7 @@ mynixos.lib.mkSystem {
 
   # System-specific configuration (personal, not opinionated)
   extraModules = [
-    ../nix-trust.nix # Nix trusts root only; devenv's cache (S2a)
+    ../nix-trust.nix # Nix trusts root only (S2a)
     # THIS HOST KEEPS A MUTABLE ACCOUNT DATABASE, and must say so.
     #
     # mynixos defaults users.mutableUsers = false (my/users/users), which is

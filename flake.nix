@@ -131,6 +131,11 @@
         )
       );
 
+      # VM tests (KVM), built on demand, never by `nix flake check`.
+      tests.x86_64-linux = lib.genAttrs' [ true false ] (v: lib.nameValuePair
+        "claude-projects-binds-${if v then "fixed" else "unfixed"}"
+        (import ./checks/claude-projects-binds-vm.nix { inherit pkgs; withFix = v; }));
+
       checks.x86_64-linux = {
         # account-balance against a stub herdr and fixture usage files: keying
         # by <session>/<pane>, --session on every call, held sessions, pools,
