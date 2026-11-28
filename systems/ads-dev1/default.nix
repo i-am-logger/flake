@@ -271,6 +271,9 @@ mynixos.lib.mkSystem {
         "aether5d-cdev9"
         "aether5d-cdev10"
       ];
+      # The status line records each account's rate limits into its own
+      # folder's usage-latest.json, which account-balance reads.
+      users.logger.apps.ai.tools.claude-code.usageRecord.enable = true;
 
       # The Lua config engine. yoga flipped first and it has held, so this host
       # starts there rather than migrating later.

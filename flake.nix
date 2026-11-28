@@ -131,6 +131,15 @@
           pkgs.runCommand "account-balance-persisted" { } ''
             echo "PASS  persisted: ~/${target} is under a persisted directory of logger on ads-dev1" | tee "$out"
           '';
+
+        # mynixos's status-line recorder and the balancer agree on
+        # usage-latest.json: the real statusLine command from ads-dev1's merged
+        # Claude settings writes a reading that `account-balance usage` reads as
+        # a numeric 5-hour % of age 0.
+        account-balance-statusline = pkgs.callPackage ./pkgs/account-balance/statusline-check.nix {
+          balancer = self.packages.x86_64-linux.account-balance;
+          hmConfig = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger;
+        };
       };
     };
 }
