@@ -25,15 +25,6 @@
     ci = true;
   };
 
-  radicle-release = {
-    rid = "rad:z36FKevww7fRDN8QDNMVAzmp47jna";
-    description = "Conventional-commit releases for Radicle: the release patch and the version rule";
-    # Self-hosting: this is the tool that will cut the fleet's releases,
-    # and the first repository whose CI gate is the same `just ci` its
-    # authors run locally rather than a reduced smoke check.
-    ci = true;
-  };
-
 
   # A third repository, rad:zfDtFXYCZjVrrJ2gbFUPZVAK1XzC, reached the seed
   # through the allow policy and was deleted as unwanted. Noted only so its
