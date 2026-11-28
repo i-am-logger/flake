@@ -17,24 +17,34 @@
 }:
 
 let
-  step = hmConfig.home.activation.claudeMergedSettings.data or
-    (throw "no claudeMergedSettings activation step: nothing merges Claude settings (usageRecord off?)");
+  # Each step is null when it is missing, so the check fails in its build with
+  # the reason, never at evaluation (checks/fail-in-build.nix).
+  step = hmConfig.home.activation.claudeMergedSettings.data or null;
   # `$_jq --argjson m '<json>' '. * $m'`, the JSON shell-quoted by escapeShellArg.
-  quoted = builtins.match "(.|\n)*--argjson m '(([^']|'\\\\'')*)' '\\. \\* \\$m'(.|\n)*" step;
+  quoted =
+    if step == null then null
+    else builtins.match "(.|\n)*--argjson m '(([^']|'\\\\'')*)' '\\. \\* \\$m'(.|\n)*" step;
   settings =
-    if quoted == null then throw "claudeMergedSettings: merged settings JSON not found"
+    if quoted == null then null
     else builtins.fromJSON (builtins.replaceStrings [ "'\\''" ] [ "'" ] (builtins.elemAt quoted 1));
-  command = settings.statusLine.command or
-    (throw "the merged Claude settings set no statusLine.command (usageRecord off?)");
+  command = if settings == null then null else settings.statusLine.command or null;
+  why =
+    if step == null then "no claudeMergedSettings activation step: nothing merges Claude settings (usageRecord off?)"
+    else if quoted == null then "claudeMergedSettings: merged settings JSON not found"
+    else if command == null then "the merged Claude settings set no statusLine.command (usageRecord off?)"
+    else null;
 in
 runCommand "account-balance-statusline"
 {
   nativeBuildInputs = [ jq gawk coreutils ];
   # The activation package's closure holds the status-line script.
-  activation = hmConfig.home.activationPackage;
+  activation = hmConfig.home.activationPackage or "";
   passthru = { inherit command settings; };
 }
   ''
+    ${lib.optionalString (why != null) ''
+      echo ${lib.escapeShellArg "FAIL  ${why}"}; exit 1
+    ''}
     export HOME="$TMPDIR/home"
     mkdir -p "$HOME"
     unset CLAUDE_CONFIG_DIR
@@ -50,7 +60,7 @@ runCommand "account-balance-statusline"
     fail=0
     check() { if eval "$2"; then echo "PASS  $1"; else echo "FAIL  $1"; fail=1; fi; }
 
-    line=$(printf '%s' "$sample" | ${command})
+    line=$(printf '%s' "$sample" | ${toString command})
     check "statusline: prints a line" '[ -n "$line" ]'
     check "statusline: writes ~/.claude/usage-latest.json (default account)" \
       '[ -s "$HOME/.claude/usage-latest.json" ]'

@@ -54,6 +54,13 @@
     let
       inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
+      # The flake's own checks, each a function of its data (checks/*.nix).
+      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" ]
+        (n: pkgs.callPackage (./checks + "/${n}.nix") { });
+      # A host's persisted directories for logger, as paths under ~.
+      persistedDirs = c: lib.concatMap
+        (p: map (d: d.directory) (p.users.logger.directories or [ ]))
+        (lib.attrValues c.environment.persistence);
       darwinPkgs = import nixpkgs { system = "aarch64-darwin"; };
     in
     {
@@ -133,20 +140,13 @@
         # account-balance keeps moves.log and the rest in
         # ~/.local/state/account-balance, and /home is tmpfs: one of logger's
         # persisted directories on ads-dev1 must cover it, or the log vanishes
-        # on reboot. Fails at evaluation, naming the path.
-        account-balance-persisted =
-          let
-            target = ".local/state/account-balance";
-            dirs = lib.concatMap
-              (p: map (d: d.directory) (p.users.logger.directories or [ ]))
-              (lib.attrValues self.nixosConfigurations.ads-dev1.config.environment.persistence);
-            covers = d: d == target || lib.hasPrefix "${lib.removeSuffix "/" d}/" target;
-          in
-          assert lib.assertMsg (lib.any covers dirs)
-            "ads-dev1 persists no directory of logger's covering ~/${target}";
-          pkgs.runCommand "account-balance-persisted" { } ''
-            echo "PASS  persisted: ~/${target} is under a persisted directory of logger on ads-dev1" | tee "$out"
-          '';
+        # on reboot.
+        account-balance-persisted = check.persisted-covers {
+          name = "account-balance-persisted";
+          host = "ads-dev1";
+          target = ".local/state/account-balance";
+          dirs = persistedDirs self.nixosConfigurations.ads-dev1.config;
+        };
 
         # mynixos's status-line recorder and the balancer agree on
         # usage-latest.json: the real statusLine command from ads-dev1's merged
@@ -161,60 +161,54 @@
         # mynixos's own claudeAccounts step, run in a scratch home, links its
         # four shared entries to ~/.claude. The expected list is written here,
         # apart from the host's, so a dropped or missing account fails.
-        claude-accounts =
-          let
-            c = self.nixosConfigurations.ads-dev1.config;
-            expected = [ "cdev1" "cdev2" "cdev3" "cdev5" "cdev6" "cdev7" ]
-              ++ map (n: "aether5d-cdev${toString n}") (lib.range 1 10);
-            dirs = lib.concatMap
-              (p: map (d: d.directory) (p.users.logger.directories or [ ]))
-              (lib.attrValues c.environment.persistence);
-            unpersisted = lib.filter (a: !(lib.elem ".claude-${a}" dirs)) expected;
-            step = c.home-manager.users.logger.home.activation.claudeAccounts.data;
-          in
-          assert lib.assertMsg (unpersisted == [ ])
-            "ads-dev1 persists no ~/.claude-<name> for: ${lib.concatStringsSep " " unpersisted}";
-          pkgs.runCommand "claude-accounts" { } ''
-            export HOME="$TMPDIR/home"
-            mkdir -p "$HOME/.claude"
-            run() { "$@"; }
-            ${step}
-            fail=0
-            for a in ${lib.escapeShellArgs expected}; do
-              for n in projects sessions CLAUDE.md settings.json; do
-                [ "$(readlink "$HOME/.claude-$a/$n")" = "$HOME/.claude/$n" ] \
-                  || { echo "FAIL  ~/.claude-$a/$n is not a link to ~/.claude/$n"; fail=1; }
-              done
-            done
-            [ "$fail" = 0 ] || exit 1
-            echo "PASS  claude-accounts: ${toString (lib.length expected)} accounts persisted, each with its 4 links" | tee "$out"
-          '';
+        claude-accounts = check.claude-accounts {
+          expected = [ "cdev1" "cdev2" "cdev3" "cdev5" "cdev6" "cdev7" ]
+            ++ map (n: "aether5d-cdev${toString n}") (lib.range 1 10);
+          dirs = persistedDirs self.nixosConfigurations.ads-dev1.config;
+          step = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger.home.activation.claudeAccounts.data or "";
+        };
 
         # vogix reaches the hosts through flake's own `vogix` input: mynixos's
         # vogix input follows it (owner, 2026-11-28: vogix v1 comes onto the host
         # by this override, with no mynixos edits). Checks the lock's follows,
         # that both names resolve to one source, and that ads-dev1 and yoga
-        # enable vogix and evaluate with it. Fails at evaluation, naming the gap.
-        vogix-v1-host =
-          let
-            lock = builtins.fromJSON (builtins.readFile ./flake.lock);
-            own = self.inputs.vogix or null;
-            follows = lock.nodes.mynixos.inputs.vogix or null;
-            hosts = [ "ads-dev1" "yoga" ];
-            host = h:
-              let c = self.nixosConfigurations.${h}.config; in
-              assert lib.assertMsg c.home-manager.users.logger.programs.vogix.enable
-                "${h} does not enable vogix";
-              builtins.seq c.system.build.toplevel.drvPath h;
-          in
-          assert lib.assertMsg (own != null) "flake declares no vogix input";
-          assert lib.assertMsg (follows == [ "vogix" ])
-            "mynixos's vogix input does not follow flake's (lock: ${builtins.toJSON follows})";
-          assert lib.assertMsg (mynixos.inputs.vogix.outPath == own.outPath)
-            "mynixos's vogix (${mynixos.inputs.vogix.outPath}) is not flake's (${own.outPath})";
-          pkgs.runCommand "vogix-v1-host" { } ''
-            echo "PASS  vogix: mynixos's vogix follows flake's (${own.rev or "?"}); ${lib.concatStringsSep ", " (map host hosts)} enable it and evaluate" | tee "$out"
-          '';
+        # enable vogix and evaluate with it.
+        vogix-v1-host = check.vogix-v1-host {
+          own = self.inputs.vogix or null;
+          follows = (builtins.fromJSON (builtins.readFile ./flake.lock)).nodes.mynixos.inputs.vogix or null;
+          mynixosVogix = mynixos.inputs.vogix.outPath or null;
+          hosts = lib.genAttrs [ "ads-dev1" "yoga" ] (h: {
+            vogix = self.nixosConfigurations.${h}.config.home-manager.users.logger.programs.vogix.enable;
+            drvPath = self.nixosConfigurations.${h}.config.system.build.toplevel.drvPath;
+          });
+        };
+
+        # Every check above fails in its own build, never at evaluation, which
+        # would stop `nix flake check` before the rest report. Each case gives a
+        # check data that must fail it (checks/fail-in-build.nix).
+        checks-fail-in-build = check.fail-in-build {
+          account-balance-persisted = check.persisted-covers {
+            name = "account-balance-persisted";
+            host = "fixture";
+            target = ".local/state/account-balance";
+            dirs = [ ".cache" ];
+          };
+          claude-accounts = check.claude-accounts {
+            expected = [ "fixture" ];
+            dirs = [ ];
+            step = "";
+          };
+          vogix-v1-host = check.vogix-v1-host {
+            own = null;
+            follows = "vogix";
+            mynixosVogix = null;
+            hosts = { };
+          };
+          account-balance-statusline = pkgs.callPackage ./pkgs/account-balance/statusline-check.nix {
+            balancer = self.packages.x86_64-linux.account-balance;
+            hmConfig = { home.activation = { }; home.activationPackage = null; };
+          };
+        };
       };
     };
 }
