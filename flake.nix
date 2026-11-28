@@ -55,7 +55,7 @@
       inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       # The flake's own checks, each a function of its data (checks/*.nix).
-      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" ]
+      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" "trusted-users" ]
         (n: pkgs.callPackage (./checks + "/${n}.nix") { });
       # A host's persisted directories for logger, as paths under ~.
       persistedDirs = c: lib.concatMap
@@ -183,6 +183,12 @@
           });
         };
 
+        # yoga's Nix trusts root only (security finding S2a).
+        trusted-users-yoga = check.trusted-users {
+          host = "yoga";
+          trusted = self.nixosConfigurations.yoga.config.nix.settings.trusted-users;
+        };
+
         # Every check above fails in its own build, never at evaluation, which
         # would stop `nix flake check` before the rest report. Each case gives a
         # check data that must fail it (checks/fail-in-build.nix).
@@ -204,6 +210,7 @@
             mynixosVogix = null;
             hosts = { };
           };
+          trusted-users = check.trusted-users { host = "fixture"; trusted = [ "root" "@wheel" ]; };
           account-balance-statusline = pkgs.callPackage ./pkgs/account-balance/statusline-check.nix {
             balancer = self.packages.x86_64-linux.account-balance;
             hmConfig = { home.activation = { }; home.activationPackage = null; };
