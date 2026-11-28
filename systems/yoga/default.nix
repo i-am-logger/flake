@@ -476,6 +476,16 @@ mynixos.lib.mkSystem {
       ];
     })
 
+    # Claude Code's per-user temporary folder (scratchpads, task output, tool
+    # results) on disk. /tmp is a RAM disk here, so whatever a session leaves
+    # there holds RAM and is pushed out to zram swap; ~/.cache is persisted on
+    # the btrfs /persist volume. systemd-tmpfiles creates the folder private
+    # (0700, as Claude Code requires) and removes entries unused for 14 days.
+    (_: {
+      environment.sessionVariables.CLAUDE_CODE_TMPDIR = "/home/logger/.cache/claude-tmp";
+      systemd.tmpfiles.rules = [ "d /home/logger/.cache/claude-tmp 0700 logger logger 14d" ];
+    })
+
     # TEST (amdgpu event-driven branch): a non-default boot entry carrying four
     # amdgpu patches on the stock 7.1 kernel:
     #   1. hold page tables until their TLB flush completes -- GPUVM
