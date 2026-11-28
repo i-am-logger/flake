@@ -85,7 +85,7 @@ check "reset: 'Jan 2' read on Dec 30 is next year's" is "$re3" "$(date -d 2027-0
 NOW=$(date +%s)
 world A s1 s2 s3:stopped aether5d
 pane s1 p1 alpha cdev1
-pane s2 p1 beta cdev1 '["claude","--effort","ultracode","--autocompact","100000","--name","beta","--resume","OLD"]'
+pane s2 p1 beta cdev1 '["/etc/profiles/per-user/logger/bin/claude","--effort","ultracode","--autocompact","100000","--name","beta","--resume","OLD"]'
 pane aether5d p1 gamma cdev1
 pane s3 p1 delta none
 tsv cdev1 60 100 10  cdev2 50 10 10  cdev3 20 80 10  cdev4 10 20 10  cdev5 0 10 10  cdev6 0 10 10  cdev9 0 10 10

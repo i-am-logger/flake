@@ -167,8 +167,10 @@ draining() {
       END { exit !(min != "" && min <= now - 86400 && !hot) }'
 }
 
+# The claude process by its argv[0] basename: herdr reports the full path (/etc/profiles/per-user/<user>/bin/claude
+# on ads-dev1), skyspy-dev's reference matched the bare name and so saw no pane here.
 pane_pid() { hs "$1" pane process-info --pane "$2" 2>/dev/null |
-  jq -r '.result.process_info.foreground_processes[]? | select(.argv[0] == "claude") | .pid' | head -1; }
+  jq -r '.result.process_info.foreground_processes[]? | select((.argv[0] // "" | split("/") | last) == "claude") | .pid' | head -1; }
 
 # "<session>/<pane> <name> <status> <pid> <acct>" for every pane running claude, in every running session
 panes() {

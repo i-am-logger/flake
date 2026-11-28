@@ -64,7 +64,7 @@ case "${1:-} ${2:-}" in
     sh=$(cat "$D/shell.pid")
     pid=$(alive_pid "$p")
     if [ -n "$pid" ]; then
-      av=$(cat "$S/$p/argv" 2>/dev/null || jq -nc --arg t "$(cat "$S/$p/title")" '["claude", "-n", $t]')
+      av=$(cat "$S/$p/argv" 2>/dev/null || jq -nc --arg t "$(cat "$S/$p/title")" '["/etc/profiles/per-user/logger/bin/claude", "-n", $t]')
       jq -n --argjson pid "$pid" --argjson sh "$sh" --argjson av "$av" \
         '{result: {process_info: {shell_pid: $sh, foreground_process_group_id: $pid,
           foreground_processes: [{pid: $pid, argv: $av}]}}}'
