@@ -50,7 +50,7 @@
       inherit (nixpkgs) lib;
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       # The flake's own checks, each a function of its data (checks/*.nix).
-      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" "trusted-users" ]
+      check = lib.genAttrs [ "persisted-covers" "claude-accounts" "vogix-v1-host" "fail-in-build" "trusted-users" "claude-projects-binds" ]
         (n: pkgs.callPackage (./checks + "/${n}.nix") { });
       # A host's persisted directories for logger, as paths under ~.
       persistedDirs = c: lib.concatMap
@@ -125,11 +125,6 @@
         )
       );
 
-      # VM tests (KVM), built on demand, never by `nix flake check`.
-      tests.x86_64-linux = lib.genAttrs' [ true false ] (v: lib.nameValuePair
-        "claude-projects-binds-${if v then "fixed" else "unfixed"}"
-        (import ./checks/claude-projects-binds-vm.nix { inherit pkgs; withFix = v; }));
-
       checks.x86_64-linux = {
         # account-balance against a stub herdr and fixture usage files: keying
         # by <session>/<pane>, --session on every call, held sessions, pools,
@@ -195,6 +190,17 @@
         (check.trusted-users { host = h; trusted = self.nixosConfigurations.${h}.config.nix.settings.trusted-users; }))
       // {
 
+        # ads-dev1's account binds (decision 0209), from mynixos (row BM3).
+        claude-projects-binds-ads-dev1 =
+          let c = self.nixosConfigurations.ads-dev1.config; in
+          check.claude-projects-binds {
+            home = c.users.users.logger.home;
+            accounts = c.my.users.logger.apps.ai.tools.claude-code.accounts;
+            mounts = c.systemd.mounts;
+            services = c.systemd.services;
+            hmRequires = c.systemd.services.home-manager-logger.unitConfig.RequiresMountsFor or [ ];
+          };
+
         # Every check above fails in its own build, never at evaluation, which
         # would stop `nix flake check` before the rest report. Each case gives a
         # check data that must fail it (checks/fail-in-build.nix).
@@ -217,6 +223,7 @@
             hosts = { };
           };
           trusted-users = check.trusted-users { host = "fixture"; trusted = [ "root" "@wheel" ]; };
+          claude-projects-binds = check.claude-projects-binds { home = "/home/x"; accounts = [ "a1" ]; mounts = [ ]; services = { }; hmRequires = [ ]; };
           instructions-size = import ./checks/instructions-size.nix { inherit (pkgs) runCommand; } {
             claudeMd = builtins.toFile "CLAUDE.md" "over a ten-byte budget";
             budgets = builtins.toFile "budgets.toml" "[docs]\nclaude_md_bytes = 10\n";

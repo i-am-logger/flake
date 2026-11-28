@@ -256,6 +256,10 @@ mynixos.lib.mkSystem {
       users.logger.apps.ai.tools.claude-code.fleetWake.enable = true;
       # The Claude accounts this host runs sessions under, each with its own
       # persisted ~/.claude-<name>. This host's list, not every host's.
+      # Each account's projects folder is a bind of ~/.claude/projects, not a
+      # symlink (decision 0209; mynixos's mode since 3922439, row BM3). Retire
+      # an account by removing it here and switching: the bind stops first.
+      users.logger.apps.ai.tools.claude-code.accountProjects = "bind-mount";
       users.logger.apps.ai.tools.claude-code.accounts = [
         "cdev1"
         "cdev2"
@@ -318,19 +322,6 @@ mynixos.lib.mkSystem {
 
   extraModules = [
     ../nix-trust.nix # Nix trusts root only (S2a)
-    # Each Claude account's projects folder is a bind of ~/.claude/projects, not
-    # a symlink (decision 0209): no permission prompt on memory writes.
-    (import ../claude-projects-binds.nix {
-      user = "logger";
-      accounts = config:
-        let
-          inherit (mynixos.inputs.nixpkgs) lib;
-          # The aether5d-cdev* folders are held empty (M8 C7): no sessions run on
-          # them on this host, so they get no bind.
-          heldForAether5d = a: lib.hasPrefix "aether5d-" a;
-        in
-        lib.filter (a: !heldForAether5d a) config.my.users.logger.apps.ai.tools.claude-code.accounts;
-    })
     # This flake's claude-code and herdr in place of nixpkgs'. Overlays are
     # applied per host in this repo rather than globally in flake.nix.
     (_: {
