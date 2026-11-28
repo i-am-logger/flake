@@ -223,6 +223,10 @@
             hosts = { };
           };
           trusted-users = check.trusted-users { host = "fixture"; trusted = [ "root" "@wheel" ]; };
+          instructions-size = import ./checks/instructions-size.nix { inherit (pkgs) runCommand; } {
+            claudeMd = builtins.toFile "CLAUDE.md" "over a ten-byte budget";
+            budgets = builtins.toFile "budgets.toml" "[docs]\nclaude_md_bytes = 10\n";
+          };
           account-balance-statusline = pkgs.callPackage ./pkgs/account-balance/statusline-check.nix {
             balancer = self.packages.x86_64-linux.account-balance;
             hmConfig = { home.activation = { }; home.activationPackage = null; };
