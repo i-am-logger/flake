@@ -183,11 +183,12 @@
           });
         };
 
-        # yoga's Nix trusts root only (security finding S2a).
-        trusted-users-yoga = check.trusted-users {
-          host = "yoga";
-          trusted = self.nixosConfigurations.yoga.config.nix.settings.trusted-users;
-        };
+      }
+      # Each NixOS host's Nix trusts root only (security finding S2a, extended
+      # to every host by the owner's yes via lead-myoslabs, 2026-11-28).
+      // lib.genAttrs' [ "yoga" "ads-dev1" "skyspy-dev" ] (h: lib.nameValuePair "trusted-users-${h}"
+        (check.trusted-users { host = h; trusted = self.nixosConfigurations.${h}.config.nix.settings.trusted-users; }))
+      // {
 
         # Every check above fails in its own build, never at evaluation, which
         # would stop `nix flake check` before the rest report. Each case gives a

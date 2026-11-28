@@ -317,6 +317,7 @@ mynixos.lib.mkSystem {
   ];
 
   extraModules = [
+    ../nix-trust.nix # Nix trusts root only; devenv's cache (S2a)
     # This flake's claude-code and herdr in place of nixpkgs'. Overlays are
     # applied per host in this repo rather than globally in flake.nix.
     (_: {

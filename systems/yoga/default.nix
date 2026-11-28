@@ -440,11 +440,7 @@ mynixos.lib.mkSystem {
   # directly on this host; the seed was the last of those to move, and the file
   # went with it. Rollback is `git revert`, not a flag.
   extraModules = [
-    # Nix trusts root only (security finding S2a; owner, 2026-11-28: "S3 + S2a +
-    # S9 now"). A trusted user is root-equivalent (nix.conf(5)), and @wheel
-    # included the owner's account, so every session in it. A cache a session
-    # wants (devenv's) belongs in nix.settings.substituters with its key.
-    ({ lib, ... }: { nix.settings.trusted-users = lib.mkForce [ "root" ]; })
+    ../nix-trust.nix # Nix trusts root only; devenv's cache (S2a)
 
     # DDR5 modules on this build carry addressable RGB (ENE controllers). DRAM RGB
     # is its own hardware -- it travels with the sticks, independent of the board
