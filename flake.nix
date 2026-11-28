@@ -157,6 +157,39 @@
           hmConfig = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger;
         };
 
+        # ads-dev1's Claude accounts: each persisted as ~/.claude-<name>, and
+        # mynixos's own claudeAccounts step, run in a scratch home, links its
+        # four shared entries to ~/.claude. The expected list is written here,
+        # apart from the host's, so a dropped or missing account fails.
+        claude-accounts =
+          let
+            c = self.nixosConfigurations.ads-dev1.config;
+            expected = [ "cdev1" "cdev2" "cdev3" "cdev5" "cdev6" "cdev7" ]
+              ++ map (n: "aether5d-cdev${toString n}") (lib.range 1 10);
+            dirs = lib.concatMap
+              (p: map (d: d.directory) (p.users.logger.directories or [ ]))
+              (lib.attrValues c.environment.persistence);
+            unpersisted = lib.filter (a: !(lib.elem ".claude-${a}" dirs)) expected;
+            step = c.home-manager.users.logger.home.activation.claudeAccounts.data;
+          in
+          assert lib.assertMsg (unpersisted == [ ])
+            "ads-dev1 persists no ~/.claude-<name> for: ${lib.concatStringsSep " " unpersisted}";
+          pkgs.runCommand "claude-accounts" { } ''
+            export HOME="$TMPDIR/home"
+            mkdir -p "$HOME/.claude"
+            run() { "$@"; }
+            ${step}
+            fail=0
+            for a in ${lib.escapeShellArgs expected}; do
+              for n in projects sessions CLAUDE.md settings.json; do
+                [ "$(readlink "$HOME/.claude-$a/$n")" = "$HOME/.claude/$n" ] \
+                  || { echo "FAIL  ~/.claude-$a/$n is not a link to ~/.claude/$n"; fail=1; }
+              done
+            done
+            [ "$fail" = 0 ] || exit 1
+            echo "PASS  claude-accounts: ${toString (lib.length expected)} accounts persisted, each with its 4 links" | tee "$out"
+          '';
+
         # vogix reaches the hosts through flake's own `vogix` input: mynixos's
         # vogix input follows it (owner, 2026-11-28: vogix v1 comes onto the host
         # by this override, with no mynixos edits). Checks the lock's follows,

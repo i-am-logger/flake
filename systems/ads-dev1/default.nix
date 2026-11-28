@@ -260,6 +260,11 @@ mynixos.lib.mkSystem {
         "cdev1"
         "cdev2"
         "cdev3"
+        # Kept for now and dropped soon (owner, decision 0188: "i can can
+        # cdev5-7 for now but id want to get rid of them soon").
+        "cdev5"
+        "cdev6"
+        "cdev7"
         "aether5d-cdev1"
         "aether5d-cdev2"
         "aether5d-cdev3"
