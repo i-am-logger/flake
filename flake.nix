@@ -162,6 +162,12 @@
           hmConfig = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger;
         };
 
+        # CLAUDE.md is exactly its byte budget in budgets.toml (at most 4096):
+        # a pointer to the Nix rules plus flake's deltas (decision 0180).
+        instructions-size = import ./checks/instructions-size.nix
+          { inherit (pkgs) runCommand; }
+          { claudeMd = ./CLAUDE.md; budgets = ./budgets.toml; };
+
         # ads-dev1's Claude accounts: each persisted as ~/.claude-<name>, and
         # mynixos's own claudeAccounts step, run in a scratch home, links its
         # four shared entries to ~/.claude. The expected list is written here,

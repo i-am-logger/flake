@@ -1,0 +1,5 @@
+# Byte budgets for documents loaded into every agent session (decision 0180).
+# CLAUDE.md must be exactly this size: shrink it and lower this in the same
+# commit; a raise is a commit of its own that says why. At most 4096.
+[docs]
+claude_md_bytes = 3340
