@@ -4,14 +4,18 @@
 # baseline and vogix emits none. A second rule for the same monitor would lose
 # HDR or make the baseline moot. Fails in its build, never at evaluation.
 { lib, runCommand }:
-{ host, lua, output }:
+{ host, lua, output, vogixLayout ? { } }:
 let
   blocks = lib.filter (b: builtins.isString b && lib.hasInfix "[\"output\"] = \"${output}\"" b)
     (builtins.split "hl\\.monitor\\(" lua);
   n = lib.length blocks;
   b = if n == 1 then lib.head blocks else "";
+  # vogix renders one hl.monitor per laid-out baseline monitor (its display.nix
+  # `rules`), whatever its output (a set output wins over desc:), so any
+  # layout entry is a second writer.
   problems =
-    lib.optional (n == 0) "no hl.monitor for ${output}"
+    lib.optional (vogixLayout != { }) "vogix's display baseline lays out ${lib.concatStringsSep ", " (lib.attrNames vogixLayout)}: vogix would write hl.monitor rules too (a second writer)"
+    ++ lib.optional (n == 0) "no hl.monitor for ${output}"
     ++ lib.optional (n > 1) "${toString n} hl.monitor rules for ${output}: two writers"
     ++ lib.optional (n == 1 && !lib.hasInfix "[\"bitdepth\"] = 10" b) "the rule for ${output} lacks bitdepth 10"
     ++ lib.optional (n == 1 && !lib.hasInfix "[\"cm\"] = \"hdr\"" b) "the rule for ${output} lacks cm hdr"

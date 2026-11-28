@@ -207,6 +207,9 @@
           host = "ads-dev1";
           lua = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger.xdg.configFile."hypr/hyprland.lua".text;
           output = "desc:Dell Inc. AW3225QF";
+          vogixLayout =
+            let b = self.nixosConfigurations.ads-dev1.config.home-manager.users.logger.programs.vogix.desktop.display.baseline or null; in
+            if b == null then { } else b.layout or { };
         };
 
         # Every check above fails in its own build, never at evaluation, which
