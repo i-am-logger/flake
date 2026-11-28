@@ -28,11 +28,6 @@
     # One nixpkgs for everything here: mynixos's. A follows adds no lock node,
     # so the lock keeps a single nixpkgs (baud's own pins aside).
     nixpkgs.follows = "mynixos/nixpkgs";
-    # Claude Desktop for Linux (unofficial community port)
-    claude-desktop = {
-      url = "github:k3d3/claude-desktop-linux-flake";
-      inputs.nixpkgs.follows = "mynixos/nixpkgs";
-    };
     # yoga's amdgpu test kernel - built from the amdgpu-vm-tlb-event-driven branch
     # of the i-am-logger/linux fork instead of per-host .patch files (see
     # systems/yoga; flake=false => tracked files only). On a github fork rather
@@ -84,7 +79,6 @@
         # Their images are reachable as packages.<system>.role-image-<name>.
         yoga = import ./systems/yoga {
           inherit mynixos yoga-kernel;
-          claude-desktop = null; # FIXME: upstream uses removed nodePackages.asar
         };
         ads-dev1 = import ./systems/ads-dev1 { inherit mynixos; };
         skyspy-dev = import ./systems/skyspy-dev { inherit mynixos; };

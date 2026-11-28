@@ -1,5 +1,4 @@
 { mynixos
-, claude-desktop ? null
 , ...
 }:
 
@@ -470,19 +469,10 @@ mynixos.lib.mkSystem {
       };
     }
 
-    # yoga's own packages: claude-desktop, and this flake's claude-code and
-    # herdr in place of nixpkgs'. Nothing fails without this module; yoga
+    # yoga's own packages: this flake's claude-code and herdr in place of
+    # nixpkgs'. Nothing fails without this module; yoga
     # silently falls back to nixpkgs' builds.
     (_: {
-      # claude-desktop is passed as null by flake.nix until upstream stops
-      # depending on the removed nodePackages.asar, so this list is empty in
-      # practice -- the conditional is what survives the day it is non-null.
-      environment.systemPackages =
-        if claude-desktop != null then
-          [ claude-desktop.packages.x86_64-linux.claude-desktop-with-fhs ]
-        else
-          [ ];
-
       nixpkgs.overlays = [
         (import ../../overlays/claude-code.nix)
         (import ../../overlays/herdr.nix)
